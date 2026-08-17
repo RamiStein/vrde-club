@@ -1,0 +1,280 @@
+/* === VRDE CLUB - ESTILOS BASE === */
+:root {
+    --brand-color: #10A352;
+    --brand-dark: #0B7339;
+    --brand-light: #D4F1A0;
+    --bg-light: #F8F9FA;
+    --text-main: #2D3748;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Hide scrollbar for tabs */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* === LÍNEA DE TIEMPO === */
+.timeline-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 24px;
+    width: 4px;
+    background-color: rgba(16, 163, 82, 0.15);
+    z-index: 45; /* Debajo del nav */
+    pointer-events: none;
+}
+
+@media (min-width: 768px) {
+    .timeline-container {
+        left: 60px;
+    }
+}
+
+.timeline-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--brand-color);
+    height: 0%; 
+    transition: height 0.1s ease-out;
+}
+
+.nave {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
+    background-color: var(--brand-color);
+    border-radius: 12px;
+    border: 3px solid #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(16, 163, 82, 0.5);
+    top: 0%; 
+    transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+}
+
+/* === ANIMACIONES DE SCROLL (FADE UP/LEFT/RIGHT) === */
+.fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.fade-left {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-right {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-up.visible, .fade-left.visible, .fade-right.visible {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+
+/* === COMPONENTES UI === */
+.btn-primary {
+    display: inline-block;
+    background-color: var(--brand-color);
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(16, 163, 82, 0.3);
+    text-align: center;
+}
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(16, 163, 82, 0.4);
+    background-color: var(--brand-dark);
+}
+
+.badge-tech {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    color: var(--brand-color);
+    background-color: rgba(16, 163, 82, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(16, 163, 82, 0.2);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.hover-lift {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* === IMÁGENES Y MEDIA === */
+.image-card {
+    position: relative;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    transform: rotate(2deg);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.image-card:hover {
+    transform: rotate(0deg) scale(1.02);
+}
+.image-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+}
+
+/* === EXPLORADOR DE NODOS === */
+.node-tab {
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    background-color: white;
+    border: 1px solid #E2E8F0;
+    color: #4A5568;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+.node-tab:hover {
+    background-color: #F8FAFC;
+}
+.node-tab.active {
+    background-color: var(--brand-color);
+    color: white;
+    border-color: var(--brand-color);
+    box-shadow: 0 4px 12px rgba(16, 163, 82, 0.3);
+}
+
+/* === ACTION CARDS (SUMATE) === */
+.action-card {
+    background-color: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    border-color: var(--brand-color);
+}
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* === UTILIDADES === */
+.pattern-bits {
+    background-image: radial-gradient(var(--brand-color) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    background-position: 0 0;
+}
+.bg-opacity-pattern {
+    position: absolute; inset: 0; opacity: 0.05; pointer-events: none;
+}
+
+.spin-slow {
+    animation: spin 10s linear infinite;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.pulse-glow {
+    animation: pulse-glow 3s infinite alternate;
+}
+@keyframes pulse-glow {
+    from { box-shadow: 0 0 10px rgba(16, 163, 82, 0.2); }
+    to { box-shadow: 0 0 30px rgba(16, 163, 82, 0.6); }
+}
+
+.floating-element {
+    animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-light);
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-color);
+}
