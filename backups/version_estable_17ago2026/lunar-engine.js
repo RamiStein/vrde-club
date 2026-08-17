@@ -568,34 +568,18 @@ class LunarEngine {
   /**
    * Obtiene la lista de todos los ciclos lunares configurados (vigentes y archivados)
    */
-    static obtenerListaCiclos() {
-    const hoy = new Date();
-    const mesesFull = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  static obtenerListaCiclos() {
     const actual = this.obtenerCicloActual();
-
     return LUNAR_CONFIG.ciclosLunares.map(c => {
-      const nuevaF = (c.nuevaFecha instanceof Date) ? c.nuevaFecha : new Date(c.nuevaFecha || '2026-08-12');
-      const llenaF = (c.llenaFecha instanceof Date) ? c.llenaFecha : new Date(c.llenaFecha || '2026-08-28');
       const esVigente = (c.id === actual.id);
-      
-      const milisegundosRestantes = llenaF.getTime() - hoy.getTime();
-      const diasRestantes = Math.max(0, Math.ceil(milisegundosRestantes / (1000 * 3600 * 24)));
-      const abierta = hoy >= nuevaF && hoy <= llenaF;
-      const llenaFechaStr = `${llenaF.getDate()} de ${mesesFull[llenaF.getMonth()]}`;
-      const nuevaFechaStr = `${nuevaF.getDate()} de ${mesesFull[nuevaF.getMonth()]}`;
-
       return {
         id: c.id,
         nombre: c.nombreLlena || `🌑 Luna Llena en ${c.llenaSigno}`,
         llenaSigno: c.llenaSigno,
         nuevaSigno: c.nuevaSigno,
         mesStr: c.mesStr,
-        nuevaFecha: nuevaF,
-        llenaFecha: llenaF,
-        nuevaFechaStr: nuevaFechaStr,
-        llenaFechaStr: llenaFechaStr,
-        diasRestantes: diasRestantes,
-        abierta: abierta,
+        nuevaFecha: c.nuevaFecha,
+        llenaFecha: c.llenaFecha,
         esVigente: esVigente,
         archivado: c.archivado !== false && !esVigente,
         badge: esVigente ? 'Compra Vigente' : 'Archivada'

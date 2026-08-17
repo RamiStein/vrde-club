@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tienda Lunar • Vrde Club</title>
-  <meta name="description" content="Compra comunitaria y soberana de alimentos agroecológicos sincronizada con los ciclos lunares.">
+  <title>Tienda Lunar â€¢ Vrde Club</title>
+  <meta name="description" content="Compra comunitaria y soberana de alimentos agroecolÃ³gicos sincronizada con los ciclos lunares.">
 
-  <!-- Tipografías -->
+  <!-- TipografÃ­as -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -17,23 +17,34 @@
 </head>
 <body>
 
-  <header class="shop-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14p20px; background: white; border-bottom: 1psolid var(--border-color); position: sticky; top: 0; z-inde50;">
+  <!-- Barra Superior de NavegaciÃ³n y Selector de Nodo -->
+  <div class="node-pills">
+      <span style="font-size: 12px; opacity: 0.8;">Cambiar nodo:</span>
+      <button class="node-select-btn active" onclick="selectNode('escobar')">Escobar</button>
+      <button class="node-select-btn" onclick="selectNode('lomaverde')">Loma Verde</button>
+      <button class="node-select-btn" onclick="selectNode('lalucila')">La Lucila</button>
+      <button class="node-select-btn" onclick="selectNode('vicentelopez')">V. LÃ³pez</button>
+    </div>
+  </div>
+
+  <!-- Header del Nodo Activo -->
+  <header class="shop-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: white; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50;">
     <div style="display: flex; align-items: center; gap: 16px;">
-      <button onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="background: #F1F5F9; color: #334155; border: 1psolid #CBD5E1; border-radius: 25px; padding: 8p16px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;" title="Volver a la página anterior">
+      <button onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; border-radius: 25px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;" title="Volver a la página anterior">
         <i class="fas fa-arrow-left"></i> Volver
       </button>
       <div class="shop-brand" onclick="openNodeProfile()" style="cursor: pointer; display: flex; align-items: center; gap: 12px;">
-        <div class="shop-brand-logo" id="shop-logo" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(16,163,82,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2psolid var(--primary); flex-shrink: 0;">🌱</div>
+        <div class="shop-brand-logo" id="shop-logo" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(16,163,82,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px solid var(--primary); flex-shrink: 0;">🌱</div>
         <div>
           <h2 class="shop-brand-name" id="shop-name" style="font-size: 18px; font-weight: 700; color: #0F172A; margin: 0; line-height: 1.2;">Nodo Escobar</h2>
-          <p style="font-size: 12px; color: var(--text-muted); margin: 2p0 0; display: flex; align-items: center; gap: 4px;">
+          <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0; display: flex; align-items: center; gap: 4px;">
             <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
             <span id="shop-subheading">Ver dirección, día de entrega y contacto &rarr;</span>
           </p>
         </div>
       </div>
     </div>
-    <a href="javascript:void(0)" onclick="openNodeProfile()" style="text-decoration: none; font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(16,163,82,0.1); padding: 8p16px; border-radius: 20px; border: 1psolid rgba(16,163,82,0.2);">
+    <a href="javascript:void(0)" onclick="openNodeProfile()" style="text-decoration: none; font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(16,163,82,0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(16,163,82,0.2);">
       Info del Nodo
     </a>
   </header>
@@ -43,13 +54,13 @@
     <div class="lunar-banner-card">
       <div class="lunar-top-row">
         <div>
-          <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 4px;">Ciclo Astronómico de Compra</div>
-          <h2 style="font-size: 26px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
-          <p style="font-size: 14px; color: #CBD5E1; margin-top: 4px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días (28 de Agosto)</p>
+          <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 4px;">Ciclo AstronÃ³mico de Compra</div>
+          <h2 style="font-size: 26px; color: white; margin: 0;" id="shop-lunar-title">ðŸŒ‘ Leo Ago 2026</h2>
+          <p style="font-size: 14px; color: #CBD5E1; margin-top: 4px;" id="shop-lunar-desc">Apertura activa â€¢ Cierra en 12 dÃ­as (28 de Agosto)</p>
         </div>
         <div style="text-align: right;">
           <div class="lunar-phase-badge">
-            <span style="font-size: 16px;">🌑</span> Compra Abierta
+            <span style="font-size: 16px;">ðŸŒ•</span> Compra Abierta
           </div>
         </div>
       </div>
@@ -80,16 +91,16 @@
     </div>
   </div>
 
-  <!-- Pestañas de Selección de Producto -->
+  <!-- PestaÃ±as de SelecciÃ³n de Producto -->
   <div class="product-tabs-wrapper">
     <div class="product-tabs" id="shop-tabs">
-      <!-- Inyectado dinámicamente por JS -->
+      <!-- Inyectado dinÃ¡micamente por JS -->
     </div>
   </div>
 
   <!-- Escaparate de Producto Activo -->
   <main class="product-showcase" id="shop-product-container">
-    <!-- Inyectado dinámicamente por JS -->
+    <!-- Inyectado dinÃ¡micamente por JS -->
   </main>
 
   <!-- Espacio de seguridad inferior para la barra flotante -->
@@ -119,16 +130,16 @@
       </div>
 
       <!-- Resumen del Carrito -->
-      <div style="background: #F8FAFC; border: 1psolid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
-        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 12px;">Tu Selección Agroecológica</div>
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 12px;">Tu SelecciÃ³n AgroecolÃ³gica</div>
         <div id="checkout-items"></div>
 
-        <!-- Donación Solidaria 3% -->
-        <div style="margin-top: 16px; border-top: 1psolid #E2E8F0; padding-top: 16px;">
+        <!-- DonaciÃ³n Solidaria 3% -->
+        <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 13px; font-weight: 700; color: #0F172A;">Aporte a la red (Sostén cooperativo)</span>
+            <span style="font-size: 13px; font-weight: 700; color: #0F172A;">Aporte a la red (SostÃ©n cooperativo)</span>
           </div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Contribución voluntaria para la logística y mantenimiento del sistema.</p>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">ContribuciÃ³n voluntaria para la logÃ­stica y mantenimiento del sistema.</p>
           <div class="don-btn-group">
             <button class="don-btn-opt active" id="don-3" onclick="setDonation('3')">3% Sugerido</button>
             <button class="don-btn-opt" id="don-custom" onclick="setDonation('custom')">Otro monto</button>
@@ -140,27 +151,27 @@
         </div>
 
         <!-- Selector Tipo de Entrega: Retiro vs Delivery -->
-        <div style="margin-top: 16px; border-top: 1psolid #E2E8F0; padding-top: 16px;">
+        <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
           <label style="font-size: 13px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 6px;">Forma de Entrega *</label>
           <div class="don-btn-group" style="margin-top: 4px;">
             <button class="don-btn-opt active" id="btn-entrega-retiro" onclick="setDeliveryType('Retiro en Nodo')">
               <i class="fas fa-store"></i> Retiro en Nodo (Gratis)
             </button>
             <button class="don-btn-opt" id="btn-entrega-delivery" onclick="setDeliveryType('Delivery')">
-              <i class="fas fa-motorcycle"></i> Envío a Domicilio (Delivery)
+              <i class="fas fa-motorcycle"></i> EnvÃ­o a Domicilio (Delivery)
             </button>
           </div>
 
           <!-- Info Retiro -->
-          <div id="info-entrega-retiro" style="background: #F1F5F9; border-radius: var(--radius-sm); padding: 10p14px; font-size: 12px; color: #475569; margin-top: 10px;">
+          <div id="info-entrega-retiro" style="background: #F1F5F9; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: #475569; margin-top: 10px;">
             <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Retiras en el punto de encuentro del nodo. Sin costo adicional.
           </div>
 
-          <!-- Formulario Dirección Delivery -->
+          <!-- Formulario DirecciÃ³n Delivery -->
           <div id="form-entrega-delivery" class="hidden" style="margin-top: 10px;">
             <div class="input-field-group" style="margin-bottom: 10px;">
-              <label style="font-size: 12px;">Dirección completa (Calle, Altura, Piso/Depto) *</label>
-              <input type="text" id="chk-direccion-delivery" class="input-field" placeholder="Ej: Av. San Martín 1420, Piso 3 Depto B">
+              <label style="font-size: 12px;">DirecciÃ³n completa (Calle, Altura, Piso/Depto) *</label>
+              <input type="text" id="chk-direccion-delivery" class="input-field" placeholder="Ej: Av. San MartÃ­n 1420, Piso 3 Depto B">
             </div>
             <div class="input-field-group" style="margin-bottom: 0;">
               <label style="font-size: 12px;">Localidad / Barrio *</label>
@@ -169,17 +180,17 @@
           </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 2psolid #E2E8F0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 2px solid #E2E8F0;">
           <span style="font-size: 15px; font-weight: 700; color: #0F172A;">TOTAL A TRANSFERIR</span>
           <span style="font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--primary);" id="checkout-total-final">$0</span>
         </div>
       </div>
 
-      <!-- Selección de Vrdedor Comunitario -->
+      <!-- SelecciÃ³n de Vrdedor Comunitario -->
       <div class="input-field-group" id="group-chk-vrdedor" style="margin-bottom: 12px;">
-        <label style="font-size: 13px; font-weight: 700; color: #0F172A;">¿Con qué Vrdedor te estás comunicando? (Opcional)</label>
+        <label style="font-size: 13px; font-weight: 700; color: #0F172A;">Â¿Con quÃ© Vrdedor te estÃ¡s comunicando? (Opcional)</label>
         <select id="chk-vrdedor-select" class="input-field" style="margin-top: 4px;">
-          <option value="Coordinación General del Nodo">🌑 Coordinación General del Nodo</option>
+          <option value="CoordinaciÃ³n General del Nodo">ðŸŒ± CoordinaciÃ³n General del Nodo</option>
         </select>
         <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Elige a tu coordinador/a de confianza para gestionar la entrega de este pedido.</p>
       </div>
@@ -187,11 +198,11 @@
       <!-- Datos del Comprador -->
       <div class="input-field-group">
         <label>Nombre y Apellido *</label>
-        <input type="text" id="chk-nombre" class="input-field" placeholder="Ej: Sofía Almada" required>
+        <input type="text" id="chk-nombre" class="input-field" placeholder="Ej: SofÃ­a Almada" required>
       </div>
 
       <div class="input-field-group">
-        <label>Teléfono (WhatsApp) *</label>
+        <label>TelÃ©fono (WhatsApp) *</label>
         <input type="tel" id="chk-tel" class="input-field" placeholder="Ej: 11 2345 6789" required>
       </div>
 
@@ -206,28 +217,28 @@
     </div>
   </div>
 
-  <!-- Modal 0xito y WhatsApp -->
+  <!-- Modal Ã‰xito y WhatsApp -->
   <div class="modal-overlay" id="modal-success">
     <div class="modal-card" style="text-align: center;">
-      <div style="font-size: 54px; margin-bottom: 16px;">🌑</div>
-      <h2 style="color: var(--primary); font-size: 26px; margin-bottom: 6px;">¡Pedido Registrado!</h2>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Código de orden: <strong id="succ-id" style="color: #0F172A;"></strong></p>
+      <div style="font-size: 54px; margin-bottom: 16px;">ðŸŒ±</div>
+      <h2 style="color: var(--primary); font-size: 26px; margin-bottom: 6px;">Â¡Pedido Registrado!</h2>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">CÃ³digo de orden: <strong id="succ-id" style="color: #0F172A;"></strong></p>
 
-      <div style="background: #F8FAFC; border: 1psolid var(--border-color); border-radius: var(--radius-md); padding: 18px; text-align: left; margin-bottom: 24px;">
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; text-align: left; margin-bottom: 24px;">
         <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 6px;">Datos para la transferencia:</div>
         <div style="font-size: 14px; margin-bottom: 4px;">Alias / CBU: <strong id="succ-alias" style="color: var(--primary);"></strong></div>
         <div style="font-size: 15px; margin-top: 6px;">Total a transferir: <strong id="succ-total" style="color: var(--primary); font-size: 20px; font-family: var(--font-heading);"></strong></div>
       </div>
 
       <p style="font-size: 13px; color: #64748B; margin-bottom: 20px; line-height: 1.4;">
-        Haz clic a continuación para notificar a tu agente de nodo por WhatsApp y adjuntar tu comprobante de pago.
+        Haz clic a continuaciÃ³n para notificar a tu agente de nodo por WhatsApp y adjuntar tu comprobante de pago.
       </p>
 
       <button class="btn-checkout-cta" style="background: #25D366; width: 100%; border-radius: var(--radius-sm); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="sendWsp()">
         <i class="fab fa-whatsapp" style="font-size: 20px;"></i> ENVIAR A WHATSAPP
       </button>
 
-      <button onclick="window.location.href='index.html'" style="background: transparent; border: 1psolid var(--border-color); color: #475569; width: 100%; padding: 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">
+      <button onclick="window.location.href='index.html'" style="background: transparent; border: 1px solid var(--border-color); color: #475569; width: 100%; padding: 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">
         Volver a la portada
       </button>
     </div>
@@ -237,19 +248,19 @@
   <div class="modal-overlay" id="modal-node">
     <div class="modal-card" style="text-align: center;">
       <div class="modal-header-row">
-        <h3 style="font-size: 20px; margin: 0;">Información del Nodo</h3>
+        <h3 style="font-size: 20px; margin: 0;">InformaciÃ³n del Nodo</h3>
         <span class="modal-close-icon" onclick="closeModal('modal-node')">&times;</span>
       </div>
 
-      <div id="prof-logo" style="width: 70px; height: 70px; border-radius: 50%; background: rgba(16,163,82,0.1); color: var(--primary); display: inline-flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 12px;">🌑</div>
+      <div id="prof-logo" style="width: 70px; height: 70px; border-radius: 50%; background: rgba(16,163,82,0.1); color: var(--primary); display: inline-flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 12px;">ðŸŒ±</div>
       <h2 id="prof-name" style="color: #0F172A; font-size: 24px; margin-bottom: 6px;">Nombre Nodo</h2>
-      <p id="prof-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.4;">Descripción</p>
+      <p id="prof-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.4;">DescripciÃ³n</p>
 
-      <div style="background: #F8FAFC; border: 1psolid var(--border-color); border-radius: var(--radius-md); padding: 16px; text-align: left; font-size: 14px;">
-        <p style="margin-bottom: 10px;"><strong>📍 Dirección:</strong> <span id="prof-dir"></span></p>
-        <p style="margin-bottom: 10px;"><strong>👤 Agente Responsable:</strong> <span id="prof-contacto"></span></p>
-        <p style="margin-bottom: 10px;"><strong>📅 Día de Entrega:</strong> <span id="prof-entrega"></span></p>
-        <p style="margin-bottom: 0;"><strong>💳 Alias:</strong> <span id="prof-cbu" style="color: var(--primary); font-weight: bold;"></span></p>
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; text-align: left; font-size: 14px;">
+        <p style="margin-bottom: 10px;"><strong>ðŸ“ DirecciÃ³n:</strong> <span id="prof-dir"></span></p>
+        <p style="margin-bottom: 10px;"><strong>ðŸ‘¤ Agente Responsable:</strong> <span id="prof-contacto"></span></p>
+        <p style="margin-bottom: 10px;"><strong>ðŸšš DÃ­a de Entrega:</strong> <span id="prof-entrega"></span></p>
+        <p style="margin-bottom: 0;"><strong>ðŸ’³ Alias:</strong> <span id="prof-cbu" style="color: var(--primary); font-weight: bold;"></span></p>
       </div>
 
       <div id="prof-social-badges" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
@@ -257,10 +268,10 @@
       </div>
 
       <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <a id="prof-admin-link" href="admin.html" style="fle1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1psolid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 600;">
+        <a id="prof-admin-link" href="admin.html" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 600;">
           <i class="fas fa-lock"></i> Panel Gestor (PIN)
         </a>
-        <button class="btn-checkout-cta" style="fle1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
+        <button class="btn-checkout-cta" style="flex: 1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
           Entendido
         </button>
       </div>
@@ -286,7 +297,7 @@
     function initStore() {
       CICLO_LUNAR = LunarEngine.obtenerCicloActual();
 
-      // Cargar carrito persistido en sesión si existe
+      // Cargar carrito persistido en sesiÃ³n si existe
       try {
         const storedCart = sessionStorage.getItem('VRDE_CART');
         if (storedCart) {
@@ -306,10 +317,10 @@
       const elBar = document.getElementById('bar-current-node'); if (elBar) elBar.innerText = nodoData.nombre;
       document.getElementById('shop-logo').innerText = nodoData.logo;
       document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
-      const elProf = document.getElementById('prof-admin-link'); if (elProf) elProf.href = `admin.html?ref=${CURRENT_REF}`;
+      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
       document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
-      document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+      document.getElementById('shop-lunar-desc').innerText = `Apertura activa â€¢ Cierra en ${CICLO_LUNAR.diasRestantes} dÃ­as (${CICLO_LUNAR.llenaFechaStr})`;
 
       const ventasNodo = 48;
       const metaNodo = nodoData.metaPropia || 100;
@@ -368,14 +379,14 @@
       const realAccumulated = getProductRealUnits(prod.id);
       const totalGlobalProd = realAccumulated + qty;
       
-      // La escala activa se calcula con precisión según las unidades que pide el socio
+      // La escala activa se calcula con precisiÃ³n segÃºn las unidades que pide el socio
       const pricing = LunarEngine.calcularPrecio(prod, qty > 0 ? qty : 1);
 
       const html = `
         <!-- Columna Izquierda -->
         <div class="showcase-card">
           <div>
-            <div class="card-section-title">Origen y Producción</div>
+            <div class="card-section-title">Origen y ProducciÃ³n</div>
             <h3 style="font-size: 18px; color: #0F172A; margin-bottom: 6px;">${prod.origen}</h3>
             <p style="font-size: 13px; color: var(--text-muted);"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 4px;"></i> Variedad: <strong>${prod.variedad}</strong></p>
           </div>
@@ -543,13 +554,13 @@
 
       // Cargar opciones de Vrdedores del nodo actual
       const vrdedoresData = LunarEngine.obtenerVrdedoresNodo(CURRENT_REF);
-      let vHtml = '<option value="Coordinación General del Nodo">🌑 Coordinación General del Nodo</option>';
+      let vHtml = '<option value="CoordinaciÃ³n General del Nodo">ðŸŒ± CoordinaciÃ³n General del Nodo</option>';
       if (vrdedoresData.lista && vrdedoresData.lista.length > 0) {
         vrdedoresData.lista.forEach(v => {
-          vHtml += `<option value="${v.nombre}">${v.avatar || 'x'} ${v.nombre} (${v.rol || 'Vrdedor'})</option>`;
+          vHtml += `<option value="${v.nombre}">${v.avatar || 'ðŸ‘¤'} ${v.nombre} (${v.rol || 'Vrdedor'})</option>`;
         });
       }
-      vHtml += '<option value="Directo por la Web">🌑 Directo por la Web / Sin Vrdedor previo</option>';
+      vHtml += '<option value="Directo por la Web">ðŸŒ Directo por la Web / Sin Vrdedor previo</option>';
       document.getElementById('chk-vrdedor-select').innerHTML = vHtml;
 
       setDonation('3');
@@ -595,7 +606,7 @@
       const vrdedorElegido = document.getElementById('chk-vrdedor-select').value;
 
       if (!nombre || !tel) {
-        alert("Por favor completa tu nombre y número de teléfono/WhatsApp.");
+        alert("Por favor completa tu nombre y nÃºmero de telÃ©fono/WhatsApp.");
         return;
       }
 
@@ -604,7 +615,7 @@
         const dir = document.getElementById('chk-direccion-delivery').value.trim();
         const loc = document.getElementById('chk-localidad-delivery').value.trim();
         if (!dir) {
-          alert("Por favor indica la dirección para el envío a domicilio.");
+          alert("Por favor indica la direcciÃ³n para el envÃ­o a domicilio.");
           return;
         }
         direccionDelivery = `${dir}${loc ? ' (' + loc + ')' : ''}`;
@@ -652,7 +663,7 @@
         estado: 'Pendiente'
       };
 
-      // Guardar centralmente y en Google Sheets si la API está conectada
+      // Guardar centralmente y en Google Sheets si la API estÃ¡ conectada
       LunarEngine.guardarNuevoPedido(ORDER_SUCCESS_DATA);
       LunarEngine.enviarPedidoApi(ORDER_SUCCESS_DATA);
 
@@ -672,22 +683,22 @@
       if (!ORDER_SUCCESS_DATA) return;
       const d = ORDER_SUCCESS_DATA;
 
-      let msg = `🌑 *Nuevo Pedido Vrde Club*\n`;
-      msg += `x Pedido: #${d.id}\n`;
-      msg += `x Nombre: ${d.nombre}\n`;
-      msg += `x~ Teléfono: ${d.telefono}\n`;
-      if (d.vrdedor) msg += `Vrdedor/a: ${d.vrdedor}\n`;
-      msg += `x Detalle:\n${d.detalle}\n`;
-      msg += `x Total a transferir: $${d.total.toLocaleString('es-AR')}\n`;
+      let msg = `ðŸŒ± *Nuevo Pedido Vrde Club*\n`;
+      msg += `ðŸ”– Pedido: #${d.id}\n`;
+      msg += `ðŸ‘¤ Nombre: ${d.nombre}\n`;
+      msg += `ðŸ“ž TelÃ©fono: ${d.telefono}\n`;
+      if (d.vrdedor) msg += `ðŸ¤ Vrdedor/a: ${d.vrdedor}\n`;
+      msg += `ðŸ“¦ Detalle:\n${d.detalle}\n`;
+      msg += `ðŸ’° Total a transferir: $${d.total.toLocaleString('es-AR')}\n`;
       
       if (d.tipoEntrega === 'Delivery') {
-        msg += `*Entrega:* Envío a Domicilio: ${d.direccionEntrega}\n`;
+        msg += `ðŸ›µ *Entrega:* EnvÃ­o a Domicilio: ${d.direccionEntrega}\n`;
       } else {
-        msg += `x *Entrega:* Retiro en ${d.nodo}\n`;
+        msg += `ðŸ“ *Entrega:* Retiro en ${d.nodo}\n`;
       }
 
-      msg += `🌑 Ciclo: ${d.ciclo}\n`;
-      if (d.mensaje) msg += `x Nota: ${d.mensaje}\n`;
+      msg += `ðŸŒ‘ Ciclo: ${d.ciclo}\n`;
+      if (d.mensaje) msg += `ðŸ’¬ Nota: ${d.mensaje}\n`;
       msg += `\n_Adjunto el comprobante de transferencia._`;
 
       const num = d.wsp.replace(/\D/g, '');
@@ -698,7 +709,7 @@
     function openNodeProfile() {
       const nodosObj = LunarEngine.obtenerNodos();
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
-      document.getElementById('prof-logo').innerText = nodoData.logo || '🌑';
+      document.getElementById('prof-logo').innerText = nodoData.logo || 'ðŸŒ±';
       document.getElementById('prof-name').innerText = nodoData.nombre;
       document.getElementById('prof-desc').innerText = nodoData.descripcion || '';
       document.getElementById('prof-dir').innerText = nodoData.direccion;
@@ -709,13 +720,13 @@
       const redes = nodoData.redes || {};
       let socialHtml = '';
       if (redes.instagram) {
-        socialHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-instagram"></i> @${redes.instagram.replace('@','')}</a>`;
+        socialHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-instagram"></i> @${redes.instagram.replace('@','')}</a>`;
       }
       if (redes.wspComunidad) {
-        socialHtml += `<a href="${redes.wspComunidad}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-whatsapp"></i> Comunidad WhatsApp</a>`;
+        socialHtml += `<a href="${redes.wspComunidad}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-whatsapp"></i> Comunidad WhatsApp</a>`;
       }
       if (redes.facebook) {
-        socialHtml += `<span style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-facebook"></i> ${redes.facebook}</span>`;
+        socialHtml += `<span style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-facebook"></i> ${redes.facebook}</span>`;
       }
       document.getElementById('prof-social-badges').innerHTML = socialHtml;
 
