@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Panel de Administración de Nodo • Vrde Club</title>
-  <meta name="description" content="Gestión comunitaria de pedidos, socios y entregas por nodo.">
+  <title>Panel de AdministraciÃ³n de Nodo â€¢ Vrde Club</title>
+  <meta name="description" content="GestiÃ³n comunitaria de pedidos, socios y entregas por nodo.">
 
   <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -220,7 +220,7 @@
       }
     }
 
-    /* PESTAÑAS TIPO EXCEL / CARPETAS LUNARES */
+    /* PESTAÃ‘AS TIPO EXCEL / CARPETAS LUNARES */
     .excel-lunar-bar-wrapper {
       background: white;
       border: 1px solid var(--border-color);
@@ -317,9 +317,9 @@
   <!-- LOGIN POR PIN -->
   <div id="admin-login" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div class="modal-card" style="text-align: center; max-width: 420px; box-shadow: var(--shadow-md);">
-      <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(16,163,82,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px;">🌱</div>
+      <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(16,163,82,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px;">ðŸŒ±</div>
       <h2 style="font-size: 22px; color: #0F172A; margin-bottom: 4px;" id="admin-login-name">Panel Gestor de Nodo</h2>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 18px;">Ingresa el PIN de 4 dígitos de tu almacén</p>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 18px;">Ingresa el PIN de 4 dÃ­gitos de tu almacÃ©n</p>
       
       <!-- Selector de ciclo en login -->
       <div style="margin-bottom: 16px; text-align: left;">
@@ -330,7 +330,7 @@
       </div>
 
       <div class="input-field-group">
-        <input type="password" id="pinInput" class="input-field" maxlength="4" placeholder="••••" autofocus style="font-size: 32px; letter-spacing: 12px; text-align: center; padding: 12px;" onkeypress="if(event.keyCode===13) attemptLogin()">
+        <input type="password" id="pinInput" class="input-field" maxlength="4" placeholder="â€¢â€¢â€¢â€¢" autofocus style="font-size: 32px; letter-spacing: 12px; text-align: center; padding: 12px;" onkeypress="if(event.keyCode===13) attemptLogin()">
       </div>
       
       <p id="pin-error" style="color: #DC2626; font-size: 13px; margin-bottom: 16px; display: none; font-weight: bold;">
@@ -356,10 +356,10 @@
   <div id="admin-dashboard" class="hidden">
     <header class="shop-header">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <span id="dash-logo" style="font-size: 26px;">🌱</span>
+        <span id="dash-logo" style="font-size: 26px;">ðŸŒ±</span>
         <div>
           <h2 class="admin-title" id="ad-title" style="margin: 0; font-size: 18px; color: var(--primary);">Panel Nodo</h2>
-          <span style="font-size: 11px; color: var(--text-muted);" id="ad-active-cycle-header-text">🌕 Luna Llena en Piscis (Compra Vigente)</span>
+          <span style="font-size: 11px; color: var(--text-muted);" id="ad-active-cycle-header-text">ðŸŒ• Luna Llena en Piscis (Compra Vigente)</span>
         </div>
       </div>
       <div style="display: flex; gap: 10px; align-items: center;">
@@ -376,7 +376,7 @@
       <!-- BARRA LATERAL IZQUIERDA -->
       <aside class="admin-sidebar-nav">
         <div style="padding: 6px 8px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
-          <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Módulos del Nodo</div>
+          <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">MÃ³dulos del Nodo</div>
           <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-top: 2px;" id="sidebar-nodo-title">Nodo Escobar</div>
         </div>
 
@@ -412,7 +412,7 @@
 
         <button class="sidebar-btn" id="sbtn-broadcast" onclick="switchNodeSection('broadcast')">
           <i class="fas fa-bullhorn" style="color: #EC4899;"></i>
-          <span>Difusión y Redes</span>
+          <span>DifusiÃ³n y Redes</span>
         </button>
 
         <button class="sidebar-btn" id="sbtn-profile" onclick="switchNodeSection('profile')">
@@ -423,19 +423,19 @@
 
       <!-- CONTENIDO PRINCIPAL -->
       <main class="admin-main-view">
-        <!-- BARRA DE PESTAÑAS TIPO EXCEL / CARPETAS LUNARES -->
+        <!-- BARRA DE PESTAÃ‘AS TIPO EXCEL / CARPETAS LUNARES -->
         <div class="excel-lunar-bar-wrapper">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #0F172A;">
               <i class="fas fa-folder-open" style="color: #6366F1;"></i>
-              <span>Carpetas por Compra Lunar (Pestañas de Registro):</span>
+              <span>Carpetas por Compra Lunar (PestaÃ±as de Registro):</span>
             </div>
             <div id="active-lunar-tag" class="vigente-status-tag">
-              🟢 Compra Vigente (Activa)
+              ðŸŸ¢ Compra Vigente (Activa)
             </div>
           </div>
           <div class="excel-tabs-scroll" id="excel-lunar-tabs">
-            <!-- Inyectado dinámicamente -->
+            <!-- Inyectado dinÃ¡micamente -->
           </div>
         </div>
 
@@ -443,14 +443,14 @@
         <div class="lunar-banner-card" style="margin: 0 0 20px 0;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <h3 style="color: var(--accent); margin-bottom: 4px; font-size: 20px;" id="ad-lunar-title">🌕 Luna Llena en Piscis</h3>
+              <h3 style="color: var(--accent); margin-bottom: 4px; font-size: 20px;" id="ad-lunar-title">ðŸŒ• Luna Llena en Piscis</h3>
               <p style="font-size: 13px; margin: 0; color: #CBD5E1;" id="ad-lunar-status">Cargando fechas de acopio...</p>
             </div>
-            <div style="font-size: 30px;" id="ad-lunar-emoji">🌕</div>
+            <div style="font-size: 30px;" id="ad-lunar-emoji">ðŸŒ•</div>
           </div>
         </div>
 
-        <!-- Métricas Resumen -->
+        <!-- MÃ©tricas Resumen -->
         <div class="admin-metrics-grid" id="node-metrics-top">
           <div class="metric-card-clean">
             <div class="metric-num" id="ad-m-pedidos" style="color: var(--primary);">0</div>
@@ -471,7 +471,7 @@
         </div>
 
         <!-- =======================================================
-             SECCIÓN 1: COMPILADO DE ACOPIO Y FICHAS DE PRODUCTO
+             SECCIÃ“N 1: COMPILADO DE ACOPIO Y FICHAS DE PRODUCTO
              ======================================================= -->
         <div id="sec-compiled-wrap" class="compiled-section">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
@@ -481,7 +481,7 @@
                 COMPILADO DE ACOPIO Y FICHAS PARA VRDEDORES
               </h3>
               <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-                Cantidades acumuladas, costos de productores, márgenes unitarios y argumentos de venta para ofrecer en la comunidad.
+                Cantidades acumuladas, costos de productores, mÃ¡rgenes unitarios y argumentos de venta para ofrecer en la comunidad.
               </p>
             </div>
 
@@ -491,7 +491,7 @@
             </div>
           </div>
 
-          <!-- Grilla Rápida de Compilados -->
+          <!-- Grilla RÃ¡pida de Compilados -->
           <div class="compiled-grid" id="compiled-products-grid" style="margin-bottom: 24px;">
             <!-- Inyectado por JS -->
           </div>
@@ -500,21 +500,21 @@
           <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
             <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
               <i class="fas fa-info-circle" style="color: var(--primary);"></i>
-              Fichas Informativas de Productos (Costo Base, Márgenes y Argumentos de Venta)
+              Fichas Informativas de Productos (Costo Base, MÃ¡rgenes y Argumentos de Venta)
             </div>
             <div id="compiled-products-detailed">
               <!-- Inyectado por JS -->
             </div>
           </div>
 
-          <!-- Banner de Contacto directo con el Teléfono de Vrde Club Central -->
+          <!-- Banner de Contacto directo con el TelÃ©fono de Vrde Club Central -->
           <div class="central-wsp-banner">
             <div>
               <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; color: var(--accent);">
-                <i class="fas fa-truck-loading"></i> Coordinación Logística Central
+                <i class="fas fa-truck-loading"></i> CoordinaciÃ³n LogÃ­stica Central
               </div>
               <p style="font-size: 13px; color: #CBD5E1; margin-top: 4px; max-width: 550px;">
-                Envía el resumen consolidado de tu nodo directamente a la central de Vrde Club (+54 9 11 2745-2476) para confirmar despacho y acopio.
+                EnvÃ­a el resumen consolidado de tu nodo directamente a la central de Vrde Club (+54 9 11 2745-2476) para confirmar despacho y acopio.
               </p>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -529,7 +529,7 @@
         </div>
 
         <!-- =======================================================
-             SECCIÓN 2: EQUIPO DE VRDEDORES COMUNITARIOS
+             SECCIÃ“N 2: EQUIPO DE VRDEDORES COMUNITARIOS
              ======================================================= -->
         <div id="sec-vrdedores-wrap" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
@@ -560,17 +560,17 @@
         </div>
 
         <!-- =======================================================
-             SECCIÓN 3: BALANCE ECONÓMICO Y LIQUIDACIONES (33.3%)
+             SECCIÃ“N 3: BALANCE ECONÃ“MICO Y LIQUIDACIONES (33.3%)
              ======================================================= -->
         <div id="sec-economy-wrap" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
             <div>
               <h3 style="margin: 0; font-size: 18px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
                 <i class="fas fa-chart-pie" style="color: #059669;"></i>
-                BALANCE ECONÓMICO Y LIQUIDACIÓN COOPERATIVA
+                BALANCE ECONÃ“MICO Y LIQUIDACIÃ“N COOPERATIVA
               </h3>
               <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
-                Desglose transparente: Costos de productores descontados y distribución tripartita del margen neto (33.3% Vrde Central • 33.3% Nodo • 33.3% Vrdedores).
+                Desglose transparente: Costos de productores descontados y distribuciÃ³n tripartita del margen neto (33.3% Vrde Central â€¢ 33.3% Nodo â€¢ 33.3% Vrdedores).
               </p>
             </div>
             <span style="background: rgba(16,163,82,0.1); color: var(--primary); font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 20px;">
@@ -578,11 +578,11 @@
             </span>
           </div>
 
-          <!-- 4 KPIs Económicos -->
+          <!-- 4 KPIs EconÃ³micos -->
           <div class="admin-metrics-grid" style="margin-bottom: 20px;">
             <div class="metric-card-clean">
               <div class="metric-num" id="econ-total-ventas" style="color: #0F172A;">$0</div>
-              <div class="metric-desc">Facturación Total (Ventas)</div>
+              <div class="metric-desc">FacturaciÃ³n Total (Ventas)</div>
             </div>
             <div class="metric-card-clean">
               <div class="metric-num" id="econ-total-costo" style="color: #DC2626;">$0</div>
@@ -598,14 +598,14 @@
             </div>
           </div>
 
-          <!-- Gráfico de Barra de Distribución Tripartita -->
+          <!-- GrÃ¡fico de Barra de DistribuciÃ³n Tripartita -->
           <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
             <div style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 8px;">
-              Distribución del Margen Neto Comunitario
+              DistribuciÃ³n del Margen Neto Comunitario
             </div>
             <div style="display: flex; height: 16px; border-radius: 8px; overflow: hidden; margin-bottom: 12px;">
               <div style="width: 33.33%; background: #10A352;" title="33.3% Vrde Central"></div>
-              <div style="width: 33.33%; background: #2563EB;" title="33.3% Nodo Almacén"></div>
+              <div style="width: 33.33%; background: #2563EB;" title="33.3% Nodo AlmacÃ©n"></div>
               <div style="width: 33.34%; background: #D97706;" title="33.3% Vrdedores Comunitarios"></div>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; font-size: 13px;">
@@ -626,7 +626,7 @@
 
           <!-- Tabla de Liquidaciones por Vrdedor -->
           <h4 style="font-size: 15px; color: #0F172A; margin: 0 0 10px;">
-            <i class="fas fa-handshake" style="color: var(--primary); margin-right: 4px;"></i> Liquidación por Vrdedor / Coordinador Comunitario
+            <i class="fas fa-handshake" style="color: var(--primary); margin-right: 4px;"></i> LiquidaciÃ³n por Vrdedor / Coordinador Comunitario
           </h4>
           <div style="overflow-x: auto;">
             <table class="table-clean" style="width: 100%; font-size: 13px;">
@@ -638,7 +638,7 @@
                   <th style="padding: 10px 12px;">Ventas</th>
                   <th style="padding: 10px 12px;">Margen Neto</th>
                   <th style="padding: 10px 12px;">Pago por Labor (33.3%)</th>
-                  <th style="padding: 10px 12px; text-align: right; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">Acción</th>
+                  <th style="padding: 10px 12px; text-align: right; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">AcciÃ³n</th>
                 </tr>
               </thead>
               <tbody id="econ-vrdedores-tbody">
@@ -649,7 +649,7 @@
         </div>
 
         <!-- =======================================================
-             SECCIÓN 4: LISTADO DE PEDIDOS Y DELIVERY
+             SECCIÃ“N 4: LISTADO DE PEDIDOS Y DELIVERY
              ======================================================= -->
         <div id="sec-orders-wrap" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
@@ -673,27 +673,27 @@
         </div>
 
         <!-- =======================================================
-             SECCIÓN 5: BASE DE DATOS Y GESTIÓN DE SOCIOS (CRM Y DIFUSIÓN)
+             SECCIÃ“N 5: BASE DE DATOS Y GESTIÃ“N DE SOCIOS (CRM Y DIFUSIÃ“N)
              ======================================================= -->
         <div id="sec-crm-wrap" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
             <div>
               <h3 style="margin: 0; font-size: 18px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
                 <i class="fas fa-address-book" style="color: #8B5CF6;"></i>
-                BASE DE DATOS Y GESTIÓN DE SOCIOS (CRM)
+                BASE DE DATOS Y GESTIÃ“N DE SOCIOS (CRM)
               </h3>
               <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
-                Registro histórico acumulado de todas las familias y clientes que han realizado pedidos en tu nodo.
+                Registro histÃ³rico acumulado de todas las familias y clientes que han realizado pedidos en tu nodo.
               </p>
             </div>
 
-            <!-- Botones de Acción / Exportación -->
+            <!-- Botones de AcciÃ³n / ExportaciÃ³n -->
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button class="btn-checkout-cta" style="background: #10B981; padding: 8px 14px; font-size: 12px; display: flex; align-items: center; gap: 6px;" onclick="exportCrmCsv()" title="Descargar archivo Excel / CSV">
                 <i class="fas fa-file-excel"></i> Exportar a Excel / CSV
               </button>
-              <button class="btn-checkout-cta" style="background: #25D366; padding: 8px 14px; font-size: 12px; display: flex; align-items: center; gap: 6px;" onclick="copyCrmPhones()" title="Copiar lista de WhatsApp para difusión">
-                <i class="fab fa-whatsapp"></i> Copiar Teléfonos
+              <button class="btn-checkout-cta" style="background: #25D366; padding: 8px 14px; font-size: 12px; display: flex; align-items: center; gap: 6px;" onclick="copyCrmPhones()" title="Copiar lista de WhatsApp para difusiÃ³n">
+                <i class="fab fa-whatsapp"></i> Copiar TelÃ©fonos
               </button>
               <button class="btn-checkout-cta" style="background: #6366F1; padding: 8px 14px; font-size: 12px; display: flex; align-items: center; gap: 6px;" onclick="copyCrmBroadcastMsg()" title="Copiar mensaje recordatorio para socios inactivos">
                 <i class="fas fa-bullhorn"></i> Copiar Mensaje de Luna
@@ -701,11 +701,11 @@
             </div>
           </div>
 
-          <!-- Métricas del CRM -->
+          <!-- MÃ©tricas del CRM -->
           <div class="admin-metrics-grid" style="margin-bottom: 20px;">
             <div class="metric-card-clean">
               <div class="metric-num" id="crm-total-socios" style="color: #0F172A;">0</div>
-              <div class="metric-desc">Socios Históricos Registrados</div>
+              <div class="metric-desc">Socios HistÃ³ricos Registrados</div>
             </div>
             <div class="metric-card-clean">
               <div class="metric-num" id="crm-activos-luna" style="color: var(--primary);">0</div>
@@ -729,7 +729,7 @@
               <button class="filter-tab-btn" id="crm-pill-inactivo" onclick="filterCrm('INACTIVO_EN_CICLO', this)">Inactivos en esta Luna (A Reactivar)</button>
             </div>
             <div style="min-width: 240px; flex: 1; max-width: 320px;">
-              <input type="text" id="crm-search-input" class="input-field" placeholder="Buscar por nombre, tel o dirección..." oninput="renderCrmTable()" style="padding: 6px 12px; font-size: 13px;">
+              <input type="text" id="crm-search-input" class="input-field" placeholder="Buscar por nombre, tel o direcciÃ³n..." oninput="renderCrmTable()" style="padding: 6px 12px; font-size: 13px;">
             </div>
           </div>
 
@@ -744,7 +744,7 @@
                   <th>Forma Habitual</th>
                   <th>Compras</th>
                   <th>Total Invertido</th>
-                  <th>Última Luna</th>
+                  <th>Ãšltima Luna</th>
                   <th>Estado Actual</th>
                   <th style="text-align: right;">Contacto</th>
                 </tr>
@@ -757,12 +757,12 @@
         </div>
 
         <!-- =======================================================
-             SECCIÓN 6: DIFUSIÓN Y REDES SOCIALES
+             SECCIÃ“N 6: DIFUSIÃ“N Y REDES SOCIALES
              ======================================================= -->
         <div id="sec-broadcast-wrap" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 24px;">
           <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);">
             <h4 style="margin-bottom: 16px; font-size: 16px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
-              <i class="fab fa-whatsapp" style="color: #25D366;"></i> Difusión Comunitaria y Enlaces
+              <i class="fab fa-whatsapp" style="color: #25D366;"></i> DifusiÃ³n Comunitaria y Enlaces
             </h4>
             <div class="input-field-group">
               <label>Enlace directo a la tienda de tu nodo</label>
@@ -805,17 +805,17 @@
             </div>
 
             <div id="node-social-preview-badges" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
-              <!-- Badges dinámicos de redes -->
+              <!-- Badges dinÃ¡micos de redes -->
             </div>
           </div>
         </div>
 
         <!-- =======================================================
-             SECCIÓN 6: PERFIL Y CONFIGURACIÓN DEL NODO
+             SECCIÃ“N 6: PERFIL Y CONFIGURACIÃ“N DEL NODO
              ======================================================= -->
         <div id="sec-profile-wrap" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 40px; box-shadow: var(--shadow-sm);">
           <h4 style="margin-bottom: 16px; font-size: 17px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
-            <i class="fas fa-sliders-h" style="color: #6366F1;"></i> Perfil y Configuración del Nodo
+            <i class="fas fa-sliders-h" style="color: #6366F1;"></i> Perfil y ConfiguraciÃ³n del Nodo
           </h4>
           
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
@@ -834,22 +834,22 @@
             <label>Imagen de Portada / Foto del Nodo (URL)</label>
             <input type="text" id="editImagen" class="input-field" placeholder="https://images.unsplash.com/..." oninput="previewNodeImg(this.value)">
             <div id="node-img-preview-box" style="margin-top: 8px;">
-              <img id="node-img-preview" src="" alt="Previsualización" style="width: 100%; height: 140px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: none;">
+              <img id="node-img-preview" src="" alt="PrevisualizaciÃ³n" style="width: 100%; height: 140px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: none;">
             </div>
           </div>
 
           <div class="input-field-group">
             <label>Texto Descriptivo del Nodo</label>
-            <textarea id="editDescripcion" class="input-field" rows="3" placeholder="Describe la labor comunitaria de tu nodo, el espacio y la conexión con productores..."></textarea>
+            <textarea id="editDescripcion" class="input-field" rows="3" placeholder="Describe la labor comunitaria de tu nodo, el espacio y la conexiÃ³n con productores..."></textarea>
           </div>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
             <div class="input-field-group">
-              <label>Dirección de retiro</label>
+              <label>DirecciÃ³n de retiro</label>
               <input type="text" id="editDireccion" class="input-field">
             </div>
             <div class="input-field-group">
-              <label>Día y Franja de Entrega</label>
+              <label>DÃ­a y Franja de Entrega</label>
               <input type="text" id="editDia" class="input-field">
             </div>
           </div>
@@ -889,19 +889,19 @@
       </div>
 
       <div class="input-field-group">
-        <label>Teléfono (WhatsApp)</label>
+        <label>TelÃ©fono (WhatsApp)</label>
         <input type="tel" id="v-edit-wsp" class="input-field" placeholder="Ej: 11 2345 6789">
       </div>
 
       <div class="input-field-group">
         <label>Emoji / Avatar</label>
         <select id="v-edit-avatar" class="input-field">
-          <option value="🌱">🌱 Semilla Verde</option>
-          <option value="🌿">🌿 Hoja Orgánica</option>
-          <option value="🍃">🍃 Hoja al viento</option>
-          <option value="🥑">🥑 Zanahoria</option>
-          <option value="🌾">🌾 Espiga de Trigo</option>
-          <option value="🍎">🍎 Manzana</option>
+          <option value="ðŸŒ±">ðŸŒ± Semilla Verde</option>
+          <option value="ðŸŒ¿">ðŸŒ¿ Hoja OrgÃ¡nica</option>
+          <option value="ðŸƒ">ðŸƒ Hoja al viento</option>
+          <option value="ðŸ¥•">ðŸ¥• Zanahoria</option>
+          <option value="ðŸŒ¾">ðŸŒ¾ Espiga de Trigo</option>
+          <option value="ðŸŽ">ðŸŽ Manzana</option>
         </select>
       </div>
 
@@ -937,14 +937,14 @@
       let selectHtml = '';
       ciclos.forEach(c => {
         const selected = c.id === CURRENT_CICLO_ID ? 'selected' : '';
-        selectHtml += `<option value="${c.id}" ${selected}>${c.nombre} (${c.mesStr}) ${c.esVigente ? '• VIGENTE' : '• Archivada'}</option>`;
+        selectHtml += `<option value="${c.id}" ${selected}>${c.nombre} (${c.mesStr}) ${c.esVigente ? 'â€¢ VIGENTE' : 'â€¢ Archivada'}</option>`;
       });
       const loginSelect = document.getElementById('loginCicloSelect');
       if (loginSelect) loginSelect.innerHTML = selectHtml;
 
       const loginName = document.getElementById('admin-login-name');
       if (loginName && allNodos[CURRENT_REF]) {
-        loginName.innerText = `Panel Gestor • ${allNodos[CURRENT_REF].nombre}`;
+        loginName.innerText = `Panel Gestor â€¢ ${allNodos[CURRENT_REF].nombre}`;
       }
     });
 
@@ -1001,16 +1001,16 @@
       if (tagEl) {
         if (currentCiclo.esVigente) {
           tagEl.className = 'vigente-status-tag';
-          tagEl.innerHTML = '🟢 Compra Vigente (Activa)';
+          tagEl.innerHTML = 'ðŸŸ¢ Compra Vigente (Activa)';
         } else {
           tagEl.className = 'archivada-status-tag';
-          tagEl.innerHTML = '📍 Registro Histórico Archivado';
+          tagEl.innerHTML = 'ðŸ“ Registro HistÃ³rico Archivado';
         }
       }
 
       const headerSub = document.getElementById('ad-active-cycle-header-text');
       if (headerSub) {
-        headerSub.innerText = `${currentCiclo.nombre} • ${currentCiclo.esVigente ? 'Compra Vigente' : 'Registro Archivado'}`;
+        headerSub.innerText = `${currentCiclo.nombre} â€¢ ${currentCiclo.esVigente ? 'Compra Vigente' : 'Registro Archivado'}`;
       }
     }
 
@@ -1026,9 +1026,9 @@
       // Banner Lunar
       document.getElementById('ad-lunar-title').innerText = CICLO_LUNAR.nombre;
       if (CICLO_LUNAR.esVigente) {
-        document.getElementById('ad-lunar-status').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+        document.getElementById('ad-lunar-status').innerText = `Apertura activa â€¢ Cierra en ${CICLO_LUNAR.diasRestantes} dÃ­as (${CICLO_LUNAR.llenaFechaStr})`;
       } else {
-        document.getElementById('ad-lunar-status').innerText = `Ciclo concluido • Cierre de acopio y entregas realizadas (${CICLO_LUNAR.mesStr})`;
+        document.getElementById('ad-lunar-status').innerText = `Ciclo concluido â€¢ Cierre de acopio y entregas realizadas (${CICLO_LUNAR.mesStr})`;
       }
 
       // Cargar pedidos reales y persistidos de este ciclo
@@ -1077,21 +1077,21 @@
       renderSocialBadges(redes);
       previewNodeImg(nodoData.imagen);
 
-      // Link de difusión
+      // Link de difusiÃ³n
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       document.getElementById('ad-link-tienda').value = storeUrl;
 
-      let wspBroadcast = `🌱 *${CICLO_LUNAR.nombre} • ${nodoData.nombre}*\n`;
-      wspBroadcast += `📍¦ Llevamos ${ORDERS_DATA.length} pedidos acumulados (${totalUnidades} unidades agroecológicas).\n`;
-      wspBroadcast += `⏳ Entrega: ${nodoData.diaEntrega} en ${nodoData.direccion}.\n`;
-      if (redes.instagram) wspBroadcast += `📍¸ Instagram: @${redes.instagram.replace('@', '')}\n`;
-      if (redes.wspComunidad) wspBroadcast += `💬 Canal WhatsApp: ${redes.wspComunidad}\n`;
-      wspBroadcast += `🛒 Súmate a la compra comunitaria acá:\n${storeUrl}`;
+      let wspBroadcast = `ðŸŒ± *${CICLO_LUNAR.nombre} â€¢ ${nodoData.nombre}*\n`;
+      wspBroadcast += `ðŸ“¦ Llevamos ${ORDERS_DATA.length} pedidos acumulados (${totalUnidades} unidades agroecolÃ³gicas).\n`;
+      wspBroadcast += `â° Entrega: ${nodoData.diaEntrega} en ${nodoData.direccion}.\n`;
+      if (redes.instagram) wspBroadcast += `ðŸ“¸ Instagram: @${redes.instagram.replace('@', '')}\n`;
+      if (redes.wspComunidad) wspBroadcast += `ðŸ’¬ Canal WhatsApp: ${redes.wspComunidad}\n`;
+      wspBroadcast += `ðŸ›’ SÃºmate a la compra comunitaria acÃ¡:\n${storeUrl}`;
       document.getElementById('ad-wsp-text').value = wspBroadcast;
     }
 
     // =================================================================
-    // NAVEGACIÓN MODULAR DE SECCIONES (SIDEBAR IZQUIERDA)
+    // NAVEGACIÃ“N MODULAR DE SECCIONES (SIDEBAR IZQUIERDA)
     // =================================================================
 
     function switchNodeSection(secId) {
@@ -1147,7 +1147,7 @@
     }
 
     // =================================================================
-    // GESTIÓN DE VRDEDORES COMUNITARIOS DEL NODO
+    // GESTIÃ“N DE VRDEDORES COMUNITARIOS DEL NODO
     // =================================================================
 
     function renderVrdedoresSection() {
@@ -1156,7 +1156,7 @@
 
       let html = '';
       if (!vData.lista || vData.lista.length === 0) {
-        html = '<p style="grid-column: 1/-1; color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">No hay Vrdedores registrados aún. Agrega coordinadores para tu comunidad.</p>';
+        html = '<p style="grid-column: 1/-1; color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">No hay Vrdedores registrados aÃºn. Agrega coordinadores para tu comunidad.</p>';
       } else {
         vData.lista.forEach(v => {
           const cleanPhone = (v.wsp || '').replace(/\D/g, '');
@@ -1164,12 +1164,12 @@
             <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
               <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
                 <div style="width: 38px; height: 38px; border-radius: 50%; background: white; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-                  ${v.avatar || '🌱'}
+                  ${v.avatar || 'ðŸŒ±'}
                 </div>
                 <div style="min-width: 0;">
                   <strong style="font-size: 14px; color: #0F172A; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${v.nombre}</strong>
                   <div style="font-size: 11px; color: var(--text-muted);">${v.rol || 'Vrdedor'}</div>
-                  ${v.wsp ? `<div style="font-size: 11px; color: #64748B;">📍± ${v.wsp}</div>` : ''}
+                  ${v.wsp ? `<div style="font-size: 11px; color: #64748B;">ðŸ“± ${v.wsp}</div>` : ''}
                 </div>
               </div>
               <div style="display: flex; gap: 4px; flex-shrink: 0;">
@@ -1178,7 +1178,7 @@
                     <i class="fab fa-whatsapp"></i>
                   </a>
                 ` : ''}
-                <button onclick="openEditVrdedorModal('${v.id}')" style="width: 30px; height: 30px; border-radius: var(--radius-sm); background: white; border: 1px solid var(--border-color); color: #2563EB; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px;" title="Editar Información del Vrdedor">
+                <button onclick="openEditVrdedorModal('${v.id}')" style="width: 30px; height: 30px; border-radius: var(--radius-sm); background: white; border: 1px solid var(--border-color); color: #2563EB; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px;" title="Editar InformaciÃ³n del Vrdedor">
                   <i class="fas fa-edit"></i>
                 </button>
                 <button onclick="deleteVrdedor('${v.id}')" style="width: 30px; height: 30px; border-radius: var(--radius-sm); background: white; border: 1px solid #EF4444; color: #EF4444; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px;" title="Eliminar">
@@ -1203,7 +1203,7 @@
       document.getElementById('v-edit-nombre').value = '';
       document.getElementById('v-edit-rol').value = '';
       document.getElementById('v-edit-wsp').value = '';
-      document.getElementById('v-edit-avatar').value = '🌱';
+      document.getElementById('v-edit-avatar').value = 'ðŸŒ±';
       openModal('modal-vrdedor');
     }
 
@@ -1212,12 +1212,12 @@
       const vrdedor = (vData.lista || []).find(v => v.id === vId);
       if (!vrdedor) return;
 
-      document.getElementById('vrdedor-modal-title').innerText = "Editar Información de Vrdedor/a";
+      document.getElementById('vrdedor-modal-title').innerText = "Editar InformaciÃ³n de Vrdedor/a";
       document.getElementById('v-edit-id').value = vrdedor.id;
       document.getElementById('v-edit-nombre').value = vrdedor.nombre || '';
       document.getElementById('v-edit-rol').value = vrdedor.rol || '';
       document.getElementById('v-edit-wsp').value = vrdedor.wsp || '';
-      document.getElementById('v-edit-avatar').value = vrdedor.avatar || '🌱';
+      document.getElementById('v-edit-avatar').value = vrdedor.avatar || 'ðŸŒ±';
       openModal('modal-vrdedor');
     }
 
@@ -1248,7 +1248,7 @@
     }
 
     function deleteVrdedor(vId) {
-      if (confirm("¿Estás seguro de quitar a este Vrdedor de tu nodo?")) {
+      if (confirm("Â¿EstÃ¡s seguro de quitar a este Vrdedor de tu nodo?")) {
         LunarEngine.eliminarVrdedor(CURRENT_REF, vId);
         renderVrdedoresSection();
         renderEconomySection();
@@ -1257,7 +1257,7 @@
     }
 
     // =================================================================
-    // LÓGICA DEL COMPILADO DE PRODUCTOS, FICHAS TÉCNICAS Y COSTOS BASE
+    // LÃ“GICA DEL COMPILADO DE PRODUCTOS, FICHAS TÃ‰CNICAS Y COSTOS BASE
     // =================================================================
 
     function getCompiledTotals() {
@@ -1350,21 +1350,21 @@
               <span style="font-size: 11px; font-weight: 700; background: #F1F5F9; padding: 3px 8px; border-radius: 10px; color: #475569;">${p.unidad}</span>
             </div>
 
-            <!-- Columna 2: Ficha Técnica y Costos Detallados -->
+            <!-- Columna 2: Ficha TÃ©cnica y Costos Detallados -->
             <div>
               <h4 style="margin: 0 0 4px; font-size: 16px; color: #0F172A;">${p.nombre}</h4>
               <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
-                <strong>📍 Origen:</strong> ${p.origen} • <em>${p.variedad}</em>
+                <strong>ðŸ“ Origen:</strong> ${p.origen} â€¢ <em>${p.variedad}</em>
               </div>
 
               <!-- Costo Base vs Precio Venta -->
               <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div>
-                  <span style="color: #991B1B; font-weight: 700; display: block;">🌱 Costo Base Productor:</span>
+                  <span style="color: #991B1B; font-weight: 700; display: block;">ðŸ”’ Costo Base Productor:</span>
                   <strong style="font-size: 14px; color: #DC2626;">$${costo.toLocaleString('es-AR')}</strong>
                 </div>
                 <div>
-                  <span style="color: #1E40AF; font-weight: 700; display: block;">🌱ï¸ Venta Minorista:</span>
+                  <span style="color: #1E40AF; font-weight: 700; display: block;">ðŸ·ï¸ Venta Minorista:</span>
                   <strong style="font-size: 14px; color: #2563EB;">$${p1.toLocaleString('es-AR')}</strong>
                 </div>
                 <div>
@@ -1372,19 +1372,19 @@
                   <strong style="color: #0F172A;">$${margenUnitario.toLocaleString('es-AR')}</strong>
                 </div>
                 <div>
-                  <span style="color: var(--primary); font-weight: 700; display: block;">🤝 Labor Vrdedor (33.3%):</span>
+                  <span style="color: var(--primary); font-weight: 700; display: block;">ðŸ¤ Labor Vrdedor (33.3%):</span>
                   <strong style="color: var(--primary); font-size: 13px;">$${laborVrdedor.toLocaleString('es-AR')} / un.</strong>
                 </div>
               </div>
             </div>
 
-            <!-- Columna 3: Tips para el Vrdedor y Botón de Venta -->
+            <!-- Columna 3: Tips para el Vrdedor y BotÃ³n de Venta -->
             <div style="background: rgba(16,163,82,0.03); border: 1px dashed rgba(16,163,82,0.3); border-radius: var(--radius-sm); padding: 12px 14px;">
               <div style="font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                 <i class="fas fa-lightbulb"></i> Tips de Venta para el Vrdedor:
               </div>
               <p style="font-size: 12px; color: #334155; line-height: 1.4; margin: 0 0 10px;">
-                ${p.tipsVrdedor || p.titulo || 'Alimento agroecológico fresco, sin intermediarios especulativos directo de cooperativas y familias productoras.'}
+                ${p.tipsVrdedor || p.titulo || 'Alimento agroecolÃ³gico fresco, sin intermediarios especulativos directo de cooperativas y familias productoras.'}
               </p>
               <button class="btn-checkout-cta" style="width: 100%; padding: 8px 12px; font-size: 12px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="copyProductSalesPitch('${p.id}')">
                 <i class="fab fa-whatsapp"></i> Copiar Mensaje de Venta para WhatsApp
@@ -1414,21 +1414,21 @@
 
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       
-      let text = `🌱 *${p.nombre}* • Compra Colectiva Lunar\n`;
-      text += `📍 *Origen:* ${p.origen} (${p.variedad})\n`;
-      text += `💰 *Precio Minorista:* $${(p.p1 || 0).toLocaleString('es-AR')}\n`;
-      if (p.p2) text += `📍¦ *Precio Mayorista (+${p.m2} un):* $${(p.p2 || 0).toLocaleString('es-AR')}\n`;
-      text += `\n✨ *¿Por qué elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo del campo sin agrotóxicos.'}\n\n`;
-      text += `🚚 *Entrega:* ${nodoData.diaEntrega} en ${nodoData.direccion}\n`;
-      text += `🛒 *Pedí acá:* ${storeUrl}`;
+      let text = `ðŸŒ± *${p.nombre}* â€¢ Compra Colectiva Lunar\n`;
+      text += `ðŸ“ *Origen:* ${p.origen} (${p.variedad})\n`;
+      text += `ðŸ’° *Precio Minorista:* $${(p.p1 || 0).toLocaleString('es-AR')}\n`;
+      if (p.p2) text += `ðŸ“¦ *Precio Mayorista (+${p.m2} un):* $${(p.p2 || 0).toLocaleString('es-AR')}\n`;
+      text += `\nâœ¨ *Â¿Por quÃ© elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo del campo sin agrotÃ³xicos.'}\n\n`;
+      text += `ðŸšš *Entrega:* ${nodoData.diaEntrega} en ${nodoData.direccion}\n`;
+      text += `ðŸ›’ *PedÃ­ acÃ¡:* ${storeUrl}`;
 
       navigator.clipboard.writeText(text).then(() => {
-        alert(`¡Ficha de venta de "${p.nombre}" copiada al portapapeles! Lista para pegar en WhatsApp.`);
+        alert(`Â¡Ficha de venta de "${p.nombre}" copiada al portapapeles! Lista para pegar en WhatsApp.`);
       });
     }
 
     // =================================================================
-    // ENVÍO DE COMPILADO A WHATSAPP DE VRDE CLUB CENTRAL
+    // ENVÃO DE COMPILADO A WHATSAPP DE VRDE CLUB CENTRAL
     // =================================================================
 
     function sendCompiledToCentral() {
@@ -1442,22 +1442,22 @@
       prods.forEach(p => {
         const count = totals[p.id]?.cantTotal || 0;
         if (count > 0) {
-          breakdownText += `• *${count} ${p.unidad}* ${p.nombre}\n`;
+          breakdownText += `â€¢ *${count} ${p.unidad}* ${p.nombre}\n`;
           totalUnidades += count;
         }
       });
 
-      let msg = `🌱 *COMPILADO DE ACOPIO LUNAR*\n`;
-      msg += `📍 *Nodo:* ${nodoData.nombre}\n`;
-      msg += `🌑 *Ciclo:* ${CICLO_LUNAR.nombre}\n`;
-      msg += `👤 *Responsable:* ${nodoData.contacto}\n`;
-      msg += `🚚 *Día y Franja de Entrega:* ${nodoData.diaEntrega}\n`;
-      msg += `📍 *Dirección de Retiro:* ${nodoData.direccion}\n`;
-      msg += `----------------------\n`;
-      msg += `📍¦ *TOTAL DE UNIDADES:* ${totalUnidades} unidades\n\n`;
-      msg += `📍‹ *DETALLE POR PRODUCTO:*\n`;
+      let msg = `ðŸŒ± *COMPILADO DE ACOPIO LUNAR*\n`;
+      msg += `ðŸ“ *Nodo:* ${nodoData.nombre}\n`;
+      msg += `ðŸŒ‘ *Ciclo:* ${CICLO_LUNAR.nombre}\n`;
+      msg += `ðŸ‘¤ *Responsable:* ${nodoData.contacto}\n`;
+      msg += `ðŸšš *DÃ­a y Franja de Entrega:* ${nodoData.diaEntrega}\n`;
+      msg += `ðŸ“ *DirecciÃ³n de Retiro:* ${nodoData.direccion}\n`;
+      msg += `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n`;
+      msg += `ðŸ“¦ *TOTAL DE UNIDADES:* ${totalUnidades} unidades\n\n`;
+      msg += `ðŸ“‹ *DETALLE POR PRODUCTO:*\n`;
       msg += breakdownText;
-      msg += `----------------------\n`;
+      msg += `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n`;
       msg += `_Mensaje generado desde el Panel Gestor de Vrde Club._`;
 
       const numVrdeCentral = '5491127452476';
@@ -1466,7 +1466,7 @@
     }
 
     // =================================================================
-    // GESTIÓN DE PEDIDOS, FILTROS Y PERSISTENCIA REAL
+    // GESTIÃ“N DE PEDIDOS, FILTROS Y PERSISTENCIA REAL
     // =================================================================
 
     
@@ -1516,12 +1516,12 @@
       // Actualizar contenedor de botones de filtros
       let filterBtnsHtml = `
         <button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Todos' ? 'active' : ''}" onclick="filterOrders('Todos', this)">Todos (${countTodos})</button>
-        <button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Pendiente' ? 'active' : ''}" onclick="filterOrders('Pendiente', this)">⏳ Pendientes (${countPend})</button>
-        <button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Pagado' ? 'active' : ''}" onclick="filterOrders('Pagado', this)">💳 Pagados (${countPag})</button>
-        <button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Entregado' ? 'active' : ''}" onclick="filterOrders('Entregado', this)">📍¦ Entregados (${countEnt})</button>
+        <button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Pendiente' ? 'active' : ''}" onclick="filterOrders('Pendiente', this)">â³ Pendientes (${countPend})</button>
+        <button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Pagado' ? 'active' : ''}" onclick="filterOrders('Pagado', this)">ðŸ’³ Pagados (${countPag})</button>
+        <button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Entregado' ? 'active' : ''}" onclick="filterOrders('Entregado', this)">ðŸ“¦ Entregados (${countEnt})</button>
       `;
       if (countArch > 0) {
-        filterBtnsHtml += `<button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Archivado' ? 'active' : ''}" onclick="filterOrders('Archivado', this)">📍 Archivados (${countArch})</button>`;
+        filterBtnsHtml += `<button class="filter-tab-btn ${ACTIVE_STATUS_FILTER === 'Archivado' ? 'active' : ''}" onclick="filterOrders('Archivado', this)">ðŸ“ Archivados (${countArch})</button>`;
       }
 
       const statusTabsContainer = document.getElementById('order-status-tabs-container');
@@ -1576,7 +1576,7 @@
           } else if (o.estado === 'Entregado') {
             actionsHtml = `
               <span style="color: var(--primary); font-size: 12px; font-weight: 700; margin-right: 4px;"><i class="fas fa-check-double"></i> Entregado</span>
-              <button onclick="archivarPedido('${o.id}')" style="background: #F1F5F9; color: #475569; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer;" title="Archivar en carpeta histórica">
+              <button onclick="archivarPedido('${o.id}')" style="background: #F1F5F9; color: #475569; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer;" title="Archivar en carpeta histÃ³rica">
                 <i class="fas fa-archive"></i> Archivar
               </button>
             `;
@@ -1597,7 +1597,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <span style="font-weight: 700; color: #0F172A;">#${o.id}</span>
-                  ${o.tipoEntrega === 'Delivery' ? '<span class="badge-delivery" style="font-size: 11px; padding: 2px 8px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 11px; padding: 2px 8px;">📍 Retiro</span>'}
+                  ${o.tipoEntrega === 'Delivery' ? '<span class="badge-delivery" style="font-size: 11px; padding: 2px 8px;">ðŸ›µ Delivery</span>' : '<span class="badge-retiro" style="font-size: 11px; padding: 2px 8px;">ðŸ“ Retiro</span>'}
                 </div>
                 <span class="badge-estado ${badgeClass}">${o.estado}</span>
               </div>
@@ -1605,8 +1605,8 @@
                 <span style="font-weight: 600; color: #0F172A;">${o.nombre}</span>
                 <span style="color: var(--text-muted);">${o.telefono}</span>
               </div>
-              ${o.vrdedor ? `<div style="font-size: 11px; color: var(--primary); font-weight: 600; margin-bottom: 6px;">🤝 Vrdedor/a: ${o.vrdedor}</div>` : ''}
-              ${o.tipoEntrega === 'Delivery' && o.direccionEntrega ? `<div style="font-size: 12px; color: #D97706; margin-bottom: 6px;"><strong>🌱  Dirección entrega:</strong> ${o.direccionEntrega}</div>` : ''}
+              ${o.vrdedor ? `<div style="font-size: 11px; color: var(--primary); font-weight: 600; margin-bottom: 6px;">ðŸ¤ Vrdedor/a: ${o.vrdedor}</div>` : ''}
+              ${o.tipoEntrega === 'Delivery' && o.direccionEntrega ? `<div style="font-size: 12px; color: #D97706; margin-bottom: 6px;"><strong>ðŸ  DirecciÃ³n entrega:</strong> ${o.direccionEntrega}</div>` : ''}
               <div style="background: #F8FAFC; padding: 10px; border-radius: var(--radius-sm); font-size: 13px; color: #475569; margin-bottom: 12px;">
                 ${o.detalle}
               </div>
@@ -1636,14 +1636,14 @@
     }
 
     function archivarPedido(orderId) {
-      if (confirm("¿Deseas archivar este pedido en el registro histórico de esta Luna?")) {
+      if (confirm("Â¿Deseas archivar este pedido en el registro histÃ³rico de esta Luna?")) {
         LunarEngine.archivarPedido(orderId);
         loadDashboard();
       }
     }
 
     // =================================================================
-    // BALANCE ECONÓMICO Y LIQUIDACIONES POR VRDEDOR
+    // BALANCE ECONÃ“MICO Y LIQUIDACIONES POR VRDEDOR
     // =================================================================
 
     function renderEconomySection() {
@@ -1664,20 +1664,20 @@
       // Tabla de Vrdedores
       let tbodyHtml = '';
       if (!econ.vrdedoresDesglose || econ.vrdedoresDesglose.length === 0) {
-        tbodyHtml = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">No hay datos de liquidación aún para este ciclo.</td></tr>';
+        tbodyHtml = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">No hay datos de liquidaciÃ³n aÃºn para este ciclo.</td></tr>';
       } else {
         econ.vrdedoresDesglose.forEach(v => {
           const cleanPhone = (v.wsp || '').replace(/\D/g, '');
-          const liquidacionMsg = `🌱 *Liquidación de Compra Lunar • ${nodoData.nombre}*\n` +
-            `🌑 *Ciclo:* ${CICLO_LUNAR ? CICLO_LUNAR.nombre : 'Actual'}\n` +
-            `👤 *Vrdedor/a:* ${v.nombre}\n` +
-            `----------------------\n` +
-            `📍¦ *Pedidos gestionados:* ${v.pedidosCount} pedidos (${v.unidadesCount} un.)\n` +
-            `💰 *Facturación pedidos:* $${v.ventasTotal.toLocaleString('es-AR')}\n` +
-            `📍ˆ *Margen neto generado:* $${v.margenNeto.toLocaleString('es-AR')}\n` +
-            `✨ *PAGO POR TU LABOR (33.3%):* $${v.pagoLabor.toLocaleString('es-AR')}\n` +
-            `----------------------\n` +
-            `_¡Muchas gracias por sostener la red de soberanía alimentaria!_`;
+          const liquidacionMsg = `ðŸŒ± *LiquidaciÃ³n de Compra Lunar â€¢ ${nodoData.nombre}*\n` +
+            `ðŸŒ‘ *Ciclo:* ${CICLO_LUNAR ? CICLO_LUNAR.nombre : 'Actual'}\n` +
+            `ðŸ‘¤ *Vrdedor/a:* ${v.nombre}\n` +
+            `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n` +
+            `ðŸ“¦ *Pedidos gestionados:* ${v.pedidosCount} pedidos (${v.unidadesCount} un.)\n` +
+            `ðŸ’° *FacturaciÃ³n pedidos:* $${v.ventasTotal.toLocaleString('es-AR')}\n` +
+            `ðŸ“ˆ *Margen neto generado:* $${v.margenNeto.toLocaleString('es-AR')}\n` +
+            `âœ¨ *PAGO POR TU LABOR (33.3%):* $${v.pagoLabor.toLocaleString('es-AR')}\n` +
+            `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n` +
+            `_Â¡Muchas gracias por sostener la red de soberanÃ­a alimentaria!_`;
 
           const wspUrl = cleanPhone 
             ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(liquidacionMsg)}` 
@@ -1687,7 +1687,7 @@
             <tr style="border-bottom: 1px solid #F1F5F9;">
               <td style="padding: 12px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 18px;">${v.avatar || '👤'}</span>
+                  <span style="font-size: 18px;">${v.avatar || 'ðŸ‘¤'}</span>
                   <div>
                     <strong style="color: #0F172A;">${v.nombre}</strong>
                     <div style="font-size: 11px; color: var(--text-muted);">${v.rol || 'Vrdedor'}</div>
@@ -1715,7 +1715,7 @@
     }
 
     // =================================================================
-    // BASE DE DATOS Y GESTIÓN DE SOCIOS (CRM Y DIFUSIÓN)
+    // BASE DE DATOS Y GESTIÃ“N DE SOCIOS (CRM Y DIFUSIÃ“N)
     // =================================================================
 
     let ACTIVE_CRM_FILTER = 'ALL';
@@ -1758,14 +1758,14 @@
         socios.forEach(s => {
           const cleanPhone = s.cleanPhone;
           const statusBadge = s.comproEnCicloSeleccionado 
-            ? `<span class="badge-pagado" style="font-size: 11px; padding: 2px 8px;">🟢 Compró en esta Luna</span>`
-            : `<span class="badge-pendiente" style="font-size: 11px; padding: 2px 8px; background: #FEF2F2; color: #DC2626; border-color: #FECACA;">⏳ Sin pedido aún</span>`;
+            ? `<span class="badge-pagado" style="font-size: 11px; padding: 2px 8px;">ðŸŸ¢ ComprÃ³ en esta Luna</span>`
+            : `<span class="badge-pendiente" style="font-size: 11px; padding: 2px 8px; background: #FEF2F2; color: #DC2626; border-color: #FECACA;">â³ Sin pedido aÃºn</span>`;
 
-          const msgRecordatorio = `🌱 *Hola ${s.nombre}! Te escribimos del ${nodoData.nombre}*\n` +
-            `🌕 Te recordamos que está abierta la compra colectiva de *${CICLO_LUNAR ? CICLO_LUNAR.nombre : 'esta Luna'}*.\n` +
-            `📍¦ Llevamos pedidos acumulados para alcanzar los mejores precios de productores.\n` +
-            `🚚 Entrega: ${nodoData.diaEntrega} en ${nodoData.direccion}.\n` +
-            `🛒 Podés armar tu pedido acá:\n${storeUrl}`;
+          const msgRecordatorio = `ðŸŒ± *Hola ${s.nombre}! Te escribimos del ${nodoData.nombre}*\n` +
+            `ðŸŒ• Te recordamos que estÃ¡ abierta la compra colectiva de *${CICLO_LUNAR ? CICLO_LUNAR.nombre : 'esta Luna'}*.\n` +
+            `ðŸ“¦ Llevamos pedidos acumulados para alcanzar los mejores precios de productores.\n` +
+            `ðŸšš Entrega: ${nodoData.diaEntrega} en ${nodoData.direccion}.\n` +
+            `ðŸ›’ PodÃ©s armar tu pedido acÃ¡:\n${storeUrl}`;
 
           const wspUrl = cleanPhone 
             ? `https://wa.me/549${cleanPhone}?text=${encodeURIComponent(msgRecordatorio)}`
@@ -1782,7 +1782,7 @@
                 <span style="font-size: 12px; color: var(--primary); font-weight: 600;">${s.vrdedor}</span>
               </td>
               <td style="padding: 12px 14px;">
-                ${s.tipoEntregaHabitual === 'Delivery' ? '<span class="badge-delivery" style="font-size: 10px; padding: 2px 6px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 10px; padding: 2px 6px;">📍 Retiro</span>'}
+                ${s.tipoEntregaHabitual === 'Delivery' ? '<span class="badge-delivery" style="font-size: 10px; padding: 2px 6px;">ðŸ›µ Delivery</span>' : '<span class="badge-retiro" style="font-size: 10px; padding: 2px 6px;">ðŸ“ Retiro</span>'}
               </td>
               <td style="padding: 12px 14px;">
                 <span style="font-weight: 700; background: #F1F5F9; padding: 2px 8px; border-radius: 10px;">${s.pedidosCount} (${s.unidadesCount} un.)</span>
@@ -1828,12 +1828,12 @@
       const socios = LunarEngine.obtenerBaseSocios(CURRENT_REF, CURRENT_CICLO_ID, ACTIVE_CRM_FILTER);
       const phones = socios.map(s => s.cleanPhone).filter(p => p && p.length >= 8);
       if (phones.length === 0) {
-        alert("No hay números de teléfono disponibles con los filtros actuales.");
+        alert("No hay nÃºmeros de telÃ©fono disponibles con los filtros actuales.");
         return;
       }
       const text = phones.join(', ');
       navigator.clipboard.writeText(text).then(() => {
-        alert(`✓ ¡${phones.length} números de teléfono copiados al portapapeles! Listos para pegar en una lista de difusión de WhatsApp.`);
+        alert(`âœ“ Â¡${phones.length} nÃºmeros de telÃ©fono copiados al portapapeles! Listos para pegar en una lista de difusiÃ³n de WhatsApp.`);
       });
     }
 
@@ -1841,17 +1841,17 @@
       const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       
-      let msg = `🌱 *COMPRA COLECTIVA LUNAR • ${nodoData.nombre.toUpperCase()}*\n`;
-      msg += `🌑 *Ciclo:* ${CICLO_LUNAR ? CICLO_LUNAR.nombre : 'Actual'}\n`;
-      msg += `⏳ *Cierre de Acopio:* ${CICLO_LUNAR ? CICLO_LUNAR.llenaFechaStr : 'Próximamente'}\n`;
-      msg += `🚚 *Día de Entrega:* ${nodoData.diaEntrega}\n`;
-      msg += `📍 *Retiro en Nodo:* ${nodoData.direccion}\n`;
-      msg += `----------------------\n`;
-      msg += `Alimentos agroecológicos directos de cooperativas y familias productoras sin agrotóxicos.\n\n`;
-      msg += `🛒 *Súmate a la compra comunitaria acá:*\n${storeUrl}`;
+      let msg = `ðŸŒ± *COMPRA COLECTIVA LUNAR â€¢ ${nodoData.nombre.toUpperCase()}*\n`;
+      msg += `ðŸŒ‘ *Ciclo:* ${CICLO_LUNAR ? CICLO_LUNAR.nombre : 'Actual'}\n`;
+      msg += `â° *Cierre de Acopio:* ${CICLO_LUNAR ? CICLO_LUNAR.llenaFechaStr : 'PrÃ³ximamente'}\n`;
+      msg += `ðŸšš *DÃ­a de Entrega:* ${nodoData.diaEntrega}\n`;
+      msg += `ðŸ“ *Retiro en Nodo:* ${nodoData.direccion}\n`;
+      msg += `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n`;
+      msg += `Alimentos agroecolÃ³gicos directos de cooperativas y familias productoras sin agrotÃ³xicos.\n\n`;
+      msg += `ðŸ›’ *SÃºmate a la compra comunitaria acÃ¡:*\n${storeUrl}`;
 
       navigator.clipboard.writeText(msg).then(() => {
-        alert("✓ ¡Mensaje de difusión copiado al portapapeles! Listo para enviar.");
+        alert("âœ“ Â¡Mensaje de difusiÃ³n copiado al portapapeles! Listo para enviar.");
       });
     }
 
@@ -1895,7 +1895,7 @@
 
       const msg = document.getElementById('save-msg');
       msg.style.color = "var(--primary)";
-      msg.innerText = "✓ Perfil, redes y configuración guardados con éxito.";
+      msg.innerText = "âœ“ Perfil, redes y configuraciÃ³n guardados con Ã©xito.";
       setTimeout(() => { msg.innerText = ""; }, 3500);
       loadDashboard();
     }
@@ -1910,7 +1910,7 @@
       const input = document.getElementById(elementId);
       input.select();
       navigator.clipboard.writeText(input.value).then(() => {
-        alert("¡Copiado al portapapeles!");
+        alert("Â¡Copiado al portapapeles!");
       });
     }
 
