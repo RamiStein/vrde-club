@@ -711,24 +711,18 @@
       document.getElementById('prof-entrega').innerText = nodoData.diaEntrega;
       document.getElementById('prof-cbu').innerText = nodoData.cbu;
 
-      
       const redes = nodoData.redes || {};
       let socialHtml = '';
-      if (redes.instagram && redes.instagram.trim() !== '') {
-        const ig = redes.instagram.trim().replace('@', '');
-        socialHtml += `<a href="https://instagram.com/${ig}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-instagram"></i> @${ig}</a>`;
+      if (redes.instagram) {
+        socialHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-instagram"></i> @${redes.instagram.replace('@','')}</a>`;
       }
-      if (redes.wspComunidad && redes.wspComunidad.trim() !== '') {
-        const wsp = redes.wspComunidad.trim();
-        socialHtml += `<a href="${wsp}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-whatsapp"></i> Comunidad WhatsApp</a>`;
+      if (redes.wspComunidad) {
+        socialHtml += `<a href="${redes.wspComunidad}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-whatsapp"></i> Comunidad WhatsApp</a>`;
       }
-      if (redes.facebook && redes.facebook.trim() !== '') {
-        const fb = redes.facebook.trim();
-        const fbUrl = fb.startsWith('http') ? fb : `https://facebook.com/${fb.replace('@', '')}`;
-        socialHtml += `<a href="${fbUrl}" target="_blank" style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-facebook"></i> ${fb}</a>`;
+      if (redes.facebook) {
+        socialHtml += `<span style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-facebook"></i> ${redes.facebook}</span>`;
       }
       document.getElementById('prof-social-badges').innerHTML = socialHtml;
-
 
       openModal('modal-node');
     }
