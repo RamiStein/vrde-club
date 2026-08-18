@@ -1,0 +1,25 @@
+const fs = require('fs');
+const path = require('path');
+
+const rootDir = 'c:/Users/Rami/Desktop/Vrde Ultimo/Web Vrde';
+
+['index.html', 'lunar.html', 'tienda.html', 'admin.html', 'superadmin.html'].forEach(f => {
+  const p = path.join(rootDir, f);
+  let txt = fs.readFileSync(p, 'utf8');
+  txt = txt.replaceAll('flexx', 'flex');
+  fs.writeFileSync(p, txt, 'utf8');
+});
+
+// Sync to dist and easyDist
+const origDist = path.join(rootDir, 'dist');
+const easyDist = path.join(rootDir, 'DESPLEGAR_A_NETLIFY');
+
+['superadmin.html', 'admin.html', 'lunar.html', 'tienda.html', 'index.html', 'lunar-engine.js', 'app.js', 'lunar-style.css', 'style.css', '_redirects'].forEach(f => {
+  const p = path.join(rootDir, f);
+  if (fs.existsSync(p)) {
+    fs.copyFileSync(p, path.join(origDist, f));
+    fs.copyFileSync(p, path.join(easyDist, f));
+  }
+});
+
+console.log('✔ Cleaned flexx across all pages.');
