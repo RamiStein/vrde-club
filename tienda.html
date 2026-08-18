@@ -326,21 +326,54 @@
       document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
       document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
 
-      const ventasNodo = 48;
-      const metaNodo = nodoData.metaPropia || 100;
-      const pNodo = Math.min(100, Math.round((ventasNodo / metaNodo) * 100));
-      document.getElementById('shop-nodo-prog-text').innerText = `${ventasNodo} / ${metaNodo} unidades`;
-      document.getElementById('shop-nodo-prog-bar').style.width = `${pNodo}%`;
-
-      const ventasGlobal = 385;
-      const metaGlobal = 500;
-      const pGlobal = Math.min(100, Math.round((ventasGlobal / metaGlobal) * 100));
-      document.getElementById('shop-global-prog-text').innerText = `${ventasGlobal} / ${metaGlobal} unidades`;
-      document.getElementById('shop-global-prog-bar').style.width = `${pGlobal}%`;
+      updateProgressBars();
 
       buildTabs();
       loadProductView(0);
       updateFloatingCart();
+    }
+
+    function updateProgressBars() {
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      const cicloActual = LunarEngine.obtenerCicloActual();
+
+      // Pedidos reales del nodo en el ciclo vigente
+      const pedidosNodo = LunarEngine.obtenerPedidos(CURRENT_REF, cicloActual.id);
+      const ventasNodo = pedidosNodo.reduce((sum, p) => {
+        if (p.unidades) return sum + Number(p.unidades);
+        if (p.items && Array.isArray(p.items)) {
+          return sum + p.items.reduce((s, it) => s + (Number(it.cant) || 0), 0);
+        }
+        return sum;
+      }, 0);
+
+      const metaNodo = Number(nodoData.metaPropia) || 100;
+      const pNodo = metaNodo > 0 ? Math.min(100, Math.round((ventasNodo / metaNodo) * 100)) : 0;
+
+      const elNodoText = document.getElementById('shop-nodo-prog-text');
+      if (elNodoText) elNodoText.innerText = `${ventasNodo} / ${metaNodo} unidades`;
+      const elNodoBar = document.getElementById('shop-nodo-prog-bar');
+      if (elNodoBar) elNodoBar.style.width = `${pNodo}%`;
+
+      // Pedidos reales globales de toda la red en el ciclo vigente
+      const pedidosGlobal = LunarEngine.obtenerPedidos(null, cicloActual.id);
+      const ventasGlobal = pedidosGlobal.reduce((sum, p) => {
+        if (p.unidades) return sum + Number(p.unidades);
+        if (p.items && Array.isArray(p.items)) {
+          return sum + p.items.reduce((s, it) => s + (Number(it.cant) || 0), 0);
+        }
+        return sum;
+      }, 0);
+
+      // Meta global acumulada de la red (suma de metas de todos los nodos)
+      const metaGlobal = Object.values(nodosObj).reduce((sum, n) => sum + (Number(n.metaPropia) || 100), 0);
+      const pGlobal = metaGlobal > 0 ? Math.min(100, Math.round((ventasGlobal / metaGlobal) * 100)) : 0;
+
+      const elGlobText = document.getElementById('shop-global-prog-text');
+      if (elGlobText) elGlobText.innerText = `${ventasGlobal} / ${metaGlobal} unidades`;
+      const elGlobBar = document.getElementById('shop-global-prog-bar');
+      if (elGlobBar) elGlobBar.style.width = `${pGlobal}%`;
     }
 
     function selectNode(nodeId) {
@@ -646,9 +679,13 @@
       const orderId = 'G-' + Math.floor(Math.random() * 900000 + 100000);
       const nodoData = LUNAR_CONFIG.nodos[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
 
+      const totalUnidadesPedido = orderItems.reduce((s, it) => s + (Number(it.cant) || 0), 0);
+
       ORDER_SUCCESS_DATA = {
         id: orderId,
         fecha: new Date().toLocaleString('es-AR'),
+        cicloId: CICLO_LUNAR.id,
+        ciclo: CICLO_LUNAR.nombre,
         nombre: nombre,
         telefono: tel,
         nodo: nodoData.nombre,
@@ -658,18 +695,19 @@
         direccionEntrega: direccionDelivery,
         detalle: cartDetails.join(', '),
         items: orderItems,
+        unidades: totalUnidadesPedido,
         total: tData.total,
         donacion: tData.don,
         mensaje: msg,
         cbu: nodoData.cbu,
         wsp: nodoData.wspPedidos,
-        ciclo: CICLO_LUNAR.nombre,
         estado: 'Pendiente'
       };
 
       // Guardar centralmente y en Google Sheets si la API está conectada
       LunarEngine.guardarNuevoPedido(ORDER_SUCCESS_DATA);
       LunarEngine.enviarPedidoApi(ORDER_SUCCESS_DATA);
+      updateProgressBars();
 
       closeModal('modal-checkout');
       document.getElementById('succ-id').innerText = orderId;
