@@ -104,10 +104,11 @@ h1, h2, h3, h4, h5, h6 {
 /* Header del Nodo */
 .shop-header {
   background: white;
-  padding: 16px 24px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   box-shadow: var(--shadow-sm);
   border-bottom: 1px solid var(--border-color);
   position: sticky;
@@ -115,31 +116,105 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 50;
 }
 
+.shop-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.btn-header-back {
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-header-back:hover {
+  background: #E2E8F0;
+}
+
 .shop-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   cursor: pointer;
+  min-width: 0;
+  flex: 1;
 }
 
 .shop-brand-logo {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(16, 163, 82, 0.1);
-  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  border: 2px solid rgba(16, 163, 82, 0.2);
+  font-size: 20px;
+  border: 2px solid var(--primary);
+  flex-shrink: 0;
+}
+
+.shop-brand-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .shop-brand-name {
-  font-size: 22px;
+  font-size: 16px;
+  font-weight: 700;
   color: #0F172A;
   margin: 0;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shop-brand-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-header-info {
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(16, 163, 82, 0.08);
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 163, 82, 0.25);
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-header-info:hover {
+  background: var(--primary);
+  color: white;
 }
 
 /* Banner de Estado Lunar & Metas */
@@ -293,7 +368,17 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 960px) {
   .product-showcase {
     grid-template-columns: 1fr;
-    padding-bottom: 70px;
+    gap: 16px;
+    padding: 0 12px 110px;
+  }
+  .product-showcase .showcase-center {
+    order: 1;
+  }
+  .product-showcase .showcase-card:last-child {
+    order: 2;
+  }
+  .product-showcase .showcase-card:first-child {
+    order: 3;
   }
 }
 
@@ -693,8 +778,60 @@ h1, h2, h3, h4, h5, h6 {
   min-width: 0;
   width: 100%;
 }
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .admin-main-view {
-    padding: 14px;
+    padding: 12px;
+  }
+  .shop-header {
+    padding: 10px 12px;
+  }
+  .shop-brand-name {
+    font-size: 15px;
+  }
+  .shop-brand-logo {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  .lunar-banner-card {
+    padding: 12px 14px;
+    margin: 8px auto;
+  }
+  .lunar-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .prod-main-img {
+    width: 170px;
+    height: 170px;
+  }
+  .btn-header-back {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+  .btn-header-back .btn-back-text {
+    display: none;
+  }
+  .btn-header-info {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+  .btn-header-info .btn-info-text {
+    display: none;
+  }
+  .modal-card {
+    padding: 20px 16px;
+    border-radius: var(--radius-md);
+  }
+  .floating-cart-bar {
+    padding: 10px 16px;
+  }
+  .cart-summary-total {
+    font-size: 19px;
+  }
+  .btn-checkout-cta {
+    padding: 10px 18px;
+    font-size: 13px;
   }
 }

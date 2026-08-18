@@ -26,25 +26,27 @@
 
   <!-- Header del Nodo Activo -->
   
-  <header class="shop-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: white; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50;">
-    <div style="display: flex; align-items: center; gap: 14px;">
-      <button onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;" title="Volver a la página anterior">
-        <i class="fas fa-arrow-left"></i> Volver
+  <header class="shop-header">
+    <div class="shop-header-left">
+      <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" title="Volver a la página anterior">
+        <i class="fas fa-arrow-left"></i>
+        <span class="btn-back-text">Volver</span>
       </button>
-      <div class="shop-brand" onclick="openNodeProfile()" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
-        <div class="shop-brand-logo" id="shop-logo" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(16,163,82,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 2px solid var(--primary); flex-shrink: 0;">🌱</div>
-        <div>
-          <h2 class="shop-brand-name" id="shop-name" style="font-size: 17px; font-weight: 700; color: #0F172A; margin: 0; line-height: 1.2;">Nodo Escobar</h2>
-          <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0; display: flex; align-items: center; gap: 4px;">
-            <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
-            <span id="shop-subheading">Ver dirección, día de entrega y contacto &rarr;</span>
-          </p>
+      <div class="shop-brand" onclick="openNodeProfile()" title="Toca para ver info completa del nodo">
+        <div class="shop-brand-logo" id="shop-logo">🌱</div>
+        <div class="shop-brand-text">
+          <h2 class="shop-brand-name" id="shop-name">Nodo Escobar</h2>
+          <div class="shop-brand-sub" id="shop-subheading">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary); font-size: 10px;"></i>
+            <span>Ver dirección y entrega &rarr;</span>
+          </div>
         </div>
       </div>
     </div>
-    <a href="javascript:void(0)" onclick="openNodeProfile()" style="text-decoration: none; font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(16,163,82,0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(16,163,82,0.25); white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;">
-      <i class="fas fa-info-circle"></i> Info del Nodo
-    </a>
+    <button class="btn-header-info" onclick="openNodeProfile()" title="Ver datos del nodo">
+      <i class="fas fa-info-circle"></i>
+      <span class="btn-info-text">Info del Nodo</span>
+    </button>
   </header>
 
 
@@ -314,6 +316,8 @@
       const safeLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
 
       document.getElementById('shop-name').innerText = nodoData.nombre;
+      const elSub = document.getElementById('shop-subheading');
+      if (elSub) elSub.innerHTML = '<i class="fas fa-map-marker-alt" style="color: var(--primary); font-size: 10px;"></i> <span>Ver dirección y entrega &rarr;</span>';
       const elBar = document.getElementById('bar-current-node'); if (elBar) elBar.innerText = nodoData.nombre;
       document.getElementById('shop-logo').innerText = safeLogo;
       document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
