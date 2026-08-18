@@ -160,10 +160,8 @@ body {
     border-radius: 2rem;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    transform: rotate(1deg);
+    transform: rotate(2deg);
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    min-height: 250px;
-    background-color: #F1F5F9;
 }
 .image-card:hover {
     transform: rotate(0deg) scale(1.02);
