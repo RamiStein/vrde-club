@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Super Admin â€¢ Vrde Club Central</title>
+  <title>Super Admin • Vrde Club Central</title>
   <meta name="description" content="Panel de control maestro de productos, pedidos globales, delivery y red de nodos.">
 
   <!-- Tipografías -->
@@ -215,7 +215,7 @@
       align-items: center;
       gap: 8px;
       background: #F8FAFC;
-      padding: 8p12px;
+      padding: 8px 12px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-color);
       font-size: 13px;
@@ -463,7 +463,7 @@
             <!-- Filtro por Ciclo Lunar -->
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Compra Lunar</label>
-              <select id="filter-cycle-select" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 14px;" onchange="applyOrdersFilters()">
+              <select id="filter-cycle-select" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 14px;" onchange="applyOrdersFilters()">
                 <option value="ALL">🌑 Todas las Lunas</option>
                 <!-- Inyectado por JS -->
               </select>
@@ -472,7 +472,7 @@
             <!-- Filtro por Nodo -->
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Filtrar por Nodo</label>
-              <select id="filter-node-select" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 14px;" onchange="applyOrdersFilters()">
+              <select id="filter-node-select" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 14px;" onchange="applyOrdersFilters()">
                 <option value="ALL">📍 Todos los Nodos</option>
                 <!-- Inyectado por JS -->
               </select>
@@ -481,7 +481,7 @@
             <!-- Filtro por Tipo de Entrega (Delivery vs Retiro) -->
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Tipo de Entrega</label>
-              <select id="filter-delivery-select" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 14px;" onchange="applyOrdersFilters()">
+              <select id="filter-delivery-select" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 14px;" onchange="applyOrdersFilters()">
                 <option value="ALL">🛵 Todas las formas de entrega</option>
                 <option value="Delivery">🛵 Solo Envío a Domicilio (Delivery)</option>
                 <option value="Retiro en Nodo">📍 Solo Retiro en Nodo</option>
@@ -491,7 +491,7 @@
             <!-- Filtro por Estado -->
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Estado del Pago</label>
-              <select id="filter-status-select" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 14px;" onchange="applyOrdersFilters()">
+              <select id="filter-status-select" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 14px;" onchange="applyOrdersFilters()">
                 <option value="ALL">🏷️ Todos los estados</option>
                 <option value="Pendiente">â³ Pendientes de Pago</option>
                 <option value="Pagado">💳 Pagados (Confirmados)</option>
@@ -503,14 +503,14 @@
             <!-- Buscador por texto -->
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Buscar socio / ID</label>
-              <input type="text" id="filter-search-input" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 14px;" placeholder="Nombre, teléfono o #ID..." oninput="applyOrdersFilters()">
+              <input type="text" id="filter-search-input" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 14px;" placeholder="Nombre, teléfono o #ID..." oninput="applyOrdersFilters()">
             </div>
           </div>
         </div>
 
         <!-- Tabla / Listado de Pedidos -->
         <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);">
-          <div style="padding: 16p20px; background: #F8FAFC; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+          <div style="padding: 16px 20px; background: #F8FAFC; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
             <div style="font-size: 14px; font-weight: 700; color: #0F172A;" id="sp-orders-counter-label">
               Mostrando pedidos
             </div>
@@ -667,19 +667,19 @@
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-items: flex-end;">
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Filtrar por Nodo</label>
-              <select id="sp-crm-node-select" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 13px;" onchange="renderSuperCrmTable()">
+              <select id="sp-crm-node-select" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 13px;" onchange="renderSuperCrmTable()">
                 <option value="ALL">📍 Todos los Nodos</option>
               </select>
             </div>
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Compra Lunar</label>
-              <select id="sp-crm-cycle-select" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 13px;" onchange="renderSuperCrmTable()">
+              <select id="sp-crm-cycle-select" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 13px;" onchange="renderSuperCrmTable()">
                 <option value="ALL">🌑 Todas las Lunas</option>
               </select>
             </div>
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Estado de Compra</label>
-              <select id="sp-crm-status-select" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 13px;" onchange="renderSuperCrmTable()">
+              <select id="sp-crm-status-select" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 13px;" onchange="renderSuperCrmTable()">
                 <option value="ALL">General (Todos)</option>
                 <option value="COMPRO_EN_CICLO">Compraron en este Ciclo</option>
                 <option value="INACTIVO_EN_CICLO">Inactivos (A Reactivar)</option>
@@ -687,7 +687,7 @@
             </div>
             <div>
               <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Buscar socio / tel / dir</label>
-              <input type="text" id="sp-crm-search-input" class="input-field" style="margin-top: 4px; padding: 8p12px; font-size: 13px;" placeholder="Nombre, teléfono o dirección..." oninput="renderSuperCrmTable()">
+              <input type="text" id="sp-crm-search-input" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 13px;" placeholder="Nombre, teléfono o dirección..." oninput="renderSuperCrmTable()">
             </div>
           </div>
         </div>
@@ -725,7 +725,7 @@
         <div style="margin-bottom: 20px;">
           <h3 style="font-size: 20px; color: #0F172A; margin: 0;">Finanzas y Balance Maestro de la Red</h3>
           <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
-            Métricas consolidadas de facturación, transferencias a fincas/productores y split cooperativo 33.3% (Vrde Central â€¢ Nodos â€¢ Vrdedores).
+            Métricas consolidadas de facturación, transferencias a fincas/productores y split cooperativo 33.3% (Vrde Central • Nodos • Vrdedores).
           </p>
         </div>
 
@@ -784,7 +784,7 @@
             <div>
               <div style="font-size: 12px; text-transform: uppercase; color: #94A3B8; font-weight: 700;">Ciclo Lunar Activo en el Sistema</div>
               <h2 style="font-size: 28px; color: white; margin: 6p0;" id="super-cycle-name">🌑 Leo Ago 2026</h2>
-              <p style="font-size: 14px; color: #CBD5E1;" id="super-cycle-details">Apertura activa â€¢ Cierra en 12 días</p>
+              <p style="font-size: 14px; color: #CBD5E1;" id="super-cycle-details">Apertura activa • Cierra en 12 días</p>
             </div>
             <div style="font-size: 48px;">🌑</div>
           </div>
@@ -792,7 +792,7 @@
       </div>
 
       <div style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 40px; padding-bottom: 30px;">
-        Vrde Club â€¢ Panel de Control Maestro Central 🥕
+        Vrde Club • Panel de Control Maestro Central 🥕
       </div>
       </main>
     </div>
@@ -857,7 +857,7 @@
           <span style="font-size: 11px; color: #B91C1C; font-weight: 600;">Solo Super Admin y Nodos</span>
         </div>
         <p style="font-size: 12px; color: #7F1D1D; margin: 2p0 8px;">
-          Monto transferido al productor. La diferencia con el precio de venta genera el margen cooperativo a dividir (33.3% Vrde â€¢ 33.3% Nodo â€¢ 33.3% Vrdedor).
+          Monto transferido al productor. La diferencia con el precio de venta genera el margen cooperativo a dividir (33.3% Vrde • 33.3% Nodo • 33.3% Vrdedor).
         </p>
         <input type="number" id="edit-prod-costo" class="input-field" placeholder="$ Costo del Productor (Ej: 6800)" style="border-color: #FCA5A5; background: white;" required>
       </div>
@@ -1026,13 +1026,13 @@
     function loadSuperDashboard() {
       const ciclo = LunarEngine.obtenerCicloActual();
       document.getElementById('super-cycle-name').innerText = ciclo.nombre;
-      document.getElementById('super-cycle-details').innerText = `Apertura activa â€¢ Cierra en ${ciclo.diasRestantes} días (${ciclo.llenaFechaStr})`;
+      document.getElementById('super-cycle-details').innerText = `Apertura activa • Cierra en ${ciclo.diasRestantes} días (${ciclo.llenaFechaStr})`;
 
       // Poblar selector de ciclos lunares
       const ciclos = LunarEngine.obtenerListaCiclos();
       let cycleSelectHtml = '<option value="ALL">🌑 Todas las Lunas</option>';
       ciclos.forEach(c => {
-        cycleSelectHtml += `<option value="${c.id}">${c.nombre} (${c.mesStr}) ${c.esVigente ? 'â€¢ VIGENTE' : 'â€¢ Archivada'}</option>`;
+        cycleSelectHtml += `<option value="${c.id}">${c.nombre} (${c.mesStr}) ${c.esVigente ? '• VIGENTE' : '• Archivada'}</option>`;
       });
       
       const cycleSelectEl = document.getElementById('filter-cycle-select');
@@ -1259,7 +1259,7 @@
         return;
       }
 
-      let text = `🛵 *HOJA DE RUTA DELIVERY â€¢ VRDE CLUB*\n`;
+      let text = `🛵 *HOJA DE RUTA DELIVERY • VRDE CLUB*\n`;
       text += `📍… Fecha: ${new Date().toLocaleDateString('es-AR')}\n`;
       text += `📍¦ Total entregas: ${deliveryOrders.length}\n`;
       text += `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n`;
@@ -1618,7 +1618,7 @@
                   </div>
                   <div style="min-width: 0;">
                     <div style="font-weight: 700; font-size: 13px; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${v.nombre}</div>
-                    <div style="font-size: 11px; color: var(--text-muted);">${v.rol || 'Vrdedor'} â€¢ <strong style="color: var(--primary);">${pCount} pedidos ($${labor.toLocaleString('es-AR')})</strong></div>
+                    <div style="font-size: 11px; color: var(--text-muted);">${v.rol || 'Vrdedor'} • <strong style="color: var(--primary);">${pCount} pedidos ($${labor.toLocaleString('es-AR')})</strong></div>
                   </div>
                 </div>
 

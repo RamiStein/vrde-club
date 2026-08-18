@@ -17,31 +17,37 @@
 </head>
 <body>
 
-  
+  <!-- Barra Superior de Navegación y Selector de Nodo -->
+  <div class="node-pills">
+      <span style="font-size: 12px; opacity: 0.8;">Cambiar nodo:</span>
+      <button class="node-select-btn active" onclick="selectNode('escobar')">Escobar</button>
+      <button class="node-select-btn" onclick="selectNode('lomaverde')">Loma Verde</button>
+      <button class="node-select-btn" onclick="selectNode('lalucila')">La Lucila</button>
+      <button class="node-select-btn" onclick="selectNode('vicentelopez')">V. López</button>
+    </div>
+  </div>
 
   <!-- Header del Nodo Activo -->
-  
-  <header class="shop-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: white; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50;">
-    <div style="display: flex; align-items: center; gap: 14px;">
-      <button onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;" title="Volver a la página anterior">
+  <header class="shop-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14p20px; background: white; border-bottom: 1psolid var(--border-color); position: sticky; top: 0; z-inde50;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <button onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="background: #F1F5F9; color: #334155; border: 1psolid #CBD5E1; border-radius: 25px; padding: 8p16px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;" title="Volver a la página anterior">
         <i class="fas fa-arrow-left"></i> Volver
       </button>
-      <div class="shop-brand" onclick="openNodeProfile()" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
-        <div class="shop-brand-logo" id="shop-logo" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(16,163,82,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 2px solid var(--primary); flex-shrink: 0;">🌱</div>
+      <div class="shop-brand" onclick="openNodeProfile()" style="cursor: pointer; display: flex; align-items: center; gap: 12px;">
+        <div class="shop-brand-logo" id="shop-logo" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(16,163,82,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2psolid var(--primary); flex-shrink: 0;">🌱</div>
         <div>
-          <h2 class="shop-brand-name" id="shop-name" style="font-size: 17px; font-weight: 700; color: #0F172A; margin: 0; line-height: 1.2;">Nodo Escobar</h2>
-          <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0; display: flex; align-items: center; gap: 4px;">
+          <h2 class="shop-brand-name" id="shop-name" style="font-size: 18px; font-weight: 700; color: #0F172A; margin: 0; line-height: 1.2;">Nodo Escobar</h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 2p0 0; display: flex; align-items: center; gap: 4px;">
             <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
             <span id="shop-subheading">Ver dirección, día de entrega y contacto &rarr;</span>
           </p>
         </div>
       </div>
     </div>
-    <a href="javascript:void(0)" onclick="openNodeProfile()" style="text-decoration: none; font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(16,163,82,0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(16,163,82,0.25); white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;">
-      <i class="fas fa-info-circle"></i> Info del Nodo
+    <a href="javascript:void(0)" onclick="openNodeProfile()" style="text-decoration: none; font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(16,163,82,0.1); padding: 8p16px; border-radius: 20px; border: 1psolid rgba(16,163,82,0.2);">
+      Info del Nodo
     </a>
   </header>
-
 
   <!-- Banner de Estado Lunar & Metas Colectivas -->
   <div style="padding: 0 16px;">
@@ -124,12 +130,12 @@
       </div>
 
       <!-- Resumen del Carrito -->
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+      <div style="background: #F8FAFC; border: 1psolid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
         <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 12px;">Tu Selección Agroecológica</div>
         <div id="checkout-items"></div>
 
         <!-- Donación Solidaria 3% -->
-        <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
+        <div style="margin-top: 16px; border-top: 1psolid #E2E8F0; padding-top: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-size: 13px; font-weight: 700; color: #0F172A;">Aporte a la red (Sostén cooperativo)</span>
           </div>
@@ -145,7 +151,7 @@
         </div>
 
         <!-- Selector Tipo de Entrega: Retiro vs Delivery -->
-        <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
+        <div style="margin-top: 16px; border-top: 1psolid #E2E8F0; padding-top: 16px;">
           <label style="font-size: 13px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 6px;">Forma de Entrega *</label>
           <div class="don-btn-group" style="margin-top: 4px;">
             <button class="don-btn-opt active" id="btn-entrega-retiro" onclick="setDeliveryType('Retiro en Nodo')">
@@ -174,7 +180,7 @@
           </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 2px solid #E2E8F0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 2psolid #E2E8F0;">
           <span style="font-size: 15px; font-weight: 700; color: #0F172A;">TOTAL A TRANSFERIR</span>
           <span style="font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--primary);" id="checkout-total-final">$0</span>
         </div>
@@ -218,7 +224,7 @@
       <h2 style="color: var(--primary); font-size: 26px; margin-bottom: 6px;">¡Pedido Registrado!</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Código de orden: <strong id="succ-id" style="color: #0F172A;"></strong></p>
 
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; text-align: left; margin-bottom: 24px;">
+      <div style="background: #F8FAFC; border: 1psolid var(--border-color); border-radius: var(--radius-md); padding: 18px; text-align: left; margin-bottom: 24px;">
         <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 6px;">Datos para la transferencia:</div>
         <div style="font-size: 14px; margin-bottom: 4px;">Alias / CBU: <strong id="succ-alias" style="color: var(--primary);"></strong></div>
         <div style="font-size: 15px; margin-top: 6px;">Total a transferir: <strong id="succ-total" style="color: var(--primary); font-size: 20px; font-family: var(--font-heading);"></strong></div>
@@ -232,7 +238,7 @@
         <i class="fab fa-whatsapp" style="font-size: 20px;"></i> ENVIAR A WHATSAPP
       </button>
 
-      <button onclick="window.location.href='index.html'" style="background: transparent; border: 1px solid var(--border-color); color: #475569; width: 100%; padding: 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">
+      <button onclick="window.location.href='index.html'" style="background: transparent; border: 1psolid var(--border-color); color: #475569; width: 100%; padding: 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">
         Volver a la portada
       </button>
     </div>
@@ -250,7 +256,7 @@
       <h2 id="prof-name" style="color: #0F172A; font-size: 24px; margin-bottom: 6px;">Nombre Nodo</h2>
       <p id="prof-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.4;">Descripción</p>
 
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; text-align: left; font-size: 14px;">
+      <div style="background: #F8FAFC; border: 1psolid var(--border-color); border-radius: var(--radius-md); padding: 16px; text-align: left; font-size: 14px;">
         <p style="margin-bottom: 10px;"><strong>📍 Dirección:</strong> <span id="prof-dir"></span></p>
         <p style="margin-bottom: 10px;"><strong>👤 Agente Responsable:</strong> <span id="prof-contacto"></span></p>
         <p style="margin-bottom: 10px;"><strong>🚚 Día de Entrega:</strong> <span id="prof-entrega"></span></p>
@@ -262,10 +268,10 @@
       </div>
 
       <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <a id="prof-admin-link" href="admin.html" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 600;">
+        <a id="prof-admin-link" href="admin.html" style="fle1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1psolid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 600;">
           <i class="fas fa-lock"></i> Panel Gestor (PIN)
         </a>
-        <button class="btn-checkout-cta" style="flex: 1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
+        <button class="btn-checkout-cta" style="fle1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
           Entendido
         </button>
       </div>
@@ -714,13 +720,13 @@
       const redes = nodoData.redes || {};
       let socialHtml = '';
       if (redes.instagram) {
-        socialHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-instagram"></i> @${redes.instagram.replace('@','')}</a>`;
+        socialHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-instagram"></i> @${redes.instagram.replace('@','')}</a>`;
       }
       if (redes.wspComunidad) {
-        socialHtml += `<a href="${redes.wspComunidad}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-whatsapp"></i> Comunidad WhatsApp</a>`;
+        socialHtml += `<a href="${redes.wspComunidad}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-whatsapp"></i> Comunidad WhatsApp</a>`;
       }
       if (redes.facebook) {
-        socialHtml += `<span style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-facebook"></i> ${redes.facebook}</span>`;
+        socialHtml += `<span style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-facebook"></i> ${redes.facebook}</span>`;
       }
       document.getElementById('prof-social-badges').innerHTML = socialHtml;
 
