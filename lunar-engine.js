@@ -242,7 +242,61 @@ const LUNAR_CONFIG = {
       p1: 23000, m1: 1,   // 1kg: $23.000
       p2: 21500, m2: 5,   // 5kg+: $21.500
       p3: 20000, m3: 10,  // 10kg+: $20.000
-      tipsVrdedor: 'Hongos frescos, gírgolas grises cultivadas en los bosques del delta. Producto orgánico sembrado en tronco fresco de álamo. Alimento ecológico sostenible y saludable. Ideal para salteados, risottos, pastas y empanadas.',
+      tipsVrdedor: 'Hongos frescos, gírgolas grises cultivadas en los bosques del delta. Producto orgánico sembrado en tronco fresco de álamo. Alimento ecológico sostenible y saludable. Ideal para salteados, risottos, pastas y empanadas. *Imagen ilustrativa.',
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P7',
+      nombre: 'Yerba Grapia Milenaria 1kg',
+      img: 'assets/yerba_grapia_1kg.jpg',
+      titulo: 'Yerba mate agroecológica con palo y estacionamiento natural',
+      subtitulo: 'Paquete tradicional de 1 kg en papel kraft',
+      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
+      variedad: 'Canchada y estacionada 18 a 24 meses',
+      meta: 60,
+      unidad: 'paquete 1kg',
+      costo: 3300,        // Costo base del productor
+      p1: 5100, m1: 1,    // Minorista (1 a 11 paquetes / 1 a 11 kg)
+      p2: 4400, m2: 12,   // Mayorista (12 a 51 paquetes / 12 a 51 kg)
+      p3: 3800, m3: 52,   // Distribuidora (52+ paquetes / 52+ kg)
+      tipsVrdedor: 'Elaborada por familias de pequeños colonos en Campo Ramón, Misiones. Estacionamiento natural prolongado de hasta 2 años en depósito y secado en cinta sin humo. Sabor suave, prolongado y sin acidez. *Imagen ilustrativa.',
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P8',
+      nombre: 'Yerba Grapia Milenaria 2kg',
+      img: 'assets/yerba_grapia_2kg.jpg',
+      titulo: 'Yerba mate agroecológica paquete familiar de 2 kg',
+      subtitulo: 'Paquete de 2 kg en papel kraft (Ahorro familiar)',
+      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
+      variedad: 'Canchada y estacionada 18 a 24 meses',
+      meta: 40,
+      unidad: 'paquete 2kg',
+      costo: 5600,        // Costo base del productor
+      p1: 8600, m1: 1,    // Minorista (1 a 5 paq = 2 a 10 kg)
+      p2: 7400, m2: 6,    // Mayorista (6 a 25 paq = 12 a 50 kg)
+      p3: 6400, m3: 26,   // Distribuidora (26+ paq = 52+ kg)
+      tipsVrdedor: 'Formato familiar de 2 kg. Yerba agroecológica de monte misionero con 18 a 24 meses de estacionamiento natural. Excelente rendimiento para el consumo diario del hogar. *Imagen ilustrativa.',
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P9',
+      nombre: 'Yerba Grapia Milenaria (Bolsón 10kg)',
+      img: 'assets/yerba_grapia_10kg.jpg',
+      titulo: 'Bolsón cooperativo mayorista de 10 kg en saca',
+      subtitulo: 'Saca de 10 kg en arpillera y papel kraft (Máximo ahorro)',
+      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
+      variedad: 'Canchada y estacionada 18 a 24 meses',
+      meta: 20,
+      unidad: 'bolsón 10kg',
+      costo: 26000,       // Costo base ($2.600/kg)
+      p1: 40000, m1: 1,   // Minorista (1 bolsón = 10 kg -> $4.000/kg)
+      p2: 34500, m2: 2,   // Mayorista (2 a 5 bolsones = 20 a 50 kg -> $3.450/kg)
+      p3: 29800, m3: 6,   // Distribuidora (6+ bolsones = 60+ kg -> $2.980/kg)
+      tipsVrdedor: 'Saca mayorista de 10 kg para compras comunitarias, familias numerosas o acopio cooperativo de nodo. Directo de chacra misionera al nodo. *Imagen ilustrativa.',
       activo: true,
       nodos: ['TODOS']
     }
@@ -266,15 +320,17 @@ class LunarEngine {
           prods = JSON.parse(stored);
           let updated = false;
           
-          // Asegurar que el nuevo producto P6 (Gírgolas) esté presente en storage existente
-          const hasP6 = prods.some(p => p.id === 'P6');
-          if (!hasP6) {
-            const p6Def = LUNAR_CONFIG.productos.find(p => p.id === 'P6');
-            if (p6Def) {
-              prods.push(p6Def);
-              updated = true;
+          // Asegurar que todos los productos oficiales estén presentes en storage
+          ['P6', 'P7', 'P8', 'P9'].forEach(pid => {
+            const hasP = prods.some(p => p.id === pid);
+            if (!hasP) {
+              const def = LUNAR_CONFIG.productos.find(p => p.id === pid);
+              if (def) {
+                prods.push(def);
+                updated = true;
+              }
             }
-          }
+          });
 
           // Migración automática para corregir fotos y sincronizar catálogo
           prods.forEach(p => {
@@ -288,6 +344,36 @@ class LunarEngine {
               p.p1 = 23000; p.m1 = 1;
               p.p2 = 21500; p.m2 = 5;
               p.p3 = 20000; p.m3 = 10;
+              p.nodos = ['TODOS'];
+              p.activo = true;
+              updated = true;
+            }
+            if (p.id === 'P7') {
+              p.img = 'assets/yerba_grapia_1kg.jpg';
+              p.costo = 3300;
+              p.p1 = 5100; p.m1 = 1;
+              p.p2 = 4400; p.m2 = 12;
+              p.p3 = 3800; p.m3 = 52;
+              p.nodos = ['TODOS'];
+              p.activo = true;
+              updated = true;
+            }
+            if (p.id === 'P8') {
+              p.img = 'assets/yerba_grapia_2kg.jpg';
+              p.costo = 5600;
+              p.p1 = 8600; p.m1 = 1;
+              p.p2 = 7400; p.m2 = 6;
+              p.p3 = 6400; p.m3 = 26;
+              p.nodos = ['TODOS'];
+              p.activo = true;
+              updated = true;
+            }
+            if (p.id === 'P9') {
+              p.img = 'assets/yerba_grapia_10kg.jpg';
+              p.costo = 26000;
+              p.p1 = 40000; p.m1 = 1;
+              p.p2 = 34500; p.m2 = 2;
+              p.p3 = 29800; p.m3 = 6;
               p.nodos = ['TODOS'];
               p.activo = true;
               updated = true;

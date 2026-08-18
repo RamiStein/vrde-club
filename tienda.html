@@ -441,7 +441,10 @@
 
         <!-- Columna Central -->
         <div class="showcase-card showcase-center">
-          <img src="${prod.img}" alt="${prod.nombre}" class="prod-main-img">
+          <div style="position: relative; display: inline-block;">
+            <img src="${prod.img}" alt="${prod.nombre}" class="prod-main-img">
+            <span style="display: block; font-size: 10px; color: var(--text-muted); margin-top: 5px; text-align: center; font-style: italic; opacity: 0.8;">* Imagen de referencia ilustrativa</span>
+          </div>
           <span class="prod-badge-unit">${prod.unidad}</span>
           <h2 class="prod-title">${prod.nombre}</h2>
           <p class="prod-subtitle">${prod.subtitulo || ''}</p>
