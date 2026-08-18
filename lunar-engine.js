@@ -227,12 +227,30 @@ const LUNAR_CONFIG = {
       tipsVrdedor: 'Gallinas criadas libres a campo abierto con sol y pastoreo diario. Huevos frescos con yema de intenso color natural, alta concentración proteica y Omega 3.',
       activo: true,
       nodos: ['TODOS']
+    },
+    {
+      id: 'P6',
+      nombre: 'Gírgolas Grises del Delta',
+      img: 'assets/girgolas.png',
+      titulo: 'Hongos frescos cultivados en los bosques del Delta',
+      subtitulo: 'Producto orgánico sembrado en tronco fresco de álamo',
+      origen: 'Productores del Delta • Alimento local y orgánico',
+      variedad: 'Gírgola Gris (Pleurotus ostreatus)',
+      meta: 50,
+      unidad: 'kg',
+      costo: 18000,       // Costo base del productor
+      p1: 23000, m1: 1,   // 1kg: $23.000
+      p2: 21500, m2: 5,   // 5kg+: $21.500
+      p3: 20000, m3: 10,  // 10kg+: $20.000
+      tipsVrdedor: 'Hongos frescos, gírgolas grises cultivadas en los bosques del delta. Producto orgánico sembrado en tronco fresco de álamo. Alimento ecológico sostenible y saludable. Ideal para salteados, risottos, pastas y empanadas.',
+      activo: true,
+      nodos: ['TODOS']
     }
   ]
 };
 
 // =================================================================
-// MOTOR ASTRONMICO Y DE CICLOS LUNARES
+// MOTOR ASTRONÓMICO Y DE CICLOS LUNARES
 // =================================================================
 
 class LunarEngine {
@@ -246,11 +264,32 @@ class LunarEngine {
       if (stored) {
         try { 
           prods = JSON.parse(stored);
-          // Migración automática para corregir fotos antiguas cacheadas en localStorage
           let updated = false;
+          
+          // Asegurar que el nuevo producto P6 (Gírgolas) esté presente en storage existente
+          const hasP6 = prods.some(p => p.id === 'P6');
+          if (!hasP6) {
+            const p6Def = LUNAR_CONFIG.productos.find(p => p.id === 'P6');
+            if (p6Def) {
+              prods.push(p6Def);
+              updated = true;
+            }
+          }
+
+          // Migración automática para corregir fotos y sincronizar catálogo
           prods.forEach(p => {
             if (p.id === 'P3' && (p.img.includes('1587049352846') || p.img.includes('1587049352847') || p.img.includes('watermelon'))) {
               p.img = 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80&w=400';
+              updated = true;
+            }
+            if (p.id === 'P6') {
+              p.img = 'assets/girgolas.png';
+              p.costo = 18000;
+              p.p1 = 23000; p.m1 = 1;
+              p.p2 = 21500; p.m2 = 5;
+              p.p3 = 20000; p.m3 = 10;
+              p.nodos = ['TODOS'];
+              p.activo = true;
               updated = true;
             }
           });
