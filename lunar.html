@@ -225,7 +225,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js"></script>
+  <script src="lunar-engine.js?v=5"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const ciclo = LunarEngine.obtenerCicloActual();
@@ -243,11 +243,12 @@
       let html = '';
 
       Object.values(nodosObj).forEach(n => {
+        const safeLogo = (n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌑';
         html += `
           <div class="node-portal-card">
             <div>
               <div class="node-header-top">
-                <div class="node-logo-circle">${n.logo || '🌱'}</div>
+                <div class="node-logo-circle">${safeLogo}</div>
                 <div>
                   <h3 class="node-portal-name">${n.nombre}</h3>
                   <div class="node-portal-dir"><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 4px;"></i> ${n.direccion}</div>

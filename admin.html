@@ -969,7 +969,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js"></script>
+  <script src="lunar-engine.js?v=5"></script>
   <script>
     let CURRENT_REF = 'escobar';
     let CURRENT_CICLO_ID = 'piscis-ago-2026';
@@ -1077,7 +1077,8 @@
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
 
       document.getElementById('ad-title').innerText = `Panel de ${nodoData.nombre}`;
-      document.getElementById('dash-logo').innerText = nodoData.logo || '🌱';
+      const safeDashLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
+      document.getElementById('dash-logo').innerText = safeDashLogo;
       document.getElementById('btn-view-shop').href = `tienda.html?ref=${CURRENT_REF}`;
 
       // Banner Lunar

@@ -278,7 +278,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js"></script>
+  <script src="lunar-engine.js?v=5"></script>
   <script>
     let CURRENT_REF = 'escobar';
     let ACTIVE_INDEX = 0;
@@ -311,10 +311,11 @@
 
       const nodosObj = LunarEngine.obtenerNodos();
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      const safeLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
 
       document.getElementById('shop-name').innerText = nodoData.nombre;
       const elBar = document.getElementById('bar-current-node'); if (elBar) elBar.innerText = nodoData.nombre;
-      document.getElementById('shop-logo').innerText = nodoData.logo;
+      document.getElementById('shop-logo').innerText = safeLogo;
       document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
       document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
@@ -708,7 +709,8 @@
     function openNodeProfile() {
       const nodosObj = LunarEngine.obtenerNodos();
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
-      document.getElementById('prof-logo').innerText = nodoData.logo || '🌱';
+      const safeProfLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
+      document.getElementById('prof-logo').innerText = safeProfLogo;
       document.getElementById('prof-name').innerText = nodoData.nombre;
       document.getElementById('prof-desc').innerText = nodoData.descripcion || '';
       document.getElementById('prof-dir').innerText = nodoData.direccion;

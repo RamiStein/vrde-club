@@ -1016,7 +1016,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js"></script>
+  <script src="lunar-engine.js?v=5"></script>
   <script>
     const MASTER_PINS = ['9999', '1234', '0000'];
 
@@ -1551,7 +1551,7 @@
             <div style="padding: 18px;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 24px;">${n.logo}</span>
+                  <span style="font-size: 24px;">${(n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌑'}</span>
                   <div>
                     <h4 style="margin: 0; font-size: 16px; color: #0F172A;">${n.nombre}</h4>
                     <span style="font-size: 11px; color: var(--text-muted);">${n.contacto}</span>
@@ -1654,7 +1654,7 @@
             <div>
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #F1F5F9; padding-bottom: 10px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 22px;">${n.logo || '🌱'}</span>
+                  <span style="font-size: 22px;">${(n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌑'}</span>
                   <div>
                     <h4 style="margin: 0; font-size: 16px; color: #0F172A;">${n.nombre}</h4>
                     <span style="font-size: 11px; color: var(--text-muted);">${n.contacto || 'Responsable de Nodo'}</span>
@@ -1883,7 +1883,7 @@
 
         tbodyHtml += `
           <tr style="border-bottom: 1px solid #F1F5F9;">
-            <td style="padding: 12px 14px;"><strong>${nodos[k].logo || '🌱'} ${nodos[k].nombre}</strong></td>
+            <td style="padding: 12px 14px;"><strong>${(nodos[k].logo && nodos[k].logo.trim().toLowerCase() !== 'x') ? nodos[k].logo : '🌑'} ${nodos[k].nombre}</strong></td>
             <td style="padding: 12px 14px;"><span style="background: #F1F5F9; padding: 2px 8px; border-radius: 10px; font-weight: 700;">${nodeOrders.length}</span></td>
             <td style="padding: 12px 14px; font-weight: 600;">$${econ.totalVentas.toLocaleString('es-AR')}</td>
             <td style="padding: 12px 14px; color: #DC2626; font-weight: 600;">$${econ.totalCosto.toLocaleString('es-AR')}</td>
