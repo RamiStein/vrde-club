@@ -59,7 +59,7 @@ const LUNAR_CONFIG = {
       id: 'lomaverde',
       nombre: 'Nodo Loma Verde',
       color: '#4e8d26',
-      logo: 'x',
+      logo: '🌑',
       imagen: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600',
       banner: 'assets/hero_bg.png',
       direccion: 'Calle Los Tilos 420, Loma Verde',
@@ -78,8 +78,8 @@ const LUNAR_CONFIG = {
       slots: ['Conservación', 'Atención Comunitaria'],
       mostrarVrdedores: true,
       vrdedores: [
-        { id: 'VRD-201', nombre: 'Agustina Vidal', rol: 'Coordinadora Loma Verde', wsp: '5491159201948', avatar: 'x' },
-        { id: 'VRD-202', nombre: 'Joaquín Paz', rol: 'Vrdedor Barrio Los Tilos', wsp: '5491138291028', avatar: 'x"' }
+        { id: 'VRD-201', nombre: 'Agustina Vidal', rol: 'Coordinadora Loma Verde', wsp: '5491159201948', avatar: '🌱' },
+        { id: 'VRD-202', nombre: 'Joaquín Paz', rol: 'Vrdedor Barrio Los Tilos', wsp: '5491138291028', avatar: '🌱' }
       ]
     },
     'lalucila': {
@@ -321,6 +321,28 @@ class LunarEngine {
         try { nodos = JSON.parse(stored); } catch(e){}
       }
     }
+
+    // Auto-sanear iconos corruptos o caracteres residuales (ej: 'x')
+    let needsResave = false;
+    Object.keys(nodos).forEach(k => {
+      if (!nodos[k].logo || nodos[k].logo === 'x' || nodos[k].logo === 'X') {
+        nodos[k].logo = '🌑';
+        needsResave = true;
+      }
+      if (nodos[k].vrdedores && Array.isArray(nodos[k].vrdedores)) {
+        nodos[k].vrdedores.forEach(v => {
+          if (!v.avatar || v.avatar === 'x' || v.avatar === 'x"' || v.avatar === 'X') {
+            v.avatar = '🌱';
+            needsResave = true;
+          }
+        });
+      }
+    });
+
+    if (needsResave && typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('VRDE_NODOS', JSON.stringify(nodos)); } catch(e){}
+    }
+
     return nodos;
   }
 
