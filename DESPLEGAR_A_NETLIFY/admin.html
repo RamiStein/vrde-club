@@ -98,7 +98,7 @@
       background: linear-gradient(135deg, #064E3B 0%, #0F172A 100%);
       color: white;
       border-radius: var(--radius-md);
-      padding: 20p24px;
+      padding: 20px 24px;
       margin-top: 20px;
       display: flex;
       justify-content: space-between;
@@ -119,13 +119,17 @@
     .filter-tab-btn {
       background: white;
       border: 1px solid var(--border-color);
-      padding: 6p14px;
-      border-radius: 20px;
+      padding: 8px 18px;
+      border-radius: 24px;
       font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .filter-tab-btn:hover {
       color: var(--primary);
@@ -154,6 +158,8 @@
       min-height: calc(100vh - 65px);
       max-width: 1440px;
       margin: 0 auto;
+      width: 100%;
+      overflow-x: hidden;
     }
     @media (max-width: 960px) {
       .admin-layout-wrapper {
@@ -163,7 +169,7 @@
     .admin-sidebar-nav {
       background: white;
       border-right: 1px solid var(--border-color);
-      padding: 20p14px;
+      padding: 20px 14px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -173,7 +179,7 @@
         border-right: none;
         border-bottom: 1px solid var(--border-color);
         flex-direction: row;
-        overflow-auto;
+        overflow-x: auto;
         padding: 10px;
       }
     }
@@ -181,7 +187,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12p16px;
+      padding: 12px 16px;
       border-radius: var(--radius-md);
       border: 1px solid transparent;
       background: transparent;
@@ -213,6 +219,9 @@
     .admin-main-view {
       padding: 24px;
       overflow-y: auto;
+      overflow-x: hidden;
+      min-width: 0;
+      width: 100%;
     }
     @media (max-width: 600px) {
       .admin-main-view {
@@ -225,14 +234,14 @@
       background: white;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 14p16p8px;
+      padding: 14px 16px 8px;
       margin-bottom: 20px;
       box-shadow: var(--shadow-sm);
     }
     .excel-tabs-scroll {
       display: flex;
       gap: 6px;
-      overflow-auto;
+      overflow-x: auto;
       padding-top: 4px;
       border-bottom: 2px solid #E2E8F0;
     }
@@ -312,7 +321,7 @@
     }
   </style>
 </head>
-<body style="background-color: #F8FAFC;">
+<body style="background-color: #F8FAFC; overflow-x: hidden; width: 100%;">
 
   <!-- LOGIN POR PIN -->
   <div id="admin-login" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
@@ -381,7 +390,7 @@
     <div class="admin-layout-wrapper">
       <!-- BARRA LATERAL IZQUIERDA -->
       <aside class="admin-sidebar-nav">
-        <div style="padding: 6p8px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
+        <div style="padding: 6px 8px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
           <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Módulos del Nodo</div>
           <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-top: 2px;" id="sidebar-nodo-title">Nodo Escobar</div>
         </div>
@@ -524,10 +533,10 @@
               </p>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <button class="btn-checkout-cta" style="background: #25D366; display: flex; align-items: center; gap: 8px; padding: 12p20px; font-size: 14px;" onclick="sendCompiledToCentral()">
+              <button class="btn-checkout-cta" style="background: #25D366; display: flex; align-items: center; gap: 8px; padding: 12px 20px; font-size: 14px;" onclick="sendCompiledToCentral()">
                 <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Enviar Compilado a Vrde Central
               </button>
-              <a href="https://wa.me/5491127452476?text=Hola%20Vrde%20Club!%20Te%20escribo%20desde%20el%20nodo%20para%20coordinar%20log%C3%ADstica." target="_blank" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 40px; padding: 12p18px; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+              <a href="https://wa.me/5491127452476?text=Hola%20Vrde%20Club!%20Te%20escribo%20desde%20el%20nodo%20para%20coordinar%20log%C3%ADstica." target="_blank" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 40px; padding: 12px 18px; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 6px;">
                 <i class="fas fa-phone-alt"></i> Hablar con Vrde (+54 9 11 2745-2476)
               </a>
             </div>
@@ -579,7 +588,7 @@
                 Desglose transparente: Costos de productores descontados y distribución tripartita del margen neto (33.3% Vrde Central • 33.3% Nodo • 33.3% Vrdedores).
               </p>
             </div>
-            <span style="background: rgba(16,163,82,0.1); color: var(--primary); font-weight: 700; font-size: 12px; padding: 6p12px; border-radius: 20px;">
+            <span style="background: rgba(16,163,82,0.1); color: var(--primary); font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 20px;">
               Regla Tripartita 33.3%
             </span>
           </div>
@@ -634,17 +643,17 @@
           <h4 style="font-size: 15px; color: #0F172A; margin: 0 0 10px;">
             <i class="fas fa-handshake" style="color: var(--primary); margin-right: 4px;"></i> Liquidación por Vrdedor / Coordinador Comunitario
           </h4>
-          <div style="overflow-auto;">
+          <div style="overflow-x: auto;">
             <table class="table-clean" style="width: 100%; font-size: 13px;">
               <thead>
                 <tr style="background: #F1F5F9; text-align: left;">
-                  <th style="padding: 10p12px; border-radius: var(--radius-sm) 0 0 var(--radius-sm);">Vrdedor/a</th>
-                  <th style="padding: 10p12px;">Pedidos</th>
-                  <th style="padding: 10p12px;">Unidades</th>
-                  <th style="padding: 10p12px;">Ventas</th>
-                  <th style="padding: 10p12px;">Margen Neto</th>
-                  <th style="padding: 10p12px;">Pago por Labor (33.3%)</th>
-                  <th style="padding: 10p12px; text-align: right; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">Acción</th>
+                  <th style="padding: 10px 12px; border-radius: var(--radius-sm) 0 0 var(--radius-sm);">Vrdedor/a</th>
+                  <th style="padding: 10px 12px;">Pedidos</th>
+                  <th style="padding: 10px 12px;">Unidades</th>
+                  <th style="padding: 10px 12px;">Ventas</th>
+                  <th style="padding: 10px 12px;">Margen Neto</th>
+                  <th style="padding: 10px 12px;">Pago por Labor (33.3%)</th>
+                  <th style="padding: 10px 12px; text-align: right; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">Acción</th>
                 </tr>
               </thead>
               <tbody id="econ-vrdedores-tbody">
@@ -734,13 +743,13 @@
               <button class="filter-tab-btn" id="crm-pill-activo" onclick="filterCrm('COMPRO_EN_CICLO', this)">Compraron en esta Luna</button>
               <button class="filter-tab-btn" id="crm-pill-inactivo" onclick="filterCrm('INACTIVO_EN_CICLO', this)">Inactivos en esta Luna (A Reactivar)</button>
             </div>
-            <div style="min-width: 240px; fle1; max-width: 320px;">
-              <input type="text" id="crm-search-input" class="input-field" placeholder="Buscar por nombre, tel o dirección..." oninput="renderCrmTable()" style="padding: 6p12px; font-size: 13px;">
+            <div style="min-width: 240px; flex: 1; max-width: 320px;">
+              <input type="text" id="crm-search-input" class="input-field" placeholder="Buscar por nombre, tel o dirección..." oninput="renderCrmTable()" style="padding: 6px 12px; font-size: 13px;">
             </div>
           </div>
 
           <!-- Tabla de Socios -->
-          <div style="overflow-auto;">
+          <div style="overflow-x: auto;">
             <table class="product-admin-table" style="box-shadow: none; border-radius: 0; border: none; font-size: 13px;">
               <thead>
                 <tr>
@@ -989,8 +998,8 @@
         const isActive = (c.id === CURRENT_CICLO_ID);
         const tabClass = isActive ? 'excel-lunar-tab active' : 'excel-lunar-tab';
         const tagHtml = c.esVigente 
-          ? `<span class="vigente-status-tag" style="padding: 2p6px; font-size: 10px;">VIGENTE</span>` 
-          : `<span class="archivada-status-tag" style="padding: 2p6px; font-size: 10px;">${c.mesStr}</span>`;
+          ? `<span class="vigente-status-tag" style="padding: 2px 6px; font-size: 10px;">VIGENTE</span>` 
+          : `<span class="archivada-status-tag" style="padding: 2px 6px; font-size: 10px;">${c.mesStr}</span>`;
 
         html += `
           <button class="${tabClass}" onclick="switchLunarCycle('${c.id}')" title="Ver registro de ${c.nombre}">
@@ -1130,21 +1139,21 @@
       if (redes.instagram) {
         const cleanInsta = redes.instagram.replace('@', '');
         html += `
-          <a href="https://instagram.com/${cleanInsta}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <a href="https://instagram.com/${cleanInsta}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
             <i class="fab fa-instagram"></i> @${cleanInsta}
           </a>
         `;
       }
       if (redes.wspComunidad) {
         html += `
-          <a href="${redes.wspComunidad}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <a href="${redes.wspComunidad}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
             <i class="fab fa-whatsapp"></i> Comunidad de WhatsApp
           </a>
         `;
       }
       if (redes.facebook) {
         html += `
-          <span style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 6p12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <span style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
             <i class="fab fa-facebook"></i> ${redes.facebook}
           </span>
         `;
@@ -1324,7 +1333,7 @@
         gridHtml += `
           <div class="compiled-card ${isActive}" onclick="selectProductFilter('${p.id}')">
             <img src="${p.img}" alt="${p.nombre}" class="compiled-img">
-            <div style="fle1; min-width: 0;">
+            <div style="flex: 1; min-width: 0;">
               <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">${p.unidad}</div>
               <div style="font-size: 14px; font-weight: 700; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.nombre}</div>
               <div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 4px;">
@@ -1353,7 +1362,7 @@
             <!-- Columna 1: Imagen y Meta -->
             <div style="text-align: center;">
               <img src="${p.img}" alt="${p.nombre}" style="width: 100%; height: 110px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 8px;">
-              <span style="font-size: 11px; font-weight: 700; background: #F1F5F9; padding: 3p8px; border-radius: 10px; color: #475569;">${p.unidad}</span>
+              <span style="font-size: 11px; font-weight: 700; background: #F1F5F9; padding: 3px 8px; border-radius: 10px; color: #475569;">${p.unidad}</span>
             </div>
 
             <!-- Columna 2: Ficha Técnica y Costos Detallados -->
@@ -1364,7 +1373,7 @@
               </div>
 
               <!-- Costo Base vs Precio Venta -->
-              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10p12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div>
                   <span style="color: #991B1B; font-weight: 700; display: block;">🌱 Costo Base Productor:</span>
                   <strong style="font-size: 14px; color: #DC2626;">$${costo.toLocaleString('es-AR')}</strong>
@@ -1385,7 +1394,7 @@
             </div>
 
             <!-- Columna 3: Tips para el Vrdedor y Botón de Venta -->
-            <div style="background: rgba(16,163,82,0.03); border: 1pdashed rgba(16,163,82,0.3); border-radius: var(--radius-sm); padding: 12p14px;">
+            <div style="background: rgba(16,163,82,0.03); border: 1pdashed rgba(16,163,82,0.3); border-radius: var(--radius-sm); padding: 12px 14px;">
               <div style="font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                 <i class="fas fa-lightbulb"></i> Tips de Venta para el Vrdedor:
               </div>
@@ -1554,7 +1563,7 @@
       let html = '';
       if (filtered.length === 0) {
         html = `
-          <div style="text-align: center; padding: 36p20px; color: var(--text-muted); font-size: 14px;">
+          <div style="text-align: center; padding: 36px 20px; color: var(--text-muted); font-size: 14px;">
             <i class="fas fa-box-open" style="font-size: 32px; color: #CBD5E1; display: block; margin-bottom: 8px;"></i>
             No hay pedidos registrados con el estado "${ACTIVE_STATUS_FILTER}" en ${CICLO_LUNAR.nombre}.
           </div>
@@ -1582,14 +1591,14 @@
           } else if (o.estado === 'Entregado') {
             actionsHtml = `
               <span style="color: var(--primary); font-size: 12px; font-weight: 700; margin-right: 4px;"><i class="fas fa-check-double"></i> Entregado</span>
-              <button onclick="archivarPedido('${o.id}')" style="background: #F1F5F9; color: #475569; border: 1px solid var(--border-color); padding: 6p10px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer;" title="Archivar en carpeta histórica">
+              <button onclick="archivarPedido('${o.id}')" style="background: #F1F5F9; color: #475569; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; cursor: pointer;" title="Archivar en carpeta histórica">
                 <i class="fas fa-archive"></i> Archivar
               </button>
             `;
           } else {
             actionsHtml = `
               <span style="color: #64748B; font-size: 12px; font-weight: 600;"><i class="fas fa-archive"></i> Archivado</span>
-              <button onclick="changeOrderStatus('${o.id}', 'Pendiente')" style="background: transparent; border: 1px solid var(--border-color); color: #64748B; padding: 4p8px; border-radius: var(--radius-sm); font-size: 11px; cursor: pointer;" title="Reabrir pedido">
+              <button onclick="changeOrderStatus('${o.id}', 'Pendiente')" style="background: transparent; border: 1px solid var(--border-color); color: #64748B; padding: 4px 8px; border-radius: var(--radius-sm); font-size: 11px; cursor: pointer;" title="Reabrir pedido">
                 <i class="fas fa-undo"></i>
               </button>
             `;
@@ -1603,7 +1612,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <span style="font-weight: 700; color: #0F172A;">#${o.id}</span>
-                  ${o.tipoEntrega === 'Delivery' ? '<span class="badge-delivery" style="font-size: 11px; padding: 2p8px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 11px; padding: 2p8px;">📍 Retiro</span>'}
+                  ${o.tipoEntrega === 'Delivery' ? '<span class="badge-delivery" style="font-size: 11px; padding: 2px 8px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 11px; padding: 2px 8px;">📍 Retiro</span>'}
                 </div>
                 <span class="badge-estado ${badgeClass}">${o.estado}</span>
               </div>
@@ -1700,7 +1709,7 @@
                   </div>
                 </div>
               </td>
-              <td style="padding: 12px;"><span style="font-weight: 700; background: #F1F5F9; padding: 2p8px; border-radius: 10px;">${v.pedidosCount}</span></td>
+              <td style="padding: 12px;"><span style="font-weight: 700; background: #F1F5F9; padding: 2px 8px; border-radius: 10px;">${v.pedidosCount}</span></td>
               <td style="padding: 12px;">${v.unidadesCount} un.</td>
               <td style="padding: 12px; font-weight: 600;">$${v.ventasTotal.toLocaleString('es-AR')}</td>
               <td style="padding: 12px; color: #2563EB; font-weight: 600;">$${v.margenNeto.toLocaleString('es-AR')}</td>
@@ -1708,7 +1717,7 @@
                 <strong style="color: var(--primary); font-size: 15px; font-family: var(--font-heading);">$${v.pagoLabor.toLocaleString('es-AR')}</strong>
               </td>
               <td style="padding: 12px; text-align: right;">
-                <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6p12px; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar comprobante por WhatsApp">
+                <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6px 12px; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar comprobante por WhatsApp">
                   <i class="fab fa-whatsapp"></i> Notificar
                 </a>
               </td>
@@ -1764,8 +1773,8 @@
         socios.forEach(s => {
           const cleanPhone = s.cleanPhone;
           const statusBadge = s.comproEnCicloSeleccionado 
-            ? `<span class="badge-pagado" style="font-size: 11px; padding: 2p8px;">🟢 Compró en esta Luna</span>`
-            : `<span class="badge-pendiente" style="font-size: 11px; padding: 2p8px; background: #FEF2F2; color: #DC2626; border-color: #FECACA;">⏳ Sin pedido aún</span>`;
+            ? `<span class="badge-pagado" style="font-size: 11px; padding: 2px 8px;">🟢 Compró en esta Luna</span>`
+            : `<span class="badge-pendiente" style="font-size: 11px; padding: 2px 8px; background: #FEF2F2; color: #DC2626; border-color: #FECACA;">⏳ Sin pedido aún</span>`;
 
           const msgRecordatorio = `🌱 *Hola ${s.nombre}! Te escribimos del ${nodoData.nombre}*\n` +
             `🌕 Te recordamos que está abierta la compra colectiva de *${CICLO_LUNAR ? CICLO_LUNAR.nombre : 'esta Luna'}*.\n` +
@@ -1779,32 +1788,32 @@
 
           html += `
             <tr style="border-bottom: 1px solid #F1F5F9;">
-              <td style="padding: 12p14px;">
+              <td style="padding: 12px 14px;">
                 <div style="font-weight: 700; color: #0F172A;">${s.nombre}</div>
                 ${s.direccion ? `<div style="font-size: 11px; color: var(--text-muted);"><i class="fas fa-map-marker-alt"></i> ${s.direccion}</div>` : ''}
               </td>
-              <td style="padding: 12p14px; font-weight: 600; color: #334155;">${s.telefono || 'Sin tel'}</td>
-              <td style="padding: 12p14px;">
+              <td style="padding: 12px 14px; font-weight: 600; color: #334155;">${s.telefono || 'Sin tel'}</td>
+              <td style="padding: 12px 14px;">
                 <span style="font-size: 12px; color: var(--primary); font-weight: 600;">${s.vrdedor}</span>
               </td>
-              <td style="padding: 12p14px;">
-                ${s.tipoEntregaHabitual === 'Delivery' ? '<span class="badge-delivery" style="font-size: 10px; padding: 2p6px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 10px; padding: 2p6px;">📍 Retiro</span>'}
+              <td style="padding: 12px 14px;">
+                ${s.tipoEntregaHabitual === 'Delivery' ? '<span class="badge-delivery" style="font-size: 10px; padding: 2px 6px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 10px; padding: 2px 6px;">📍 Retiro</span>'}
               </td>
-              <td style="padding: 12p14px;">
-                <span style="font-weight: 700; background: #F1F5F9; padding: 2p8px; border-radius: 10px;">${s.pedidosCount} (${s.unidadesCount} un.)</span>
+              <td style="padding: 12px 14px;">
+                <span style="font-weight: 700; background: #F1F5F9; padding: 2px 8px; border-radius: 10px;">${s.pedidosCount} (${s.unidadesCount} un.)</span>
               </td>
-              <td style="padding: 12p14px; font-weight: 700; color: #0F172A;">
+              <td style="padding: 12px 14px; font-weight: 700; color: #0F172A;">
                 $${s.totalGastado.toLocaleString('es-AR')}
               </td>
-              <td style="padding: 12p14px; font-size: 12px; color: #64748B;">
+              <td style="padding: 12px 14px; font-size: 12px; color: #64748B;">
                 ${s.ultimaLuna || 'Reciente'}
               </td>
-              <td style="padding: 12p14px;">
+              <td style="padding: 12px 14px;">
                 ${statusBadge}
               </td>
-              <td style="padding: 12p14px; text-align: right;">
+              <td style="padding: 12px 14px; text-align: right;">
                 ${cleanPhone ? `
-                  <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6p10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar recordatorio por WhatsApp">
+                  <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6px 10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar recordatorio por WhatsApp">
                     <i class="fab fa-whatsapp"></i> Chat
                   </a>
                 ` : ''}
@@ -1985,10 +1994,10 @@
       </div>
 
       <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button type="button" onclick="closeModal('modal-edit-order')" style="fle1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; cursor: pointer; font-weight: 600;">
+        <button type="button" onclick="closeModal('modal-edit-order')" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; cursor: pointer; font-weight: 600;">
           Cancelar
         </button>
-        <button type="button" onclick="saveEditedOrderFromModal()" class="btn-checkout-cta" style="fle1; padding: 12px; border-radius: var(--radius-sm);">
+        <button type="button" onclick="saveEditedOrderFromModal()" class="btn-checkout-cta" style="flex: 1; padding: 12px; border-radius: var(--radius-sm);">
           <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Cambios
         </button>
       </div>

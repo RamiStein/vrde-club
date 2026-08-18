@@ -224,13 +224,17 @@
     .filter-tab-btn {
       background: white;
       border: 1px solid var(--border-color);
-      padding: 6p14px;
-      border-radius: 20px;
+      padding: 8px 18px;
+      border-radius: 24px;
       font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .filter-tab-btn:hover {
       color: var(--primary);
@@ -316,7 +320,7 @@
     }
   </style>
 </head>
-<body style="background-color: #F8FAFC;">
+<body style="background-color: #F8FAFC; overflow-x: hidden; width: 100%;">
 
   <!-- LOGIN MASTER POR PIN -->
   <div id="super-login" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
@@ -536,7 +540,7 @@
               Configura precios minoristas, mayoristas y distribuidora que bajan automáticamente con el acopio colectivo.
             </p>
           </div>
-          <button class="btn-checkout-cta" style="padding: 10p22px; font-size: 14px; display: flex; align-items: center; gap: 8px;" onclick="openCreateProductModal()">
+          <button class="btn-checkout-cta" style="padding: 10px 22px; font-size: 14px; display: flex; align-items: center; gap: 8px;" onclick="openCreateProductModal()">
             <i class="fas fa-plus"></i> Agregar Nuevo Producto
           </button>
         </div>
@@ -589,7 +593,7 @@
               Supervisión de coordinadores barriales, roles asignados y contacto directo con la red de gestores.
             </p>
           </div>
-          <button class="btn-checkout-cta" style="padding: 9p18px; font-size: 13px; display: flex; align-items: center; gap: 6px;" onclick="openSuperAddVrdedorModal()">
+          <button class="btn-checkout-cta" style="padding: 9px 18px; font-size: 13px; display: flex; align-items: center; gap: 6px;" onclick="openSuperAddVrdedorModal()">
             <i class="fas fa-user-plus"></i> Asignar Nuevo Vrdedor a Nodo
           </button>
         </div>
@@ -758,13 +762,13 @@
             <table class="table-clean" style="width: 100%; font-size: 13px;">
               <thead>
                 <tr style="background: #F8FAFC; text-align: left;">
-                  <th style="padding: 10p14px;">Nodo</th>
-                  <th style="padding: 10p14px;">Pedidos</th>
-                  <th style="padding: 10p14px;">Ventas Brutas</th>
-                  <th style="padding: 10p14px; color: #DC2626;">Costo Productores</th>
-                  <th style="padding: 10p14px; color: #2563EB;">Margen Neto</th>
-                  <th style="padding: 10p14px; color: var(--primary);">Parte Nodo (33.3%)</th>
-                  <th style="padding: 10p14px; color: #D97706;">Parte Vrdedores (33.3%)</th>
+                  <th style="padding: 10px 14px;">Nodo</th>
+                  <th style="padding: 10px 14px;">Pedidos</th>
+                  <th style="padding: 10px 14px;">Ventas Brutas</th>
+                  <th style="padding: 10px 14px; color: #DC2626;">Costo Productores</th>
+                  <th style="padding: 10px 14px; color: #2563EB;">Margen Neto</th>
+                  <th style="padding: 10px 14px; color: var(--primary);">Parte Nodo (33.3%)</th>
+                  <th style="padding: 10px 14px; color: #D97706;">Parte Vrdedores (33.3%)</th>
                 </tr>
               </thead>
               <tbody id="sp-fin-nodos-tbody">
@@ -851,7 +855,7 @@
       </div>
 
       <!-- COSTO BASE DE PRODUCCIÓN (PRIVADO SUPER ADMIN Y NODOS) -->
-      <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-sm); padding: 12p14px; margin-bottom: 16px;">
+      <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <strong style="font-size: 13px; color: #991B1B;"><i class="fas fa-lock"></i> Costo Base de Producción (Privado)</strong>
           <span style="font-size: 11px; color: #B91C1C; font-weight: 600;">Solo Super Admin y Nodos</span>
@@ -873,7 +877,7 @@
         </p>
 
         <!-- Nivel 1: Minorista -->
-        <div style="margin-top: 12px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10p14px;">
+        <div style="margin-top: 12px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 14px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <strong style="font-size: 13px; color: #0F172A;">1. Precio Minorista (Base)</strong>
             <span style="font-size: 11px; color: var(--text-muted);">Desde 1 unidad</span>
@@ -884,7 +888,7 @@
         </div>
 
         <!-- Nivel 2: Mayorista -->
-        <div style="margin-top: 10px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10p14px;">
+        <div style="margin-top: 10px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 14px;">
           <strong style="font-size: 13px; color: #0F172A;">2. Precio Mayorista (Escala Media)</strong>
           <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; margin-top: 6px;">
             <input type="number" id="edit-prod-m2" class="input-field" placeholder="Meta un. (Ej: 30)">
@@ -893,7 +897,7 @@
         </div>
 
         <!-- Nivel 3: Distribuidora -->
-        <div style="margin-top: 10px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10p14px;">
+        <div style="margin-top: 10px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 14px;">
           <strong style="font-size: 13px; color: #0F172A;">3. Precio Distribuidora (Gran Volumen)</strong>
           <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; margin-top: 6px;">
             <input type="number" id="edit-prod-m3" class="input-field" placeholder="Meta un. (Ej: 60)">
@@ -1198,7 +1202,7 @@
               <div style="font-size: 11px; color: var(--text-muted);">${o.fecha || 'Reciente'}</div>
             </td>
             <td>
-              <span style="font-size: 12px; font-weight: 600; color: #6366F1; background: #EEF2FF; padding: 2p8px; border-radius: 8px;">${o.ciclo || 'Piscis'}</span>
+              <span style="font-size: 12px; font-weight: 600; color: #6366F1; background: #EEF2FF; padding: 2px 8px; border-radius: 8px;">${o.ciclo || 'Piscis'}</span>
             </td>
             <td>
               <span style="font-weight: 700; color: var(--primary); font-size: 13px;">${o.nodo || 'Central'}</span>
@@ -1535,7 +1539,7 @@
             ${n.imagen ? `
               <div style="height: 110px; position: relative;">
                 <img src="${n.imagen}" alt="${n.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
-                <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 2p8px; border-radius: 12px; font-size: 11px;">PIN: ${n.pin}</div>
+                <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">PIN: ${n.pin}</div>
               </div>
             ` : ''}
             
@@ -1611,7 +1615,7 @@
             pedidosPorVrdedores += pCount;
 
             vrdedoresChipsHtml += `
-              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10p12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
                 <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
                   <div style="width: 32px; height: 32px; border-radius: 50%; background: white; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">
                     ${v.avatar || '🌱'}
@@ -1651,7 +1655,7 @@
                     <span style="font-size: 11px; color: var(--text-muted);">${n.contacto || 'Responsable de Nodo'}</span>
                   </div>
                 </div>
-                <span class="${vData.mostrar ? 'badge-pagado' : 'badge-pendiente'}" style="font-size: 10px; padding: 2p8px;">
+                <span class="${vData.mostrar ? 'badge-pagado' : 'badge-pendiente'}" style="font-size: 10px; padding: 2px 8px;">
                   ${vData.mostrar ? 'âœ“ Visible en Tienda' : 'Oculto en Tienda'}
                 </span>
               </div>
@@ -1786,8 +1790,8 @@
         socios.forEach(s => {
           const cleanPhone = s.cleanPhone;
           const statusBadge = s.comproEnCicloSeleccionado 
-            ? `<span class="badge-pagado" style="font-size: 11px; padding: 2p8px;">🟢 Compró en esta Luna</span>`
-            : `<span class="badge-pendiente" style="font-size: 11px; padding: 2p8px; background: #FEF2F2; color: #DC2626; border-color: #FECACA;">â³ Sin pedido aún</span>`;
+            ? `<span class="badge-pagado" style="font-size: 11px; padding: 2px 8px;">🟢 Compró en esta Luna</span>`
+            : `<span class="badge-pendiente" style="font-size: 11px; padding: 2px 8px; background: #FEF2F2; color: #DC2626; border-color: #FECACA;">â³ Sin pedido aún</span>`;
 
           const wspUrl = cleanPhone 
             ? `https://wa.me/549${cleanPhone}?text=${encodeURIComponent(`Hola ${s.nombre}! Te escribimos desde Vrde Club Red Central sobre la compra colectiva.`)}`
@@ -1795,23 +1799,23 @@
 
           tbodyHtml += `
             <tr style="border-bottom: 1px solid #F1F5F9;">
-              <td style="padding: 12p14px;">
+              <td style="padding: 12px 14px;">
                 <div style="font-weight: 700; color: #0F172A;">${s.nombre}</div>
                 ${s.direccion ? `<div style="font-size: 11px; color: var(--text-muted);"><i class="fas fa-map-marker-alt"></i> ${s.direccion}</div>` : ''}
               </td>
-              <td style="padding: 12p14px; font-weight: 600; color: #334155;">${s.telefono || 'Sin tel'}</td>
-              <td style="padding: 12p14px;"><span style="font-weight: 600; color: #2563EB;">${s.nodo}</span></td>
-              <td style="padding: 12p14px; font-size: 12px; color: var(--primary); font-weight: 600;">${s.vrdedor}</td>
-              <td style="padding: 12p14px;">
-                ${s.tipoEntregaHabitual === 'Delivery' ? '<span class="badge-delivery" style="font-size: 10px; padding: 2p6px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 10px; padding: 2p6px;">📍 Retiro</span>'}
+              <td style="padding: 12px 14px; font-weight: 600; color: #334155;">${s.telefono || 'Sin tel'}</td>
+              <td style="padding: 12px 14px;"><span style="font-weight: 600; color: #2563EB;">${s.nodo}</span></td>
+              <td style="padding: 12px 14px; font-size: 12px; color: var(--primary); font-weight: 600;">${s.vrdedor}</td>
+              <td style="padding: 12px 14px;">
+                ${s.tipoEntregaHabitual === 'Delivery' ? '<span class="badge-delivery" style="font-size: 10px; padding: 2px 6px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 10px; padding: 2px 6px;">📍 Retiro</span>'}
               </td>
-              <td style="padding: 12p14px;"><span style="font-weight: 700; background: #F1F5F9; padding: 2p8px; border-radius: 10px;">${s.pedidosCount} (${s.unidadesCount} un.)</span></td>
-              <td style="padding: 12p14px; font-weight: 700; color: #0F172A;">$${s.totalGastado.toLocaleString('es-AR')}</td>
-              <td style="padding: 12p14px; font-size: 12px; color: #64748B;">${s.ultimaLuna || 'Reciente'}</td>
-              <td style="padding: 12p14px;">${statusBadge}</td>
-              <td style="padding: 12p14px; text-align: right;">
+              <td style="padding: 12px 14px;"><span style="font-weight: 700; background: #F1F5F9; padding: 2px 8px; border-radius: 10px;">${s.pedidosCount} (${s.unidadesCount} un.)</span></td>
+              <td style="padding: 12px 14px; font-weight: 700; color: #0F172A;">$${s.totalGastado.toLocaleString('es-AR')}</td>
+              <td style="padding: 12px 14px; font-size: 12px; color: #64748B;">${s.ultimaLuna || 'Reciente'}</td>
+              <td style="padding: 12px 14px;">${statusBadge}</td>
+              <td style="padding: 12px 14px; text-align: right;">
                 ${cleanPhone ? `
-                  <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6p10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Abrir WhatsApp">
+                  <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6px 10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Abrir WhatsApp">
                     <i class="fab fa-whatsapp"></i> Chat
                   </a>
                 ` : ''}
@@ -1874,13 +1878,13 @@
 
         tbodyHtml += `
           <tr style="border-bottom: 1px solid #F1F5F9;">
-            <td style="padding: 12p14px;"><strong>${nodos[k].logo || '🌱'} ${nodos[k].nombre}</strong></td>
-            <td style="padding: 12p14px;"><span style="background: #F1F5F9; padding: 2p8px; border-radius: 10px; font-weight: 700;">${nodeOrders.length}</span></td>
-            <td style="padding: 12p14px; font-weight: 600;">$${econ.totalVentas.toLocaleString('es-AR')}</td>
-            <td style="padding: 12p14px; color: #DC2626; font-weight: 600;">$${econ.totalCosto.toLocaleString('es-AR')}</td>
-            <td style="padding: 12p14px; color: #2563EB; font-weight: 600;">$${econ.margenNetoTotal.toLocaleString('es-AR')}</td>
-            <td style="padding: 12p14px; color: var(--primary); font-weight: 700;">$${econ.split.nodo.toLocaleString('es-AR')}</td>
-            <td style="padding: 12p14px; color: #D97706; font-weight: 700;">$${econ.split.vrdedores.toLocaleString('es-AR')}</td>
+            <td style="padding: 12px 14px;"><strong>${nodos[k].logo || '🌱'} ${nodos[k].nombre}</strong></td>
+            <td style="padding: 12px 14px;"><span style="background: #F1F5F9; padding: 2px 8px; border-radius: 10px; font-weight: 700;">${nodeOrders.length}</span></td>
+            <td style="padding: 12px 14px; font-weight: 600;">$${econ.totalVentas.toLocaleString('es-AR')}</td>
+            <td style="padding: 12px 14px; color: #DC2626; font-weight: 600;">$${econ.totalCosto.toLocaleString('es-AR')}</td>
+            <td style="padding: 12px 14px; color: #2563EB; font-weight: 600;">$${econ.margenNetoTotal.toLocaleString('es-AR')}</td>
+            <td style="padding: 12px 14px; color: var(--primary); font-weight: 700;">$${econ.split.nodo.toLocaleString('es-AR')}</td>
+            <td style="padding: 12px 14px; color: #D97706; font-weight: 700;">$${econ.split.vrdedores.toLocaleString('es-AR')}</td>
           </tr>
         `;
       });
