@@ -480,6 +480,11 @@
           </div>
         </div>
 
+          <div class="excel-tabs-scroll" id="excel-lunar-tabs">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+
         <!-- Banner Estado Lunar -->
         <div class="lunar-banner-card" style="margin: 0 0 20px 0;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1072,7 +1077,7 @@
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
 
       document.getElementById('ad-title').innerText = `Panel de ${nodoData.nombre}`;
-      document.getElementById('dash-logo').innerText = nodoData.logo || '🌱';
+      document.getElementById('dash-logo').innerText = nodoData.logo;
       document.getElementById('btn-view-shop').href = `tienda.html?ref=${CURRENT_REF}`;
 
       // Banner Lunar
