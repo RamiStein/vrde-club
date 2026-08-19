@@ -332,51 +332,15 @@ class LunarEngine {
             }
           });
 
-          // Migración automática para corregir fotos y sincronizar catálogo
+          // Migración automática: solo asegurar que las imágenes por defecto estén asignadas
           prods.forEach(p => {
             if (p.id === 'P3' && (p.img.includes('1587049352846') || p.img.includes('1587049352847') || p.img.includes('watermelon'))) {
               p.img = 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80&w=400';
               updated = true;
             }
-            if (p.id === 'P6') {
-              p.img = 'assets/girgolas.png';
-              p.costo = 18000;
-              p.p1 = 23000; p.m1 = 1;
-              p.p2 = 21500; p.m2 = 5;
-              p.p3 = 20000; p.m3 = 10;
-              p.nodos = ['TODOS'];
-              p.activo = true;
-              updated = true;
-            }
-            if (p.id === 'P7') {
-              p.img = 'assets/yerba_grapia_1kg.jpg';
-              p.costo = 3300;
-              p.p1 = 5100; p.m1 = 1;
-              p.p2 = 4400; p.m2 = 12;
-              p.p3 = 3800; p.m3 = 52;
-              p.nodos = ['TODOS'];
-              p.activo = true;
-              updated = true;
-            }
-            if (p.id === 'P8') {
-              p.img = 'assets/yerba_grapia_2kg.jpg';
-              p.costo = 5600;
-              p.p1 = 8600; p.m1 = 1;
-              p.p2 = 7400; p.m2 = 6;
-              p.p3 = 6400; p.m3 = 26;
-              p.nodos = ['TODOS'];
-              p.activo = true;
-              updated = true;
-            }
-            if (p.id === 'P9') {
-              p.img = 'assets/yerba_grapia_10kg.jpg';
-              p.costo = 26000;
-              p.p1 = 40000; p.m1 = 1;
-              p.p2 = 34500; p.m2 = 2;
-              p.p3 = 29800; p.m3 = 6;
-              p.nodos = ['TODOS'];
-              p.activo = true;
-              updated = true;
+            if (!p.img || p.img.trim() === '') {
+              const def = LUNAR_CONFIG.productos.find(d => d.id === p.id);
+              if (def && def.img) { p.img = def.img; updated = true; }
             }
           });
           if (updated) {
@@ -407,9 +371,9 @@ class LunarEngine {
    */
   static guardarProducto(prodData) {
     let prods = this.obtenerProductos(null, false);
-    const inde= prods.findIndex(p => p.id === prodData.id);
+    const index = prods.findIndex(p => p.id === prodData.id);
 
-    if (inde> -1) {
+    if (index > -1) {
       prods[index] = { ...prods[index], ...prodData };
     } else {
       prods.push(prodData);
@@ -503,8 +467,8 @@ class LunarEngine {
     if (!nodos[key]) return;
     if (!nodos[key].vrdedores) nodos[key].vrdedores = [];
 
-    const inde= nodos[key].vrdedores.findIndex(v => v.id === vrdedorData.id);
-    if (inde> -1) {
+    const index = nodos[key].vrdedores.findIndex(v => v.id === vrdedorData.id);
+    if (index > -1) {
       nodos[key].vrdedores[index] = { ...nodos[key].vrdedores[index], ...vrdedorData };
     } else {
       nodos[key].vrdedores.push(vrdedorData);
@@ -569,8 +533,8 @@ class LunarEngine {
    */
   static actualizarPedidoCompleto(pedidoId, nuevosDatos) {
     let pedidos = this.obtenerPedidos();
-    const inde= pedidos.findIndex(p => String(p.id) === String(pedidoId));
-    if (inde> -1) {
+    const index = pedidos.findIndex(p => String(p.id) === String(pedidoId));
+    if (index > -1) {
       pedidos[index] = { ...pedidos[index], ...nuevosDatos, updatedAt: new Date().toISOString() };
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));

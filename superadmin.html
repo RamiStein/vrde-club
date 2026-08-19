@@ -1016,7 +1016,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js?v=5"></script>
+  <script src="lunar-engine.js?v=6"></script>
   <script>
     const MASTER_PINS = ['9999', '1234', '0000'];
 
@@ -1462,7 +1462,7 @@
       LunarEngine.guardarProducto(prodData);
       closeModal('modal-product-editor');
       renderProductsTable();
-      alert("âœ“ Producto guardado con éxito.");
+      alert("✅ Producto guardado con éxito.");
     }
 
     function openQuickPriceModal(prodId) {
@@ -1506,7 +1506,7 @@
     }
 
     function deleteProduct(prodId) {
-      if (confirm("Â¿Estás seguro de que deseas eliminar este producto del catálogo?")) {
+      if (confirm("¿Estás seguro de que deseas eliminar este producto del catálogo?")) {
         LunarEngine.eliminarProducto(prodId);
         renderProductsTable();
       }
@@ -1661,7 +1661,7 @@
                   </div>
                 </div>
                 <span class="${vData.mostrar ? 'badge-pagado' : 'badge-pendiente'}" style="font-size: 10px; padding: 2px 8px;">
-                  ${vData.mostrar ? 'âœ“ Visible en Tienda' : 'Oculto en Tienda'}
+                  ${vData.mostrar ? '✓ Visible en Tienda' : 'Oculto en Tienda'}
                 </span>
               </div>
 
