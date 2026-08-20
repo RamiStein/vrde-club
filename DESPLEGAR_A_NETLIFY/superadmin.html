@@ -1439,9 +1439,15 @@
       const selectedNodes = [];
       nodeCheckboxes.forEach(cb => selectedNodes.push(cb.value));
 
+      const existing = LunarEngine.obtenerProductos(null, false).find(x => x.id === id);
+
       const prodData = {
         id: id,
         nombre: nombre,
+        categoria: existing?.categoria || 'granos',
+        subcategoria: existing?.subcategoria || 'otros',
+        productorInfo: existing?.productorInfo || null,
+        variantes: existing?.variantes || null,
         origen: document.getElementById('edit-prod-origen').value.trim() || 'Agroecológico',
         variedad: document.getElementById('edit-prod-variedad').value.trim() || 'Estación',
         unidad: document.getElementById('edit-prod-unidad').value.trim() || 'unidad',

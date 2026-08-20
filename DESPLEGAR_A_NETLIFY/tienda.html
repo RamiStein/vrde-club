@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Tienda Lunar • Vrde Club</title>
   <meta name="description" content="Compra comunitaria y soberana de alimentos agroecológicos sincronizada con los ciclos lunares.">
 
@@ -14,18 +14,413 @@
   <!-- Tipografías -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Hoja de estilos del sistema Lunar -->
   <link rel="stylesheet" href="lunar-style.css">
+
+  <style>
+    /* =========================================================
+       ESTILOS PARA CATEGORÍAS SPOTIFY, FLIP 3D Y MODO SWIPE
+       ========================================================= */
+    :root {
+      --spotify-radius: 16px;
+    }
+
+    /* Switch de Modos de Vista */
+    .view-mode-bar-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0 12px;
+      padding: 0 16px;
+    }
+    .view-mode-pill-btn {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .view-mode-pill-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(16,163,82,0.25);
+    }
+
+    /* Bloques de Categorías Spotify */
+    .spotify-categories-wrapper {
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+    .spotify-categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 600px) {
+      .spotify-categories-grid {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scroll-snap-type: x mandatory;
+      }
+      .spotify-cat-card {
+        min-width: 120px;
+        height: 70px !important;
+        scroll-snap-align: start;
+      }
+    }
+
+    .spotify-cat-card {
+      position: relative;
+      height: 78px;
+      border-radius: var(--spotify-radius);
+      padding: 10px 12px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: white;
+      font-weight: 800;
+      font-size: 12.5px;
+      line-height: 1.15;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+    .spotify-cat-card:hover { transform: translateY(-2px); }
+    .spotify-cat-card.active { outline: 3px solid #0F172A; outline-offset: 1px; }
+    .spotify-cat-card .cat-name { z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .spotify-cat-card .cat-count { font-size: 10px; opacity: 0.85; font-weight: 500; }
+    .spotify-cat-card .cat-icon {
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      font-size: 32px;
+      opacity: 0.85;
+      transform: rotate(15deg);
+    }
+
+    .scat-all { background: linear-gradient(135deg, #10A352, #059669); }
+    .scat-granos { background: linear-gradient(135deg, #D97706, #B45309); }
+    .scat-cacao { background: linear-gradient(135deg, #92400E, #78350F); }
+    .scat-yerba { background: linear-gradient(135deg, #0D9488, #115E59); }
+    .scat-aceite { background: linear-gradient(135deg, #65A30D, #4D7C0F); }
+    .scat-hongos { background: linear-gradient(135deg, #475569, #334155); }
+    .scat-huerta { background: linear-gradient(135deg, #16A34A, #15803D); }
+    .scat-granja { background: linear-gradient(135deg, #EA580C, #C2410C); }
+
+    /* Subcategorías */
+    .subcat-pills-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 4px 0 8px;
+    }
+    .subcat-pill-btn {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      padding: 5px 12px;
+      border-radius: 18px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .subcat-pill-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* =========================================================
+       GRILLA DE PRODUCTOS CON FLIP 3D
+       ========================================================= */
+    .store-grid-wrapper {
+      padding: 0 16px;
+      margin-bottom: 30px;
+    }
+    .store-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 380px));
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .flip-card-container {
+      perspective: 1200px;
+      width: 100%;
+      height: 520px;
+      position: relative;
+    }
+    .flip-card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .flip-card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .flip-front { z-index: 2; transform: rotateY(0deg); }
+    .flip-back {
+      transform: rotateY(180deg);
+      background: #0F172A;
+      color: white;
+      padding: 18px;
+      overflow-y: auto;
+      z-index: 1;
+    }
+
+    .card-img-wrapper {
+      position: relative;
+      width: 100%;
+      height: 175px;
+      background: #F1F5F9;
+      overflow: hidden;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+    .origin-pill-tag {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10.5px;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+    .btn-flip-trigger {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0F172A;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      z-index: 5;
+    }
+
+    .card-content-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+    .prod-card-name { font-size: 17px; font-weight: 800; color: #0F172A; line-height: 1.25; margin-bottom: 2px; }
+    .prod-card-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.35; margin-bottom: 8px; }
+
+    /* Selector de Presentación en Tarjeta */
+    .variant-chips-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .variant-chips-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .variant-chips-grid { display: flex; gap: 5px; }
+    .v-chip-btn {
+      flex: 1;
+      padding: 5px 6px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      background: white;
+      font-size: 11px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.15s;
+    }
+    .v-chip-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .v-chip-btn .v-sub-text { font-size: 9px; opacity: 0.85; font-weight: 500; }
+
+    /* Escala de Ahorro Colectivo */
+    .scale-box-card {
+      background: #F1F5F9;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .scale-price-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .scale-price-val { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--primary); }
+    .scale-tiers-text { font-size: 10.5px; color: #475569; border-top: 1px dashed #CBD5E1; padding-top: 4px; margin-top: 4px; }
+
+    /* Footer con Cantidad y Botón Sumar */
+    .card-action-footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .qty-counter-control {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      background: white;
+      padding: 2px 4px;
+    }
+    .qty-btn-c {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: none;
+      background: #F1F5F9;
+      color: #0F172A;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-num-c { width: 28px; text-align: center; font-weight: 800; font-size: 13px; }
+    
+    .btn-add-to-cart-grid {
+      flex: 1;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(16,163,82,0.25);
+    }
+    .btn-add-to-cart-grid:hover { background: var(--primary-dark); }
+
+    /* Dorso de la Tarjeta */
+    .back-tag-label { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+    .back-prod-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .back-story-text { font-size: 11px; color: #CBD5E1; line-height: 1.35; margin-bottom: 8px; }
+    .back-impact-box {
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 10.5px;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 8px;
+    }
+    .back-map-box {
+      width: 100%;
+      height: 110px;
+      border-radius: 8px;
+      background: #1E293B;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .back-map-pin { font-size: 22px; color: var(--primary); animation: bounce 1.5s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* =========================================================
+       MODO SWIPE (TINDER)
+       ========================================================= */
+    #swipe-view-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-width: 380px;
+      margin: 0 auto 30px;
+      padding: 0 12px;
+    }
+    .swipe-actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .btn-act-circle {
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease;
+    }
+    .btn-act-circle:active { transform: scale(0.9); }
+    .btn-act-pass { width: 48px; height: 48px; background: white; color: #EF4444; border: 2px solid #FEE2E2; font-size: 18px; }
+    .btn-act-info { width: 40px; height: 40px; background: white; color: #6366F1; border: 2px solid #E0E7FF; font-size: 14px; }
+    .btn-act-like { width: 56px; height: 56px; background: var(--primary); color: white; font-size: 22px; box-shadow: 0 6px 18px rgba(16,163,82,0.35); }
+
+    .swipe-counter-hint { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 6px; text-align: center; }
+  </style>
 </head>
 <body>
 
-  
-
   <!-- Header del Nodo Activo -->
-  
   <header class="shop-header">
     <div class="shop-header-left">
       <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" title="Volver a la página anterior">
@@ -48,7 +443,6 @@
       <span class="btn-info-text">Info del Nodo</span>
     </button>
   </header>
-
 
   <!-- Banner de Estado Lunar & Metas Colectivas -->
   <div style="padding: 0 16px;">
@@ -92,20 +486,158 @@
     </div>
   </div>
 
-  <!-- Pestañas de Selección de Producto -->
-  <div class="product-tabs-wrapper">
-    <div class="product-tabs" id="shop-tabs">
-      <!-- Inyectado dinámicamente por JS -->
+  <!-- Switch de Modos de Vista: Cuadrícula vs Swipe -->
+  <div class="view-mode-bar-container">
+    <button class="view-mode-pill-btn active" id="btn-view-grid" onclick="switchStoreView('grid')">
+      <i class="fas fa-th-large"></i> Vista Cuadrícula
+    </button>
+    <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')">
+      <i class="fas fa-layer-group"></i> Modo Swipe (Tinder 🎴)
+    </button>
+  </div>
+
+  <!-- Barra de Categorías Spotify & Subcategorías -->
+  <div class="spotify-categories-wrapper">
+    <div class="spotify-categories-grid">
+      <div class="spotify-cat-card scat-all active" onclick="filterByStoreCategory('TODOS', this)">
+        <div class="cat-name">Ver Todo</div>
+        <div class="cat-icon">🌱</div>
+      </div>
+      <div class="spotify-cat-card scat-granos" onclick="filterByStoreCategory('granos', this)">
+        <div class="cat-name">Granos & Legumbres</div>
+        <div class="cat-icon">🌾</div>
+      </div>
+      <div class="spotify-cat-card scat-cacao" onclick="filterByStoreCategory('cacao', this)">
+        <div class="cat-name">Cacao Silvestre</div>
+        <div class="cat-icon">🍫</div>
+      </div>
+      <div class="spotify-cat-card scat-yerba" onclick="filterByStoreCategory('yerba', this)">
+        <div class="cat-name">Yerba Mate</div>
+        <div class="cat-icon">🌿</div>
+      </div>
+      <div class="spotify-cat-card scat-aceite" onclick="filterByStoreCategory('aceite', this)">
+        <div class="cat-name">Aceite Oliva</div>
+        <div class="cat-icon">🫒</div>
+      </div>
+      <div class="spotify-cat-card scat-hongos" onclick="filterByStoreCategory('hongos', this)">
+        <div class="cat-name">Hongos del Delta</div>
+        <div class="cat-icon">🍄</div>
+      </div>
+      <div class="spotify-cat-card scat-huerta" onclick="filterByStoreCategory('huerta', this)">
+        <div class="cat-name">Huerta & Frescos</div>
+        <div class="cat-icon">🥬</div>
+      </div>
+      <div class="spotify-cat-card scat-granja" onclick="filterByStoreCategory('granja', this)">
+        <div class="cat-name">Granja & Mieles</div>
+        <div class="cat-icon">🥚</div>
+      </div>
+    </div>
+
+    <!-- Pastillas de Subcategorías -->
+    <div class="subcat-pills-bar" id="subcat-bar">
+      <button class="subcat-pill-btn active" onclick="filterByStoreSubcat('ALL', this)">Todas las variedades</button>
+      <button class="subcat-pill-btn" data-cat="granos" onclick="filterByStoreSubcat('legumbres', this)">🫘 Legumbres (Lentejas / Garbanzos)</button>
+      <button class="subcat-pill-btn" data-cat="granos" onclick="filterByStoreSubcat('arroz', this)">🍚 Arroces (Yamaní)</button>
+      <button class="subcat-pill-btn" data-cat="granos" onclick="filterByStoreSubcat('harinas', this)">🌾 Harinas a la Piedra</button>
     </div>
   </div>
 
-  <!-- Escaparate de Producto Activo -->
-  <main class="product-showcase" id="shop-product-container">
-    <!-- Inyectado dinámicamente por JS -->
+  <!-- =========================================
+       1. ESCAPARATE MODO CUADRÍCULA (CON FLIP 3D)
+       ========================================= -->
+  <main class="store-grid-wrapper" id="grid-view-container">
+    <div class="store-products-grid" id="grid-products-holder">
+      <!-- Inyectado dinámicamente -->
+    </div>
   </main>
 
-  <!-- Espacio de seguridad inferior para la barra flotante -->
-  <div style="height: 60px; width: 100%; pointer-events: none;"></div>
+  <!-- =========================================
+       2. ESCAPARATE MODO SWIPE (TINDER)
+       ========================================= -->
+  <div id="swipe-view-container">
+    <div class="flip-card-container" style="height: 450px; max-width: 380px;">
+      <div class="flip-card-inner" id="swipe-card-inner">
+        
+        <!-- FRENTE SWIPE -->
+        <div class="flip-card-face flip-front">
+          <button class="btn-flip-trigger" onclick="event.stopPropagation(); toggleSwipeFlip();">
+            <i class="fas fa-sync-alt"></i> Info & Mapa
+          </button>
+          <div class="card-img-wrapper" onclick="toggleSwipeFlip();" style="height: 165px;">
+            <img id="sw-img" src="" alt="Producto">
+            <div class="origin-pill-tag" id="sw-origin">📍 Origen</div>
+          </div>
+          <div class="card-content-body">
+            <div>
+              <h3 class="prod-card-name" id="sw-title">Nombre Producto</h3>
+              <p class="prod-card-desc" id="sw-desc">Descripción breve del producto.</p>
+            </div>
+
+            <!-- Selector de Presentación -->
+            <div class="variant-chips-box" onclick="event.stopPropagation();">
+              <div class="variant-chips-header">
+                <span>Presentación:</span>
+                <span id="sw-chip-label" style="color: var(--primary);">Formato</span>
+              </div>
+              <div class="variant-chips-grid" id="sw-chips-grid"></div>
+            </div>
+
+            <!-- Cantidad y Total -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 10px; padding: 6px 10px;" onclick="event.stopPropagation();">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 11px; font-weight: 700; color: #475569;">Cant:</span>
+                <div class="qty-counter-control">
+                  <button class="qty-btn-c" onclick="adjustSwipeQty(-1)">-</button>
+                  <span class="qty-num-c" id="sw-qty-val">1</span>
+                  <button class="qty-btn-c" onclick="adjustSwipeQty(1)">+</button>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="scale-price-val" id="sw-total-val">$0</div>
+                <div style="font-size: 9.5px; color: var(--text-muted);" id="sw-unit-val">($0 / u)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DORSO SWIPE -->
+        <div class="flip-card-face flip-back">
+          <button class="btn-flip-trigger" style="background: rgba(255,255,255,0.2); color: white;" onclick="event.stopPropagation(); toggleSwipeFlip();">
+            <i class="fas fa-undo"></i> Volver a la Foto
+          </button>
+          <div class="back-tag-label">Historia y Trazabilidad</div>
+          <h3 class="back-prod-title" id="sw-back-producer">Productor</h3>
+          <p class="back-story-text" id="sw-back-story">Historia</p>
+          <div class="back-impact-box">
+            <strong style="color: var(--accent);"><i class="fas fa-seedling"></i> Impacto:</strong>
+            <span id="sw-back-impact">Impacto agroecológico.</span>
+          </div>
+          <div class="back-map-box">
+            <i class="fas fa-map-marker-alt back-map-pin"></i>
+            <span style="position: absolute; bottom: 4px; font-size: 9.5px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;" id="sw-back-loc">📍 Ubicación</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botones de Acción Swipe -->
+    <div class="swipe-actions-bar">
+      <button class="btn-act-circle btn-act-pass" onclick="triggerSwipeAction('left')" title="Pasar al siguiente">
+        <i class="fas fa-times"></i>
+      </button>
+      <button class="btn-act-circle btn-act-info" onclick="toggleSwipeFlip()" title="Girar para ver historia y mapa">
+        <i class="fas fa-info"></i>
+      </button>
+      <button class="btn-act-circle btn-act-like" onclick="triggerSwipeAction('right')" title="¡Sumar al pedido!">
+        <i class="fas fa-heart"></i>
+      </button>
+    </div>
+
+    <div class="swipe-counter-hint" id="sw-counter-hint">
+      Producto 1 de 11 • Toca la foto para ver historia y mapa
+    </div>
+  </div>
 
   <!-- Barra Flotante de Carrito -->
   <div class="floating-cart-bar" id="floating-cart">
@@ -151,442 +683,585 @@
           </div>
         </div>
 
-        <!-- Selector Tipo de Entrega: Retiro vs Delivery -->
-        <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 6px;">Forma de Entrega *</label>
-          <div class="don-btn-group" style="margin-top: 4px;">
-            <button class="don-btn-opt active" id="btn-entrega-retiro" onclick="setDeliveryType('Retiro en Nodo')">
-              <i class="fas fa-store"></i> Retiro en Nodo (Gratis)
-            </button>
-            <button class="don-btn-opt" id="btn-entrega-delivery" onclick="setDeliveryType('Delivery')">
-              <i class="fas fa-motorcycle"></i> Envío a Domicilio (Delivery)
-            </button>
-          </div>
-
-          <!-- Info Retiro -->
-          <div id="info-entrega-retiro" style="background: #F1F5F9; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: #475569; margin-top: 10px;">
-            <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Retiras en el punto de encuentro del nodo. Sin costo adicional.
-          </div>
-
-          <!-- Formulario Dirección Delivery -->
-          <div id="form-entrega-delivery" class="hidden" style="margin-top: 10px;">
-            <div class="input-field-group" style="margin-bottom: 10px;">
-              <label style="font-size: 12px;">Dirección completa (Calle, Altura, Piso/Depto) *</label>
-              <input type="text" id="chk-direccion-delivery" class="input-field" placeholder="Ej: Av. San Martín 1420, Piso 3 Depto B">
-            </div>
-            <div class="input-field-group" style="margin-bottom: 0;">
-              <label style="font-size: 12px;">Localidad / Barrio *</label>
-              <input type="text" id="chk-localidad-delivery" class="input-field" placeholder="Ej: Escobar / Loma Verde">
-            </div>
-          </div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 2px solid #E2E8F0;">
-          <span style="font-size: 15px; font-weight: 700; color: #0F172A;">TOTAL A TRANSFERIR</span>
-          <span style="font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--primary);" id="checkout-total-final">$0</span>
+        <div class="total-row" style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #CBD5E1;">
+          <span style="font-size: 16px; font-weight: 700; color: #0F172A;">Total a Transferir:</span>
+          <span style="font-size: 22px; font-weight: 800; color: var(--primary);" id="checkout-total-final">$0</span>
         </div>
       </div>
 
-      <!-- Selección de Vrdedor Comunitario -->
-      <div class="input-field-group" id="group-chk-vrdedor" style="margin-bottom: 12px;">
-        <label style="font-size: 13px; font-weight: 700; color: #0F172A;">¿Con qué Vrdedor te estás comunicando? (Opcional)</label>
-        <select id="chk-vrdedor-select" class="input-field" style="margin-top: 4px;">
-          <option value="Coordinación General del Nodo">🌱 Coordinación General del Nodo</option>
-        </select>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Elige a tu coordinador/a de confianza para gestionar la entrega de este pedido.</p>
-      </div>
+      <!-- Formulario de Pedido -->
+      <form onsubmit="event.preventDefault(); submitOrder();">
+        
+        <!-- Asignación de Vrdedor/a -->
+        <div class="form-group" id="vrdedor-selector-group">
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>🤝 ¿Quién te invitó o acompaña tu compra?</span>
+            <span style="font-weight: 400; color: var(--text-muted); font-size: 11px;">(Vrdedores Locales)</span>
+          </label>
+          <select id="chk-vrdedor-select" class="input-field" style="background: #F8FAFC; font-weight: 600;">
+            <!-- Inyectado por JS -->
+          </select>
+        </div>
 
-      <!-- Datos del Comprador -->
-      <div class="input-field-group">
-        <label>Nombre y Apellido *</label>
-        <input type="text" id="chk-nombre" class="input-field" placeholder="Ej: Sofía Almada" required>
-      </div>
+        <div class="form-group">
+          <label class="form-label">Nombre y Apellido *</label>
+          <input type="text" id="chk-nombre" class="input-field" placeholder="Tu nombre completo" required>
+        </div>
 
-      <div class="input-field-group">
-        <label>Teléfono (WhatsApp) *</label>
-        <input type="tel" id="chk-tel" class="input-field" placeholder="Ej: 11 2345 6789" required>
-      </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono / WhatsApp *</label>
+          <input type="tel" id="chk-tel" class="input-field" placeholder="Ej: 1123456789 (Sin 0 ni 15)" required>
+        </div>
 
-      <div class="input-field-group">
-        <label>Comentario adicional (opcional)</label>
-        <textarea id="chk-msg" class="input-field" rows="2" placeholder="Ej: Avisar por WhatsApp antes de llegar"></textarea>
-      </div>
+        <!-- Opciones de Entrega -->
+        <div class="form-group">
+          <label class="form-label">Forma de Entrega *</label>
+          <div class="delivery-options-grid">
+            <button type="button" class="delivery-card active" id="btn-entrega-retiro" onclick="setDeliveryType('Retiro en Nodo')">
+              <i class="fas fa-store"></i>
+              <div class="title">Retiro en Nodo</div>
+              <div class="sub">Sin costo adicional</div>
+            </button>
+            <button type="button" class="delivery-card" id="btn-entrega-delivery" onclick="setDeliveryType('Delivery')">
+              <i class="fas fa-motorcycle"></i>
+              <div class="title">Envío a Domicilio</div>
+              <div class="sub">Coordinar con el nodo</div>
+            </button>
+          </div>
+        </div>
 
-      <button class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); margin-top: 8px;" id="btn-submit-order" onclick="submitOrder()">
-        CONFIRMAR PEDIDO
-      </button>
+        <div id="info-entrega-retiro" class="delivery-info-box">
+          <i class="fas fa-map-pin" style="color: var(--primary); margin-right: 6px;"></i>
+          <span>Retiras tu pedido el día asignado en la sede del nodo.</span>
+        </div>
+
+        <div id="form-entrega-delivery" class="hidden" style="margin-bottom: 16px;">
+          <div class="form-group">
+            <label class="form-label">Dirección de Entrega</label>
+            <input type="text" id="chk-direccion-delivery" class="input-field" placeholder="Calle, número, piso/depto">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Localidad / Barrio</label>
+            <input type="text" id="chk-localidad-delivery" class="input-field" placeholder="Ej: Maschwitz, Loma Verde, etc.">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notas o aclaraciones (opcional)</label>
+          <textarea id="chk-msg" class="input-field" rows="2" placeholder="Indicaciones para la entrega o retiro..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 15px; margin-top: 10px;">
+          CONFIRMAR Y ENVIAR PEDIDO
+        </button>
+      </form>
     </div>
   </div>
 
-  <!-- Modal Éxito y WhatsApp -->
+  <!-- Modal Éxito -->
   <div class="modal-overlay" id="modal-success">
     <div class="modal-card" style="text-align: center;">
-      <div style="font-size: 54px; margin-bottom: 16px;">🌱</div>
-      <h2 style="color: var(--primary); font-size: 26px; margin-bottom: 6px;">¡Pedido Registrado!</h2>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Código de orden: <strong id="succ-id" style="color: #0F172A;"></strong></p>
-
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; text-align: left; margin-bottom: 24px;">
-        <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 6px;">Datos para la transferencia:</div>
-        <div style="font-size: 14px; margin-bottom: 4px;">Alias / CBU: <strong id="succ-alias" style="color: var(--primary);"></strong></div>
-        <div style="font-size: 15px; margin-top: 6px;">Total a transferir: <strong id="succ-total" style="color: var(--primary); font-size: 20px; font-family: var(--font-heading);"></strong></div>
-      </div>
-
-      <p style="font-size: 13px; color: #64748B; margin-bottom: 20px; line-height: 1.4;">
-        Haz clic a continuación para notificar a tu agente de nodo por WhatsApp y adjuntar tu comprobante de pago.
+      <div style="font-size: 54px; color: var(--primary); margin-bottom: 10px;">🎉</div>
+      <h3 style="font-size: 22px; color: #0F172A; margin: 0 0 8px;">¡Pedido Registrado con Éxito!</h3>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+        Tu pedido comunitario <strong id="succ-id">#G-000000</strong> ha sido guardado en la red.
       </p>
 
-      <button class="btn-checkout-cta" style="background: #25D366; width: 100%; border-radius: var(--radius-sm); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="sendWsp()">
-        <i class="fab fa-whatsapp" style="font-size: 20px;"></i> ENVIAR A WHATSAPP
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 24px; text-align: left;">
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 6px;">Datos para Transferir</div>
+        <div style="font-size: 13px; color: #0F172A; margin-bottom: 4px;">Alias / CBU: <strong id="succ-alias" style="color: var(--primary);">escobar.vrde.mp</strong></div>
+        <div style="font-size: 13px; color: #0F172A;">Total a Transferir: <strong id="succ-total" style="font-size: 16px; color: #0F172A;">$0</strong></div>
+      </div>
+
+      <button class="btn-checkout-cta" onclick="sendWsp()" style="width: 100%; background: #25D366; border-radius: var(--radius-md); padding: 14px; font-size: 15px;">
+        <i class="fab fa-whatsapp" style="font-size: 18px; margin-right: 8px;"></i> ENVIAR COMPROBANTE AL NODO
       </button>
 
-      <button onclick="window.location.href='index.html'" style="background: transparent; border: 1px solid var(--border-color); color: #475569; width: 100%; padding: 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">
-        Volver a la portada
+      <button onclick="closeModal('modal-success')" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 16px;">
+        Cerrar ventana
       </button>
     </div>
   </div>
 
   <!-- Modal Perfil del Nodo -->
   <div class="modal-overlay" id="modal-node">
-    <div class="modal-card" style="text-align: center;">
+    <div class="modal-card">
       <div class="modal-header-row">
-        <h3 style="font-size: 20px; margin: 0;">Información del Nodo</h3>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 32px;" id="prof-logo">🌱</div>
+          <div>
+            <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="prof-name">Nodo Escobar</h3>
+            <span style="font-size: 12px; color: var(--primary); font-weight: 600;">Punto Oficial de Acopio y Entrega</span>
+          </div>
+        </div>
         <span class="modal-close-icon" onclick="closeModal('modal-node')">&times;</span>
       </div>
 
-      <div id="prof-logo" style="width: 70px; height: 70px; border-radius: 50%; background: rgba(16,163,82,0.1); color: var(--primary); display: inline-flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 12px;">🌱</div>
-      <h2 id="prof-name" style="color: #0F172A; font-size: 24px; margin-bottom: 6px;">Nombre Nodo</h2>
-      <p id="prof-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.4;">Descripción</p>
+      <div style="padding: 10px 0;">
+        <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-bottom: 16px;" id="prof-desc"></p>
 
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; text-align: left; font-size: 14px;">
-        <p style="margin-bottom: 10px;"><strong>📍 Dirección:</strong> <span id="prof-dir"></span></p>
-        <p style="margin-bottom: 10px;"><strong>👤 Agente Responsable:</strong> <span id="prof-contacto"></span></p>
-        <p style="margin-bottom: 10px;"><strong>🚚 Día de Entrega:</strong> <span id="prof-entrega"></span></p>
-        <p style="margin-bottom: 0;"><strong>💳 Alias:</strong> <span id="prof-cbu" style="color: var(--primary); font-weight: bold;"></span></p>
-      </div>
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary); width: 20px;"></i>
+            <strong id="prof-dir">Dirección</strong>
+          </div>
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-user-check" style="color: var(--primary); width: 20px;"></i>
+            <span id="prof-contacto">Responsable</span>
+          </div>
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-calendar-alt" style="color: var(--primary); width: 20px;"></i>
+            <span id="prof-entrega">Horario de entrega</span>
+          </div>
+          <div style="font-size: 13px; color: #334155;">
+            <i class="fas fa-university" style="color: var(--primary); width: 20px;"></i>
+            <span>Alias / CBU: <strong id="prof-cbu" style="color: var(--primary);">alias</strong></span>
+          </div>
+        </div>
 
-      <div id="prof-social-badges" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
-        <!-- Inyectado por JS -->
-      </div>
-
-      <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <a id="prof-admin-link" href="admin.html" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 600;">
-          <i class="fas fa-lock"></i> Panel Gestor (PIN)
-        </a>
-        <button class="btn-checkout-cta" style="flex: 1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
-          Entendido
-        </button>
+        <div style="margin-top: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 8px;">Redes y Difusión del Nodo:</div>
+          <div id="prof-social-badges" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="lunar-engine.js?v=6"></script>
+  <!-- Scripts del Sistema Lunar -->
+  <script src="lunar-engine.js"></script>
+
   <script>
     let CURRENT_REF = 'escobar';
-    let ACTIVE_INDEX = 0;
-    let CARRITO = {};
+    let CICLO_LUNAR = null;
     let DONATION_TYPE = '3';
     let ORDER_SUCCESS_DATA = null;
-    let CICLO_LUNAR = null;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const refParam = urlParams.get('ref');
-    if (refParam && LUNAR_CONFIG.nodos[refParam.toLowerCase()]) {
-      CURRENT_REF = refParam.toLowerCase();
-    }
+    // Estado del Carrito y Selección
+    let CART_ITEMS = []; // Array de { id, prodId, title, variantId, variantLabel, price, qty, img }
+    let STORE_VIEW_MODE = 'grid'; // 'grid' o 'swipe'
+    let CURRENT_CATEGORY = 'TODOS';
+    let CURRENT_SUBCATEGORY = 'ALL';
+
+    let gridProductStates = {}; // { prodId: { variantIdx, qty } }
+
+    // Estado para modo Swipe
+    let swipeFilteredList = [];
+    let swipeCurrentIdx = 0;
+    let swipeVariantIdx = 0;
+    let swipeQty = 1;
 
     function initStore() {
-      CICLO_LUNAR = LunarEngine.obtenerCicloActual();
-
-      // Cargar carrito persistido en sesión si existe
-      try {
-        const storedCart = sessionStorage.getItem('VRDE_CART');
-        if (storedCart) {
-          CARRITO = JSON.parse(storedCart);
-        }
-      } catch(e){}
-
-      document.querySelectorAll('.node-select-btn').forEach(btn => {
-        const text = btn.innerText.toLowerCase().replace(/[\s\.]/g, '');
-        btn.classList.toggle('active', text.includes(CURRENT_REF.replace(/[\s\.]/g, '')));
-      });
+      const urlParams = new URLSearchParams(window.location.search);
+      CURRENT_REF = urlParams.get('ref') || 'escobar';
+      CICLO_LUNAR = LunarEngine.obtenerCicloVigente();
 
       const nodosObj = LunarEngine.obtenerNodos();
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
-      const safeLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
 
+      // Cargar Header del Nodo
       document.getElementById('shop-name').innerText = nodoData.nombre;
-      const elSub = document.getElementById('shop-subheading');
-      if (elSub) elSub.innerHTML = '<i class="fas fa-map-marker-alt" style="color: var(--primary); font-size: 10px;"></i> <span>Ver dirección y entrega &rarr;</span>';
-      const elBar = document.getElementById('bar-current-node'); if (elBar) elBar.innerText = nodoData.nombre;
-      document.getElementById('shop-logo').innerText = safeLogo;
+      document.getElementById('shop-logo').innerText = nodoData.logo || '🌱';
       document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
-      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
+      // Cargar Banner Lunar
       document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
       document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
 
-      updateProgressBars();
+      // Inicializar Estados de Productos
+      const prods = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      prods.forEach(p => {
+        gridProductStates[p.id] = { variantIdx: 0, qty: 1 };
+      });
 
-      buildTabs();
-      loadProductView(0);
-      updateFloatingCart();
+      updateProgressBars();
+      applyFiltersAndRender();
     }
 
     function updateProgressBars() {
-      const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
-      const cicloActual = LunarEngine.obtenerCicloActual();
+      const prods = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      const orders = LunarEngine.obtenerPedidos(CURRENT_REF);
 
-      // Pedidos reales del nodo en el ciclo vigente
-      const pedidosNodo = LunarEngine.obtenerPedidos(CURRENT_REF, cicloActual.id);
-      const ventasNodo = pedidosNodo.reduce((sum, p) => {
-        if (p.unidades) return sum + Number(p.unidades);
-        if (p.items && Array.isArray(p.items)) {
-          return sum + p.items.reduce((s, it) => s + (Number(it.cant) || 0), 0);
+      let nodoUnits = 0;
+      orders.forEach(o => {
+        if (o.items) {
+          o.items.forEach(i => nodoUnits += (Number(i.cant) || 0));
+        } else if (o.unidades) {
+          nodoUnits += Number(o.unidades);
         }
-        return sum;
-      }, 0);
-
-      const metaNodo = Number(nodoData.metaPropia) || 100;
-      const pNodo = metaNodo > 0 ? Math.min(100, Math.round((ventasNodo / metaNodo) * 100)) : 0;
-
-      const elNodoText = document.getElementById('shop-nodo-prog-text');
-      if (elNodoText) elNodoText.innerText = `${ventasNodo} / ${metaNodo} unidades`;
-      const elNodoBar = document.getElementById('shop-nodo-prog-bar');
-      if (elNodoBar) elNodoBar.style.width = `${pNodo}%`;
-
-      // Pedidos reales globales de toda la red en el ciclo vigente
-      const pedidosGlobal = LunarEngine.obtenerPedidos(null, cicloActual.id);
-      const ventasGlobal = pedidosGlobal.reduce((sum, p) => {
-        if (p.unidades) return sum + Number(p.unidades);
-        if (p.items && Array.isArray(p.items)) {
-          return sum + p.items.reduce((s, it) => s + (Number(it.cant) || 0), 0);
-        }
-        return sum;
-      }, 0);
-
-      // Meta global acumulada de la red (suma de metas de todos los nodos)
-      const metaGlobal = Object.values(nodosObj).reduce((sum, n) => sum + (Number(n.metaPropia) || 100), 0);
-      const pGlobal = metaGlobal > 0 ? Math.min(100, Math.round((ventasGlobal / metaGlobal) * 100)) : 0;
-
-      const elGlobText = document.getElementById('shop-global-prog-text');
-      if (elGlobText) elGlobText.innerText = `${ventasGlobal} / ${metaGlobal} unidades`;
-      const elGlobBar = document.getElementById('shop-global-prog-bar');
-      if (elGlobBar) elGlobBar.style.width = `${pGlobal}%`;
-    }
-
-    function selectNode(nodeId) {
-      CURRENT_REF = nodeId;
-      const newUrl = window.location.pathname + '?ref=' + nodeId;
-      window.history.pushState({ path: newUrl }, '', newUrl);
-      initStore();
-    }
-
-    function getStoreProducts() {
-      return LunarEngine.obtenerProductos(CURRENT_REF, true);
-    }
-
-    function buildTabs() {
-      let html = '';
-      const prods = getStoreProducts();
-      if (ACTIVE_INDEX >= prods.length) ACTIVE_INDEX = 0;
-
-      prods.forEach((p, i) => {
-        html += `<div class="tab-item ${i === ACTIVE_INDEX ? 'active' : ''}" onclick="loadProductView(${i})">${p.nombre}</div>`;
       });
-      document.getElementById('shop-tabs').innerHTML = html;
+
+      const allOrders = LunarEngine.obtenerPedidos(null);
+      let globalUnits = 0;
+      allOrders.forEach(o => {
+        if (o.items) {
+          o.items.forEach(i => globalUnits += (Number(i.cant) || 0));
+        } else if (o.unidades) {
+          globalUnits += Number(o.unidades);
+        }
+      });
+
+      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || {};
+      const nodoMeta = nodoData.metaPropia || 120;
+      const globalMeta = 500;
+
+      document.getElementById('shop-nodo-prog-text').innerText = `${nodoUnits} / ${nodoMeta} unidades`;
+      document.getElementById('shop-nodo-prog-bar').style.width = `${Math.min(100, Math.round((nodoUnits / nodoMeta) * 100))}%`;
+
+      document.getElementById('shop-global-prog-text').innerText = `${globalUnits} / ${globalMeta} unidades`;
+      document.getElementById('shop-global-prog-bar').style.width = `${Math.min(100, Math.round((globalUnits / globalMeta) * 100))}%`;
     }
 
-    function loadProductView(index) {
-      const prods = getStoreProducts();
-      if (prods.length === 0) {
-        document.getElementById('shop-product-container').innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">No hay productos activos para este nodo.</p>';
+    // ==========================================
+    // FILTROS Y CATEGORÍAS SPOTIFY
+    // ==========================================
+    function filterByStoreCategory(cat, el) {
+      document.querySelectorAll('.spotify-cat-card').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      CURRENT_CATEGORY = cat;
+      CURRENT_SUBCATEGORY = 'ALL';
+
+      // Actualizar Subcategorías visibles
+      document.querySelectorAll('.subcat-pill-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.includes('Todas')) btn.classList.add('active');
+        if (cat === 'TODOS' || !btn.dataset.cat || btn.dataset.cat === cat) {
+          btn.style.display = 'inline-block';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+
+      applyFiltersAndRender();
+    }
+
+    function filterByStoreSubcat(sub, el) {
+      document.querySelectorAll('.subcat-pill-btn').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+      CURRENT_SUBCATEGORY = sub;
+      applyFiltersAndRender();
+    }
+
+    function getFilteredProducts() {
+      const allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      return allProds.filter(p => {
+        const matchCat = (CURRENT_CATEGORY === 'TODOS' || p.categoria === CURRENT_CATEGORY);
+        const matchSub = (CURRENT_SUBCATEGORY === 'ALL' || p.subcategoria === CURRENT_SUBCATEGORY);
+        return matchCat && matchSub;
+      });
+    }
+
+    function applyFiltersAndRender() {
+      const list = getFilteredProducts();
+      swipeFilteredList = list;
+      swipeCurrentIdx = 0;
+
+      if (STORE_VIEW_MODE === 'grid') {
+        renderGridStore(list);
+      } else {
+        renderSwipeStore();
+      }
+    }
+
+    // ==========================================
+    // RENDERIZADO MODO CUADRÍCULA CON FLIP 3D
+    // ==========================================
+    function renderGridStore(products) {
+      const container = document.getElementById('grid-products-holder');
+      if (products.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: white; border-radius: 16px; border: 1px solid var(--border-color);">
+            <div style="font-size: 36px; margin-bottom: 8px;">🔍</div>
+            <h3 style="color: #0F172A;">No hay productos en esta selección</h3>
+            <p style="color: var(--text-muted); font-size: 13px;">Prueba seleccionando otra categoría o subcategoría.</p>
+          </div>
+        `;
         return;
       }
 
-      ACTIVE_INDEX = index;
-      const prod = prods[index];
-
-      document.querySelectorAll('.tab-item').forEach((t, i) => {
-        t.classList.toggle('active', i === index);
-      });
-
-      const qty = CARRITO[index] || 0;
-      const realAccumulated = getProductRealUnits(prod.id);
-      const totalGlobalProd = realAccumulated + qty;
-      
-      // La escala activa se calcula con precisión según las unidades que pide el socio
-      const pricing = LunarEngine.calcularPrecio(prod, qty > 0 ? qty : 1);
-
-      const html = `
-        <!-- Columna Izquierda -->
-        <div class="showcase-card">
-          <div>
-            <div class="card-section-title">Origen y Producción</div>
-            <h3 style="font-size: 18px; color: #0F172A; margin-bottom: 6px;">${prod.origen}</h3>
-            <p style="font-size: 13px; color: var(--text-muted);"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 4px;"></i> Variedad: <strong>${prod.variedad}</strong></p>
-          </div>
-
-          <div class="impact-badge">
-            <div class="card-section-title" style="color: var(--primary);">Impacto en la Red Lunar</div>
-            <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--primary);">${totalGlobalProd}</div>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">unidades pedidas entre todos los nodos.</p>
-            <div class="progress-bar-container" style="background: #E2E8F0; height: 8px;">
-              <div class="progress-bar-fill" style="width: ${Math.min(100, (totalGlobalProd / (prod.meta || 100)) * 100)}%; background: var(--primary);"></div>
-            </div>
-            <div style="font-size: 11px; text-align: right; color: #94A3B8; margin-top: 4px;">Meta colectiva: ${prod.meta || 100} ${prod.unidad}</div>
-          </div>
-        </div>
-
-        <!-- Columna Central -->
-        <div class="showcase-card showcase-center">
-          <div style="position: relative; display: inline-block;">
-            <img src="${prod.img}" alt="${prod.nombre}" class="prod-main-img">
-            <span style="display: block; font-size: 10px; color: var(--text-muted); margin-top: 5px; text-align: center; font-style: italic; opacity: 0.8;">* Imagen de referencia ilustrativa</span>
-          </div>
-          <span class="prod-badge-unit">${prod.unidad}</span>
-          <h2 class="prod-title">${prod.nombre}</h2>
-          <p class="prod-subtitle">${prod.subtitulo || ''}</p>
-        </div>
-
-        <!-- Columna Derecha -->
-        <div class="showcase-card">
-          <div>
-            <div class="card-section-title" style="display: flex; justify-content: space-between; align-items: center;">
-              <span>Escalas por Volumen</span>
-              <span style="font-size: 10px; font-weight: 600; color: var(--primary);">Clic para aplicar</span>
-            </div>
-            
-            <!-- Tarjeta Minorista -->
-            <div class="price-tier-row ${pricing.tier === 1 ? 'active' : ''}" onclick="selectTierDirectly(1)" style="cursor: pointer;" title="Clic para aplicar escala Minorista (1 unidad)">
-              <div>
-                <div class="tier-title">Minorista <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);">(1 a ${(prod.m2 || 20) - 1} un.)</span></div>
-                <div class="tier-req-badge">Precio Base</div>
-              </div>
-              <div class="tier-price-val">$${prod.p1?.toLocaleString('es-AR')}</div>
-            </div>
-
-            <!-- Tarjeta Mayorista -->
-            ${prod.p2 && prod.m2 ? `
-            <div class="price-tier-row ${pricing.tier === 2 ? 'active' : ''}" onclick="selectTierDirectly(2)" style="cursor: pointer;" title="Clic para aplicar escala Mayorista (${prod.m2} unidades)">
-              <div>
-                <div class="tier-title">Mayorista <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);">(${prod.m2} a ${(prod.m3 || 999) - 1} un.)</span></div>
-                <div class="tier-req-badge" style="color: var(--primary);">Descuento +${prod.m2} un.</div>
-              </div>
-              <div class="tier-price-val">$${prod.p2?.toLocaleString('es-AR')}</div>
-            </div>` : ''}
-
-            <!-- Tarjeta Distribuidora -->
-            ${prod.p3 && prod.m3 ? `
-            <div class="price-tier-row ${pricing.tier === 3 ? 'active' : ''}" onclick="selectTierDirectly(3)" style="cursor: pointer;" title="Clic para aplicar escala Distribuidora (${prod.m3} unidades)">
-              <div>
-                <div class="tier-title">Distribuidora <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);">(+${prod.m3} un.)</span></div>
-                <div class="tier-req-badge" style="color: #EA580C;">Gran Volumen +${prod.m3} un.</div>
-              </div>
-              <div class="tier-price-val">$${prod.p3?.toLocaleString('es-AR')}</div>
-            </div>` : ''}
-          </div>
-
-          <div>
-            <div class="qty-control-box">
-              <button class="qty-btn-circle" onclick="changeQty(-1)">-</button>
-              <input type="text" class="qty-display-input" value="${qty}" readonly>
-              <button class="qty-btn-circle" onclick="changeQty(1)">+</button>
-            </div>
-            <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 8px;">Ajusta cantidades o haz clic en las escalas arriba</p>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('shop-product-container').innerHTML = html;
-    }
-
-    function selectTierDirectly(tierNum) {
-      const prods = getStoreProducts();
-      const prod = prods[ACTIVE_INDEX];
-      if (!prod) return;
-
-      if (tierNum === 1) {
-        CARRITO[ACTIVE_INDEX] = 1;
-      } else if (tierNum === 2) {
-        CARRITO[ACTIVE_INDEX] = prod.m2 || 25;
-      } else if (tierNum === 3) {
-        CARRITO[ACTIVE_INDEX] = prod.m3 || 50;
-      }
-
-      try { sessionStorage.setItem('VRDE_CART', JSON.stringify(CARRITO)); } catch(e){}
-      loadProductView(ACTIVE_INDEX);
-      updateFloatingCart();
-    }
-
-    function getProductRealUnits(prodId) {
-      let count = 0;
-      const orders = LunarEngine.obtenerPedidos(null);
-      orders.forEach(o => {
-        if (o.items) {
-          o.items.forEach(i => {
-            if (i.prodId === prodId) count += (i.cant || 0);
-          });
+      let html = '';
+      products.forEach((p, idx) => {
+        if (!gridProductStates[p.id]) {
+          gridProductStates[p.id] = { variantIdx: 0, qty: 1 };
         }
+        const state = gridProductStates[p.id];
+        const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [
+          { id: 'v1', label: p.unidad || 'Unidad', p1: p.p1, p2: p.p2, p3: p.p3, tiers: `Mayorista (+${p.m2}u): $${p.p2} • Dist (+${p.m3}u): $${p.p3}` }
+        ];
+        const currentV = variants[state.variantIdx] || variants[0];
+        const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Agroecología soberana', loc: p.origen };
+
+        let chipsHtml = '';
+        variants.forEach((v, vIdx) => {
+          chipsHtml += `
+            <button class="v-chip-btn ${vIdx === state.variantIdx ? 'active' : ''}" onclick="selectGridVariant('${p.id}', ${vIdx})">
+              <span>${v.label}</span>
+              <span class="v-sub-text">$${v.p1.toLocaleString('es-AR')}</span>
+            </button>
+          `;
+        });
+
+        html += `
+          <div class="flip-card-container">
+            <div class="flip-card-inner" id="grid-card-${p.id}">
+              
+              <!-- FRENTE DE LA TARJETA -->
+              <div class="flip-card-face flip-front">
+                <button class="btn-flip-trigger" onclick="toggleGridFlip('${p.id}')" title="Ver historia del productor y mapa">
+                  <i class="fas fa-sync-alt"></i> Info & Mapa
+                </button>
+                <div class="card-img-wrapper" onclick="toggleGridFlip('${p.id}')">
+                  <img src="${currentV.img || p.img}" alt="${p.nombre}">
+                  <div class="origin-pill-tag">${p.origen}</div>
+                </div>
+                <div class="card-content-body">
+                  <div>
+                    <h3 class="prod-card-name">${p.nombre}</h3>
+                    <p class="prod-card-desc">${p.subtitulo || p.titulo}</p>
+                  </div>
+
+                  <!-- Selector de Presentación -->
+                  <div class="variant-chips-box">
+                    <div class="variant-chips-header">
+                      <span>Presentación:</span>
+                      <span style="color: var(--primary);">${currentV.label}</span>
+                    </div>
+                    <div class="variant-chips-grid">
+                      ${chipsHtml}
+                    </div>
+                  </div>
+
+                  <!-- Escala de Ahorro Colectivo -->
+                  <div class="scale-box-card">
+                    <div class="scale-price-row">
+                      <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Precio unidad:</span>
+                      <div class="scale-price-val">$${currentV.p1.toLocaleString('es-AR')}</div>
+                    </div>
+                    <div class="scale-tiers-text">
+                      <div>• ${currentV.tiers || 'Compra colectiva en red'}</div>
+                    </div>
+                  </div>
+
+                  <!-- Controles de Cantidad y Agregar -->
+                  <div class="card-action-footer">
+                    <div class="qty-counter-control">
+                      <button class="qty-btn-c" onclick="adjustGridQty('${p.id}', -1)">-</button>
+                      <span class="qty-num-c" id="grid-qty-val-${p.id}">${state.qty}</span>
+                      <button class="qty-btn-c" onclick="adjustGridQty('${p.id}', 1)">+</button>
+                    </div>
+                    <button class="btn-add-to-cart-grid" onclick="addGridProductToCart('${p.id}')">
+                      <i class="fas fa-cart-plus"></i> Sumar al Pedido
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DORSO DE LA TARJETA (HISTORIA Y MAPA) -->
+              <div class="flip-card-face flip-back">
+                <button class="btn-flip-trigger" style="background: rgba(255,255,255,0.2); color: white;" onclick="toggleGridFlip('${p.id}')">
+                  <i class="fas fa-undo"></i> Volver a la Foto
+                </button>
+                <div class="back-tag-label">Origen y Trazabilidad</div>
+                <h3 class="back-prod-title">${info.productor}</h3>
+                <p class="back-story-text">${info.historia}</p>
+                
+                <div class="back-impact-box">
+                  <strong style="color: var(--accent);"><i class="fas fa-seedling"></i> Impacto:</strong>
+                  <span>${info.impacto}</span>
+                </div>
+
+                <div class="back-map-box">
+                  <i class="fas fa-map-marker-alt back-map-pin"></i>
+                  <span style="position: absolute; bottom: 4px; font-size: 9.5px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;">${info.loc}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
       });
-      return count;
+
+      container.innerHTML = html;
     }
 
-    function changeQty(delta) {
-      const current = CARRITO[ACTIVE_INDEX] || 0;
-      const next = Math.max(0, current + delta);
-      if (next === 0) {
-        delete CARRITO[ACTIVE_INDEX];
-      } else {
-        CARRITO[ACTIVE_INDEX] = next;
+    function toggleGridFlip(prodId) {
+      const card = document.getElementById(`grid-card-${prodId}`);
+      if (card) card.classList.toggle('flipped');
+    }
+
+    function selectGridVariant(prodId, vIdx) {
+      gridProductStates[prodId].variantIdx = vIdx;
+      renderGridStore(getFilteredProducts());
+    }
+
+    function adjustGridQty(prodId, delta) {
+      gridProductStates[prodId].qty += delta;
+      if (gridProductStates[prodId].qty < 1) gridProductStates[prodId].qty = 1;
+      const el = document.getElementById(`grid-qty-val-${prodId}`);
+      if (el) el.innerText = gridProductStates[prodId].qty;
+    }
+
+    function addGridProductToCart(prodId) {
+      const prods = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      const p = prods.find(x => x.id === prodId);
+      if (!p) return;
+      const state = gridProductStates[prodId];
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const v = variants[state.variantIdx] || variants[0];
+      
+      addProductToCart(p, v, state.qty);
+    }
+
+    // ==========================================
+    // RENDERIZADO MODO SWIPE (TINDER)
+    // ==========================================
+    function renderSwipeStore() {
+      if (swipeFilteredList.length === 0) return;
+      const p = swipeFilteredList[swipeCurrentIdx];
+      const card = document.getElementById('swipe-card-inner');
+      card.classList.remove('flipped');
+
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1, tiers: 'Compra colectiva' }];
+      swipeVariantIdx = 0;
+      swipeQty = 1;
+      const currentV = variants[swipeVariantIdx];
+      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía alimentaria', loc: p.origen };
+
+      document.getElementById('sw-img').src = currentV.img || p.img;
+      document.getElementById('sw-origin').innerText = p.origen;
+      document.getElementById('sw-title').innerText = p.nombre;
+      document.getElementById('sw-desc').innerText = p.subtitulo || p.titulo;
+
+      // Dorso
+      document.getElementById('sw-back-producer').innerText = info.productor;
+      document.getElementById('sw-back-story').innerText = info.historia;
+      document.getElementById('sw-back-impact').innerText = info.impacto;
+      document.getElementById('sw-back-loc').innerText = info.loc;
+
+      // Variantes en Chips
+      let chipsHtml = '';
+      variants.forEach((v, vIdx) => {
+        chipsHtml += `
+          <button class="v-chip-btn ${vIdx === 0 ? 'active' : ''}" onclick="selectSwipeVariant(${vIdx}, this)">
+            <span>${v.label}</span>
+            <span class="v-sub-text">$${v.p1.toLocaleString('es-AR')}</span>
+          </button>
+        `;
+      });
+      document.getElementById('sw-chips-grid').innerHTML = chipsHtml;
+      updateSwipeCalculation();
+
+      document.getElementById('sw-counter-hint').innerText = `Producto ${swipeCurrentIdx + 1} de ${swipeFilteredList.length} • Toca la foto para ver historia y mapa`;
+    }
+
+    function toggleSwipeFlip() {
+      document.getElementById('swipe-card-inner').classList.toggle('flipped');
+    }
+
+    function selectSwipeVariant(vIdx, btn) {
+      btn.parentElement.querySelectorAll('.v-chip-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      swipeVariantIdx = vIdx;
+      updateSwipeCalculation();
+    }
+
+    function adjustSwipeQty(delta) {
+      swipeQty += delta;
+      if (swipeQty < 1) swipeQty = 1;
+      document.getElementById('sw-qty-val').innerText = swipeQty;
+      updateSwipeCalculation();
+    }
+
+    function updateSwipeCalculation() {
+      const p = swipeFilteredList[swipeCurrentIdx];
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const v = variants[swipeVariantIdx] || variants[0];
+      const total = v.p1 * swipeQty;
+
+      document.getElementById('sw-chip-label').innerText = `${v.label} (x${swipeQty})`;
+      document.getElementById('sw-total-val').innerText = `$${total.toLocaleString('es-AR')}`;
+      document.getElementById('sw-unit-val').innerText = `($${v.p1.toLocaleString('es-AR')} / u)`;
+    }
+
+    function triggerSwipeAction(dir) {
+      const card = document.getElementById('swipe-card-inner');
+      const p = swipeFilteredList[swipeCurrentIdx];
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const v = variants[swipeVariantIdx] || variants[0];
+
+      if (dir === 'right') {
+        addProductToCart(p, v, swipeQty);
       }
 
-      try { sessionStorage.setItem('VRDE_CART', JSON.stringify(CARRITO)); } catch(e){}
-      loadProductView(ACTIVE_INDEX);
-      updateFloatingCart();
+      card.style.transform = (dir === 'right') ? 'translateX(100px) rotate(10deg) scale(0.92)' : 'translateX(-100px) rotate(-10deg) scale(0.92)';
+      card.style.opacity = '0';
+
+      setTimeout(() => {
+        swipeCurrentIdx = (swipeCurrentIdx + 1) % swipeFilteredList.length;
+        renderSwipeStore();
+        card.style.transition = 'none';
+        card.style.transform = 'none';
+        card.style.opacity = '1';
+        setTimeout(() => {
+          card.style.transition = 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)';
+        }, 40);
+      }, 200);
     }
 
-    function getActiveProductPrice(prod, index) {
-      const qty = CARRITO[index] || 0;
-      if (qty === 0) return prod.p1;
-      return LunarEngine.calcularPrecio(prod, qty).precio;
+    // ==========================================
+    // GESTIÓN DEL CARRITO & CHECKOUT OFICIAL
+    // ==========================================
+    function addProductToCart(product, variant, qty) {
+      const itemKey = `${product.id}_${variant.id || variant.label}`;
+      const existing = CART_ITEMS.find(it => it.key === itemKey);
+
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        CART_ITEMS.push({
+          key: itemKey,
+          id: product.id,
+          title: product.nombre,
+          variantId: variant.id || 'std',
+          variantLabel: variant.label,
+          price: variant.p1,
+          qty: qty,
+          unidad: variant.unidad || product.unidad
+        });
+      }
+
+      updateFloatingCart();
     }
 
     function updateFloatingCart() {
-      let total = 0;
-      let items = 0;
-      const prods = getStoreProducts();
-      prods.forEach((p, i) => {
-        const q = CARRITO[i] || 0;
-        if (q > 0) {
-          total += q * getActiveProductPrice(p, i);
-          items += q;
-        }
-      });
+      const totalUnits = CART_ITEMS.reduce((s, it) => s + it.qty, 0);
+      const totalPrice = CART_ITEMS.reduce((s, it) => s + (it.price * it.qty), 0);
 
-      document.getElementById('cart-total-text').innerText = `$${total.toLocaleString('es-AR')}`;
-      document.getElementById('floating-cart').classList.toggle('visible', items > 0);
+      document.getElementById('cart-total-text').innerText = `$${totalPrice.toLocaleString('es-AR')}`;
+      document.getElementById('floating-cart').classList.toggle('visible', totalUnits > 0);
     }
 
     function openCheckoutModal() {
       let html = '';
       let subtotal = 0;
-      const prods = getStoreProducts();
 
-      prods.forEach((p, i) => {
-        const q = CARRITO[i] || 0;
-        if (q > 0) {
-          const price = getActiveProductPrice(p, i);
-          const lineTotal = q * price;
-          subtotal += lineTotal;
-          html += `
-            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
-              <span><strong>${q}x</strong> ${p.nombre}</span>
-              <span style="font-weight: 600;">$${lineTotal.toLocaleString('es-AR')}</span>
+      CART_ITEMS.forEach((it, idx) => {
+        const lineTotal = it.price * it.qty;
+        subtotal += lineTotal;
+        html += `
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; margin-bottom: 8px; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
+            <div>
+              <strong>${it.qty}x</strong> ${it.title}
+              <div style="font-size: 11px; color: var(--text-muted);">${it.variantLabel}</div>
             </div>
-          `;
-        }
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 700; color: var(--primary);">$${lineTotal.toLocaleString('es-AR')}</span>
+              <button onclick="removeCartItem(${idx})" style="background: none; border: none; color: #EF4444; font-size: 12px; cursor: pointer;">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        `;
       });
 
       document.getElementById('checkout-items').innerHTML = html;
@@ -605,6 +1280,16 @@
 
       setDonation('3');
       openModal('modal-checkout');
+    }
+
+    function removeCartItem(idx) {
+      CART_ITEMS.splice(idx, 1);
+      updateFloatingCart();
+      if (CART_ITEMS.length === 0) {
+        closeModal('modal-checkout');
+      } else {
+        openCheckoutModal();
+      }
     }
 
     let DELIVERY_TYPE = 'Retiro en Nodo';
@@ -664,24 +1349,21 @@
       const tData = updateTotalFinal();
       const cartDetails = [];
       const orderItems = [];
-      const prods = getStoreProducts();
 
-      prods.forEach((p, i) => {
-        const q = CARRITO[i] || 0;
-        if (q > 0) {
-          cartDetails.push(`${q} ${p.unidad} ${p.nombre}`);
-          orderItems.push({
-            prodId: p.id,
-            nombre: p.nombre,
-            cant: q,
-            unidad: p.unidad
-          });
-        }
+      CART_ITEMS.forEach(it => {
+        cartDetails.push(`${it.qty}x ${it.title} (${it.variantLabel})`);
+        orderItems.push({
+          prodId: it.id,
+          nombre: it.title,
+          variante: it.variantLabel,
+          cant: it.qty,
+          unidad: it.unidad,
+          precio: it.price
+        });
       });
 
       const orderId = 'G-' + Math.floor(Math.random() * 900000 + 100000);
-      const nodoData = LUNAR_CONFIG.nodos[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
-
+      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LunarEngine.obtenerNodos()['escobar'];
       const totalUnidadesPedido = orderItems.reduce((s, it) => s + (Number(it.cant) || 0), 0);
 
       ORDER_SUCCESS_DATA = {
@@ -707,7 +1389,7 @@
         estado: 'Pendiente'
       };
 
-      // Guardar centralmente y en Google Sheets si la API está conectada
+      // Guardar centralmente
       LunarEngine.guardarNuevoPedido(ORDER_SUCCESS_DATA);
       LunarEngine.enviarPedidoApi(ORDER_SUCCESS_DATA);
       updateProgressBars();
@@ -717,10 +1399,8 @@
       document.getElementById('succ-alias').innerText = nodoData.cbu;
       document.getElementById('succ-total').innerText = `$${tData.total.toLocaleString('es-AR')}`;
 
-      CARRITO = {};
-      try { sessionStorage.removeItem('VRDE_CART'); } catch(e){}
+      CART_ITEMS = [];
       updateFloatingCart();
-      loadProductView(ACTIVE_INDEX);
       openModal('modal-success');
     }
 
@@ -731,15 +1411,15 @@
       let msg = `🌱 *Nuevo Pedido Vrde Club*\n`;
       msg += `🔖 Pedido: #${d.id}\n`;
       msg += `👤 Nombre: ${d.nombre}\n`;
-      msg += `📍ž Teléfono: ${d.telefono}\n`;
+      msg += `📞 Teléfono: ${d.telefono}\n`;
       if (d.vrdedor) msg += `🤝 Vrdedor/a: ${d.vrdedor}\n`;
-      msg += `📍¦ Detalle:\n${d.detalle}\n`;
+      msg += `📦 Detalle:\n${d.detalle}\n`;
       msg += `💰 Total a transferir: $${d.total.toLocaleString('es-AR')}\n`;
       
       if (d.tipoEntrega === 'Delivery') {
         msg += `🛵 *Entrega:* Envío a Domicilio: ${d.direccionEntrega}\n`;
       } else {
-        msg += `📍 *Entrega:* Retiro en ${d.nodo}\n`;
+        msg += `📍 *Entrega:* Retiro en ${d.nodo}\n`;
       }
 
       msg += `🌑 Ciclo: ${d.ciclo}\n`;
@@ -754,8 +1434,7 @@
     function openNodeProfile() {
       const nodosObj = LunarEngine.obtenerNodos();
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
-      const safeProfLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
-      document.getElementById('prof-logo').innerText = safeProfLogo;
+      document.getElementById('prof-logo').innerText = nodoData.logo || '🌱';
       document.getElementById('prof-name').innerText = nodoData.nombre;
       document.getElementById('prof-desc').innerText = nodoData.descripcion || '';
       document.getElementById('prof-dir').innerText = nodoData.direccion;
@@ -763,7 +1442,6 @@
       document.getElementById('prof-entrega').innerText = nodoData.diaEntrega;
       document.getElementById('prof-cbu').innerText = nodoData.cbu;
 
-      
       const redes = nodoData.redes || {};
       let socialHtml = '';
       if (redes.instagram && redes.instagram.trim() !== '') {
@@ -781,8 +1459,18 @@
       }
       document.getElementById('prof-social-badges').innerHTML = socialHtml;
 
-
       openModal('modal-node');
+    }
+
+    function switchStoreView(mode) {
+      STORE_VIEW_MODE = mode;
+      document.getElementById('btn-view-grid').classList.toggle('active', mode === 'grid');
+      document.getElementById('btn-view-swipe').classList.toggle('active', mode === 'swipe');
+
+      document.getElementById('grid-view-container').style.display = (mode === 'grid') ? 'block' : 'none';
+      document.getElementById('swipe-view-container').style.display = (mode === 'swipe') ? 'flex' : 'none';
+
+      applyFiltersAndRender();
     }
 
     function openModal(id) {

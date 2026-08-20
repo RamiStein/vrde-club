@@ -136,86 +136,136 @@ const LUNAR_CONFIG = {
     }
   },
 
-  // Catálogo base de Productos con Escalas Colectivas, Costo de Producción y Ficha Informativa para Vrdedores
+  // Catálogo base de Productos con Escalas Colectivas, Costo de Producción, Variantes y Ficha Informativa
   productos: [
     {
       id: 'P1',
       nombre: 'Bolsón Agroecológico de Estación',
-      img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400',
+      categoria: 'huerta',
+      subcategoria: 'bolson',
+      img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600',
       titulo: 'Bolsón de 7 a 8 kg de verduras frescas sin agrotóxicos',
-      subtitulo: 'Cosechado 24hs antes de la entrega',
+      subtitulo: 'Cosechado 24hs antes de la entrega por familias productoras',
       origen: 'Finca Ovoro & Productores de La Plata',
-      variedad: 'Agroecológica Certificada',
+      variedad: 'Agroecológica Certificada de Estación',
       meta: 150,
-      unidad: 'bolsón',
-      costo: 6800,        // Costo base del productor
-      p1: 11500, m1: 1,   // Minorista
-      p2: 9800,  m2: 30,  // Mayorista (+30 unidades en la red)
-      p3: 8900,  m3: 60,  // Distribuidora (+60 unidades en la red)
-      tipsVrdedor: 'Cosechado horas antes de la entrega. Sin agroquímicos ni cámaras frigoríficas. 7 a 8 kg variados de hojas verdes, hortalizas y tubérculos de estación. Ideal para familias de 3 a 5 personas.',
+      unidad: 'bolsón 7-8kg',
+      costo: 6800,
+      p1: 11500, m1: 1,
+      p2: 9800,  m2: 30,
+      p3: 8900,  m3: 60,
+      tipsVrdedor: 'Cosechado horas antes del reparto. 7 a 8 kg variados de hojas verdes, hortalizas y tubérculos de estación sin agroquímicos.',
+      productorInfo: {
+        productor: 'Finca Ovoro & Productores del Cordón Platense',
+        historia: 'Familias campesinas organizadas que cultivan en suelos vivos sin agrotóxicos. Cosechan de madrugada horas antes del reparto al nodo.',
+        impacto: 'Soberanía alimentaria real y precio justo directo a la familia productora.',
+        loc: '📍 La Plata, Buenos Aires'
+      },
+      variantes: [
+        { id: 'bolson_std', label: 'Bolsón Familiar (7 a 8 kg)', unidad: 'bolsón', costo: 6800, p1: 11500, p2: 9800, p3: 8900, m1: 1, m2: 30, m3: 60, tiers: 'Mayorista (+30u): $9.800 • Dist (+60u): $8.900' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P2',
-      nombre: 'Aceite de Oliva Extra Virgen 2L',
-      img: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=400',
-      titulo: 'Aceite de oliva primera prensada en frío',
-      subtitulo: 'Bidón 2 Litros - Acidez menor a 0.4%',
-      origen: 'Fincas del Valle de Traslasierra (Córdoba)',
-      variedad: 'Arbequina / Arauco Orgánico',
+      nombre: 'Aceite de Oliva Extra Virgen Lorenzo Cabrera',
+      categoria: 'aceite',
+      subcategoria: 'aceite',
+      img: 'assets/aceite_lorenzo_cabrera.jpg',
+      titulo: 'Aceite de oliva virgen extra de primera prensada en frío',
+      subtitulo: 'Acidez menor a 0.4% • Olivares tradicionales de Traslasierra',
+      origen: 'Finca Lorenzo Cabrera (Traslasierra, Córdoba)',
+      variedad: 'Arbequina / Arauco Agroecológico',
       meta: 80,
-      unidad: 'bidón 2L',
-      costo: 14500,       // Costo base del productor
-      p1: 22000, m1: 1,
-      p2: 19500, m2: 20,
-      p3: 17800, m3: 40,
-      tipsVrdedor: 'Primera prensada en frío con acidez garantizada < 0.4%. Aceite 100% puro sin cortes ni químicos. Formato económico de 2 litros para consumo familiar prolongado.',
+      unidad: 'botella 1L',
+      costo: 12000,
+      p1: 19300, m1: 1,
+      p2: 17900, m2: 20,
+      p3: 16500, m3: 50,
+      tipsVrdedor: 'Primera prensada en frío con acidez garantizada < 0.4%. Aceite 100% puro sin cortes ni químicos.',
+      productorInfo: {
+        productor: 'Finca Lorenzo Cabrera',
+        historia: 'Olivares tradicionales en el microclima único de Traslasierra regados con agua pura de vertientes serranas. Prensado mecánico en frío a pocas horas de la cosecha.',
+        impacto: 'Cultura olivícola artesanal libre de agroquímicos sintéticos.',
+        loc: '📍 Valle de Traslasierra, Córdoba'
+      },
+      variantes: [
+        { id: '1L', label: 'Botella 1 Litro', unidad: 'botella 1L', costo: 12000, p1: 19300, p2: 17900, p3: 16500, m1: 1, m2: 20, m3: 50, tiers: 'Mayorista (+20L): $17.900 • Dist (+50L): $16.500' },
+        { id: '2L', label: 'Bidón 2 Litros (Ahorro)', unidad: 'bidón 2L', costo: 22500, p1: 36000, p2: 33500, p3: 31000, m1: 1, m2: 10, m3: 25, tiers: 'Mayorista (+10u): $33.500 • Dist (+25u): $31.000' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P3',
-      nombre: 'Miel Pura de Monte 1kg',
-      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80&w=400',
-      titulo: 'Miel cruda sin pasteurizar de monte nativo',
-      subtitulo: 'Frasco de vidrio 1 kg',
+      nombre: 'Miel Pura de Monte Nativo',
+      categoria: 'granja',
+      subcategoria: 'miel',
+      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80&w=600',
+      titulo: 'Miel cruda sin pasteurizar de monte silvestre',
+      subtitulo: 'Frasco de vidrio • Conserva enzimas y polen vivos',
       origen: 'Cooperativa Apícola Monte Adentro',
       variedad: 'Multifloral Nativa',
       meta: 100,
       unidad: 'frasco 1kg',
-      costo: 4200,        // Costo base del productor
+      costo: 4200,
       p1: 7200, m1: 1,
       p2: 6100, m2: 25,
       p3: 5400, m3: 50,
-      tipsVrdedor: 'Miel cruda sin pasteurizar ni diluir. Extraída de flores silvestres del monte nativo. Conserva enzimas, polen y propiedades antibacterianas intactas.',
+      tipsVrdedor: 'Miel cruda sin pasteurizar ni diluir. Extraída de flores silvestres del monte nativo.',
+      productorInfo: {
+        productor: 'Cooperativa Apícola Monte Adentro',
+        historia: 'Colmenas ubicadas en áreas protegidas de monte nativo libre de fumigaciones. Miel cruda sin pasteurizar con enzimas y polen vivos intactos.',
+        impacto: 'Polinización de flora silvestre autóctona y desarrollo cooperativo.',
+        loc: '📍 Monte Nativo del Salado'
+      },
+      variantes: [
+        { id: '1kg', label: 'Frasco 1 kg', unidad: 'frasco 1kg', costo: 4200, p1: 7200, p2: 6100, p3: 5400, m1: 1, m2: 25, m3: 50, tiers: 'Mayorista (+25u): $6.100 • Dist (+50u): $5.400' },
+        { id: '500g', label: 'Frasco 500g', unidad: 'frasco 500g', costo: 2400, p1: 4200, p2: 3600, p3: 3100, m1: 1, m2: 25, m3: 50, tiers: 'Mayorista (+25u): $3.600 • Dist (+50u): $3.100' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P4',
-      nombre: 'Harina Integral Agroecológica 5kg',
-      img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=400',
-      titulo: 'Molienda en piedra de trigo agroecológico',
-      subtitulo: 'Bolsa 5 kg con germen y salvado intacto',
+      nombre: 'Harina Integral Agroecológica Molino del Salado',
+      categoria: 'granos',
+      subcategoria: 'harinas',
+      img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600',
+      titulo: 'Molienda en piedra de trigo agroecológico no OGM',
+      subtitulo: 'Conserva el germen y salvado vivo • Ideal para masa madre',
       origen: 'Molino Harinero del Salado',
       variedad: 'Trigo Pan 100% Integral',
       meta: 120,
       unidad: 'bolsa 5kg',
-      costo: 3800,        // Costo base del productor
+      costo: 3800,
       p1: 6500, m1: 1,
-      p2: 5400, m2: 30,
-      p3: 4800, m3: 70,
-      tipsVrdedor: 'Trigo sin pesticidas molido a la piedra. Mantiene el germen vivo y todo el salvado natural. Perfecta para masa madre, panificación casera y repostería nutritiva.',
+      p2: 5400, m2: 6,
+      p3: 4800, m3: 20,
+      tipsVrdedor: 'Trigo sin pesticidas molido a la piedra. Mantiene el germen vivo y todo el salvado natural.',
+      productorInfo: {
+        productor: 'Molino Harinero del Salado',
+        historia: 'Trigo pan agroecológico de semillas no modificadas molido lentamente en piedras francesas, manteniendo el germen vivo y todo el salvado natural.',
+        impacto: 'Panificación viva con masa madre y soberanía de molienda comunitaria.',
+        loc: '📍 Cuenca del Salado, Buenos Aires'
+      },
+      variantes: [
+        { id: '1kg', label: 'Bolsa 1 kg', unidad: 'bolsa 1kg', costo: 1500, p1: 2500, p2: 2100, p3: 1800, m1: 1, m2: 10, m3: 30, tiers: 'Mayorista (+10u): $2.100 • Dist (+30u): $1.800' },
+        { id: '5kg', label: 'Bolsa 5 kg (Familiar)', unidad: 'bolsa 5kg', costo: 3800, p1: 6500, p2: 5400, p3: 4800, m1: 1, m2: 6, m3: 20, tiers: 'Mayorista (+6u): $5.400 • Dist (+20u): $4.800' },
+        { id: '25kg', label: 'Bolsa 25 kg (Panadería)', unidad: 'bolsa 25kg', costo: 16500, p1: 27000, p2: 23500, p3: 21000, m1: 1, m2: 2, m3: 6, tiers: 'Mayorista (+2u): $23.500 • Dist (+6u): $21.000' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P5',
       nombre: 'Huevos de Campo Pastoriles (Maples)',
-      img: 'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&q=80&w=400',
+      categoria: 'granja',
+      subcategoria: 'huevos',
+      img: 'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&q=80&w=600',
       titulo: 'Maple de 30 huevos de gallinas libres de jaula',
-      subtitulo: 'Alimentación pastoril y granos no OGM',
+      subtitulo: 'Pastoreo rotativo diario y alimentación con granos no OGM',
       origen: 'Granja Agroecológica El Encuentro',
       variedad: 'Pastoreo Libre',
       meta: 90,
@@ -224,79 +274,201 @@ const LUNAR_CONFIG = {
       p1: 8500, m1: 1,
       p2: 7400, m2: 20,
       p3: 6800, m3: 45,
-      tipsVrdedor: 'Gallinas criadas libres a campo abierto con sol y pastoreo diario. Huevos frescos con yema de intenso color natural, alta concentración proteica y Omega 3.',
+      tipsVrdedor: 'Gallinas criadas libres a campo abierto con sol y pastoreo diario. Huevos frescos con yema de intenso color natural.',
+      productorInfo: {
+        productor: 'Granja Agroecológica El Encuentro',
+        historia: 'Gallinas criadas libres a campo abierto con pastoreo rotativo diario, sol y aire puro. Alimentación sana con granos no OGM.',
+        impacto: 'Bienestar animal estricto sin jaulas ni estrés y alimentos de alta densidad biológica.',
+        loc: '📍 Granja El Encuentro, Bs. As.'
+      },
+      variantes: [
+        { id: 'maple', label: 'Maple 30 Huevos', unidad: 'maple 30u', costo: 5200, p1: 8500, p2: 7400, p3: 6800, m1: 1, m2: 20, m3: 45, tiers: 'Mayorista (+20u): $7.400 • Dist (+45u): $6.800' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P6',
       nombre: 'Gírgolas Grises del Delta',
+      categoria: 'hongos',
+      subcategoria: 'hongos',
       img: 'assets/girgolas.png',
       titulo: 'Hongos frescos cultivados en los bosques del Delta',
-      subtitulo: 'Producto orgánico sembrado en tronco fresco de álamo',
+      subtitulo: 'Sembrado en tronco fresco de álamo • Producto orgánico',
       origen: 'Productores del Delta • Alimento local y orgánico',
       variedad: 'Gírgola Gris (Pleurotus ostreatus)',
       meta: 50,
       unidad: 'kg',
-      costo: 18000,       // Costo base del productor
-      p1: 23000, m1: 1,   // 1kg: $23.000
-      p2: 21500, m2: 5,   // 5kg+: $21.500
-      p3: 20000, m3: 10,  // 10kg+: $20.000
-      tipsVrdedor: 'Hongos frescos, gírgolas grises cultivadas en los bosques del delta. Producto orgánico sembrado en tronco fresco de álamo. Alimento ecológico sostenible y saludable. Ideal para salteados, risottos, pastas y empanadas. *Imagen ilustrativa.',
+      costo: 18000,
+      p1: 23000, m1: 1,
+      p2: 21500, m2: 5,
+      p3: 20000, m3: 10,
+      tipsVrdedor: 'Hongos frescos, gírgolas grises cultivadas en los bosques del delta. Producto orgánico sembrado en tronco fresco de álamo.',
+      productorInfo: {
+        productor: 'Productores del Delta • Bosque Nativo',
+        historia: 'Hongos frescos Pleurotus sembrados en troncos frescos de álamo bajo el microclima sombrío y húmedo de los humedales del Delta.',
+        impacto: 'Producción forestal regenerativa sin desmonte y alimento gourmet medicinal.',
+        loc: '📍 Islas del Delta del Paraná'
+      },
+      variantes: [
+        { id: '1kg', label: 'Bandeja 1 kg', unidad: 'kg', costo: 18000, p1: 23000, p2: 21500, p3: 20000, m1: 1, m2: 5, m3: 10, tiers: 'Mayorista (+5kg): $21.500 • Dist (+10kg): $20.000' },
+        { id: '500g', label: 'Bandeja 500g', unidad: '500g', costo: 9500, p1: 12500, p2: 11500, p3: 10800, m1: 1, m2: 5, m3: 10, tiers: 'Mayorista (+5u): $11.500 • Dist (+10u): $10.800' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P7',
-      nombre: 'Yerba Grapia Milenaria 1kg',
+      nombre: 'Yerba Mate Agroecológica Grapia Milenaria',
+      categoria: 'yerba',
+      subcategoria: 'yerba',
       img: 'assets/yerba_grapia_1kg.jpg',
-      titulo: 'Yerba mate agroecológica con palo y estacionamiento natural',
-      subtitulo: 'Paquete tradicional de 1 kg en papel kraft',
+      titulo: 'Yerba mate con palo y estacionamiento natural de 2 años',
+      subtitulo: 'Secado en cinta sin humo • Sabor suave sin acidez',
       origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
       variedad: 'Canchada y estacionada 18 a 24 meses',
       meta: 60,
       unidad: 'paquete 1kg',
-      costo: 3300,        // Costo base del productor
-      p1: 5100, m1: 1,    // Minorista (1 a 11 paquetes / 1 a 11 kg)
-      p2: 4400, m2: 12,   // Mayorista (12 a 51 paquetes / 12 a 51 kg)
-      p3: 3800, m3: 52,   // Distribuidora (52+ paquetes / 52+ kg)
-      tipsVrdedor: 'Elaborada por familias de pequeños colonos en Campo Ramón, Misiones. Estacionamiento natural prolongado de hasta 2 años en depósito y secado en cinta sin humo. Sabor suave, prolongado y sin acidez. *Imagen ilustrativa.',
+      costo: 3300,
+      p1: 5100, m1: 1,
+      p2: 4400, m2: 12,
+      p3: 3800, m3: 52,
+      tipsVrdedor: 'Elaborada por familias de pequeños colonos en Campo Ramón, Misiones. Estacionamiento natural prolongado.',
+      productorInfo: {
+        productor: 'Cooperativa El Colono (Campo Ramón, Misiones)',
+        historia: 'Elaborada por familias de pequeños colonos en las serranías misioneras. Cosecha manual, secado en cinta sin humo y estacionamiento natural de 18 a 24 meses.',
+        impacto: 'Comercio justo cooperativo sin intermediarios y reforestación de monte.',
+        loc: '📍 Campo Ramón, Misiones'
+      },
+      variantes: [
+        { id: '1kg', label: 'Paquete 1 kg', unidad: 'paquete 1kg', img: 'assets/yerba_grapia_1kg.jpg', costo: 3300, p1: 5100, p2: 4400, p3: 3800, m1: 1, m2: 12, m3: 52, tiers: 'Mayorista (+12u): $4.400 • Dist (+52u): $3.800' },
+        { id: '2kg', label: 'Paquete 2 kg (Ahorro)', unidad: 'paquete 2kg', img: 'assets/yerba_grapia_2kg.jpg', costo: 5600, p1: 8600, p2: 7400, p3: 6400, m1: 1, m2: 6, m3: 26, tiers: 'Mayorista (+6u): $7.400 • Dist (+26u): $6.400' },
+        { id: '10kg', label: 'Bolsón 10 kg (Saca)', unidad: 'bolsón 10kg', img: 'assets/yerba_grapia_10kg.jpg', costo: 26000, p1: 37000, p2: 32000, p3: 27500, m1: 1, m2: 2, m3: 6, tiers: 'Mayorista (+2u): $32.000 • Dist (+6u): $27.500' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P8',
-      nombre: 'Yerba Grapia Milenaria 2kg',
-      img: 'assets/yerba_grapia_2kg.jpg',
-      titulo: 'Yerba mate agroecológica paquete familiar de 2 kg',
-      subtitulo: 'Paquete de 2 kg en papel kraft (Ahorro familiar)',
-      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
-      variedad: 'Canchada y estacionada 18 a 24 meses',
-      meta: 40,
-      unidad: 'paquete 2kg',
-      costo: 5600,        // Costo base del productor
-      p1: 8600, m1: 1,    // Minorista (1 a 5 paq = 2 a 10 kg)
-      p2: 7400, m2: 6,    // Mayorista (6 a 25 paq = 12 a 50 kg)
-      p3: 6400, m3: 26,   // Distribuidora (26+ paq = 52+ kg)
-      tipsVrdedor: 'Formato familiar de 2 kg. Yerba agroecológica de monte misionero con 18 a 24 meses de estacionamiento natural. Excelente rendimiento para el consumo diario del hogar. *Imagen ilustrativa.',
+      nombre: 'Lentejas Agroecológicas Salve la Tierra',
+      categoria: 'granos',
+      subcategoria: 'legumbres',
+      img: 'assets/lentejas_salve_tierra.jpg',
+      titulo: 'Lentejas verdes seleccionadas de agricultura regenerativa',
+      subtitulo: 'Suelo vivo pampeano • Semillas 100% libres de transgénicos (NO OGM)',
+      origen: 'Salve la Tierra (Capilla del Señor / Areco, Bs. As.)',
+      variedad: 'Lentejas verdes NO OGM',
+      meta: 70,
+      unidad: 'bolsa 1kg',
+      costo: 2200,
+      p1: 3500, m1: 1,
+      p2: 3000, m2: 6,
+      p3: 2600, m3: 20,
+      tipsVrdedor: 'Lentejas verdes de producción regenerativa sin pesticidas ni fertilizantes sintéticos.',
+      productorInfo: {
+        productor: 'Salve la Tierra • Suelo Vivo',
+        historia: 'Agricultura regenerativa en Capilla del Señor. Cultivo sin fertilizantes químicos ni pesticidas que regenera la materia orgánica del suelo pampeano.',
+        impacto: 'Alimentos limpios a precio accesible y regeneración de suelos.',
+        loc: '📍 Capilla del Señor / Areco, Buenos Aires'
+      },
+      variantes: [
+        { id: '1kg', label: 'Bolsa 1 kg', unidad: 'bolsa 1kg', costo: 2200, p1: 3500, p2: 3000, p3: 2600, m1: 1, m2: 6, m3: 20, tiers: 'Mayorista (+6u): $3.000 • Dist (+20u): $2.600' },
+        { id: '5kg', label: 'Bolsa 5 kg (Ahorro)', unidad: 'bolsa 5kg', costo: 10500, p1: 16000, p2: 14000, p3: 12000, m1: 1, m2: 6, m3: 20, tiers: 'Mayorista (+6u): $14.000 • Dist (+20u): $12.000' },
+        { id: '25kg', label: 'Bolsa 25 kg (Mayorista)', unidad: 'bolsa 25kg', costo: 48000, p1: 70000, p2: 62000, p3: 55000, m1: 1, m2: 2, m3: 5, tiers: 'Mayorista (+2u): $62.000 • Dist (+5u): $55.000' }
+      ],
       activo: true,
       nodos: ['TODOS']
     },
     {
       id: 'P9',
-      nombre: 'Yerba Grapia Milenaria (Bolsón 10kg)',
-      img: 'assets/yerba_grapia_10kg.jpg',
-      titulo: 'Bolsón cooperativo mayorista de 10 kg en saca',
-      subtitulo: 'Saca de 10 kg en arpillera y papel kraft (Máximo ahorro)',
-      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
-      variedad: 'Canchada y estacionada 18 a 24 meses',
-      meta: 20,
-      unidad: 'bolsón 10kg',
-      costo: 26000,       // Costo base ($2.600/kg)
-      p1: 40000, m1: 1,   // Minorista (1 bolsón = 10 kg -> $4.000/kg)
-      p2: 34500, m2: 2,   // Mayorista (2 a 5 bolsones = 20 a 50 kg -> $3.450/kg)
-      p3: 29800, m3: 6,   // Distribuidora (6+ bolsones = 60+ kg -> $2.980/kg)
-      tipsVrdedor: 'Saca mayorista de 10 kg para compras comunitarias, familias numerosas o acopio cooperativo de nodo. Directo de chacra misionera al nodo. *Imagen ilustrativa.',
+      nombre: 'Garbanzos Agroecológicos Salve la Tierra',
+      categoria: 'granos',
+      subcategoria: 'legumbres',
+      img: 'assets/garbanzos_salve_tierra.jpg',
+      titulo: 'Garbanzos grandes de cultivo natural sin agroquímicos',
+      subtitulo: 'Textura cremosa para hummus y guisos • Suelo vivo pampeano',
+      origen: 'Salve la Tierra (Capilla del Señor / Areco, Bs. As.)',
+      variedad: 'Garbanzos NO OGM',
+      meta: 60,
+      unidad: 'bolsa 1kg',
+      costo: 2200,
+      p1: 3500, m1: 1,
+      p2: 3000, m2: 6,
+      p3: 2600, m3: 20,
+      tipsVrdedor: 'Garbanzos de alta densidad proteica y mineral cultivados sin agroquímicos.',
+      productorInfo: {
+        productor: 'Salve la Tierra • Suelo Vivo',
+        historia: 'Garbanzos seleccionados de ciclo natural secados al sol. Granos enteros y tiernos de alta concentración mineral y proteica.',
+        impacto: 'Cuidado de semillas nativas y soberanía legumbrera.',
+        loc: '📍 Capilla del Señor, Buenos Aires'
+      },
+      variantes: [
+        { id: '1kg', label: 'Bolsa 1 kg', unidad: 'bolsa 1kg', costo: 2200, p1: 3500, p2: 3000, p3: 2600, m1: 1, m2: 6, m3: 20, tiers: 'Mayorista (+6u): $3.000 • Dist (+20u): $2.600' },
+        { id: '5kg', label: 'Bolsa 5 kg (Ahorro)', unidad: 'bolsa 5kg', costo: 10500, p1: 16000, p2: 14000, p3: 12000, m1: 1, m2: 6, m3: 20, tiers: 'Mayorista (+6u): $14.000 • Dist (+20u): $12.000' },
+        { id: '25kg', label: 'Bolsa 25 kg (Mayorista)', unidad: 'bolsa 25kg', costo: 48000, p1: 70000, p2: 62000, p3: 55000, m1: 1, m2: 2, m3: 5, tiers: 'Mayorista (+2u): $62.000 • Dist (+5u): $55.000' }
+      ],
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P10',
+      nombre: 'Arroz Yamaní Integral Agroecológico Caupolicán',
+      categoria: 'granos',
+      subcategoria: 'arroz',
+      img: 'assets/arroz_caupolican.jpg',
+      titulo: 'Arroz Yamaní integral libre de agroquímicos y sin TACC',
+      subtitulo: 'Capital Nacional del Arroz • Procesado físico sin aditivos',
+      origen: 'Molino Arrocero Caupolicán S.R.L. (San Salvador, Entre Ríos)',
+      variedad: 'Yamaní Integral Sin TACC',
+      meta: 80,
+      unidad: 'paquete 1kg',
+      costo: 2400,
+      p1: 3800, m1: 1,
+      p2: 3200, m2: 6,
+      p3: 2800, m3: 20,
+      tipsVrdedor: 'Grano entero integral libre de agroquímicos y pesticidas. Cultivo natural de San Salvador, Entre Ríos.',
+      productorInfo: {
+        productor: 'Molino Arrocero Caupolicán S.R.L.',
+        historia: 'Cultivo natural en San Salvador, Entre Ríos. Grano entero integral sin agroquímicos, procesado físico sin pulido químico ni blanqueadores.',
+        impacto: 'Cuidado de humedales entrerrianos y alimento 100% libre de TACC.',
+        loc: '📍 San Salvador, Entre Ríos'
+      },
+      variantes: [
+        { id: '1kg', label: 'Paquete 1 kg', unidad: 'paquete 1kg', costo: 2400, p1: 3800, p2: 3200, p3: 2800, m1: 1, m2: 6, m3: 20, tiers: 'Mayorista (+6u): $3.200 • Dist (+20u): $2.800' },
+        { id: '5kg', label: 'Bolsa 5 kg (Ahorro)', unidad: 'bolsa 5kg', costo: 11500, p1: 17500, p2: 15000, p3: 13000, m1: 1, m2: 6, m3: 20, tiers: 'Mayorista (+6u): $15.000 • Dist (+20u): $13.000' },
+        { id: '30kg', label: 'Bolsa 30 kg (Saca)', unidad: 'bolsa 30kg', costo: 65000, p1: 95000, p2: 84000, p3: 75000, m1: 1, m2: 2, m3: 5, tiers: 'Mayorista (+2u): $84.000 • Dist (+5u): $75.000' }
+      ],
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P11',
+      nombre: 'Pasta Pura Cacao Silvestre Amazónico de Bolivia',
+      categoria: 'cacao',
+      subcategoria: 'cacao',
+      img: 'assets/cacao_bolivia.jpg',
+      titulo: '100% puro cacao silvestre de recolección en selva virgen',
+      subtitulo: 'Semillas fermentadas y suavemente tostadas • Sabor profundo',
+      origen: 'Comunidades Recolectoras de Rurrenabaque (Beni, Bolivia 🇧🇴)',
+      variedad: 'Cacao Criollo Silvestre Amazónico',
+      meta: 50,
+      unidad: 'barra 1kg',
+      costo: 42000,
+      p1: 60000, m1: 1,
+      p2: 57000, m2: 3,
+      p3: 55000, m3: 5,
+      tipsVrdedor: 'Cacao silvestre puro sin azúcar ni aditivos. Cierre 25-08-2026. Llega entre el 28 y 30 de agosto.',
+      productorInfo: {
+        productor: 'Familias Recolectoras de Rurrenabaque',
+        historia: 'Cacao criollo silvestre recolectado manualmente en canoas en islas vírgenes del río Beni (Madidi). Fermentado tradicional y suavemente tostado.',
+        impacto: 'Protección activa de la Amazonía boliviana y soberanía comunitaria.',
+        loc: '📍 Rurrenabaque, Beni, Bolivia'
+      },
+      variantes: [
+        { id: '1kg', label: 'Barra 1 kg', unidad: 'barra 1kg', costo: 42000, p1: 60000, p2: 57000, p3: 55000, m1: 1, m2: 3, m3: 5, tiers: 'Mayorista (+3kg): $57.000 • Dist (+5kg): $55.000 • +10kg: $50.000' },
+        { id: '500g', label: 'Barra 500g (1/2 kg)', unidad: 'barra 500g', costo: 22000, p1: 32500, p2: 28500, p3: 27500, m1: 1, m2: 6, m3: 10, tiers: 'Mayorista (+6u): $28.500 • Dist (+10u): $27.500 • +20u: $25.000' },
+        { id: '100g', label: 'Barra 100g', unidad: 'barra 100g', costo: 4800, p1: 7500, p2: 6800, p3: 6200, m1: 1, m2: 10, m3: 20, tiers: 'Mayorista (+10u): $6.800 • Dist (+20u): $6.200' }
+      ],
       activo: true,
       nodos: ['TODOS']
     }
@@ -313,7 +485,7 @@ class LunarEngine {
    */
   static obtenerProductos(nodoId = null, soloActivos = false) {
     let prods = LUNAR_CONFIG.productos;
-    if (typeof localStorage !== 'undefined') {
+    if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
       const stored = localStorage.getItem('VRDE_PRODUCTOS');
       if (stored) {
         try { 
@@ -321,7 +493,7 @@ class LunarEngine {
           let updated = false;
           
           // Asegurar que todos los productos oficiales estén presentes en storage
-          ['P6', 'P7', 'P8', 'P9'].forEach(pid => {
+          ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11'].forEach(pid => {
             const hasP = prods.some(p => p.id === pid);
             if (!hasP) {
               const def = LUNAR_CONFIG.productos.find(p => p.id === pid);
@@ -332,21 +504,38 @@ class LunarEngine {
             }
           });
 
-          // Migración automática: solo asegurar que las imágenes por defecto estén asignadas
+          // Sincronizar variantes y fotos actualizadas
           prods.forEach(p => {
-            if (p.id === 'P3' && (p.img.includes('1587049352846') || p.img.includes('1587049352847') || p.img.includes('watermelon'))) {
-              p.img = 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80&w=400';
-              updated = true;
-            }
-            if (!p.img || p.img.trim() === '') {
-              const def = LUNAR_CONFIG.productos.find(d => d.id === p.id);
-              if (def && def.img) { p.img = def.img; updated = true; }
+            const def = LUNAR_CONFIG.productos.find(x => x.id === p.id);
+            if (def) {
+              if (!p.variantes || p.variantes.length === 0) {
+                p.variantes = def.variantes;
+                updated = true;
+              }
+              if (!p.productorInfo) {
+                p.productorInfo = def.productorInfo;
+                updated = true;
+              }
+              if (!p.categoria) {
+                p.categoria = def.categoria;
+                p.subcategoria = def.subcategoria;
+                updated = true;
+              }
+              if (p.img !== def.img && def.img.startsWith('assets/')) {
+                p.img = def.img;
+                updated = true;
+              }
             }
           });
+
           if (updated) {
             localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
           }
-        } catch(e){}
+        } catch(e) {
+          prods = LUNAR_CONFIG.productos;
+        }
+      } else {
+        localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
       }
     }
 
@@ -1291,4 +1480,9 @@ if (typeof window !== 'undefined') {
 
   initFirebaseSync();
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { LunarEngine, LUNAR_CONFIG };
+}
+
 
