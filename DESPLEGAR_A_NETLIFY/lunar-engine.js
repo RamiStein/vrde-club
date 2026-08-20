@@ -59,7 +59,7 @@ const LUNAR_CONFIG = {
       id: 'lomaverde',
       nombre: 'Nodo Loma Verde',
       color: '#4e8d26',
-      logo: 'x',
+      logo: '🌑',
       imagen: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600',
       banner: 'assets/hero_bg.png',
       direccion: 'Calle Los Tilos 420, Loma Verde',
@@ -78,8 +78,8 @@ const LUNAR_CONFIG = {
       slots: ['Conservación', 'Atención Comunitaria'],
       mostrarVrdedores: true,
       vrdedores: [
-        { id: 'VRD-201', nombre: 'Agustina Vidal', rol: 'Coordinadora Loma Verde', wsp: '5491159201948', avatar: 'x' },
-        { id: 'VRD-202', nombre: 'Joaquín Paz', rol: 'Vrdedor Barrio Los Tilos', wsp: '5491138291028', avatar: 'x"' }
+        { id: 'VRD-201', nombre: 'Agustina Vidal', rol: 'Coordinadora Loma Verde', wsp: '5491159201948', avatar: '🌱' },
+        { id: 'VRD-202', nombre: 'Joaquín Paz', rol: 'Vrdedor Barrio Los Tilos', wsp: '5491138291028', avatar: '🌱' }
       ]
     },
     'lalucila': {
@@ -227,12 +227,84 @@ const LUNAR_CONFIG = {
       tipsVrdedor: 'Gallinas criadas libres a campo abierto con sol y pastoreo diario. Huevos frescos con yema de intenso color natural, alta concentración proteica y Omega 3.',
       activo: true,
       nodos: ['TODOS']
+    },
+    {
+      id: 'P6',
+      nombre: 'Gírgolas Grises del Delta',
+      img: 'assets/girgolas.png',
+      titulo: 'Hongos frescos cultivados en los bosques del Delta',
+      subtitulo: 'Producto orgánico sembrado en tronco fresco de álamo',
+      origen: 'Productores del Delta • Alimento local y orgánico',
+      variedad: 'Gírgola Gris (Pleurotus ostreatus)',
+      meta: 50,
+      unidad: 'kg',
+      costo: 18000,       // Costo base del productor
+      p1: 23000, m1: 1,   // 1kg: $23.000
+      p2: 21500, m2: 5,   // 5kg+: $21.500
+      p3: 20000, m3: 10,  // 10kg+: $20.000
+      tipsVrdedor: 'Hongos frescos, gírgolas grises cultivadas en los bosques del delta. Producto orgánico sembrado en tronco fresco de álamo. Alimento ecológico sostenible y saludable. Ideal para salteados, risottos, pastas y empanadas. *Imagen ilustrativa.',
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P7',
+      nombre: 'Yerba Grapia Milenaria 1kg',
+      img: 'assets/yerba_grapia_1kg.jpg',
+      titulo: 'Yerba mate agroecológica con palo y estacionamiento natural',
+      subtitulo: 'Paquete tradicional de 1 kg en papel kraft',
+      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
+      variedad: 'Canchada y estacionada 18 a 24 meses',
+      meta: 60,
+      unidad: 'paquete 1kg',
+      costo: 3300,        // Costo base del productor
+      p1: 5100, m1: 1,    // Minorista (1 a 11 paquetes / 1 a 11 kg)
+      p2: 4400, m2: 12,   // Mayorista (12 a 51 paquetes / 12 a 51 kg)
+      p3: 3800, m3: 52,   // Distribuidora (52+ paquetes / 52+ kg)
+      tipsVrdedor: 'Elaborada por familias de pequeños colonos en Campo Ramón, Misiones. Estacionamiento natural prolongado de hasta 2 años en depósito y secado en cinta sin humo. Sabor suave, prolongado y sin acidez. *Imagen ilustrativa.',
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P8',
+      nombre: 'Yerba Grapia Milenaria 2kg',
+      img: 'assets/yerba_grapia_2kg.jpg',
+      titulo: 'Yerba mate agroecológica paquete familiar de 2 kg',
+      subtitulo: 'Paquete de 2 kg en papel kraft (Ahorro familiar)',
+      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
+      variedad: 'Canchada y estacionada 18 a 24 meses',
+      meta: 40,
+      unidad: 'paquete 2kg',
+      costo: 5600,        // Costo base del productor
+      p1: 8600, m1: 1,    // Minorista (1 a 5 paq = 2 a 10 kg)
+      p2: 7400, m2: 6,    // Mayorista (6 a 25 paq = 12 a 50 kg)
+      p3: 6400, m3: 26,   // Distribuidora (26+ paq = 52+ kg)
+      tipsVrdedor: 'Formato familiar de 2 kg. Yerba agroecológica de monte misionero con 18 a 24 meses de estacionamiento natural. Excelente rendimiento para el consumo diario del hogar. *Imagen ilustrativa.',
+      activo: true,
+      nodos: ['TODOS']
+    },
+    {
+      id: 'P9',
+      nombre: 'Yerba Grapia Milenaria (Bolsón 10kg)',
+      img: 'assets/yerba_grapia_10kg.jpg',
+      titulo: 'Bolsón cooperativo mayorista de 10 kg en saca',
+      subtitulo: 'Saca de 10 kg en arpillera y papel kraft (Máximo ahorro)',
+      origen: 'Cooperativa El Colono (Campo Ramón, Misiones)',
+      variedad: 'Canchada y estacionada 18 a 24 meses',
+      meta: 20,
+      unidad: 'bolsón 10kg',
+      costo: 26000,       // Costo base ($2.600/kg)
+      p1: 40000, m1: 1,   // Minorista (1 bolsón = 10 kg -> $4.000/kg)
+      p2: 34500, m2: 2,   // Mayorista (2 a 5 bolsones = 20 a 50 kg -> $3.450/kg)
+      p3: 29800, m3: 6,   // Distribuidora (6+ bolsones = 60+ kg -> $2.980/kg)
+      tipsVrdedor: 'Saca mayorista de 10 kg para compras comunitarias, familias numerosas o acopio cooperativo de nodo. Directo de chacra misionera al nodo. *Imagen ilustrativa.',
+      activo: true,
+      nodos: ['TODOS']
     }
   ]
 };
 
 // =================================================================
-// MOTOR ASTRONMICO Y DE CICLOS LUNARES
+// MOTOR ASTRONÓMICO Y DE CICLOS LUNARES
 // =================================================================
 
 class LunarEngine {
@@ -246,12 +318,29 @@ class LunarEngine {
       if (stored) {
         try { 
           prods = JSON.parse(stored);
-          // Migración automática para corregir fotos antiguas cacheadas en localStorage
           let updated = false;
+          
+          // Asegurar que todos los productos oficiales estén presentes en storage
+          ['P6', 'P7', 'P8', 'P9'].forEach(pid => {
+            const hasP = prods.some(p => p.id === pid);
+            if (!hasP) {
+              const def = LUNAR_CONFIG.productos.find(p => p.id === pid);
+              if (def) {
+                prods.push(def);
+                updated = true;
+              }
+            }
+          });
+
+          // Migración automática: solo asegurar que las imágenes por defecto estén asignadas
           prods.forEach(p => {
             if (p.id === 'P3' && (p.img.includes('1587049352846') || p.img.includes('1587049352847') || p.img.includes('watermelon'))) {
               p.img = 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80&w=400';
               updated = true;
+            }
+            if (!p.img || p.img.trim() === '') {
+              const def = LUNAR_CONFIG.productos.find(d => d.id === p.id);
+              if (def && def.img) { p.img = def.img; updated = true; }
             }
           });
           if (updated) {
@@ -282,9 +371,9 @@ class LunarEngine {
    */
   static guardarProducto(prodData) {
     let prods = this.obtenerProductos(null, false);
-    const inde= prods.findIndex(p => p.id === prodData.id);
+    const index = prods.findIndex(p => p.id === prodData.id);
 
-    if (inde> -1) {
+    if (index > -1) {
       prods[index] = { ...prods[index], ...prodData };
     } else {
       prods.push(prodData);
@@ -321,6 +410,28 @@ class LunarEngine {
         try { nodos = JSON.parse(stored); } catch(e){}
       }
     }
+
+    // Auto-sanear iconos corruptos o caracteres residuales (ej: 'x')
+    let needsResave = false;
+    Object.keys(nodos).forEach(k => {
+      if (!nodos[k].logo || nodos[k].logo === 'x' || nodos[k].logo === 'X') {
+        nodos[k].logo = '🌑';
+        needsResave = true;
+      }
+      if (nodos[k].vrdedores && Array.isArray(nodos[k].vrdedores)) {
+        nodos[k].vrdedores.forEach(v => {
+          if (!v.avatar || v.avatar === 'x' || v.avatar === 'x"' || v.avatar === 'X') {
+            v.avatar = '🌱';
+            needsResave = true;
+          }
+        });
+      }
+    });
+
+    if (needsResave && typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('VRDE_NODOS', JSON.stringify(nodos)); } catch(e){}
+    }
+
     return nodos;
   }
 
@@ -356,8 +467,8 @@ class LunarEngine {
     if (!nodos[key]) return;
     if (!nodos[key].vrdedores) nodos[key].vrdedores = [];
 
-    const inde= nodos[key].vrdedores.findIndex(v => v.id === vrdedorData.id);
-    if (inde> -1) {
+    const index = nodos[key].vrdedores.findIndex(v => v.id === vrdedorData.id);
+    if (index > -1) {
       nodos[key].vrdedores[index] = { ...nodos[key].vrdedores[index], ...vrdedorData };
     } else {
       nodos[key].vrdedores.push(vrdedorData);
@@ -422,8 +533,8 @@ class LunarEngine {
    */
   static actualizarPedidoCompleto(pedidoId, nuevosDatos) {
     let pedidos = this.obtenerPedidos();
-    const inde= pedidos.findIndex(p => String(p.id) === String(pedidoId));
-    if (inde> -1) {
+    const index = pedidos.findIndex(p => String(p.id) === String(pedidoId));
+    if (index > -1) {
       pedidos[index] = { ...pedidos[index], ...nuevosDatos, updatedAt: new Date().toISOString() };
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));

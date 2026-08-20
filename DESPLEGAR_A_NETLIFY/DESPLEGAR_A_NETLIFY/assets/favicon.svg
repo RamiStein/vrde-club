@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="vrdeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10A352" />
+      <stop offset="100%" stop-color="#0B7339" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#vrdeGrad)" />
+  <!-- Hoja Principal Vrde -->
+  <path d="M32 48 C32 48 32 30 32 24 C32 17 24 16 19 20 C15 24 16 31 21 34 C26 37 30 39 32 48 Z" fill="#FFFFFF"/>
+  <!-- Hoja Secundaria Luz -->
+  <path d="M32 40 C35 34 41 32 45 33 C49 35 50 40 46 44 C42 47 36 47 32 48 Z" fill="#D4F1A0"/>
+</svg>

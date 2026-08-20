@@ -1,0 +1,163 @@
+<!-- =========================================
+     VIEW 2: SHOP
+     ========================================= -->
+<div id="shop-view" class="hidden">
+  <!-- Banner Superior -->
+  <div id="shop-banner" class="shop-banner-top"></div>
+  
+  <!-- Header -->
+  <div class="shop-header">
+    <div class="back-btn" onclick="goHome()">â¬…ï¸</div>
+    <div class="shop-brand" onclick="openNodeProfile()">
+      <div class="shop-brand-logo" id="shop-logo"></div>
+      <h2 class="shop-brand-name" id="shop-name">Cargando...</h2>
+    </div>
+  </div>
+
+  <!-- Progress & Lunar Banner -->
+  <div class="shop-progress-banner">
+    <div class="progress-row">
+      <span class="progress-label">Meta del nodo:</span>
+      <span class="progress-value" id="shop-nodo-prog-text">0 / 0</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="shop-nodo-prog-bar" style="width: 0%; background: white;"></div>
+    </div>
+    
+    <div class="progress-row" style="margin-top: 15px;">
+      <span class="progress-label">Red global:</span>
+      <span class="progress-value" id="shop-global-prog-text">0 / 0</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="shop-global-prog-bar" style="width: 0%"></div>
+    </div>
+    
+    <div class="lunar-info-banner">
+      <div>
+        <div class="lunar-info-title" id="shop-lunar-title">Luna Nueva</div>
+        <div class="lunar-info-text" id="shop-lunar-desc">Cierra en X dÃ­as</div>
+      </div>
+      <div style="font-size: 24px;" id="shop-lunar-emoji"></div>
+    </div>
+    <div id="shop-closed-notice" class="lunar-closed-notice hidden">
+      La compra de este ciclo estÃ¡ cerrada
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="product-tabs" id="shop-tabs">
+    <!-- Injected via JS -->
+  </div>
+
+  <!-- Product Showcase -->
+  <div class="product-showcase" id="shop-product-container">
+    <!-- Injected via JS -->
+  </div>
+
+  <!-- Floating Cart -->
+  <div class="floating-cart" id="floating-cart">
+    <div class="cart-info">
+      <span class="cart-label">Total estimado</span>
+      <span class="cart-total" id="cart-total-text">$0</span>
+    </div>
+    <button class="btn btn-primary" id="btn-checkout" onclick="openCheckoutModal()">FINALIZAR PEDIDO</button>
+  </div>
+</div>
+
+<!-- =========================================
+     MODALS (SHOP)
+     ========================================= -->
+<!-- Checkout Modal -->
+<div class="modal-overlay" id="modal-checkout">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Finalizar Pedido</h3>
+      <span class="modal-close" onclick="closeModal('modal-checkout')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="checkout-summary">
+        <h4 style="margin-bottom: 10px; font-size: 14px; color: var(--text-muted); text-transform: uppercase;">Tu Carrito</h4>
+        <div id="checkout-items"></div>
+        
+        <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+          <p style="font-size: 14px; font-weight: 600; margin-bottom: 5px;">Aporte a la red (DonaciÃ³n)</p>
+          <p style="font-size: 12px; color: var(--text-muted);">Tu aporte sostiene la logÃ­stica y desarrollo de Vrde Club.</p>
+          <div class="donation-options">
+            <button class="don-btn active" id="don-3" onclick="setDonation('3')">3% (Sugerido)</button>
+            <button class="don-btn" id="don-custom" onclick="setDonation('custom')">Otro monto</button>
+            <button class="don-btn" id="don-0" onclick="setDonation('0')">Sin aporte</button>
+          </div>
+          <div id="custom-donation-div" class="hidden" style="margin-top: 10px;">
+            <input type="number" id="custom-don-val" class="input-control" placeholder="$ Monto" oninput="updateTotalFinal()">
+          </div>
+        </div>
+
+        <div class="summary-total">
+          <span>TOTAL A PAGAR</span>
+          <span id="checkout-total-final">$0</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Nombre y Apellido</label>
+        <input type="text" id="chk-nombre" class="input-control" placeholder="Ej: Juan PÃ©rez">
+      </div>
+      <div class="input-group">
+        <label>TelÃ©fono (WhatsApp)</label>
+        <input type="tel" id="chk-tel" class="input-control" placeholder="Ej: 1123456789">
+      </div>
+      <div class="input-group">
+        <label>Comentario adicional (opcional)</label>
+        <textarea id="chk-msg" class="input-control" rows="2"></textarea>
+      </div>
+      
+      <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="btn-submit-order" onclick="submitOrder()">ENVIAR PEDIDO</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="modal-success">
+  <div class="modal-content" style="text-align: center;">
+    <div class="modal-body" style="padding: 40px 20px;">
+      <div style="font-size: 60px; margin-bottom: 20px;">âœ…</div>
+      <h2 style="color: var(--primary); margin-bottom: 10px;">Â¡Pedido Confirmado!</h2>
+      <p style="margin-bottom: 20px; color: var(--text-muted);">Tu pedido <strong id="succ-id"></strong> ha sido registrado.</p>
+      
+      <div class="card" style="background: var(--bg); margin-bottom: 20px; text-align: left;">
+        <p style="font-size: 14px; font-weight: bold; margin-bottom: 5px;">Datos para transferencia:</p>
+        <p style="font-size: 14px; margin-bottom: 5px;">Alias: <strong id="succ-alias"></strong></p>
+        <p style="font-size: 14px;">Total a transferir: <strong id="succ-total" style="color: var(--primary); font-size: 18px;"></strong></p>
+      </div>
+
+      <p style="font-size: 14px; margin-bottom: 20px;">Por favor, enviÃ¡ el comprobante al WhatsApp del nodo para confirmar tu compra.</p>
+      
+      <button class="btn" style="background: #25D366; color: white; width: 100%; margin-bottom: 10px;" onclick="sendWsp()">
+        ðŸ“² ENVIAR COMPROBANTE
+      </button>
+      <button class="btn btn-outline" style="width: 100%;" onclick="goHome()">Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- Node Profile Modal -->
+<div class="modal-overlay" id="modal-node">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Info del Nodo</h3>
+      <span class="modal-close" onclick="closeModal('modal-node')">&times;</span>
+    </div>
+    <div class="modal-body" style="text-align: center;">
+      <div id="prof-logo" style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg); display: inline-flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 15px; overflow: hidden;">
+      </div>
+      <h2 id="prof-name" style="color: var(--primary); margin-bottom: 5px;">Nombre</h2>
+      <p id="prof-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Desc</p>
+      
+      <div style="text-align: left; background: var(--bg); padding: 15px; border-radius: var(--radius-sm);">
+        <p style="margin-bottom: 10px;"><strong>ðŸ“ DirecciÃ³n:</strong> <span id="prof-dir"></span></p>
+        <p style="margin-bottom: 10px;"><strong>ðŸ“± Contacto:</strong> <span id="prof-contacto"></span></p>
+        <p style="margin-bottom: 10px;"><strong>ðŸšš Entrega:</strong> <span id="prof-entrega"></span></p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Previsualización • Yerba Mate Grapia Milenaria</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Cabinet+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10A352;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border: #E2E8F0;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 30px 20px;
+      color: #0F172A;
+    }
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 28px;
+      margin-bottom: 6px;
+      color: #0F172A;
+    }
+    p.subtitle {
+      color: #64748B;
+      margin-bottom: 26px;
+      font-size: 15px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+    }
+    .img-wrapper {
+      width: 100%;
+      height: 320px;
+      background: #E2E8F0;
+      position: relative;
+    }
+    .img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-body {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(16, 163, 82, 0.1);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+    .price-box {
+      background: #F1F5F9;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .price-row:last-child {
+      margin-bottom: 0;
+    }
+    .price-label {
+      color: #64748B;
+    }
+    .price-val {
+      font-weight: 700;
+      color: #0F172A;
+    }
+    .badge-cost {
+      font-size: 11px;
+      color: #94A3B8;
+      margin-top: 8px;
+      text-align: right;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+      <h1>🌿 Previsualización de Producto: Yerba Mate Grapia Milenaria</h1>
+      <a href="tienda.html" style="text-decoration: none; color: var(--primary); font-weight: 700; font-size: 14px;">← Ir a la Tienda</a>
+    </div>
+    <p class="subtitle">Cooperativa El Colono • Campo Ramón, Misiones • Estacionamiento Natural 18-24 meses</p>
+
+    <div class="grid">
+      <!-- 1 KG -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/yerba_grapia_1kg.jpg" alt="Yerba Grapia 1kg">
+        </div>
+        <div class="card-body">
+          <div>
+            <span class="tag">Formato 1 kg</span>
+            <h3 class="title">Yerba Grapia Milenaria 1kg</h3>
+            <p style="font-size: 13px; color: #64748B; margin: 0; line-height: 1.4;">
+              Paquete de papel kraft tradicional. Molienda equilibrada con palo, secado en cinta y estacionamiento natural.
+            </p>
+          </div>
+          <div class="price-box">
+            <div class="price-row">
+              <span class="price-label">1 a 10 kg (Minorista):</span>
+              <span class="price-val">.100</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">12 a 50 kg (Mayorista):</span>
+              <span class="price-val" style="color: var(--primary);">.400</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">52+ kg (Distribuidor):</span>
+              <span class="price-val" style="color: #047857;">.800</span>
+            </div>
+            <div class="badge-cost">Costo Productor: .300</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 KG -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/yerba_grapia_2kg.jpg" alt="Yerba Grapia 2kg">
+        </div>
+        <div class="card-body">
+          <div>
+            <span class="tag">Formato 2 kg</span>
+            <h3 class="title">Yerba Grapia Milenaria 2kg</h3>
+            <p style="font-size: 13px; color: #64748B; margin: 0; line-height: 1.4;">
+              Paquete familiar de 2 kg. Excelente rendimiento para consumidores frecuentes y familias materas.
+            </p>
+          </div>
+          <div class="price-box">
+            <div class="price-row">
+              <span class="price-label">2 a 10 kg (Minorista):</span>
+              <span class="price-val">.600</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">12 a 50 kg (Mayorista):</span>
+              <span class="price-val" style="color: var(--primary);">.400</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">52+ kg (Distribuidor):</span>
+              <span class="price-val" style="color: #047857;">.400</span>
+            </div>
+            <div class="badge-cost">Costo Productor: .600</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 KG -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/yerba_grapia_10kg.jpg" alt="Yerba Grapia Bolsón 10kg">
+        </div>
+        <div class="card-body">
+          <div>
+            <span class="tag">Bolsón 10 kg</span>
+            <h3 class="title">Bolsón Cooperativo 10kg</h3>
+            <p style="font-size: 13px; color: #64748B; margin: 0; line-height: 1.4;">
+              Saca mayorista de 10 kg en arpillera y papel kraft. Máximo ahorro comunitario para compras colectivas de nodos.
+            </p>
+          </div>
+          <div class="price-box">
+            <div class="price-row">
+              <span class="price-label">10 kg (Minorista):</span>
+              <span class="price-val">.000 (.000/kg)</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">20 a 50 kg (Mayorista):</span>
+              <span class="price-val" style="color: var(--primary);">.500 (.450/kg)</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">60+ kg (Distribuidor):</span>
+              <span class="price-val" style="color: #047857;">.800 (.980/kg)</span>
+            </div>
+            <div class="badge-cost">Costo Productor: .000 (.600/kg)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

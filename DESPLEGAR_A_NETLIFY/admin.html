@@ -6,6 +6,11 @@
   <title>Panel de Administración de Nodo • Vrde Club</title>
   <meta name="description" content="Gestión comunitaria de pedidos, socios y entregas por nodo.">
 
+  <!-- Favicon e Icono de Navegador -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
+
   <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -964,7 +969,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js"></script>
+  <script src="lunar-engine.js?v=6"></script>
   <script>
     let CURRENT_REF = 'escobar';
     let CURRENT_CICLO_ID = 'piscis-ago-2026';
@@ -1072,7 +1077,8 @@
       const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
 
       document.getElementById('ad-title').innerText = `Panel de ${nodoData.nombre}`;
-      document.getElementById('dash-logo').innerText = nodoData.logo || '🌱';
+      const safeDashLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
+      document.getElementById('dash-logo').innerText = safeDashLogo;
       document.getElementById('btn-view-shop').href = `tienda.html?ref=${CURRENT_REF}`;
 
       // Banner Lunar

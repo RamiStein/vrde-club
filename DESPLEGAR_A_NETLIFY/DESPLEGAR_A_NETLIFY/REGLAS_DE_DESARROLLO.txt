@@ -1,0 +1,41 @@
+================================================================================
+ REGLAS DE DESARROLLO Y PROTOCOLO QUIRÚRGICO • PROYECTO VRDE CLUB
+================================================================================
+
+1. PRINCIPIO DE EDICIÓN QUIRÚRGICA Y PUNTUAL:
+   - NUNCA realizar modificaciones globales, refactorizaciones masivas o reemplazos
+     por script sobre archivos completos sin autorización explícita.
+   - Modificar ÚNICAMENTE las líneas, funciones o elementos CSS/HTML solicitados
+     de forma directa y precisa por el usuario.
+   - Si una tarea afecta un módulo específico (ej: una función en admin.html),
+     NO tocar las demás páginas (index.html, tienda.html, lunar.html, etc.).
+
+2. PRESERVACIÓN ESTRICTA DE DISEÑO Y ESTRUCTURA DOM:
+   - Respetar la estructura visual lograda: paddings, márgenes, layout de 270px
+     en barras laterales, paleta de colores de marca, tipografías e iconos.
+   - No eliminar clases CSS, IDs de elementos ni wrappers de sección existentes.
+   - Evitar generar scrolls horizontales o desbordes en cualquier resolución.
+
+3. PROTOCOLO OBLIGATORIO DE BACKUPS:
+   - Antes de realizar cualquier cambio significativo o estructural, verificar
+     o generar una copia de respaldo en la carpeta /backups con formato:
+     /backups/backup_YYYY-MM-DD_HH-mm/
+   - En caso de cualquier error o comportamiento no deseado, poder restaurar
+     instantáneamente a la versión previa estable.
+
+4. PERSISTENCIA DE DATOS Y COMPATIBILIDAD:
+   - Toda información modificada (estados de pedidos, perfiles de nodo, redes
+     sociales, equipos de Vrdedores, costos de productos y CRM) debe persistir
+     en localStorage (claves: VRDE_PEDIDOS, VRDE_PRODUCTOS, VRDE_NODOS).
+   - No resetear ni sobreescribir datos cargados por el usuario tras recargar (F5).
+   - Mantener siempre la compatibilidad entre ciclos lunares activos e históricos.
+
+5. VERIFICACIÓN Y VALIDACIÓN TÉCNICA:
+   - Toda modificación de código JavaScript debe validarse sintácticamente
+     antes de finalizar (ej: node -c lunar-engine.js).
+   - Comprobar que los modales, formularios y enlaces abran y cierren correctamente.
+
+6. LISTO PARA PRODUCCIÓN Y DESPLIEGUE A NETLIFY:
+   - Mantener el proyecto 100% estático, autónomo y listo para subir a Netlify
+     (conservar netlify.toml, _redirects y carpeta DESPLEGAR_A_NETLIFY).
+================================================================================

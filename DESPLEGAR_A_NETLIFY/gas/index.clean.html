@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vrde Club</title>
+  
+  <script>
+    window.onerror = function(msg, url, line, col, err) {
+      console.error("Error capturado: " + msg + " at " + line + ":" + col);
+      var statusEl = document.getElementById('status-message');
+      if (statusEl) statusEl.innerText = "Error de conexi├│n. Intenta de nuevo.";
+      return false;
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================
+       1. CSS VARIABLES
+       ========================================= */
+    :root {
+      --primary: #4e8d26;
+      --accent: #b6e936;
+      --bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text-main: #1a1a1a;
+      --text-muted: #666666;
+      --border: #e0e0e0;
+      
+      --dark-bg: #0f0f0f;
+      --dark-card: #1a1a2e;
+      --dark-border: #333333;
+      --dark-text: #e0e0e0;
+      
+      --font-heading: 'Rajdhani', sans-serif;
+      --font-body: 'Inter', sans-serif;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+      
+      --transition: all 0.3s ease;
+    }
+
+    /* =========================================
+       2. RESET & BASE
+       ========================================= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+    }
+    input, textarea, select {
+      font-family: inherit;
+      outline: none;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================================
+       3. SHARED COMPONENTS
+       ========================================= */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 16px;
+      transition: var(--transition);
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #3d701e;
+    }
+    .btn-accent {
+      background-color: var(--accent);
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+    .btn-accent:hover {
+      background-color: #a4d42f;
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      border: 2px solid var(--border);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .dark-card {
+      background: var(--dark-card);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      border: 1px solid var(--dark-border);
+      color: var(--dark-text);
+    }
+    
+    .progress-bar-container {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      height: 8px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .input-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      background: white;
+      transition: border-color 0.3s;
+    }
+    .input-control:focus {
+      border-color: var(--primary);
+    }
+    
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--card-bg);
+      z-index: 10;
+    }
+    .modal-title {
+      font-size: 20px;
+      margin: 0;
+    }
+    .modal-close {
+      font-size: 24px;
+      color: var(--text-muted);
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-body {
+      padding: 20px;
+    }
+    
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-pendiente { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+    .badge-pagado { background: #cce5ff; color: #004085; border: 1px solid #b8daff; }
+    .badge-entregado { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+
+    /* =========================================
+       4. LOADER
+       ========================================= */
+    #loader {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #loader.dark {
+      background: var(--dark-bg);
+      color: var(--dark-text);
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(182, 233, 54, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    #loader-text {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+
+    /* =========================================
+       5. LANDING STYLES
+       ========================================= */
+    #landing-view {
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+    .landing-hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+    .landing-title {
+      font-size: 48px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .landing-subtitle {
+      font-size: 18px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 20px;
+    }
+    .landing-tagline {
+      font-size: 22px;
+      color: white;
+      font-weight: 600;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .landing-lunar {
+      max-width: 600px;
+      margin: 0 auto 50px;
+      text-align: center;
+    }
+    .lunar-emoji {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+    .lunar-title {
+      color: var(--accent);
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+    .lunar-status {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #aaa;
+    }
+    .lunar-progress-text {
+      font-size: 14px;
+      margin-top: 10px;
+      color: #ccc;
+    }
+    
+    .landing-steps {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 60px;
+      flex-wrap: wrap;
+    }
+    .landing-step {
+      flex: 1;
+      min-width: 250px;
+      text-align: center;
+    }
+    .step-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+    .step-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: white;
+    }
+    .step-desc {
+      font-size: 14px;
+      color: #aaa;
+    }
+    
+    .landing-section-title {
+      font-size: 28px;
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+    .node-card {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      transition: transform 0.2s;
+    }
+    .node-card:hover {
+      transform: translateY(-5px);
+    }
+    .node-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-right: 15px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .node-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .node-info {
+      flex: 1;
+    }
+    .node-name {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+    .node-stats {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+    .node-link {
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .testimonials-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+    .testimonial-card {
+      padding: 20px;
+    }
+    .test-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .test-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+      color: #111;
+    }
+    .test-name {
+      font-weight: 600;
+      color: white;
+    }
+    .test-text {
+      font-size: 14px;
+      color: #ccc;
+      font-style: italic;
+    }
+
+    .landing-cta {
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--dark-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--dark-border);
+      margin-bottom: 40px;
+    }
+    .landing-cta h3 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: white;
+    }
+    
+    .landing-footer {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      padding: 20px;
+    }
+
+    /* =========================================
+       6. SHOP STYLES
+       ========================================= */
+    #shop-view {
+      padding-bottom: 100px; /* space for floating cart */
+    }
+    
+    .shop-banner-top {
+      width: 100%;
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--primary);
+    }
+    
+    .shop-header {
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .back-btn {
+      font-size: 24px;
+      margin-right: 15px;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+    .shop-brand {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .shop-brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .shop-brand-name {
+      font-size: 20px;
+      color: var(--primary);
+      margin: 0;
+    }
+    
+    .shop-progress-banner {
+      background: var(--dark-card);
+      color: white;
+      padding: 15px 20px;
+    }
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .progress-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .progress-value {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      color: var(--accent);
+    }
+    
+    .lunar-info-banner {
+      background: rgba(182, 233, 54, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 10px 15px;
+      margin-top: 10px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .lunar-info-text {
+      font-size: 13px;
+      color: #ccc;
+    }
+    .lunar-info-title {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 2px;
+    }
+    .lunar-closed-notice {
+      background: #ff4d4d;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: var(--radius-sm);
+      margin-top: 10px;
+    }
+
+    .product-tabs {
+      display: flex;
+      overflow-x: auto;
+      padding: 15px 20px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .product-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .tab-item {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: var(--bg);
+      margin-right: 10px;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+    .tab-item.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .product-showcase {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .prod-col-left, .prod-col-right {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .prod-col-center {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .prod-image {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 20px;
+      box-shadow: var(--shadow-lg);
+      border: 4px solid white;
+      transition: transform 0.5s ease;
+    }
+    .prod-image:hover {
+      transform: scale(1.05);
+    }
+    .prod-title {
+      font-size: 32px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .prod-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+    
+    .widget {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .widget-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    
+    /* Price Tiers */
+    .price-tiers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .price-tier {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      border: 2px solid transparent;
+      transition: var(--transition);
+    }
+    .price-tier.active {
+      background: rgba(182, 233, 54, 0.1);
+      border-color: var(--accent);
+    }
+    .tier-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .tier-req {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .tier-price {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .price-tier.active .tier-price {
+      color: var(--primary);
+      font-size: 20px;
+    }
+    
+    /* Qty Selector */
+    .qty-selector {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+      border-radius: 30px;
+      padding: 5px;
+    }
+    .qty-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-btn:active {
+      transform: scale(0.95);
+    }
+    .qty-input {
+      width: 60px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      font-family: var(--font-heading);
+    }
+    
+    /* Floating Cart */
+    .floating-cart {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      z-index: 900;
+    }
+    .floating-cart.visible {
+      transform: translateY(0);
+    }
+    .cart-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .cart-total {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    
+    /* Checkout Specific */
+    .checkout-summary {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .donation-options {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .don-btn {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      text-align: center;
+      background: white;
+      cursor: pointer;
+    }
+    .don-btn.active {
+      background: rgba(182, 233, 54, 0.2);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* =========================================
+       7. ADMIN STYLES
+       ========================================= */
+    #admin-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .admin-login-card {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .pin-input {
+      font-size: 32px;
+      letter-spacing: 10px;
+      text-align: center;
+      padding: 15px;
+      font-family: var(--font-heading);
+    }
+    
+    #admin-dashboard {
+      padding-bottom: 50px;
+    }
+    .admin-header {
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+    .admin-title {
+      font-size: 20px;
+      color: var(--primary);
+      margin: 0;
+    }
+    
+    .admin-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .metric-card {
+      text-align: center;
+      padding: 20px 10px;
+    }
+    .metric-value {
+      font-size: 32px;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .filters {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+    .filter-btn {
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+    .order-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      border: 1px solid var(--border);
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .order-id { font-weight: bold; color: var(--text-muted); }
+    .order-name { font-weight: 600; font-size: 16px; }
+    .order-detail {
+      font-size: 13px;
+      color: var(--text-muted);
+      background: var(--bg);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+    .order-total {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .order-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+    .btn-action {
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+    }
+    .btn-wsp {
+      width: 40px;
+      flex: none;
+      background: #25D366;
+      color: white;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .past-cycles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .cycle-card {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .cycle-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+    }
+    .cycle-name {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .cycle-stats {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    .members-table-wrapper {
+      background: white;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      margin-bottom: 40px;
+    }
+    .members-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+    .members-table th, .members-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .members-table th {
+      background: var(--bg);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .copy-group {
+      display: flex;
+      gap: 10px;
+    }
+    .copy-group .input-control {
+      flex: 1;
+      background: var(--bg);
+    }
+
+    /* =========================================
+       8. RESPONSIVE
+       ========================================= */
+    @media (min-width: 768px) {
+      .product-showcase {
+        grid-template-columns: 250px 1fr 300px;
+      }
+      .admin-metrics {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .landing-cta {
+        padding: 60px 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader" class="dark">
+    <div class="spinner"></div>
+    <div id="loader-text">Iniciando v6...</div>
+  </div>
+  <script>
+    try {
+      document.getElementById('loader-text').innerText = 'JS arranc├│ OK.';
+    } catch(e) {
+      alert("Error JS inline: " + e.message);
+    }
+  </script>
+
+  <!-- =========================================
+       VIEW 1: LANDING
+       ========================================= -->
+  <div id="landing-view" class="hidden">
+    <div class="landing-hero">
+      <h1 class="landing-title">­ƒî▒ VRDE CLUB</h1>
+      <p class="landing-subtitle">Compra comunitaria agroecol├│gica</p>
+      <p class="landing-tagline">Compramos juntos, pagamos menos, comemos mejor.</p>
+    </div>
+
+    <div class="container">
+      <!-- LUNAR CYCLE -->
+      <div class="dark-card landing-lunar">
+        <div class="lunar-emoji" id="lan-lunar-emoji">­ƒîæ</div>
+        <h2 class="lunar-title" id="lan-lunar-title">Cargando ciclo...</h2>
+        <div class="lunar-status" id="lan-lunar-status">--</div>
+        
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="lan-lunar-progress" style="width: 0%"></div>
+        </div>
+        <div class="lunar-progress-text" id="lan-lunar-progress-text">-- / -- unidades</div>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div class="landing-steps">
+        <div class="landing-step dark-card">
+          <div class="step-icon">­ƒîÖ</div>
+          <div class="step-title">Eleg├¡ tu nodo</div>
+          <div class="step-desc">Busc├í el punto de retiro m├ís cercano a tu casa.</div>
+        </div>
+        <div class="landing-step dark-card">
+          <div class="step-icon">­ƒôª</div>
+          <div class="step-title">Arm├í tu pedido</div>
+          <div class="step-desc">Sumate a la compra del ciclo lunar actual.</div>
+        </div>
+        <div class="landing-step dark-card">
+          <div class="step-icon">­ƒÜø</div>
+          <div class="step-title">Retir├í en tu zona</div>
+          <div class="step-desc">Busc├í tus productos frescos el d├¡a de entrega.</div>
+        </div>
+      </div>
+
+      <!-- NODES GRID -->
+      <h3 class="landing-section-title">NODOS DE LA RED</h3>
+      <div class="nodes-grid" id="lan-nodes-grid">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <h3 class="landing-section-title">VOCES DE LA RED</h3>
+      <div class="testimonials-list" id="lan-testimonials">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- CTA -->
+      <div class="landing-cta">
+        <h3>┬┐Quer├®s ser nodo difusor?</h3>
+        <a href="https://wa.me/5491127452476?text=Hola!%20Quiero%20ser%20nodo%20difusor%20en%20Vrde%20Club" target="_blank" class="btn btn-accent" style="padding: 15px 30px; font-size: 18px;">
+          Habl├í con nosotros
+        </a>
+      </div>
+
+      <div class="landing-footer">
+        Red Fractal ÔÇó Vrde Club ÔÇó ­ƒîæ
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       VIEW 2: SHOP
+       ========================================= -->
+  <div id="shop-view" class="hidden">
+    <!-- Banner Superior -->
+    <div id="shop-banner" class="shop-banner-top"></div>
+    
+    <!-- Header -->
+    <div class="shop-header">
+      <div class="back-btn" onclick="goHome()">ÔåÉ</div>
+      <div class="shop-brand" onclick="openNodeProfile()">
+        <div class="shop-brand-logo" id="shop-logo">­ƒî▒</div>
+        <h2 class="shop-brand-name" id="shop-name">Cargando...</h2>
+      </div>
+    </div>
+
+    <!-- Progress & Lunar Banner -->
+    <div class="shop-progress-banner">
+      <div class="progress-row">
+        <span class="progress-label">Meta del nodo:</span>
+        <span class="progress-value" id="shop-nodo-prog-text">0 / 0</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="shop-nodo-prog-bar" style="width: 0%; background: white;"></div>
+      </div>
+      
+      <div class="progress-row" style="margin-top: 15px;">
+        <span class="progress-label">Red global:</span>
+        <span class="progress-value" id="shop-global-prog-text">0 / 0</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="shop-global-prog-bar" style="width: 0%"></div>
+      </div>
+      
+      <div class="lunar-info-banner">
+        <div>
+          <div class="lunar-info-title" id="shop-lunar-title">Luna Nueva</div>
+          <div class="lunar-info-text" id="shop-lunar-desc">Cierra en X d├¡as</div>
+        </div>
+        <div style="font-size: 24px;" id="shop-lunar-emoji">­ƒîæ</div>
+      </div>
+      <div id="shop-closed-notice" class="lunar-closed-notice hidden">
+        La compra de este ciclo est├í cerrada
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="product-tabs" id="shop-tabs">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- Product Showcase -->
+    <div class="product-showcase" id="shop-product-container">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- Floating Cart -->
+    <div class="floating-cart" id="floating-cart">
+      <div class="cart-info">
+        <span class="cart-label">Total estimado</span>
+        <span class="cart-total" id="cart-total-text">$0</span>
+      </div>
+      <button class="btn btn-primary" id="btn-checkout" onclick="openCheckoutModal()">FINALIZAR PEDIDO</button>
+    </div>
+  </div>
+
+  <!-- =========================================
+       VIEW 3: ADMIN
+       ========================================= -->
+  <div id="admin-login" class="hidden">
+    <div class="card admin-login-card">
+      <div class="shop-brand-logo" id="admin-login-logo" style="margin: 0 auto 15px; width: 60px; height: 60px; font-size: 30px;">­ƒöÆ</div>
+      <h2 style="margin-bottom: 5px;" id="admin-login-name">Panel</h2>
+      <p style="color: var(--text-muted); margin-bottom: 20px;">Administraci├│n de Nodo</p>
+      
+      <div class="input-group">
+        <input type="password" id="pinInput" class="input-control pin-input" maxlength="4" placeholder="ÔÇóÔÇóÔÇóÔÇó" onkeypress="if(event.keyCode===13) attemptLogin()">
+      </div>
+      
+      <p id="pin-error" style="color: red; font-size: 14px; margin-bottom: 15px; display: none;">PIN incorrecto</p>
+      
+      <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="attemptLogin()">INGRESAR</button>
+      
+      <a href="javascript:void(0)" onclick="window.location.href = APP_URL + '?ref=' + CURRENT_REF" style="font-size: 14px; color: var(--text-muted);">ÔåÉ Volver a la tienda</a>
+    </div>
+  </div>
+
+  <div id="admin-dashboard" class="hidden">
+    <div class="admin-header">
+      <h2 class="admin-title" id="ad-title">Panel</h2>
+      <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" onclick="logout()">Salir</button>
+    </div>
+
+    <div class="container">
+      <!-- Lunar status -->
+      <div class="dark-card" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 style="color: var(--accent); margin-bottom: 5px;" id="ad-lunar-title">Luna</h3>
+          <p style="font-size: 14px; margin: 0;" id="ad-lunar-status">Status</p>
+        </div>
+        <div style="font-size: 30px;" id="ad-lunar-emoji">­ƒîæ</div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="admin-metrics">
+        <div class="card metric-card">
+          <div class="metric-value" id="ad-m-pedidos">0</div>
+          <div class="metric-label">Pedidos</div>
+        </div>
+        <div class="card metric-card">
+          <div class="metric-value" id="ad-m-socios">0</div>
+          <div class="metric-label">Socios</div>
+        </div>
+        <div class="card metric-card">
+          <div class="metric-value" id="ad-m-recaudado">$0</div>
+          <div class="metric-label">Recaudado</div>
+        </div>
+        <div class="card metric-card">
+          <div class="metric-value" id="ad-m-unidades">0</div>
+          <div class="metric-label">Unidades</div>
+        </div>
+      </div>
+
+      <!-- Orders -->
+      <div class="section-header">
+        <h3 style="margin: 0;">PEDIDOS DEL CICLO ACTUAL</h3>
+        <div class="filters">
+          <button class="filter-btn active" onclick="filterOrders('Todos', this)">Todos</button>
+          <button class="filter-btn" onclick="filterOrders('Pendiente', this)">Pendientes</button>
+          <button class="filter-btn" onclick="filterOrders('Pagado', this)">Pagados</button>
+          <button class="filter-btn" onclick="filterOrders('Entregado', this)">Entregados</button>
+        </div>
+      </div>
+      
+      <div class="orders-list" id="ad-orders-list">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Past Cycles -->
+      <h3 style="margin-bottom: 15px; margin-top: 30px;">CICLOS ANTERIORES</h3>
+      <div class="past-cycles-grid" id="ad-past-cycles">
+        <!-- Injected via JS -->
+      </div>
+      <div id="ad-past-orders-container" class="hidden" style="margin-bottom: 30px;">
+        <h4 id="ad-past-orders-title" style="margin-bottom: 15px; color: var(--primary);">Pedidos del ciclo</h4>
+        <div class="orders-list" id="ad-past-orders-list"></div>
+      </div>
+
+      <!-- Members -->
+      <h3 style="margin-bottom: 15px; margin-top: 30px;">DIRECTORIO DE SOCIOS</h3>
+      <div class="input-group">
+        <input type="text" id="memberSearch" class="input-control" placeholder="Buscar socio..." onkeyup="filterMembers()">
+      </div>
+      <div class="members-table-wrapper">
+        <table class="members-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Tel├®fono</th>
+              <th>Pedidos</th>
+              <th>Total G.</th>
+              <th>├Ültimo</th>
+            </tr>
+          </thead>
+          <tbody id="ad-members-tbody">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Share & Setup -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div class="card">
+          <h4 style="margin-bottom: 15px;">Difusi├│n</h4>
+          <div class="input-group">
+            <label>Link de tu tienda</label>
+            <div class="copy-group">
+              <input type="text" id="ad-link-tienda" class="input-control" readonly>
+              <button class="btn btn-outline" onclick="copyText('ad-link-tienda')">Copiar</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Resumen para WhatsApp</label>
+            <textarea id="ad-wsp-text" class="input-control" rows="4" readonly></textarea>
+            <button class="btn btn-outline" style="width: 100%; margin-top: 10px;" onclick="copyText('ad-wsp-text')">Copiar Resumen</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom: 15px;">Configuraci├│n del Nodo</h4>
+          <div class="input-group">
+            <label>Nombre del Nodo</label>
+            <input type="text" id="editNombre" class="input-control">
+          </div>
+          <div class="input-group">
+            <label>Logo (URL o Emoji)</label>
+            <input type="text" id="editLogo" class="input-control">
+          </div>
+          <div class="input-group">
+            <label>Direcci├│n de retiro</label>
+            <input type="text" id="editDireccion" class="input-control">
+          </div>
+          <div class="input-group">
+            <label>Contacto (Nombre)</label>
+            <input type="text" id="editContacto" class="input-control">
+          </div>
+          <div class="input-group">
+            <label>Descripci├│n corta</label>
+            <textarea id="editDesc" class="input-control" rows="2"></textarea>
+          </div>
+          <div class="input-group">
+            <label>D├¡a de entrega (ej: S├íbado de 10 a 14hs)</label>
+            <input type="text" id="editDia" class="input-control">
+          </div>
+          <button class="btn btn-primary" style="width: 100%;" id="btn-save-profile" onclick="saveProfile()">Guardar Cambios</button>
+          <div id="save-msg" style="text-align: center; margin-top: 10px; font-size: 14px; font-weight: bold;"></div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 14px;">
+        Vrde Club ÔÇó Red Fractal ÔÇó ­ƒîæ
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================
+       MODALS (SHOP)
+       ========================================= -->
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="modal-checkout">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Finalizar Pedido</h3>
+        <span class="modal-close" onclick="closeModal('modal-checkout')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="checkout-summary">
+          <h4 style="margin-bottom: 10px; font-size: 14px; color: var(--text-muted); text-transform: uppercase;">Tu Carrito</h4>
+          <div id="checkout-items"></div>
+          
+          <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+            <p style="font-size: 14px; font-weight: 600; margin-bottom: 5px;">Aporte a la red (Donaci├│n)</p>
+            <p style="font-size: 12px; color: var(--text-muted);">Tu aporte sostiene la log├¡stica y desarrollo de Vrde Club.</p>
+            <div class="donation-options">
+              <button class="don-btn active" id="don-3" onclick="setDonation('3')">3% (Sugerido)</button>
+              <button class="don-btn" id="don-custom" onclick="setDonation('custom')">Otro monto</button>
+              <button class="don-btn" id="don-0" onclick="setDonation('0')">Sin aporte</button>
+            </div>
+            <div id="custom-donation-div" class="hidden" style="margin-top: 10px;">
+              <input type="number" id="custom-don-val" class="input-control" placeholder="$ Monto" oninput="updateTotalFinal()">
+            </div>
+          </div>
+
+          <div class="summary-total">
+            <span>TOTAL A PAGAR</span>
+            <span id="checkout-total-final">$0</span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Nombre y Apellido</label>
+          <input type="text" id="chk-nombre" class="input-control" placeholder="Ej: Juan P├®rez">
+        </div>
+        <div class="input-group">
+          <label>Tel├®fono (WhatsApp)</label>
+          <input type="tel" id="chk-tel" class="input-control" placeholder="Ej: 1123456789">
+        </div>
+        <div class="input-group">
+          <label>Comentario adicional (opcional)</label>
+          <textarea id="chk-msg" class="input-control" rows="2"></textarea>
+        </div>
+        
+        <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="btn-submit-order" onclick="submitOrder()">ENVIAR PEDIDO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="modal-success">
+    <div class="modal-content" style="text-align: center;">
+      <div class="modal-body" style="padding: 40px 20px;">
+        <div style="font-size: 60px; margin-bottom: 20px;">­ƒÄë</div>
+        <h2 style="color: var(--primary); margin-bottom: 10px;">┬íPedido Confirmado!</h2>
+        <p style="margin-bottom: 20px; color: var(--text-muted);">Tu pedido <strong id="succ-id"></strong> ha sido registrado.</p>
+        
+        <div class="card" style="background: var(--bg); margin-bottom: 20px; text-align: left;">
+          <p style="font-size: 14px; font-weight: bold; margin-bottom: 5px;">Datos para transferencia:</p>
+          <p style="font-size: 14px; margin-bottom: 5px;">Alias: <strong id="succ-alias"></strong></p>
+          <p style="font-size: 14px;">Total a transferir: <strong id="succ-total" style="color: var(--primary); font-size: 18px;"></strong></p>
+        </div>
+
+        <p style="font-size: 14px; margin-bottom: 20px;">Por favor, envi├í el comprobante al WhatsApp del nodo para confirmar tu compra.</p>
+        
+        <button class="btn" style="background: #25D366; color: white; width: 100%; margin-bottom: 10px;" onclick="sendWsp()">
+          ­ƒô▒ ENVIAR COMPROBANTE
+        </button>
+        <button class="btn btn-outline" style="width: 100%;" onclick="goHome()">Volver al inicio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Node Profile Modal -->
+  <div class="modal-overlay" id="modal-node">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Info del Nodo</h3>
+        <span class="modal-close" onclick="closeModal('modal-node')">&times;</span>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <div id="prof-logo" style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg); display: inline-flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 15px; overflow: hidden;">
+          ­ƒî▒
+        </div>
+        <h2 id="prof-name" style="color: var(--primary); margin-bottom: 5px;">Nombre</h2>
+        <p id="prof-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Desc</p>
+        
+        <div style="text-align: left; background: var(--bg); padding: 15px; border-radius: var(--radius-sm);">
+          <p style="margin-bottom: 10px;"><strong>­ƒôì Direcci├│n:</strong> <span id="prof-dir"></span></p>
+          <p style="margin-bottom: 10px;"><strong>­ƒæñ Contacto:</strong> <span id="prof-contacto"></span></p>
+          <p style="margin-bottom: 10px;"><strong>­ƒôå Entrega:</strong> <span id="prof-entrega"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       JAVASCRIPT LOGIC
+       ========================================= -->
+  <script>
+    // =========================================
+    // TEMPLATE VARIABLES & GLOBALS
+    // =========================================
+    var CURRENT_REF = '<?= refId ?>';
+    var APP_URL = '<?= urlApp ?>';
+    var PANEL_MODE = '<?= panelMode ?>';
+
+    // Globals Shop
+    var SHOP_DATA = null;
+    var CARRITO = {}; // index -> qty
+    var ACTIVE_INDEX = 0;
+    var DONATION_TYPE = '3';
+    var ORDER_SUCCESS_DATA = null;
+
+    // Globals Admin
+    var ADMIN_PIN = '';
+    var ADMIN_DATA = null;
+    var CURRENT_CYCLE_NAME = '';
+    var CURRENT_ORDERS = [];
+
+    // =========================================
+    // =========================================
+    // INITIALIZATION & ROUTING
+    // =========================================
+    var loaderTimer = null;
+
+    function initApp() {
+      if (PANEL_MODE === 'true' && CURRENT_REF && CURRENT_REF !== 'null') {
+        showAdminLogin();
+      } else if (!CURRENT_REF || CURRENT_REF === 'null' || CURRENT_REF === '') {
+        initLanding();
+      } else {
+        initShop();
+      }
+    }
+
+    // Polling robusto: Espera a que la API de Google Apps Script est├® inyectada y lista
+    var initLoops = 0;
+    function waitAndInit() {
+      initLoops++;
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        initApp();
+      } else {
+        if (initLoops > 100) {
+          document.getElementById('loader-text').innerText = "ERROR: google.script.run no carg├│.";
+          return;
+        }
+        setTimeout(waitAndInit, 50);
+      }
+    }
+    
+    // Iniciar verificaci├│n
+    try {
+      waitAndInit();
+    } catch(e) {
+      alert("Crash en waitAndInit: " + e.message);
+    }
+
+    function showLoader(text) {
+      if (loaderTimer) clearTimeout(loaderTimer);
+      var loaderEl = document.getElementById('loader');
+      var loaderTextEl = document.getElementById('loader-text');
+      
+      loaderTextEl.innerHTML = text || 'Cargando...';
+      loaderEl.classList.remove('hidden');
+
+      // Timeout de seguridad: si pasan 10 segundos sin respuesta, ofrecer reintento
+      loaderTimer = setTimeout(function() {
+        if (!loaderEl.classList.contains('hidden')) {
+          loaderTextEl.innerHTML = '<div style="text-align:center; padding: 20px; max-width: 400px;">' +
+            '<p style="margin-bottom: 15px; font-size: 15px;">ÔÜá´©Å La conexi├│n con Google Sheets tard├│ demasiado.</p>' +
+            '<p style="margin-bottom: 15px; font-size: 13px; opacity: 0.8;">Asegurate de haber creado una <strong>Nueva versi├│n</strong> al implementar en Apps Script.</p>' +
+            '<button onclick="location.reload()" style="background:#b6e936; color:#111; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; border:none;">­ƒöä Reintentar</button>' +
+            '</div>';
+        }
+      }, 10000);
+    }
+
+    function hideLoader() {
+      if (loaderTimer) clearTimeout(loaderTimer);
+      document.getElementById('loader').classList.add('hidden');
+    }
+
+    function handleError(err) {
+      console.error('Error GAS:', err);
+      hideLoader();
+      var errorMsg = (err && err.message) ? err.message : String(err);
+      alert("Error de conexi├│n: " + errorMsg);
+    }
+
+    // =========================================
+    // LANDING LOGIC
+    // =========================================
+    function initLanding() {
+      document.getElementById('loader').classList.add('dark');
+      showLoader('Sincronizando con la luna...');
+      document.getElementById('landing-view').classList.remove('hidden');
+      
+      google.script.run
+        .withSuccessHandler(function(data) {
+          try {
+            renderLanding(data);
+          } catch(e) {
+            hideLoader();
+            console.error('Error renderLanding:', e);
+            alert('Error al renderizar: ' + e.message);
+          }
+        })
+        .withFailureHandler(handleError)
+        .obtenerLandingData();
+    }
+
+    function renderLanding(data) {
+      hideLoader();
+      
+      if (!data || !data.success) {
+        alert('Error al cargar datos: ' + (data ? data.error : 'Sin respuesta'));
+        return;
+      }
+      
+      // Lunar Info
+      var c = data.ciclo || {};
+      document.getElementById('lan-lunar-emoji').innerText = c.signo ? c.signo : '­ƒîæ';
+      document.getElementById('lan-lunar-title').innerText = c.nombre || 'Ciclo de Compra';
+      
+      var status = c.abierta 
+        ? "Cierra en " + c.diasRestantes + " d├¡as"
+        : "Compra cerrada";
+      document.getElementById('lan-lunar-status').innerText = status;
+      
+      var p = 0;
+      if (data.metaGeneral > 0) {
+        p = Math.min(100, Math.round((data.totalGeneral / data.metaGeneral) * 100));
+      }
+      document.getElementById('lan-lunar-progress').style.width = p + '%';
+      document.getElementById('lan-lunar-progress-text').innerText = data.totalGeneral + ' / ' + data.metaGeneral + ' unidades pedidas';
+
+      // Nodes Grid
+      var nodesHtml = '';
+      if (data.aliados && data.aliados.length > 0) {
+        data.aliados.forEach(function(n) {
+          var color = n.color || '#4e8d26';
+          var logoHtml = isEmoji(n.logo) 
+            ? n.logo 
+            : (n.logo ? '<img src="'+n.logo+'">' : n.nombre.charAt(0).toUpperCase());
+          
+          nodesHtml += '<div class="node-card dark-card" style="border-color: ' + color + '40;">' +
+            '<div class="node-logo" style="color: ' + color + ';">' + logoHtml + '</div>' +
+            '<div class="node-info">' +
+            '<div class="node-name" style="color: ' + color + ';">' + n.nombre + '</div>' +
+            '<div class="node-stats">' + (n.ventasCiclo || 0) + ' unidades aportadas</div>' +
+            '<a href="' + data.url + '?ref=' + n.id + '" target="_top" class="node-link" style="color: ' + color + ';">Entrar a la tienda &rarr;</a>' +
+            '</div></div>';
+        });
+      } else {
+        nodesHtml = '<p style="color: #aaa;">No hay nodos activos en este momento.</p>';
+      }
+      document.getElementById('lan-nodes-grid').innerHTML = nodesHtml;
+
+      // Testimonials
+      var testHtml = '';
+      if (data.comentarios && data.comentarios.length > 0) {
+        data.comentarios.forEach(function(t) {
+          var color = t.color || '#b6e936';
+          var nombre = t.nombre || t.name || '';
+          var texto = t.texto || t.text || '';
+          testHtml += '<div class="testimonial-card dark-card">' +
+            '<div class="test-header">' +
+            '<div class="test-avatar" style="background: ' + color + ';">' + nombre.charAt(0).toUpperCase() + '</div>' +
+            '<div class="test-name">' + nombre + '</div>' +
+            '</div>' +
+            '<div class="test-text">"' + texto + '"</div>' +
+            '</div>';
+        });
+      } else {
+        document.getElementById('lan-testimonials').previousElementSibling.style.display = 'none';
+      }
+      document.getElementById('lan-testimonials').innerHTML = testHtml;
+    }
+
+    function isEmoji(str) {
+      if(!str) return false;
+      var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/;
+      return regex.test(str);
+    }
+
+    // =========================================
+    // SHOP LOGIC
+    // =========================================
+    function initShop() {
+      document.getElementById('loader').classList.remove('dark');
+      showLoader('Abriendo tienda...');
+      document.getElementById('shop-view').classList.remove('hidden');
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          try {
+            renderShop(res);
+          } catch(e) {
+            hideLoader();
+            console.error('Error renderShop:', e);
+            alert('Error al cargar la tienda: ' + e.message);
+          }
+        })
+        .withFailureHandler(handleError)
+        .obtenerConfig(CURRENT_REF);
+    }
+
+    function renderShop(res) {
+      hideLoader();
+      if (!res.success) {
+        alert("Nodo no encontrado.");
+        goHome();
+        return;
+      }
+      SHOP_DATA = res;
+      CARRITO = {};
+      
+      var v = res.VISUAL;
+      var c = res.CICLO_LUNAR;
+      
+      // Theme colors
+      var root = document.documentElement;
+      if (v.color) root.style.setProperty('--primary', v.color);
+      
+      // Branding
+      document.getElementById('shop-name').innerText = v.nombre;
+      var logoHtml = isEmoji(v.logo) 
+        ? v.logo 
+        : (v.logo ? '<img src="'+v.logo+'" style="width:100%; height:100%; border-radius:50%;">' : '­ƒî▒');
+      document.getElementById('shop-logo').innerHTML = logoHtml;
+      
+      // Banner
+      var bannerEl = document.getElementById('shop-banner');
+      if (v.banner) {
+        bannerEl.style.backgroundImage = "url('" + v.banner + "')";
+      }
+      
+      // Lunar Info
+      document.getElementById('shop-lunar-title').innerText = c.nombre || 'Ciclo Lunar';
+      document.getElementById('shop-lunar-desc').innerText = c.abierta ? "Cierra en " + c.diasRestantes + " d├¡as" : "Compra Cerrada";
+      document.getElementById('shop-lunar-emoji').innerText = c.signo || '­ƒîæ';
+      
+      if (!c.abierta) {
+        document.getElementById('shop-closed-notice').classList.remove('hidden');
+        document.getElementById('btn-checkout').disabled = true;
+        document.getElementById('btn-checkout').innerText = "CERRADO";
+        document.getElementById('btn-checkout').style.opacity = "0.5";
+      }
+      
+      // Progress Node (sumar todas las ventas del nodo)
+      var nVentas = 0;
+      for (var nk in res.VENTAS_NODO) { nVentas += res.VENTAS_NODO[nk] || 0; }
+      var nMeta = v.metaPropia || 50;
+      var nP = Math.min(100, Math.round((nVentas/nMeta)*100));
+      document.getElementById('shop-nodo-prog-text').innerText = nVentas + ' / ' + nMeta;
+      document.getElementById('shop-nodo-prog-bar').style.width = nP + '%';
+      
+      // Progress Global (sumar todas las ventas globales)
+      var gVentas = 0;
+      for (var gk in res.VENTAS_GLOBALES) { gVentas += res.VENTAS_GLOBALES[gk] || 0; }
+      var gMeta = res.META_GLOBAL_NODOS || 500;
+      var gP = Math.min(100, Math.round((gVentas/gMeta)*100));
+      document.getElementById('shop-global-prog-text').innerText = gVentas + ' / ' + gMeta;
+      document.getElementById('shop-global-prog-bar').style.width = gP + '%';
+      
+      buildShopTabs();
+      if (res.PRODUCTOS.length > 0) {
+        loadProductView(0);
+      }
+    }
+
+    function buildShopTabs() {
+      var html = '';
+      SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+        html += '<div class="tab-item ' + (i === 0 ? 'active' : '') + '" onclick="loadProductView(' + i + ')" id="tab-' + i + '">' + p.nombre + '</div>';
+      });
+      document.getElementById('shop-tabs').innerHTML = html;
+    }
+
+    function loadProductView(index) {
+      ACTIVE_INDEX = index;
+      var prod = SHOP_DATA.PRODUCTOS[index];
+      
+      // Update tabs
+      document.querySelectorAll('.tab-item').forEach(function(t, i) {
+        if(i === index) t.classList.add('active');
+        else t.classList.remove('active');
+      });
+      
+      var qty = CARRITO[index] || 0;
+      var totalGlobalProd = (SHOP_DATA.VENTAS_GLOBALES[prod.nombre.toLowerCase().trim()] || 0) + qty;
+      
+      var activeTier = 1;
+      var price = prod.p1;
+      if (prod.p3 > 0 && prod.m3 > 0 && totalGlobalProd >= prod.m3) {
+        activeTier = 3; price = prod.p3;
+      } else if (prod.p2 > 0 && prod.m2 > 0 && totalGlobalProd >= prod.m2) {
+        activeTier = 2; price = prod.p2;
+      }
+
+      // Build showcase HTML
+      var html = '<div class="prod-col-left">' +
+        '<div class="widget">' +
+        '<div class="widget-title">Origen</div>' +
+        '<p style="font-weight: 600;">' + (prod.origen || 'Agroecol├│gico') + '</p>' +
+        '<p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">Variedad: ' + (prod.variedad || '-') + '</p>' +
+        '</div>' +
+        '<div class="widget">' +
+        '<div class="widget-title">Impacto Comunitario</div>' +
+        '<div style="font-size: 24px; color: var(--primary); font-weight: bold;">' + totalGlobalProd + '</div>' +
+        '<p style="font-size: 12px; color: var(--text-muted);">unidades pedidas en toda la red en este ciclo.</p>' +
+        '<div class="progress-bar-container" style="background: var(--bg); margin-top:10px;">' +
+        '<div class="progress-bar-fill" style="width: ' + Math.min(100, (totalGlobalProd / (prod.meta || 100))*100) + '%;"></div>' +
+        '</div>' +
+        '<p style="font-size: 11px; text-align: right; color: #999;">Meta: ' + (prod.meta || 100) + '</p>' +
+        '</div></div>' +
+        '<div class="prod-col-center">' +
+        '<img src="' + (prod.img || 'https://via.placeholder.com/250?text=Producto') + '" class="prod-image">' +
+        '<h2 class="prod-title">' + prod.nombre + '</h2>' +
+        '<p class="prod-subtitle">' + (prod.subtitulo || '') + '</p>' +
+        '<div class="badge" style="background: var(--bg); color: var(--text-muted); margin-top: 15px;">' + prod.unidad + '</div>' +
+        '</div>' +
+        '<div class="prod-col-right">' +
+        '<div class="widget">' +
+        '<div class="widget-title">Precio Colaborativo</div>' +
+        '<div class="price-tiers">' +
+        '<div class="price-tier ' + (activeTier===1 ? 'active' : '') + '">' +
+        '<div><div class="tier-name">Minorista</div><div class="tier-req">Base</div></div>' +
+        '<div class="tier-price"> > 0 && prod.m2 > 0) {
+        html += '<div class="price-tier ' + (activeTier===2 ? 'active' : '') + '">' +
+          '<div><div class="tier-name">Mayorista</div><div class="tier-req">Meta: ' + prod.m2 + ' un.</div></div>' +
+          '<div class="tier-price">
+      }
+      
+      if (prod.p3 > 0 && prod.m3 > 0) {
+        html += '<div class="price-tier ' + (activeTier===3 ? 'active' : '') + '">' +
+          '<div><div class="tier-name">Distribuidora</div><div class="tier-req">Meta: ' + prod.m3 + ' un.</div></div>' +
+          '<div class="tier-price">
+      }
+
+      var disabledStr = SHOP_DATA.CICLO_LUNAR.abierta ? '' : 'disabled';
+      var op = SHOP_DATA.CICLO_LUNAR.abierta ? '1' : '0.5';
+
+      html += '</div><div class="qty-selector" style="opacity: ' + op + ';">' +
+        '<button class="qty-btn" onclick="changeQty(-1)" ' + disabledStr + '>-</button>' +
+        '<input type="text" class="qty-input" value="' + qty + '" readonly>' +
+        '<button class="qty-btn" onclick="changeQty(1)" ' + disabledStr + '>+</button>' +
+        '</div></div></div>';
+      
+      document.getElementById('shop-product-container').innerHTML = html;
+    }
+
+    function changeQty(delta) {
+      if (!SHOP_DATA.CICLO_LUNAR.abierta) return;
+      var current = CARRITO[ACTIVE_INDEX] || 0;
+      var next = current + delta;
+      if (next < 0) next = 0;
+      CARRITO[ACTIVE_INDEX] = next;
+      
+      loadProductView(ACTIVE_INDEX);
+      updateFloatingCart();
+    }
+
+    function getActivePrice(product, index) {
+      var qty = CARRITO[index] || 0;
+      var totalSold = (SHOP_DATA.VENTAS_GLOBALES[product.nombre.toLowerCase().trim()] || 0) + qty;
+      var price = product.p1;
+      if (product.p3 > 0 && product.m3 > 0 && totalSold >= product.m3) price = product.p3;
+      else if (product.p2 > 0 && product.m2 > 0 && totalSold >= product.m2) price = product.p2;
+      return price;
+    }
+
+    function updateFloatingCart() {
+      var total = 0;
+      var items = 0;
+      SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+        var q = CARRITO[i] || 0;
+        if (q > 0) {
+          total += q * getActivePrice(p, i);
+          items++;
+        }
+      });
+      
+      document.getElementById('cart-total-text').innerText = '$' + total;
+      var cartEl = document.getElementById('floating-cart');
+      if (items > 0) {
+        cartEl.classList.add('visible');
+      } else {
+        cartEl.classList.remove('visible');
+      }
+    }
+
+    function openCheckoutModal() {
+      if (!SHOP_DATA.CICLO_LUNAR.abierta) return;
+      var html = '';
+      var subtotal = 0;
+      
+      SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+        var q = CARRITO[i] || 0;
+        if (q > 0) {
+          var price = getActivePrice(p, i);
+          var lineTotal = q * price;
+          subtotal += lineTotal;
+          html += '<div class="summary-item">' +
+            '<span>' + q + 'x ' + p.nombre + '</span>' +
+            '<span style="font-weight:600;">
+        }
+      });
+      
+      document.getElementById('checkout-items').innerHTML = html;
+      document.getElementById('checkout-items').setAttribute('data-subtotal', subtotal);
+      
+      setDonation('3'); // reset to default
+      openModal('modal-checkout');
+    }
+
+    function setDonation(type) {
+      DONATION_TYPE = type;
+      document.getElementById('don-3').classList.remove('active');
+      document.getElementById('don-custom').classList.remove('active');
+      document.getElementById('don-0').classList.remove('active');
+      
+      document.getElementById('don-' + (type==='custom'?'custom':type)).classList.add('active');
+      
+      if (type === 'custom') {
+        document.getElementById('custom-donation-div').classList.remove('hidden');
+      } else {
+        document.getElementById('custom-donation-div').classList.add('hidden');
+      }
+      updateTotalFinal();
+    }
+
+    function updateTotalFinal() {
+      var sub = parseFloat(document.getElementById('checkout-items').getAttribute('data-subtotal')) || 0;
+      var don = 0;
+      if (DONATION_TYPE === '3') don = sub * 0.03;
+      else if (DONATION_TYPE === 'custom') don = parseFloat(document.getElementById('custom-don-val').value) || 0;
+      
+      var total = Math.round(sub + don);
+      document.getElementById('checkout-total-final').innerText = '$' + total;
+      return { sub: sub, don: Math.round(don), total: total };
+    }
+
+    function submitOrder() {
+      var nombre = document.getElementById('chk-nombre').value.trim();
+      var tel = document.getElementById('chk-tel').value.trim();
+      var msg = document.getElementById('chk-msg').value.trim();
+      
+      if (!nombre || !tel) {
+        alert("Por favor complet├í tu nombre y tel├®fono.");
+        return;
+      }
+      
+      var tData = updateTotalFinal();
+      var cartArr = [];
+      SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+        var q = CARRITO[i] || 0;
+        if (q > 0) {
+          cartArr.push({
+            nombre: p.nombre,
+            cant: q,
+            unidad: p.unidad,
+            precio: getActivePrice(p, i)
+          });
+        }
+      });
+      
+      var data = {
+        carrito: cartArr,
+        nombre: nombre,
+        telefono: tel,
+        nodo: SHOP_DATA.VISUAL.nombre,
+        totalPagar: tData.total,
+        donacion: tData.don,
+        mensaje: msg,
+        aliadoId: CURRENT_REF
+      };
+      
+      document.getElementById('btn-submit-order').disabled = true;
+      document.getElementById('btn-submit-order').innerText = "ENVIANDO...";
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          document.getElementById('btn-submit-order').disabled = false;
+          document.getElementById('btn-submit-order').innerText = "ENVIAR PEDIDO";
+          if (res.success) {
+            closeModal('modal-checkout');
+            showSuccess(res);
+          } else {
+            alert("Error al guardar el pedido. Intent├í nuevamente.");
+          }
+        })
+        .withFailureHandler(function(e){
+          document.getElementById('btn-submit-order').disabled = false;
+          document.getElementById('btn-submit-order').innerText = "ENVIAR PEDIDO";
+          alert("Error de conexi├│n.");
+        })
+        .guardarPedido(data);
+    }
+
+    function showSuccess(data) {
+      ORDER_SUCCESS_DATA = data;
+      document.getElementById('succ-id').innerText = data.id;
+      document.getElementById('succ-alias').innerText = SHOP_DATA.VISUAL.cbu || 'Consultar al nodo';
+      document.getElementById('succ-total').innerText = '$' + data.total;
+      
+      // Clear cart
+      CARRITO = {};
+      updateFloatingCart();
+      if(SHOP_DATA.PRODUCTOS.length > 0) loadProductView(ACTIVE_INDEX);
+      
+      openModal('modal-success');
+    }
+
+    function sendWsp() {
+      if (!ORDER_SUCCESS_DATA) return;
+      var d = ORDER_SUCCESS_DATA;
+      
+      var msg = "­ƒî▒ *Nuevo Pedido Vrde Club*\n";
+      msg += "­ƒôï Pedido: " + d.id + "\n";
+      msg += "­ƒæñ Nombre: " + d.nombre + "\n";
+      msg += "­ƒôª Detalle:\n" + d.detalle + "\n";
+      msg += "­ƒÆ░ Total a transferir: $" + d.total + "\n";
+      msg += "­ƒÅá Retiro: " + d.nodo + "\n";
+      msg += "­ƒîæ Ciclo: " + d.ciclo;
+      
+      var num = SHOP_DATA.VISUAL.wspPedidos || '5491127452476';
+      num = num.replace(/\D/g, '');
+      var url = "https://wa.me/" + num + "?text=" + encodeURIComponent(msg);
+      window.open(url, '_blank');
+    }
+
+    function openNodeProfile() {
+      if (!SHOP_DATA) return;
+      var v = SHOP_DATA.VISUAL;
+      document.getElementById('prof-logo').innerHTML = isEmoji(v.logo) ? v.logo : (v.logo ? '<img src="'+v.logo+'" style="width:100%;height:100%;object-fit:cover;">' : '­ƒî▒');
+      document.getElementById('prof-name').innerText = v.nombre;
+      document.getElementById('prof-desc').innerText = v.descripcion || '';
+      document.getElementById('prof-dir').innerText = v.direccion || '-';
+      document.getElementById('prof-contacto').innerText = v.contacto || '-';
+      document.getElementById('prof-entrega').innerText = v.diaEntrega || '-';
+      openModal('modal-node');
+    }
+
+    // =========================================
+    // ADMIN LOGIC
+    // =========================================
+    function showAdminLogin() {
+      document.getElementById('loader').classList.add('hidden');
+      document.getElementById('admin-login').classList.remove('hidden');
+      // Intenta cargar nombre del nodo por url pero no es cr├¡tico.
+    }
+
+    function attemptLogin() {
+      var pin = document.getElementById('pinInput').value;
+      if(pin.length < 4) return;
+      
+      document.getElementById('pin-error').style.display = 'none';
+      var btn = document.querySelector('#admin-login button');
+      btn.innerText = "VERIFICANDO...";
+      
+      google.script.run
+        .withSuccessHandler(function(r) {
+          btn.innerText = "INGRESAR";
+          if (r.success) {
+            ADMIN_PIN = pin;
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            loadAdminDashboard();
+          } else {
+            document.getElementById('pin-error').style.display = 'block';
+            document.getElementById('pinInput').value = '';
+          }
+        })
+        .withFailureHandler(function(e){
+          btn.innerText = "INGRESAR";
+          alert("Error de conexi├│n.");
+        })
+        .verificarPinNodo(CURRENT_REF, pin);
+    }
+
+    function loadAdminDashboard() {
+      showLoader('Cargando panel...');
+      document.getElementById('loader').classList.remove('dark');
+      
+      google.script.run
+        .withSuccessHandler(renderAdminDashboard)
+        .obtenerDatosAdmin(CURRENT_REF);
+    }
+
+    function renderAdminDashboard(data) {
+      hideLoader();
+      ADMIN_DATA = data;
+      CURRENT_CYCLE_NAME = data.cicloActual.nombre;
+      var v = data.visual;
+      
+      // Header & Lunar
+      document.getElementById('ad-title').innerText = "Panel de " + v.nombre;
+      document.getElementById('ad-lunar-title').innerText = data.cicloActual.nombre;
+      document.getElementById('ad-lunar-status').innerText = data.cicloActual.abierta ? "Cierra en " + data.cicloActual.diasRestantes + " d├¡as" : "Cerrada";
+      document.getElementById('ad-lunar-emoji').innerText = data.cicloActual.signo || '­ƒîæ';
+      
+      // Metrics
+      document.getElementById('ad-m-pedidos').innerText = data.metricas.totalPedidos;
+      document.getElementById('ad-m-socios').innerText = data.metricas.totalSocios;
+      document.getElementById('ad-m-recaudado').innerText = "$" + data.metricas.totalRecaudado;
+      document.getElementById('ad-m-unidades').innerText = data.metricas.totalUnidades;
+      
+      // Orders
+      CURRENT_ORDERS = data.pedidos || [];
+      renderOrdersList(CURRENT_ORDERS, 'ad-orders-list', true);
+      
+      // Past Cycles
+      var pastHtml = '';
+      if (data.ciclosAnteriores && data.ciclosAnteriores.length > 0) {
+        data.ciclosAnteriores.forEach(function(c) {
+          pastHtml += '<div class="card cycle-card" onclick="loadPastCycle(\'' + c.nombre + '\')">' +
+            '<div class="cycle-name">' + c.nombre + '</div>' +
+            '<div class="cycle-stats">­ƒôª ' + c.totalPedidos + ' | ­ƒÆ░ 
+        });
+      } else {
+        pastHtml = '<p style="color:var(--text-muted); font-size:14px;">No hay ciclos anteriores registrados.</p>';
+      }
+      document.getElementById('ad-past-cycles').innerHTML = pastHtml;
+      
+      // Members
+      renderMembersTable(data.socios || []);
+      
+      // Profile inputs
+      document.getElementById('editNombre').value = v.nombre || '';
+      document.getElementById('editLogo').value = v.logo || '';
+      document.getElementById('editDireccion').value = v.direccion || '';
+      document.getElementById('editContacto').value = v.contacto || '';
+      document.getElementById('editDesc').value = v.descripcion || '';
+      document.getElementById('editDia').value = v.diaEntrega || '';
+      
+      // Links & Text
+      document.getElementById('ad-link-tienda').value = data.linkTienda;
+      var wspText = "­ƒîæ " + data.cicloActual.nombre + " - " + v.nombre + "\n";
+      wspText += "­ƒôª " + data.metricas.totalPedidos + " pedidos | ­ƒÆ░ $" + data.metricas.totalRecaudado + " recaudado | ­ƒæÑ " + data.metricas.totalSocios + " socios\n";
+      wspText += "­ƒöù " + data.linkTienda;
+      document.getElementById('ad-wsp-text').value = wspText;
+    }
+
+    function renderOrdersList(orders, containerId, isCurrentCycle) {
+      var html = '';
+      if (orders.length === 0) {
+        html = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:20px;">No hay pedidos para mostrar.</p>';
+      } else {
+        orders.forEach(function(o) {
+          var badgeClass = 'badge-pendiente';
+          var est = (o.estado || '').toLowerCase();
+          if (est === 'pagado') badgeClass = 'badge-pagado';
+          if (est === 'entregado') badgeClass = 'badge-entregado';
+          
+          var actionsHtml = '';
+          if (isCurrentCycle) {
+            if (est === 'pendiente') {
+              actionsHtml = '<button class="btn btn-outline btn-action" style="color:var(--primary); border-color:var(--primary);" onclick="changeOrderStatus(\'' + o.id + '\', \'Pagado\', this)">Ô£à Marcar Pagado</button>';
+            } else if (est === 'pagado') {
+              actionsHtml = '<button class="btn btn-outline btn-action" style="color:#004085; border-color:#004085;" onclick="changeOrderStatus(\'' + o.id + '\', \'Entregado\', this)">­ƒôª Marcar Entregado</button>';
+            } else {
+              actionsHtml = '<div style="flex:1; text-align:center; color:var(--text-muted); font-size:13px; padding:8px;">Ô£ö Entregado</div>';
+            }
+          }
+          
+          var wspNum = String(o.telefono).replace(/\D/g, '');
+          var wspBtn = wspNum ? '<a href="https://wa.me/549' + wspNum + '" target="_blank" class="btn-wsp">­ƒô▒</a>' : '';
+
+          html += '<div class="order-card">' +
+            '<div class="order-row">' +
+            '<span class="order-id">#' + o.id + '</span>' +
+            '<span class="badge ' + badgeClass + '">' + (o.estado || 'Pendiente') + '</span>' +
+            '</div>' +
+            '<div class="order-row" style="margin-bottom:15px;">' +
+            '<span class="order-name">' + o.nombre + '</span>' +
+            '<span style="font-size:14px; color:var(--text-muted);">' + o.telefono + '</span>' +
+            '</div>' +
+            '<div class="order-detail">' + o.detalle + '</div>' +
+            '<div class="order-row" style="margin-bottom:0; margin-top:10px;">' +
+            '<span style="font-size:14px;">Unidades: <strong>' + o.unidades + '</strong></span>' +
+            '<span class="order-total">
+        });
+      }
+      document.getElementById(containerId).innerHTML = html;
+    }
+
+    function filterOrders(status, btnEl) {
+      document.querySelectorAll('.filters .filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btnEl.classList.add('active');
+      
+      var filtered = CURRENT_ORDERS;
+      if (status !== 'Todos') {
+        filtered = CURRENT_ORDERS.filter(function(o) {
+          return (o.estado || 'Pendiente').toLowerCase() === status.toLowerCase();
+        });
+      }
+      renderOrdersList(filtered, 'ad-orders-list', true);
+    }
+
+    function changeOrderStatus(orderId, newStatus, btnEl) {
+      btnEl.innerText = "ÔÅ│...";
+      btnEl.disabled = true;
+      google.script.run
+        .withSuccessHandler(function(r) {
+          if (r.success) loadAdminDashboard();
+        })
+        .withFailureHandler(function(e){
+          alert("Error de conexi├│n");
+          btnEl.disabled = false;
+        })
+        .actualizarEstadoPedido(orderId, newStatus, CURRENT_CYCLE_NAME);
+    }
+
+    function loadPastCycle(cycleName) {
+      document.getElementById('ad-past-orders-container').classList.add('hidden');
+      document.getElementById('loader').classList.remove('hidden');
+      document.getElementById('loader-text').innerText = "Cargando " + cycleName + "...";
+      
+      google.script.run
+        .withSuccessHandler(function(r) {
+          document.getElementById('loader').classList.add('hidden');
+          document.getElementById('ad-past-orders-title').innerText = "Pedidos: " + cycleName;
+          document.getElementById('ad-past-orders-container').classList.remove('hidden');
+          renderOrdersList(r.pedidos, 'ad-past-orders-list', false);
+          // scroll to it
+          document.getElementById('ad-past-orders-container').scrollIntoView({behavior: "smooth"});
+        })
+        .withFailureHandler(function(){
+          document.getElementById('loader').classList.add('hidden');
+          alert("Error al cargar.");
+        })
+        .obtenerPedidosCiclo(CURRENT_REF, cycleName);
+    }
+
+    function renderMembersTable(members) {
+      ADMIN_DATA.socios = members; // save for filter
+      drawMembersTable(members);
+    }
+    
+    function drawMembersTable(arr) {
+      var html = '';
+      if(arr.length === 0) {
+        html = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No hay socios.</td></tr>';
+      } else {
+        arr.forEach(function(s) {
+          var wspNum = String(s.telefono).replace(/\D/g, '');
+          var wspBtn = wspNum ? '<a href="https://wa.me/549' + wspNum + '" target="_blank" style="text-decoration:none;">­ƒô▒</a>' : '';
+          
+          html += `
+            <tr>
+              <td><strong>${s.nombre}</strong></td>
+              <td>${s.telefono} ${wspBtn}</td>
+              <td>${s.totalPedidos}</td>
+              <td>$${s.totalGastado}</td>
+              <td style="font-size:12px; color:var(--text-muted);">${s.ultimoPedido || '-'}</td>
+            </tr>
+          `;
+        });
+      }
+      document.getElementById('ad-members-tbody').innerHTML = html;
+    }
+
+    function filterMembers() {
+      var query = document.getElementById('memberSearch').value.toLowerCase();
+      if (!ADMIN_DATA || !ADMIN_DATA.socios) return;
+      var filtered = ADMIN_DATA.socios.filter(function(s) {
+        return s.nombre.toLowerCase().indexOf(query) > -1 || String(s.telefono).indexOf(query) > -1;
+      });
+      drawMembersTable(filtered);
+    }
+
+    function saveProfile() {
+      var btn = document.getElementById('btn-save-profile');
+      var msg = document.getElementById('save-msg');
+      btn.innerText = "Guardando...";
+      btn.disabled = true;
+      msg.innerText = "";
+      
+      var datos = {
+        nombre: document.getElementById('editNombre').value,
+        logo: document.getElementById('editLogo').value,
+        direccion: document.getElementById('editDireccion').value,
+        contacto: document.getElementById('editContacto').value,
+        descripcion: document.getElementById('editDesc').value,
+        diaEntrega: document.getElementById('editDia').value
+      };
+      
+      google.script.run
+        .withSuccessHandler(function(r) {
+          btn.innerText = "Guardar Cambios";
+          btn.disabled = false;
+          if (r.success) {
+            msg.style.color = "var(--primary)";
+            msg.innerText = "┬íPerfil actualizado!";
+            setTimeout(function(){ msg.innerText = ""; }, 3000);
+          } else {
+            msg.style.color = "red";
+            msg.innerText = "Error al guardar.";
+          }
+        })
+        .withFailureHandler(function(e){
+          btn.innerText = "Guardar Cambios";
+          btn.disabled = false;
+          msg.style.color = "red";
+          msg.innerText = "Error de conexión.";
+        })
+        .actualizarPerfilNodo(CURRENT_REF, ADMIN_PIN, datos);
+    }
+
+    function logout() {
+      ADMIN_PIN = '';
+      window.location.reload();
+    }
+
+    // =========================================
+    // UTILS
+    // =========================================
+    function goHome() {
+      window.location.href = APP_URL;
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function copyText(elementId) {
+      var copyText = document.getElementById(elementId);
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+      
+      try {
+        navigator.clipboard.writeText(copyText.value).then(function() {
+          var btn = copyText.nextElementSibling;
+          var originalText = btn.innerText;
+          btn.innerText = "¡Copiado!";
+          btn.style.backgroundColor = "var(--primary)";
+          btn.style.color = "white";
+          setTimeout(function() {
+            btn.innerText = originalText;
+            btn.style.backgroundColor = "";
+            btn.style.color = "";
+          }, 2000);
+        });
+      } catch (err) {
+        document.execCommand("copy"); // fallback
+      }
+    }
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Estilos -->
+    <?!= include('CSS'); ?>
+  </head>
+  <body>
+    <!-- Pantalla de carga -->
+    <div id="loader" class="loader-overlay">
+      <div class="spinner"></div>
+      <p id="loader-text" style="margin-top:20px; font-weight:600; font-size:16px;">Sincronizando con la luna...</p>
+    </div>
+
+    <!-- Componentes de Vistas -->
+    <?!= include('Landing'); ?>
+    <?!= include('Shop'); ?>
+    <?!= include('Admin'); ?>
+
+    <!-- LÃ³gica de la aplicaciÃ³n -->
+    <?!= include('JS'); ?>
+  </body>
+</html>
