@@ -14,7 +14,7 @@
   <!-- Tipografías -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Hoja de estilos del sistema Lunar -->
@@ -22,10 +22,10 @@
 
   <style>
     /* =========================================================
-       ESTILOS PARA CATEGORÍAS SPOTIFY, FLIP 3D Y MODO SWIPE
+       ESTILOS PARA CATEGORÍAS SPOTIFY, SHOWCASE 3 COLUMNAS Y PRESENTACIONES
        ========================================================= */
     :root {
-      --spotify-radius: 16px;
+      --spotify-radius: 14px;
     }
 
     /* Switch de Modos de Vista */
@@ -33,15 +33,15 @@
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin: 16px 0 12px;
+      margin: 14px 0 10px;
       padding: 0 16px;
     }
     .view-mode-pill-btn {
       background: white;
       border: 1px solid var(--border-color);
-      padding: 8px 18px;
+      padding: 7px 16px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--text-muted);
       cursor: pointer;
@@ -60,14 +60,15 @@
 
     /* Bloques de Categorías Spotify */
     .spotify-categories-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 12px;
       padding: 0 16px;
-      margin-bottom: 16px;
     }
     .spotify-categories-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-      gap: 10px;
-      margin-bottom: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
     }
     @media (max-width: 600px) {
       .spotify-categories-grid {
@@ -77,17 +78,17 @@
         scroll-snap-type: x mandatory;
       }
       .spotify-cat-card {
-        min-width: 120px;
-        height: 70px !important;
+        min-width: 115px;
+        height: 64px !important;
         scroll-snap-align: start;
       }
     }
 
     .spotify-cat-card {
       position: relative;
-      height: 78px;
+      height: 70px;
       border-radius: var(--spotify-radius);
-      padding: 10px 12px;
+      padding: 8px 10px;
       overflow: hidden;
       cursor: pointer;
       display: flex;
@@ -95,21 +96,20 @@
       justify-content: space-between;
       color: white;
       font-weight: 800;
-      font-size: 12.5px;
+      font-size: 12px;
       line-height: 1.15;
       transition: all 0.2s ease;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.04);
       flex-shrink: 0;
     }
     .spotify-cat-card:hover { transform: translateY(-2px); }
     .spotify-cat-card.active { outline: 3px solid #0F172A; outline-offset: 1px; }
     .spotify-cat-card .cat-name { z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-    .spotify-cat-card .cat-count { font-size: 10px; opacity: 0.85; font-weight: 500; }
     .spotify-cat-card .cat-icon {
       position: absolute;
       right: -4px;
       bottom: -4px;
-      font-size: 32px;
+      font-size: 28px;
       opacity: 0.85;
       transform: rotate(15deg);
     }
@@ -123,263 +123,308 @@
     .scat-huerta { background: linear-gradient(135deg, #16A34A, #15803D); }
     .scat-granja { background: linear-gradient(135deg, #EA580C, #C2410C); }
 
-    /* Subcategorías */
-    .subcat-pills-bar {
-      display: flex;
-      gap: 6px;
+    /* Pestañas de Variedades de Producto */
+    .product-tabs-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 16px;
+      padding: 0 16px;
       overflow-x: auto;
-      padding: 4px 0 8px;
+      -webkit-overflow-scrolling: touch;
     }
-    .subcat-pill-btn {
-      background: #F8FAFC;
-      border: 1px solid var(--border-color);
-      padding: 5px 12px;
-      border-radius: 18px;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: #475569;
-      cursor: pointer;
+    .product-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px 8px;
       white-space: nowrap;
-      transition: all 0.15s;
     }
-    .subcat-pill-btn.active {
+    .product-tabs::-webkit-scrollbar { display: none; }
+    .tab-item {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: white;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-item:hover { border-color: var(--primary); color: var(--primary); }
+    .tab-item.active {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(16, 163, 82, 0.25);
     }
 
     /* =========================================================
-       GRILLA DE PRODUCTOS CON FLIP 3D
+       ESCAPARATE SHOWCASE 3 COLUMNAS
        ========================================================= */
-    .store-grid-wrapper {
+    .product-showcase {
+      max-width: 1100px;
+      margin: 0 auto 24px;
       padding: 0 16px;
-      margin-bottom: 30px;
-    }
-    .store-products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 380px));
-      gap: 24px;
-      justify-content: center;
+      grid-template-columns: 290px 1fr 330px;
+      gap: 18px;
+      align-items: stretch;
     }
 
-    .flip-card-container {
-      perspective: 1200px;
-      width: 100%;
-      height: 520px;
-      position: relative;
-    }
-    .flip-card-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      -webkit-transform-style: preserve-3d;
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .flip-card-inner.flipped {
-      transform: rotateY(180deg);
+    @media (max-width: 960px) {
+      .product-showcase {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .showcase-center { order: 1; }
+      .showcase-right { order: 2; }
+      .showcase-left { order: 3; }
     }
 
-    .flip-card-face {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+    .showcase-card {
       background: white;
       border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
       border: 1px solid var(--border-color);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
-    }
-    .flip-front { z-index: 2; transform: rotateY(0deg); }
-    .flip-back {
-      transform: rotateY(180deg);
-      background: #0F172A;
-      color: white;
-      padding: 18px;
-      overflow-y: auto;
-      z-index: 1;
+      justify-content: space-between;
     }
 
-    .card-img-wrapper {
-      position: relative;
-      width: 100%;
-      height: 175px;
-      background: #F1F5F9;
-      overflow: hidden;
-      cursor: pointer;
-      flex-shrink: 0;
+    /* Columna Izquierda: Origen, Presentación e Impacto */
+    .card-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94A3B8;
+      margin-bottom: 6px;
+      font-weight: 800;
     }
-    .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-
-    .origin-pill-tag {
-      position: absolute;
-      top: 10px; left: 10px;
-      background: rgba(15, 23, 42, 0.85);
-      color: white;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 10.5px;
-      font-weight: 700;
-      backdrop-filter: blur(4px);
-    }
-    .btn-flip-trigger {
-      position: absolute;
-      top: 10px; right: 10px;
-      background: rgba(255, 255, 255, 0.92);
+    .showcase-producer-name {
+      font-size: 16px;
+      font-weight: 800;
       color: #0F172A;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 20px;
-      padding: 4px 10px;
-      font-size: 10.5px;
-      font-weight: 700;
-      cursor: pointer;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+    .showcase-variedad-badge {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      z-index: 5;
+      font-size: 11.5px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 14px;
     }
 
-    .card-content-body {
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      justify-content: space-between;
-    }
-    .prod-card-name { font-size: 17px; font-weight: 800; color: #0F172A; line-height: 1.25; margin-bottom: 2px; }
-    .prod-card-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.35; margin-bottom: 8px; }
-
-    /* Selector de Presentación en Tarjeta */
-    .variant-chips-box {
+    /* Selector de Presentación en la Columna Izquierda */
+    .presentation-selector-box {
       background: #F8FAFC;
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
     }
-    .variant-chips-header {
+    .pres-header {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #64748B;
+      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
-      font-size: 9.5px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 5px;
     }
-    .variant-chips-grid { display: flex; gap: 5px; }
-    .v-chip-btn {
-      flex: 1;
-      padding: 5px 6px;
+    .pres-chips-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pres-chip-btn {
+      width: 100%;
+      padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid #CBD5E1;
       background: white;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       color: #334155;
       cursor: pointer;
-      text-align: center;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
       transition: all 0.15s;
     }
-    .v-chip-btn.active {
+    .pres-chip-btn.active {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(16,163,82,0.2);
     }
-    .v-chip-btn .v-sub-text { font-size: 9px; opacity: 0.85; font-weight: 500; }
+    .pres-chip-btn .pres-sub { font-size: 11px; opacity: 0.9; font-weight: 600; }
 
-    /* Escala de Ahorro Colectivo */
-    .scale-box-card {
+    /* Impacto en la Red */
+    .impact-badge-box {
+      background: rgba(16, 163, 82, 0.06);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      border: 1px solid rgba(16, 163, 82, 0.15);
+    }
+    .impact-badge-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .impact-badge-desc { font-size: 11px; color: #475569; line-height: 1.3; }
+
+    /* Columna Central: Foto y Título */
+    .showcase-center {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .prod-main-img {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 5px solid white;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .prod-main-img:hover { transform: scale(1.03); }
+    .prod-badge-unit {
+      display: inline-block;
       background: #F1F5F9;
-      border-radius: 10px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
+      color: #475569;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 6px;
     }
-    .scale-price-row { display: flex; justify-content: space-between; align-items: baseline; }
-    .scale-price-val { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--primary); }
-    .scale-tiers-text { font-size: 10.5px; color: #475569; border-top: 1px dashed #CBD5E1; padding-top: 4px; margin-top: 4px; }
+    .prod-title { font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 4px; line-height: 1.2; }
+    .prod-subtitle { font-size: 12.5px; color: #64748B; margin: 0; }
 
-    /* Footer con Cantidad y Botón Sumar */
-    .card-action-footer {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .qty-counter-control {
-      display: flex;
-      align-items: center;
+    .btn-show-story-flip {
+      margin-top: 12px;
+      background: #F8FAFC;
       border: 1px solid var(--border-color);
       border-radius: 20px;
-      background: white;
-      padding: 2px 4px;
-    }
-    .qty-btn-c {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: none;
-      background: #F1F5F9;
-      color: #0F172A;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .qty-num-c { width: 28px; text-align: center; font-weight: 800; font-size: 13px; }
-    
-    .btn-add-to-cart-grid {
-      flex: 1;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 10px 14px;
+      padding: 6px 14px;
+      font-size: 11.5px;
       font-weight: 700;
-      font-size: 13px;
+      color: var(--primary);
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 6px;
       transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(16,163,82,0.25);
     }
-    .btn-add-to-cart-grid:hover { background: var(--primary-dark); }
+    .btn-show-story-flip:hover { background: var(--primary); color: white; }
 
-    /* Dorso de la Tarjeta */
-    .back-tag-label { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
-    .back-prod-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
-    .back-story-text { font-size: 11px; color: #CBD5E1; line-height: 1.35; margin-bottom: 8px; }
-    .back-impact-box {
-      background: rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 6px 8px;
-      font-size: 10.5px;
-      border: 1px solid rgba(255,255,255,0.1);
-      margin-bottom: 8px;
+    /* Columna Derecha: Escalas por Volumen & Cantidades */
+    .showcase-right {
+      justify-content: space-between;
     }
-    .back-map-box {
-      width: 100%;
-      height: 110px;
-      border-radius: 8px;
-      background: #1E293B;
-      position: relative;
+    .scale-tier-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: #F8FAFC;
+      border-radius: var(--radius-md);
+      border: 2px solid transparent;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .scale-tier-card:hover { border-color: #CBD5E1; }
+    .scale-tier-card.active {
+      background: rgba(16, 163, 82, 0.08);
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(16, 163, 82, 0.1);
+    }
+    .scale-tier-info .st-title { font-size: 15px; font-weight: 700; color: #0F172A; }
+    .scale-tier-info .st-sub { font-size: 11px; color: #64748B; }
+    .scale-tier-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .scale-tier-card.active .scale-tier-price {
+      color: var(--primary);
+      font-size: 21px;
+    }
+
+    .qty-control-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F1F5F9;
+      border-radius: 40px;
+      padding: 4px;
+      margin-top: 10px;
+    }
+    .qty-btn-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease;
     }
-    .back-map-pin { font-size: 22px; color: var(--primary); animation: bounce 1.5s infinite; }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    .qty-btn-circle:active { transform: scale(0.9); }
+    .qty-input-text {
+      width: 60px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #0F172A;
+    }
+
+    /* Modal Ficha Productor y Mapa */
+    .story-modal-body {
+      padding: 14px 0;
+    }
+    .story-impact-box {
+      background: rgba(16,163,82,0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      margin: 12px 0;
+      border: 1px solid rgba(16,163,82,0.2);
+    }
+    .story-map-box {
+      width: 100%;
+      height: 120px;
+      background: #1E293B;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      position: relative;
+    }
 
     /* =========================================================
        MODO SWIPE (TINDER)
@@ -414,8 +459,6 @@
     .btn-act-pass { width: 48px; height: 48px; background: white; color: #EF4444; border: 2px solid #FEE2E2; font-size: 18px; }
     .btn-act-info { width: 40px; height: 40px; background: white; color: #6366F1; border: 2px solid #E0E7FF; font-size: 14px; }
     .btn-act-like { width: 56px; height: 56px; background: var(--primary); color: white; font-size: 22px; box-shadow: 0 6px 18px rgba(16,163,82,0.35); }
-
-    .swipe-counter-hint { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 6px; text-align: center; }
   </style>
 </head>
 <body>
@@ -486,17 +529,17 @@
     </div>
   </div>
 
-  <!-- Switch de Modos de Vista: Cuadrícula vs Swipe -->
+  <!-- Switch de Modos de Vista: Showcase vs Swipe -->
   <div class="view-mode-bar-container">
-    <button class="view-mode-pill-btn active" id="btn-view-grid" onclick="switchStoreView('grid')">
-      <i class="fas fa-th-large"></i> Vista Cuadrícula
+    <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')">
+      <i class="fas fa-th-large"></i> Formato Catálogo
     </button>
     <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')">
       <i class="fas fa-layer-group"></i> Modo Swipe (Tinder 🎴)
     </button>
   </div>
 
-  <!-- Barra de Categorías Spotify & Subcategorías -->
+  <!-- Bloques de Categorías Spotify -->
   <div class="spotify-categories-wrapper">
     <div class="spotify-categories-grid">
       <div class="spotify-cat-card scat-all active" onclick="filterByStoreCategory('TODOS', this)">
@@ -532,92 +575,55 @@
         <div class="cat-icon">🥚</div>
       </div>
     </div>
+  </div>
 
-    <!-- Pastillas de Subcategorías -->
-    <div class="subcat-pills-bar" id="subcat-bar">
-      <button class="subcat-pill-btn active" onclick="filterByStoreSubcat('ALL', this)">Todas las variedades</button>
-      <button class="subcat-pill-btn" data-cat="granos" onclick="filterByStoreSubcat('legumbres', this)">🫘 Legumbres (Lentejas / Garbanzos)</button>
-      <button class="subcat-pill-btn" data-cat="granos" onclick="filterByStoreSubcat('arroz', this)">🍚 Arroces (Yamaní)</button>
-      <button class="subcat-pill-btn" data-cat="granos" onclick="filterByStoreSubcat('harinas', this)">🌾 Harinas a la Piedra</button>
+  <!-- Pestañas de Variedades de Producto de la Categoría -->
+  <div class="product-tabs-wrapper">
+    <div class="product-tabs" id="shop-product-tabs">
+      <!-- Inyectado por JS -->
     </div>
   </div>
 
   <!-- =========================================
-       1. ESCAPARATE MODO CUADRÍCULA (CON FLIP 3D)
+       1. ESCAPARATE PRINCIPAL (3 COLUMNAS)
        ========================================= -->
-  <main class="store-grid-wrapper" id="grid-view-container">
-    <div class="store-products-grid" id="grid-products-holder">
-      <!-- Inyectado dinámicamente -->
-    </div>
+  <main class="product-showcase" id="showcase-container">
+    <!-- Inyectado dinámicamente -->
   </main>
 
   <!-- =========================================
-       2. ESCAPARATE MODO SWIPE (TINDER)
+       2. MODO SWIPE (TINDER)
        ========================================= -->
   <div id="swipe-view-container">
-    <div class="flip-card-container" style="height: 450px; max-width: 380px;">
-      <div class="flip-card-inner" id="swipe-card-inner">
-        
-        <!-- FRENTE SWIPE -->
-        <div class="flip-card-face flip-front">
-          <button class="btn-flip-trigger" onclick="event.stopPropagation(); toggleSwipeFlip();">
-            <i class="fas fa-sync-alt"></i> Info & Mapa
-          </button>
-          <div class="card-img-wrapper" onclick="toggleSwipeFlip();" style="height: 165px;">
-            <img id="sw-img" src="" alt="Producto">
-            <div class="origin-pill-tag" id="sw-origin">📍 Origen</div>
-          </div>
-          <div class="card-content-body">
-            <div>
-              <h3 class="prod-card-name" id="sw-title">Nombre Producto</h3>
-              <p class="prod-card-desc" id="sw-desc">Descripción breve del producto.</p>
-            </div>
+    <div class="showcase-card" style="max-width: 380px; width: 100%; padding: 16px;">
+      <div style="position: relative; text-align: center;">
+        <img id="sw-img" src="" alt="Producto" style="width: 190px; height: 190px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+        <div class="prod-badge-unit" id="sw-badge" style="display: block; width: fit-content; margin: 8px auto 4px;">Formato</div>
+        <h3 class="prod-title" id="sw-title" style="font-size: 19px;">Producto</h3>
+        <p class="prod-subtitle" id="sw-desc" style="font-size: 12px; margin-bottom: 12px;">Descripción</p>
+      </div>
 
-            <!-- Selector de Presentación -->
-            <div class="variant-chips-box" onclick="event.stopPropagation();">
-              <div class="variant-chips-header">
-                <span>Presentación:</span>
-                <span id="sw-chip-label" style="color: var(--primary);">Formato</span>
-              </div>
-              <div class="variant-chips-grid" id="sw-chips-grid"></div>
-            </div>
+      <!-- Presentación en Swipe -->
+      <div class="presentation-selector-box" style="margin-bottom: 10px;">
+        <div class="pres-header">
+          <span>Presentación / Peso:</span>
+        </div>
+        <div class="pres-chips-grid" id="sw-chips-grid"></div>
+      </div>
 
-            <!-- Cantidad y Total -->
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 10px; padding: 6px 10px;" onclick="event.stopPropagation();">
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 11px; font-weight: 700; color: #475569;">Cant:</span>
-                <div class="qty-counter-control">
-                  <button class="qty-btn-c" onclick="adjustSwipeQty(-1)">-</button>
-                  <span class="qty-num-c" id="sw-qty-val">1</span>
-                  <button class="qty-btn-c" onclick="adjustSwipeQty(1)">+</button>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <div class="scale-price-val" id="sw-total-val">$0</div>
-                <div style="font-size: 9.5px; color: var(--text-muted);" id="sw-unit-val">($0 / u)</div>
-              </div>
-            </div>
+      <!-- Cantidad y Precio en Swipe -->
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 10px; padding: 6px 12px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 11px; font-weight: 700;">Cant:</span>
+          <div class="qty-control-box" style="margin-top: 0; padding: 2px;">
+            <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(-1)">-</button>
+            <span id="sw-qty-val" style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">1</span>
+            <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(1)">+</button>
           </div>
         </div>
-
-        <!-- DORSO SWIPE -->
-        <div class="flip-card-face flip-back">
-          <button class="btn-flip-trigger" style="background: rgba(255,255,255,0.2); color: white;" onclick="event.stopPropagation(); toggleSwipeFlip();">
-            <i class="fas fa-undo"></i> Volver a la Foto
-          </button>
-          <div class="back-tag-label">Historia y Trazabilidad</div>
-          <h3 class="back-prod-title" id="sw-back-producer">Productor</h3>
-          <p class="back-story-text" id="sw-back-story">Historia</p>
-          <div class="back-impact-box">
-            <strong style="color: var(--accent);"><i class="fas fa-seedling"></i> Impacto:</strong>
-            <span id="sw-back-impact">Impacto agroecológico.</span>
-          </div>
-          <div class="back-map-box">
-            <i class="fas fa-map-marker-alt back-map-pin"></i>
-            <span style="position: absolute; bottom: 4px; font-size: 9.5px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;" id="sw-back-loc">📍 Ubicación</span>
-          </div>
+        <div style="text-align: right;">
+          <div class="scale-tier-price" id="sw-total-val" style="color: var(--primary); font-size: 18px;">$0</div>
         </div>
-
       </div>
     </div>
 
@@ -626,18 +632,17 @@
       <button class="btn-act-circle btn-act-pass" onclick="triggerSwipeAction('left')" title="Pasar al siguiente">
         <i class="fas fa-times"></i>
       </button>
-      <button class="btn-act-circle btn-act-info" onclick="toggleSwipeFlip()" title="Girar para ver historia y mapa">
+      <button class="btn-act-circle btn-act-info" onclick="openProductStoryModal(ACTIVE_PRODUCT_INDEX)" title="Ver historia y mapa">
         <i class="fas fa-info"></i>
       </button>
       <button class="btn-act-circle btn-act-like" onclick="triggerSwipeAction('right')" title="¡Sumar al pedido!">
         <i class="fas fa-heart"></i>
       </button>
     </div>
-
-    <div class="swipe-counter-hint" id="sw-counter-hint">
-      Producto 1 de 11 • Toca la foto para ver historia y mapa
-    </div>
   </div>
+
+  <!-- Espacio de seguridad inferior para la barra flotante -->
+  <div style="height: 60px; width: 100%; pointer-events: none;"></div>
 
   <!-- Barra Flotante de Carrito -->
   <div class="floating-cart-bar" id="floating-cart">
@@ -653,6 +658,30 @@
   <!-- =========================================
        MODALES
        ========================================= -->
+
+  <!-- Modal Ficha de Historia y Mapa del Productor -->
+  <div class="modal-overlay" id="modal-story">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="st-modal-title">Origen y Trazabilidad</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-story')">&times;</span>
+      </div>
+      <div class="story-modal-body">
+        <h4 style="font-size: 17px; color: var(--primary); margin: 0 0 6px;" id="st-producer-name">Productor</h4>
+        <p style="font-size: 13.5px; color: #334155; line-height: 1.45; margin: 0 0 10px;" id="st-producer-desc"></p>
+        
+        <div class="story-impact-box">
+          <strong style="color: var(--primary);"><i class="fas fa-seedling"></i> Impacto Agroecológico:</strong>
+          <div style="margin-top: 4px; color: #1E293B;" id="st-producer-impact"></div>
+        </div>
+
+        <div class="story-map-box">
+          <i class="fas fa-map-marker-alt" style="font-size: 24px; color: var(--accent); animation: bounce 1.5s infinite;"></i>
+          <span style="position: absolute; bottom: 8px; font-size: 11px; background: rgba(0,0,0,0.7); padding: 3px 10px; border-radius: 4px;" id="st-producer-loc">📍 Ubicación</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal Checkout -->
   <div class="modal-overlay" id="modal-checkout">
@@ -836,19 +865,13 @@
     let DONATION_TYPE = '3';
     let ORDER_SUCCESS_DATA = null;
 
-    // Estado del Carrito y Selección
-    let CART_ITEMS = []; // Array de { id, prodId, title, variantId, variantLabel, price, qty, img }
-    let STORE_VIEW_MODE = 'grid'; // 'grid' o 'swipe'
+    // Estado del Catálogo y Selección
     let CURRENT_CATEGORY = 'TODOS';
-    let CURRENT_SUBCATEGORY = 'ALL';
-
-    let gridProductStates = {}; // { prodId: { variantIdx, qty } }
-
-    // Estado para modo Swipe
-    let swipeFilteredList = [];
-    let swipeCurrentIdx = 0;
-    let swipeVariantIdx = 0;
-    let swipeQty = 1;
+    let DISPLAY_PRODUCTS = [];
+    let ACTIVE_PRODUCT_INDEX = 0;
+    let SELECTED_VARIANT_INDEX = {}; // { prodId: variantIndex }
+    let CART_ITEMS = {}; // { "prodId_variantId": { prod, variant, qty } }
+    let STORE_VIEW_MODE = 'showcase'; // 'showcase' o 'swipe'
 
     function initStore() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -867,37 +890,29 @@
       document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
       document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
 
-      // Inicializar Estados de Productos
-      const prods = LunarEngine.obtenerProductos(CURRENT_REF, true);
-      prods.forEach(p => {
-        gridProductStates[p.id] = { variantIdx: 0, qty: 1 };
+      // Inicializar selección de variantes por defecto (índice 0)
+      const allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      allProds.forEach(p => {
+        SELECTED_VARIANT_INDEX[p.id] = 0;
       });
 
       updateProgressBars();
-      applyFiltersAndRender();
+      filterCategoryAndRender('TODOS');
     }
 
     function updateProgressBars() {
-      const prods = LunarEngine.obtenerProductos(CURRENT_REF, true);
       const orders = LunarEngine.obtenerPedidos(CURRENT_REF);
-
       let nodoUnits = 0;
       orders.forEach(o => {
-        if (o.items) {
-          o.items.forEach(i => nodoUnits += (Number(i.cant) || 0));
-        } else if (o.unidades) {
-          nodoUnits += Number(o.unidades);
-        }
+        if (o.items) o.items.forEach(i => nodoUnits += (Number(i.cant) || 0));
+        else if (o.unidades) nodoUnits += Number(o.unidades);
       });
 
       const allOrders = LunarEngine.obtenerPedidos(null);
       let globalUnits = 0;
       allOrders.forEach(o => {
-        if (o.items) {
-          o.items.forEach(i => globalUnits += (Number(i.cant) || 0));
-        } else if (o.unidades) {
-          globalUnits += Number(o.unidades);
-        }
+        if (o.items) o.items.forEach(i => globalUnits += (Number(i.cant) || 0));
+        else if (o.unidades) globalUnits += Number(o.unidades);
       });
 
       const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || {};
@@ -912,332 +927,358 @@
     }
 
     // ==========================================
-    // FILTROS Y CATEGORÍAS SPOTIFY
+    // FILTRADO POR CATEGORÍAS SPOTIFY
     // ==========================================
     function filterByStoreCategory(cat, el) {
       document.querySelectorAll('.spotify-cat-card').forEach(c => c.classList.remove('active'));
       if (el) el.classList.add('active');
+      filterCategoryAndRender(cat);
+    }
 
+    function filterCategoryAndRender(cat) {
       CURRENT_CATEGORY = cat;
-      CURRENT_SUBCATEGORY = 'ALL';
-
-      // Actualizar Subcategorías visibles
-      document.querySelectorAll('.subcat-pill-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.innerText.includes('Todas')) btn.classList.add('active');
-        if (cat === 'TODOS' || !btn.dataset.cat || btn.dataset.cat === cat) {
-          btn.style.display = 'inline-block';
-        } else {
-          btn.style.display = 'none';
-        }
-      });
-
-      applyFiltersAndRender();
-    }
-
-    function filterByStoreSubcat(sub, el) {
-      document.querySelectorAll('.subcat-pill-btn').forEach(b => b.classList.remove('active'));
-      if (el) el.classList.add('active');
-      CURRENT_SUBCATEGORY = sub;
-      applyFiltersAndRender();
-    }
-
-    function getFilteredProducts() {
       const allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
-      return allProds.filter(p => {
-        const matchCat = (CURRENT_CATEGORY === 'TODOS' || p.categoria === CURRENT_CATEGORY);
-        const matchSub = (CURRENT_SUBCATEGORY === 'ALL' || p.subcategoria === CURRENT_SUBCATEGORY);
-        return matchCat && matchSub;
-      });
-    }
 
-    function applyFiltersAndRender() {
-      const list = getFilteredProducts();
-      swipeFilteredList = list;
-      swipeCurrentIdx = 0;
-
-      if (STORE_VIEW_MODE === 'grid') {
-        renderGridStore(list);
+      if (cat === 'TODOS') {
+        DISPLAY_PRODUCTS = allProds;
       } else {
-        renderSwipeStore();
+        DISPLAY_PRODUCTS = allProds.filter(p => p.categoria === cat);
       }
+
+      ACTIVE_PRODUCT_INDEX = 0;
+      renderProductTabs();
+      loadActiveProductView();
+    }
+
+    function renderProductTabs() {
+      const tabsContainer = document.getElementById('shop-product-tabs');
+      let html = '';
+
+      DISPLAY_PRODUCTS.forEach((p, idx) => {
+        const activeClass = (idx === ACTIVE_PRODUCT_INDEX) ? 'active' : '';
+        html += `
+          <button class="tab-item ${activeClass}" onclick="selectProductTab(${idx})">
+            ${p.nombre}
+          </button>
+        `;
+      });
+
+      tabsContainer.innerHTML = html;
+    }
+
+    function selectProductTab(idx) {
+      ACTIVE_PRODUCT_INDEX = idx;
+      renderProductTabs();
+      loadActiveProductView();
     }
 
     // ==========================================
-    // RENDERIZADO MODO CUADRÍCULA CON FLIP 3D
+    // RENDERIZADO DEL SHOWCASE (3 COLUMNAS)
     // ==========================================
-    function renderGridStore(products) {
-      const container = document.getElementById('grid-products-holder');
-      if (products.length === 0) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: white; border-radius: 16px; border: 1px solid var(--border-color);">
-            <div style="font-size: 36px; margin-bottom: 8px;">🔍</div>
-            <h3 style="color: #0F172A;">No hay productos en esta selección</h3>
-            <p style="color: var(--text-muted); font-size: 13px;">Prueba seleccionando otra categoría o subcategoría.</p>
-          </div>
-        `;
+    function loadActiveProductView() {
+      if (STORE_VIEW_MODE === 'swipe') {
+        renderSwipeStore();
         return;
       }
 
-      let html = '';
-      products.forEach((p, idx) => {
-        if (!gridProductStates[p.id]) {
-          gridProductStates[p.id] = { variantIdx: 0, qty: 1 };
-        }
-        const state = gridProductStates[p.id];
-        const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [
-          { id: 'v1', label: p.unidad || 'Unidad', p1: p.p1, p2: p.p2, p3: p.p3, tiers: `Mayorista (+${p.m2}u): $${p.p2} • Dist (+${p.m3}u): $${p.p3}` }
-        ];
-        const currentV = variants[state.variantIdx] || variants[0];
-        const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Agroecología soberana', loc: p.origen };
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
 
-        let chipsHtml = '';
-        variants.forEach((v, vIdx) => {
-          chipsHtml += `
-            <button class="v-chip-btn ${vIdx === state.variantIdx ? 'active' : ''}" onclick="selectGridVariant('${p.id}', ${vIdx})">
-              <span>${v.label}</span>
-              <span class="v-sub-text">$${v.p1.toLocaleString('es-AR')}</span>
-            </button>
-          `;
-        });
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [
+        { id: 'v1', label: p.unidad || 'Unidad', unidad: p.unidad, costo: p.costo, p1: p.p1, p2: p.p2, p3: p.p3, m1: 1, m2: p.m2 || 20, m3: p.m3 || 50 }
+      ];
 
-        html += `
-          <div class="flip-card-container">
-            <div class="flip-card-inner" id="grid-card-${p.id}">
-              
-              <!-- FRENTE DE LA TARJETA -->
-              <div class="flip-card-face flip-front">
-                <button class="btn-flip-trigger" onclick="toggleGridFlip('${p.id}')" title="Ver historia del productor y mapa">
-                  <i class="fas fa-sync-alt"></i> Info & Mapa
-                </button>
-                <div class="card-img-wrapper" onclick="toggleGridFlip('${p.id}')">
-                  <img src="${currentV.img || p.img}" alt="${p.nombre}">
-                  <div class="origin-pill-tag">${p.origen}</div>
-                </div>
-                <div class="card-content-body">
-                  <div>
-                    <h3 class="prod-card-name">${p.nombre}</h3>
-                    <p class="prod-card-desc">${p.subtitulo || p.titulo}</p>
-                  </div>
+      const currentVIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const currentV = variants[currentVIdx] || variants[0];
+      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía alimentaria real.', loc: p.origen };
 
-                  <!-- Selector de Presentación -->
-                  <div class="variant-chips-box">
-                    <div class="variant-chips-header">
-                      <span>Presentación:</span>
-                      <span style="color: var(--primary);">${currentV.label}</span>
-                    </div>
-                    <div class="variant-chips-grid">
-                      ${chipsHtml}
-                    </div>
-                  </div>
+      const cartKey = `${p.id}_${currentV.id || currentV.label}`;
+      const currentQty = CART_ITEMS[cartKey]?.qty || 0;
 
-                  <!-- Escala de Ahorro Colectivo -->
-                  <div class="scale-box-card">
-                    <div class="scale-price-row">
-                      <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Precio unidad:</span>
-                      <div class="scale-price-val">$${currentV.p1.toLocaleString('es-AR')}</div>
-                    </div>
-                    <div class="scale-tiers-text">
-                      <div>• ${currentV.tiers || 'Compra colectiva en red'}</div>
-                    </div>
-                  </div>
+      // Calcular escalas activas para la variante seleccionada
+      const m1 = currentV.m1 || 1;
+      const m2 = currentV.m2 || 20;
+      const m3 = currentV.m3 || 50;
+      const p1 = currentV.p1;
+      const p2 = currentV.p2 || p1;
+      const p3 = currentV.p3 || p2;
 
-                  <!-- Controles de Cantidad y Agregar -->
-                  <div class="card-action-footer">
-                    <div class="qty-counter-control">
-                      <button class="qty-btn-c" onclick="adjustGridQty('${p.id}', -1)">-</button>
-                      <span class="qty-num-c" id="grid-qty-val-${p.id}">${state.qty}</span>
-                      <button class="qty-btn-c" onclick="adjustGridQty('${p.id}', 1)">+</button>
-                    </div>
-                    <button class="btn-add-to-cart-grid" onclick="addGridProductToCart('${p.id}')">
-                      <i class="fas fa-cart-plus"></i> Sumar al Pedido
-                    </button>
-                  </div>
-                </div>
-              </div>
+      const isTier1 = currentQty >= m1 && currentQty < m2;
+      const isTier2 = currentQty >= m2 && currentQty < m3;
+      const isTier3 = currentQty >= m3;
 
-              <!-- DORSO DE LA TARJETA (HISTORIA Y MAPA) -->
-              <div class="flip-card-face flip-back">
-                <button class="btn-flip-trigger" style="background: rgba(255,255,255,0.2); color: white;" onclick="toggleGridFlip('${p.id}')">
-                  <i class="fas fa-undo"></i> Volver a la Foto
-                </button>
-                <div class="back-tag-label">Origen y Trazabilidad</div>
-                <h3 class="back-prod-title">${info.productor}</h3>
-                <p class="back-story-text">${info.historia}</p>
-                
-                <div class="back-impact-box">
-                  <strong style="color: var(--accent);"><i class="fas fa-seedling"></i> Impacto:</strong>
-                  <span>${info.impacto}</span>
-                </div>
-
-                <div class="back-map-box">
-                  <i class="fas fa-map-marker-alt back-map-pin"></i>
-                  <span style="position: absolute; bottom: 4px; font-size: 9.5px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;">${info.loc}</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
+      // Generar Botones de Presentación para Columna Izquierda
+      let presChipsHtml = '';
+      variants.forEach((v, vIdx) => {
+        const isAct = vIdx === currentVIdx ? 'active' : '';
+        presChipsHtml += `
+          <button class="pres-chip-btn ${isAct}" onclick="selectProductVariant('${p.id}', ${vIdx})">
+            <span>${v.label}</span>
+            <span class="pres-sub">$${v.p1.toLocaleString('es-AR')}</span>
+          </button>
         `;
       });
 
-      container.innerHTML = html;
+      // Calcular unidades pedidas en la red para el badge de impacto
+      let totalRealUnits = 0;
+      LunarEngine.obtenerPedidos(null).forEach(o => {
+        if (o.items) {
+          o.items.forEach(it => {
+            if (it.prodId === p.id) totalRealUnits += (Number(it.cant) || 0);
+          });
+        }
+      });
+
+      const showcaseContainer = document.getElementById('showcase-container');
+      showcaseContainer.innerHTML = `
+        <!-- COLUMNA IZQUIERDA: ORIGEN, PRESENTACIÓN E IMPACTO -->
+        <div class="showcase-card showcase-left">
+          <div>
+            <div class="card-section-title">ORIGEN Y PRODUCCIÓN</div>
+            <div class="showcase-producer-name">${info.productor || p.origen}</div>
+            <div class="showcase-variedad-badge">
+              <i class="fas fa-check-circle"></i>
+              <span>${p.variedad}</span>
+            </div>
+
+            <!-- SECTOR PRESENTACIÓN DEL PRODUCTO -->
+            <div class="presentation-selector-box">
+              <div class="pres-header">
+                <span>Presentación / Formato:</span>
+                <span style="color: var(--primary);">${currentV.label}</span>
+              </div>
+              <div class="pres-chips-grid">
+                ${presChipsHtml}
+              </div>
+            </div>
+          </div>
+
+          <!-- IMPACTO EN LA RED LUNAR -->
+          <div class="impact-badge-box">
+            <div class="card-section-title" style="color: var(--primary); margin-bottom: 2px;">IMPACTO EN LA RED LUNAR</div>
+            <div class="impact-badge-num">${totalRealUnits}</div>
+            <div class="impact-badge-desc">unidades pedidas entre todos los nodos en este ciclo lunar.</div>
+            <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px; border-top: 1px dashed rgba(16,163,82,0.2); padding-top: 4px;">
+              Meta colectiva: ${p.meta || 100} ${currentV.unidad || p.unidad}
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA CENTRAL: FOTO PROTAGONISTA Y DETALLE -->
+        <div class="showcase-card showcase-center">
+          <div style="position: relative;">
+            <img src="${currentV.img || p.img}" alt="${p.nombre}" class="prod-main-img" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})">
+          </div>
+          <div>
+            <div class="prod-badge-unit">${currentV.unidad || p.unidad}</div>
+            <h2 class="prod-title">${p.nombre}</h2>
+            <p class="prod-subtitle">${p.subtitulo || p.titulo}</p>
+            <button class="btn-show-story-flip" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})">
+              <i class="fas fa-book-open"></i> Ver Historia y Mapa del Productor
+            </button>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: ESCALAS POR VOLUMEN Y CANTIDADES -->
+        <div class="showcase-card showcase-right">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="card-section-title" style="margin: 0;">ESCALAS POR VOLUMEN</span>
+              <span style="font-size: 11px; font-weight: 700; color: var(--primary);">CLIC PARA APLICAR</span>
+            </div>
+
+            <!-- Escala 1: Minorista -->
+            <div class="scale-tier-card ${isTier1 ? 'active' : ''}" onclick="applyTierDirectly(1)">
+              <div class="scale-tier-info">
+                <div class="st-title">Minorista <span style="font-size: 12px; font-weight: 500; color: #64748B;">(1 a ${m2 - 1} un.)</span></div>
+                <div class="st-sub">Precio Base</div>
+              </div>
+              <div class="scale-tier-price">$${p1.toLocaleString('es-AR')}</div>
+            </div>
+
+            <!-- Escala 2: Mayorista -->
+            <div class="scale-tier-card ${isTier2 ? 'active' : ''}" onclick="applyTierDirectly(2)">
+              <div class="scale-tier-info">
+                <div class="st-title">Mayorista <span style="font-size: 12px; font-weight: 500; color: #64748B;">(${m2} a ${m3 - 1} un.)</span></div>
+                <div class="st-sub">Descuento +${m2} un.</div>
+              </div>
+              <div class="scale-tier-price">$${p2.toLocaleString('es-AR')}</div>
+            </div>
+
+            <!-- Escala 3: Distribuidora / Gran Volumen -->
+            <div class="scale-tier-card ${isTier3 ? 'active' : ''}" onclick="applyTierDirectly(3)">
+              <div class="scale-tier-info">
+                <div class="st-title">Distribuidora <span style="font-size: 12px; font-weight: 500; color: #64748B;">(+${m3} un.)</span></div>
+                <div class="st-sub">Gran Volumen +${m3} un.</div>
+              </div>
+              <div class="scale-tier-price">$${p3.toLocaleString('es-AR')}</div>
+            </div>
+          </div>
+
+          <!-- Selector de Cantidad -->
+          <div>
+            <div class="qty-control-box">
+              <button class="qty-btn-circle" onclick="adjustProductQty(-1)">-</button>
+              <input type="text" class="qty-input-text" value="${currentQty}" readonly>
+              <button class="qty-btn-circle" onclick="adjustProductQty(1)">+</button>
+            </div>
+            <div style="font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 6px;">
+              Ajusta cantidades o haz clic en las escalas arriba
+            </div>
+          </div>
+        </div>
+      `;
     }
 
-    function toggleGridFlip(prodId) {
-      const card = document.getElementById(`grid-card-${prodId}`);
-      if (card) card.classList.toggle('flipped');
+    function selectProductVariant(prodId, vIdx) {
+      SELECTED_VARIANT_INDEX[prodId] = vIdx;
+      loadActiveProductView();
     }
 
-    function selectGridVariant(prodId, vIdx) {
-      gridProductStates[prodId].variantIdx = vIdx;
-      renderGridStore(getFilteredProducts());
-    }
-
-    function adjustGridQty(prodId, delta) {
-      gridProductStates[prodId].qty += delta;
-      if (gridProductStates[prodId].qty < 1) gridProductStates[prodId].qty = 1;
-      const el = document.getElementById(`grid-qty-val-${prodId}`);
-      if (el) el.innerText = gridProductStates[prodId].qty;
-    }
-
-    function addGridProductToCart(prodId) {
-      const prods = LunarEngine.obtenerProductos(CURRENT_REF, true);
-      const p = prods.find(x => x.id === prodId);
+    function applyTierDirectly(tierNum) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
       if (!p) return;
-      const state = gridProductStates[prodId];
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1, m1: 1, m2: 20, m3: 50 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      let targetQty = 1;
+      if (tierNum === 2) targetQty = v.m2 || 20;
+      else if (tierNum === 3) targetQty = v.m3 || 50;
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      CART_ITEMS[cartKey] = {
+        prod: p,
+        variant: v,
+        qty: targetQty
+      };
+
+      loadActiveProductView();
+      updateFloatingCart();
+    }
+
+    function adjustProductQty(delta) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
       const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
-      const v = variants[state.variantIdx] || variants[0];
-      
-      addProductToCart(p, v, state.qty);
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const current = CART_ITEMS[cartKey]?.qty || 0;
+      const next = Math.max(0, current + delta);
+
+      if (next === 0) {
+        delete CART_ITEMS[cartKey];
+      } else {
+        CART_ITEMS[cartKey] = {
+          prod: p,
+          variant: v,
+          qty: next
+        };
+      }
+
+      loadActiveProductView();
+      updateFloatingCart();
+    }
+
+    function openProductStoryModal(prodIdx) {
+      const p = DISPLAY_PRODUCTS[prodIdx];
+      if (!p) return;
+      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía y precio justo.', loc: p.origen };
+
+      document.getElementById('st-modal-title').innerText = `Origen: ${p.nombre}`;
+      document.getElementById('st-producer-name').innerText = info.productor || p.origen;
+      document.getElementById('st-producer-desc').innerText = info.historia || p.tipsVrdedor;
+      document.getElementById('st-producer-impact').innerText = info.impacto || 'Comercio transparente y agroecología comunitaria.';
+      document.getElementById('st-producer-loc').innerText = info.loc || p.origen;
+
+      openModal('modal-story');
     }
 
     // ==========================================
     // RENDERIZADO MODO SWIPE (TINDER)
     // ==========================================
+    let swipeQty = 1;
+
     function renderSwipeStore() {
-      if (swipeFilteredList.length === 0) return;
-      const p = swipeFilteredList[swipeCurrentIdx];
-      const card = document.getElementById('swipe-card-inner');
-      card.classList.remove('flipped');
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
 
-      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1, tiers: 'Compra colectiva' }];
-      swipeVariantIdx = 0;
-      swipeQty = 1;
-      const currentV = variants[swipeVariantIdx];
-      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía alimentaria', loc: p.origen };
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
 
-      document.getElementById('sw-img').src = currentV.img || p.img;
-      document.getElementById('sw-origin').innerText = p.origen;
+      document.getElementById('sw-img').src = v.img || p.img;
+      document.getElementById('sw-badge').innerText = v.unidad || p.unidad;
       document.getElementById('sw-title').innerText = p.nombre;
       document.getElementById('sw-desc').innerText = p.subtitulo || p.titulo;
 
-      // Dorso
-      document.getElementById('sw-back-producer').innerText = info.productor;
-      document.getElementById('sw-back-story').innerText = info.historia;
-      document.getElementById('sw-back-impact').innerText = info.impacto;
-      document.getElementById('sw-back-loc').innerText = info.loc;
-
-      // Variantes en Chips
       let chipsHtml = '';
-      variants.forEach((v, vIdx) => {
+      variants.forEach((vr, idx) => {
+        const isAct = idx === vIdx ? 'active' : '';
         chipsHtml += `
-          <button class="v-chip-btn ${vIdx === 0 ? 'active' : ''}" onclick="selectSwipeVariant(${vIdx}, this)">
-            <span>${v.label}</span>
-            <span class="v-sub-text">$${v.p1.toLocaleString('es-AR')}</span>
+          <button class="pres-chip-btn ${isAct}" onclick="selectSwipeVariant('${p.id}', ${idx})">
+            <span>${vr.label}</span>
+            <span class="pres-sub">$${vr.p1.toLocaleString('es-AR')}</span>
           </button>
         `;
       });
       document.getElementById('sw-chips-grid').innerHTML = chipsHtml;
-      updateSwipeCalculation();
-
-      document.getElementById('sw-counter-hint').innerText = `Producto ${swipeCurrentIdx + 1} de ${swipeFilteredList.length} • Toca la foto para ver historia y mapa`;
+      document.getElementById('sw-qty-val').innerText = swipeQty;
+      document.getElementById('sw-total-val').innerText = `$${(v.p1 * swipeQty).toLocaleString('es-AR')}`;
     }
 
-    function toggleSwipeFlip() {
-      document.getElementById('swipe-card-inner').classList.toggle('flipped');
-    }
-
-    function selectSwipeVariant(vIdx, btn) {
-      btn.parentElement.querySelectorAll('.v-chip-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      swipeVariantIdx = vIdx;
-      updateSwipeCalculation();
+    function selectSwipeVariant(prodId, vIdx) {
+      SELECTED_VARIANT_INDEX[prodId] = vIdx;
+      renderSwipeStore();
     }
 
     function adjustSwipeQty(delta) {
       swipeQty += delta;
       if (swipeQty < 1) swipeQty = 1;
-      document.getElementById('sw-qty-val').innerText = swipeQty;
-      updateSwipeCalculation();
-    }
-
-    function updateSwipeCalculation() {
-      const p = swipeFilteredList[swipeCurrentIdx];
-      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
-      const v = variants[swipeVariantIdx] || variants[0];
-      const total = v.p1 * swipeQty;
-
-      document.getElementById('sw-chip-label').innerText = `${v.label} (x${swipeQty})`;
-      document.getElementById('sw-total-val').innerText = `$${total.toLocaleString('es-AR')}`;
-      document.getElementById('sw-unit-val').innerText = `($${v.p1.toLocaleString('es-AR')} / u)`;
+      renderSwipeStore();
     }
 
     function triggerSwipeAction(dir) {
-      const card = document.getElementById('swipe-card-inner');
-      const p = swipeFilteredList[swipeCurrentIdx];
-      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
-      const v = variants[swipeVariantIdx] || variants[0];
-
-      if (dir === 'right') {
-        addProductToCart(p, v, swipeQty);
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (dir === 'right' && p) {
+        const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+        const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+        const v = variants[vIdx] || variants[0];
+        const cartKey = `${p.id}_${v.id || v.label}`;
+        const prev = CART_ITEMS[cartKey]?.qty || 0;
+        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: prev + swipeQty };
+        updateFloatingCart();
       }
 
-      card.style.transform = (dir === 'right') ? 'translateX(100px) rotate(10deg) scale(0.92)' : 'translateX(-100px) rotate(-10deg) scale(0.92)';
-      card.style.opacity = '0';
-
-      setTimeout(() => {
-        swipeCurrentIdx = (swipeCurrentIdx + 1) % swipeFilteredList.length;
-        renderSwipeStore();
-        card.style.transition = 'none';
-        card.style.transform = 'none';
-        card.style.opacity = '1';
-        setTimeout(() => {
-          card.style.transition = 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)';
-        }, 40);
-      }, 200);
+      swipeQty = 1;
+      ACTIVE_PRODUCT_INDEX = (ACTIVE_PRODUCT_INDEX + 1) % DISPLAY_PRODUCTS.length;
+      renderProductTabs();
+      renderSwipeStore();
     }
 
     // ==========================================
-    // GESTIÓN DEL CARRITO & CHECKOUT OFICIAL
+    // CARRITO Y MODAL CHECKOUT
     // ==========================================
-    function addProductToCart(product, variant, qty) {
-      const itemKey = `${product.id}_${variant.id || variant.label}`;
-      const existing = CART_ITEMS.find(it => it.key === itemKey);
-
-      if (existing) {
-        existing.qty += qty;
-      } else {
-        CART_ITEMS.push({
-          key: itemKey,
-          id: product.id,
-          title: product.nombre,
-          variantId: variant.id || 'std',
-          variantLabel: variant.label,
-          price: variant.p1,
-          qty: qty,
-          unidad: variant.unidad || product.unidad
-        });
-      }
-
-      updateFloatingCart();
+    function getProductPrice(variant, qty) {
+      if (qty >= (variant.m3 || 50)) return variant.p3 || variant.p1;
+      if (qty >= (variant.m2 || 20)) return variant.p2 || variant.p1;
+      return variant.p1;
     }
 
     function updateFloatingCart() {
-      const totalUnits = CART_ITEMS.reduce((s, it) => s + it.qty, 0);
-      const totalPrice = CART_ITEMS.reduce((s, it) => s + (it.price * it.qty), 0);
+      let total = 0;
+      let totalUnits = 0;
 
-      document.getElementById('cart-total-text').innerText = `$${totalPrice.toLocaleString('es-AR')}`;
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        total += item.qty * price;
+        totalUnits += item.qty;
+      });
+
+      document.getElementById('cart-total-text').innerText = `$${total.toLocaleString('es-AR')}`;
       document.getElementById('floating-cart').classList.toggle('visible', totalUnits > 0);
     }
 
@@ -1245,18 +1286,21 @@
       let html = '';
       let subtotal = 0;
 
-      CART_ITEMS.forEach((it, idx) => {
-        const lineTotal = it.price * it.qty;
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        const lineTotal = item.qty * price;
         subtotal += lineTotal;
+
         html += `
           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; margin-bottom: 8px; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
             <div>
-              <strong>${it.qty}x</strong> ${it.title}
-              <div style="font-size: 11px; color: var(--text-muted);">${it.variantLabel}</div>
+              <strong>${item.qty}x</strong> ${item.prod.nombre}
+              <div style="font-size: 11px; color: var(--text-muted);">${item.variant.label}</div>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-weight: 700; color: var(--primary);">$${lineTotal.toLocaleString('es-AR')}</span>
-              <button onclick="removeCartItem(${idx})" style="background: none; border: none; color: #EF4444; font-size: 12px; cursor: pointer;">
+              <button onclick="removeCartItemByKey('${k}')" style="background: none; border: none; color: #EF4444; font-size: 12px; cursor: pointer;">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </div>
@@ -1282,10 +1326,11 @@
       openModal('modal-checkout');
     }
 
-    function removeCartItem(idx) {
-      CART_ITEMS.splice(idx, 1);
+    function removeCartItemByKey(k) {
+      delete CART_ITEMS[k];
       updateFloatingCart();
-      if (CART_ITEMS.length === 0) {
+      loadActiveProductView();
+      if (Object.keys(CART_ITEMS).length === 0) {
         closeModal('modal-checkout');
       } else {
         openCheckoutModal();
@@ -1350,15 +1395,17 @@
       const cartDetails = [];
       const orderItems = [];
 
-      CART_ITEMS.forEach(it => {
-        cartDetails.push(`${it.qty}x ${it.title} (${it.variantLabel})`);
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        cartDetails.push(`${item.qty}x ${item.prod.nombre} (${item.variant.label})`);
         orderItems.push({
-          prodId: it.id,
-          nombre: it.title,
-          variante: it.variantLabel,
-          cant: it.qty,
-          unidad: it.unidad,
-          precio: it.price
+          prodId: item.prod.id,
+          nombre: item.prod.nombre,
+          variante: item.variant.label,
+          cant: item.qty,
+          unidad: item.variant.unidad || item.prod.unidad,
+          precio: price
         });
       });
 
@@ -1399,8 +1446,9 @@
       document.getElementById('succ-alias').innerText = nodoData.cbu;
       document.getElementById('succ-total').innerText = `$${tData.total.toLocaleString('es-AR')}`;
 
-      CART_ITEMS = [];
+      CART_ITEMS = {};
       updateFloatingCart();
+      loadActiveProductView();
       openModal('modal-success');
     }
 
@@ -1464,13 +1512,13 @@
 
     function switchStoreView(mode) {
       STORE_VIEW_MODE = mode;
-      document.getElementById('btn-view-grid').classList.toggle('active', mode === 'grid');
+      document.getElementById('btn-view-showcase').classList.toggle('active', mode === 'showcase');
       document.getElementById('btn-view-swipe').classList.toggle('active', mode === 'swipe');
 
-      document.getElementById('grid-view-container').style.display = (mode === 'grid') ? 'block' : 'none';
+      document.getElementById('showcase-container').style.display = (mode === 'showcase') ? 'grid' : 'none';
       document.getElementById('swipe-view-container').style.display = (mode === 'swipe') ? 'flex' : 'none';
 
-      applyFiltersAndRender();
+      loadActiveProductView();
     }
 
     function openModal(id) {
