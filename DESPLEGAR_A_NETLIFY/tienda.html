@@ -21,11 +21,29 @@
   <link rel="stylesheet" href="lunar-style.css">
 
   <style>
-    /* =========================================================
-       ESTILOS PARA CATEGORÍAS SPOTIFY, SHOWCASE 3 COLUMNAS Y PRESENTACIONES
-       ========================================================= */
     :root {
-      --spotify-radius: 14px;
+      --spotify-radius: 12px;
+    }
+
+    /* Header Compacto */
+    .shop-header {
+      padding: 10px 16px;
+    }
+
+    /* Banner Lunar Compacto */
+    .lunar-banner-card {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 12px 18px;
+      margin: 6px auto 10px;
+      max-width: 1100px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .lunar-top-row {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
     }
 
     /* Switch de Modos de Vista */
@@ -33,83 +51,75 @@
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin: 14px 0 10px;
+      margin: 6px 0 10px;
       padding: 0 16px;
     }
     .view-mode-pill-btn {
       background: white;
       border: 1px solid var(--border-color);
-      padding: 7px 16px;
+      padding: 6px 16px;
       border-radius: 30px;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-muted);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
       transition: all 0.2s ease;
     }
     .view-mode-pill-btn.active {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
-      box-shadow: 0 4px 14px rgba(16,163,82,0.25);
+      box-shadow: 0 4px 12px rgba(16,163,82,0.25);
     }
 
-    /* Bloques de Categorías Spotify */
+    /* Bloques de Categorías Spotify: 2 FILAS DE 4 COLUMNAS PERFECTAS (8 EN TOTAL) */
     .spotify-categories-wrapper {
       max-width: 1100px;
-      margin: 0 auto 12px;
+      margin: 0 auto 10px;
       padding: 0 16px;
     }
     .spotify-categories-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      margin-bottom: 8px;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .spotify-categories-grid {
-        display: flex;
-        overflow-x: auto;
-        padding-bottom: 6px;
-        scroll-snap-type: x mandatory;
-      }
-      .spotify-cat-card {
-        min-width: 115px;
-        height: 64px !important;
-        scroll-snap-align: start;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
       }
     }
 
     .spotify-cat-card {
       position: relative;
-      height: 70px;
+      height: 56px;
       border-radius: var(--spotify-radius);
-      padding: 8px 10px;
+      padding: 8px 12px;
       overflow: hidden;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       color: white;
       font-weight: 800;
-      font-size: 12px;
+      font-size: 12.5px;
       line-height: 1.15;
       transition: all 0.2s ease;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
       flex-shrink: 0;
     }
-    .spotify-cat-card:hover { transform: translateY(-2px); }
+    .spotify-cat-card:hover { transform: translateY(-1.5px); }
     .spotify-cat-card.active { outline: 3px solid #0F172A; outline-offset: 1px; }
     .spotify-cat-card .cat-name { z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
     .spotify-cat-card .cat-icon {
       position: absolute;
-      right: -4px;
-      bottom: -4px;
-      font-size: 28px;
+      right: 2px;
+      bottom: -2px;
+      font-size: 26px;
       opacity: 0.85;
       transform: rotate(15deg);
     }
@@ -123,28 +133,78 @@
     .scat-huerta { background: linear-gradient(135deg, #16A34A, #15803D); }
     .scat-granja { background: linear-gradient(135deg, #EA580C, #C2410C); }
 
-    /* Pestañas de Variedades de Producto */
+    /* Pestañas de Variedades de Producto con Flechas de Navegación */
     .product-tabs-wrapper {
       max-width: 1100px;
-      margin: 0 auto 16px;
+      margin: 0 auto 12px;
       padding: 0 16px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      position: relative;
     }
+    .product-tabs-outer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+    .tab-nav-arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid var(--border-color);
+      color: #334155;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.15s ease;
+      z-index: 5;
+    }
+    .tab-nav-arrow:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .tab-nav-arrow:active { transform: scale(0.9); }
+
     .product-tabs {
       display: flex;
       gap: 8px;
       overflow-x: auto;
+      scroll-behavior: smooth;
       padding: 4px 2px 8px;
       white-space: nowrap;
+      flex: 1;
+      cursor: grab;
+      user-select: none;
     }
-    .product-tabs::-webkit-scrollbar { display: none; }
+    .product-tabs:active { cursor: grabbing; }
+    
+    /* Scrollbar moderna y sutil para las pestañas */
+    .product-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-track {
+      background: #F1F5F9;
+      border-radius: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
     .tab-item {
       flex-shrink: 0;
-      padding: 8px 16px;
+      padding: 7px 16px;
       border-radius: 30px;
-      font-size: 12.5px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       color: var(--text-muted);
       background: white;
       border: 1px solid var(--border-color);
@@ -164,7 +224,7 @@
        ========================================================= */
     .product-showcase {
       max-width: 1100px;
-      margin: 0 auto 24px;
+      margin: 0 auto 20px;
       padding: 0 16px;
       display: grid;
       grid-template-columns: 290px 1fr 330px;
@@ -185,7 +245,7 @@
     .showcase-card {
       background: white;
       border-radius: var(--radius-lg);
-      padding: 20px;
+      padding: 18px;
       box-shadow: var(--shadow-sm);
       border: 1px solid var(--border-color);
       display: flex;
@@ -195,28 +255,28 @@
 
     /* Columna Izquierda: Origen, Presentación e Impacto */
     .card-section-title {
-      font-size: 11px;
+      font-size: 10.5px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       color: #94A3B8;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       font-weight: 800;
     }
     .showcase-producer-name {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: #0F172A;
       line-height: 1.25;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .showcase-variedad-badge {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--primary);
       font-weight: 600;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     /* Selector de Presentación en la Columna Izquierda */
@@ -225,10 +285,10 @@
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 10px 12px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .pres-header {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
       color: #64748B;
@@ -243,11 +303,11 @@
     }
     .pres-chip-btn {
       width: 100%;
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 8px;
       border: 1px solid #CBD5E1;
       background: white;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #334155;
       cursor: pointer;
@@ -268,18 +328,18 @@
     .impact-badge-box {
       background: rgba(16, 163, 82, 0.06);
       border-radius: var(--radius-md);
-      padding: 12px 14px;
+      padding: 10px 12px;
       border: 1px solid rgba(16, 163, 82, 0.15);
     }
     .impact-badge-num {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
       color: var(--primary);
       line-height: 1;
       margin-bottom: 2px;
     }
-    .impact-badge-desc { font-size: 11px; color: #475569; line-height: 1.3; }
+    .impact-badge-desc { font-size: 10.5px; color: #475569; line-height: 1.3; }
 
     /* Columna Central: Foto y Título */
     .showcase-center {
@@ -289,11 +349,11 @@
       position: relative;
     }
     .prod-main-img {
-      width: 210px;
-      height: 210px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
       object-fit: cover;
-      margin: 0 auto 12px;
+      margin: 0 auto 10px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       border: 5px solid white;
       transition: transform 0.3s ease;
@@ -304,22 +364,22 @@
       display: inline-block;
       background: #F1F5F9;
       color: #475569;
-      padding: 4px 12px;
+      padding: 3px 12px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 700;
       margin-bottom: 6px;
     }
-    .prod-title { font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 4px; line-height: 1.2; }
-    .prod-subtitle { font-size: 12.5px; color: #64748B; margin: 0; }
+    .prod-title { font-size: 21px; font-weight: 800; color: #0F172A; margin: 0 0 4px; line-height: 1.2; }
+    .prod-subtitle { font-size: 12px; color: #64748B; margin: 0; }
 
     .btn-show-story-flip {
-      margin-top: 12px;
+      margin-top: 10px;
       background: #F8FAFC;
       border: 1px solid var(--border-color);
       border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 11.5px;
+      padding: 5px 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--primary);
       cursor: pointer;
@@ -338,11 +398,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 14px;
+      padding: 9px 12px;
       background: #F8FAFC;
       border-radius: var(--radius-md);
       border: 2px solid transparent;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -352,17 +412,17 @@
       border-color: var(--primary);
       box-shadow: 0 2px 8px rgba(16, 163, 82, 0.1);
     }
-    .scale-tier-info .st-title { font-size: 15px; font-weight: 700; color: #0F172A; }
-    .scale-tier-info .st-sub { font-size: 11px; color: #64748B; }
+    .scale-tier-info .st-title { font-size: 14.5px; font-weight: 700; color: #0F172A; }
+    .scale-tier-info .st-sub { font-size: 10.5px; color: #64748B; }
     .scale-tier-price {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 800;
       color: #0F172A;
     }
     .scale-tier-card.active .scale-tier-price {
       color: var(--primary);
-      font-size: 21px;
+      font-size: 20px;
     }
 
     .qty-control-box {
@@ -372,7 +432,7 @@
       background: #F1F5F9;
       border-radius: 40px;
       padding: 4px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .qty-btn-circle {
       width: 36px;
@@ -492,13 +552,13 @@
     <div class="lunar-banner-card">
       <div class="lunar-top-row">
         <div>
-          <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 4px;">Ciclo Astronómico de Compra</div>
-          <h2 style="font-size: 26px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
-          <p style="font-size: 14px; color: #CBD5E1; margin-top: 4px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días (28 de Agosto)</p>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 2px;">Ciclo Astronómico de Compra</div>
+          <h2 style="font-size: 22px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
+          <p style="font-size: 13px; color: #CBD5E1; margin-top: 2px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días (28 de Agosto)</p>
         </div>
         <div style="text-align: right;">
           <div class="lunar-phase-badge">
-            <span style="font-size: 16px;">🌕</span> Compra Abierta
+            <span style="font-size: 14px;">🌕</span> Compra Abierta
           </div>
         </div>
       </div>
@@ -539,7 +599,7 @@
     </button>
   </div>
 
-  <!-- Bloques de Categorías Spotify -->
+  <!-- Bloques de Categorías Spotify (4x2 en Desktop) -->
   <div class="spotify-categories-wrapper">
     <div class="spotify-categories-grid">
       <div class="spotify-cat-card scat-all active" onclick="filterByStoreCategory('TODOS', this)">
@@ -577,10 +637,14 @@
     </div>
   </div>
 
-  <!-- Pestañas de Variedades de Producto de la Categoría -->
+  <!-- Pestañas de Variedades de Producto con Flechas de Desplazamiento -->
   <div class="product-tabs-wrapper">
-    <div class="product-tabs" id="shop-product-tabs">
-      <!-- Inyectado por JS -->
+    <div class="product-tabs-outer">
+      <button class="tab-nav-arrow" onclick="scrollTabs(-200)" title="Anterior"><i class="fas fa-chevron-left"></i></button>
+      <div class="product-tabs" id="shop-product-tabs">
+        <!-- Inyectado por JS -->
+      </div>
+      <button class="tab-nav-arrow" onclick="scrollTabs(200)" title="Siguiente"><i class="fas fa-chevron-right"></i></button>
     </div>
   </div>
 
@@ -597,7 +661,7 @@
   <div id="swipe-view-container">
     <div class="showcase-card" style="max-width: 380px; width: 100%; padding: 16px;">
       <div style="position: relative; text-align: center;">
-        <img id="sw-img" src="" alt="Producto" style="width: 190px; height: 190px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+        <img id="sw-img" src="" alt="Producto" style="width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
         <div class="prod-badge-unit" id="sw-badge" style="display: block; width: fit-content; margin: 8px auto 4px;">Formato</div>
         <h3 class="prod-title" id="sw-title" style="font-size: 19px;">Producto</h3>
         <p class="prod-subtitle" id="sw-desc" style="font-size: 12px; margin-bottom: 12px;">Descripción</p>
@@ -623,6 +687,7 @@
         </div>
         <div style="text-align: right;">
           <div class="scale-tier-price" id="sw-total-val" style="color: var(--primary); font-size: 18px;">$0</div>
+          <div style="font-size: 9.5px; color: var(--text-muted);" id="sw-unit-val"></div>
         </div>
       </div>
     </div>
@@ -896,6 +961,9 @@
         SELECTED_VARIANT_INDEX[p.id] = 0;
       });
 
+      // Configurar Drag & Wheel para las pestañas de producto
+      initTabsScrollBehavior();
+
       updateProgressBars();
       filterCategoryAndRender('TODOS');
     }
@@ -972,6 +1040,44 @@
       loadActiveProductView();
     }
 
+    function scrollTabs(delta) {
+      const el = document.getElementById('shop-product-tabs');
+      if (el) el.scrollBy({ left: delta, behavior: 'smooth' });
+    }
+
+    function initTabsScrollBehavior() {
+      const slider = document.getElementById('shop-product-tabs');
+      if (!slider) return;
+
+      // Soporte para rueda del ratón horizontal
+      slider.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          slider.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+
+      // Soporte para arrastrar con el ratón (drag to scroll)
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+      slider.addEventListener('mouseleave', () => { isDown = false; });
+      slider.addEventListener('mouseup', () => { isDown = false; });
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    }
+
     // ==========================================
     // RENDERIZADO DEL SHOWCASE (3 COLUMNAS)
     // ==========================================
@@ -1044,7 +1150,7 @@
             <!-- SECTOR PRESENTACIÓN DEL PRODUCTO -->
             <div class="presentation-selector-box">
               <div class="pres-header">
-                <span>Presentación / Formato:</span>
+                <span>PRESENTACIÓN / FORMATO:</span>
                 <span style="color: var(--primary);">${currentV.label}</span>
               </div>
               <div class="pres-chips-grid">
@@ -1082,7 +1188,7 @@
         <!-- COLUMNA DERECHA: ESCALAS POR VOLUMEN Y CANTIDADES -->
         <div class="showcase-card showcase-right">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
               <span class="card-section-title" style="margin: 0;">ESCALAS POR VOLUMEN</span>
               <span style="font-size: 11px; font-weight: 700; color: var(--primary);">CLIC PARA APLICAR</span>
             </div>
@@ -1090,7 +1196,7 @@
             <!-- Escala 1: Minorista -->
             <div class="scale-tier-card ${isTier1 ? 'active' : ''}" onclick="applyTierDirectly(1)">
               <div class="scale-tier-info">
-                <div class="st-title">Minorista <span style="font-size: 12px; font-weight: 500; color: #64748B;">(1 a ${m2 - 1} un.)</span></div>
+                <div class="st-title">Minorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(1 a ${m2 - 1} un.)</span></div>
                 <div class="st-sub">Precio Base</div>
               </div>
               <div class="scale-tier-price">$${p1.toLocaleString('es-AR')}</div>
@@ -1099,7 +1205,7 @@
             <!-- Escala 2: Mayorista -->
             <div class="scale-tier-card ${isTier2 ? 'active' : ''}" onclick="applyTierDirectly(2)">
               <div class="scale-tier-info">
-                <div class="st-title">Mayorista <span style="font-size: 12px; font-weight: 500; color: #64748B;">(${m2} a ${m3 - 1} un.)</span></div>
+                <div class="st-title">Mayorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(${m2} a ${m3 - 1} un.)</span></div>
                 <div class="st-sub">Descuento +${m2} un.</div>
               </div>
               <div class="scale-tier-price">$${p2.toLocaleString('es-AR')}</div>
@@ -1108,7 +1214,7 @@
             <!-- Escala 3: Distribuidora / Gran Volumen -->
             <div class="scale-tier-card ${isTier3 ? 'active' : ''}" onclick="applyTierDirectly(3)">
               <div class="scale-tier-info">
-                <div class="st-title">Distribuidora <span style="font-size: 12px; font-weight: 500; color: #64748B;">(+${m3} un.)</span></div>
+                <div class="st-title">Distribuidora <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(+${m3} un.)</span></div>
                 <div class="st-sub">Gran Volumen +${m3} un.</div>
               </div>
               <div class="scale-tier-price">$${p3.toLocaleString('es-AR')}</div>
@@ -1122,7 +1228,7 @@
               <input type="text" class="qty-input-text" value="${currentQty}" readonly>
               <button class="qty-btn-circle" onclick="adjustProductQty(1)">+</button>
             </div>
-            <div style="font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 6px;">
+            <div style="font-size: 10.5px; text-align: center; color: var(--text-muted); margin-top: 5px;">
               Ajusta cantidades o haz clic en las escalas arriba
             </div>
           </div>
@@ -1199,8 +1305,6 @@
     // ==========================================
     // RENDERIZADO MODO SWIPE (TINDER)
     // ==========================================
-    let swipeQty = 1;
-
     function renderSwipeStore() {
       const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
       if (!p) return;
@@ -1208,6 +1312,10 @@
       const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
       const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
       const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const inCartQty = CART_ITEMS[cartKey]?.qty || 0;
+      const displayQty = inCartQty > 0 ? inCartQty : 1;
 
       document.getElementById('sw-img').src = v.img || p.img;
       document.getElementById('sw-badge').innerText = v.unidad || p.unidad;
@@ -1225,8 +1333,11 @@
         `;
       });
       document.getElementById('sw-chips-grid').innerHTML = chipsHtml;
-      document.getElementById('sw-qty-val').innerText = swipeQty;
-      document.getElementById('sw-total-val').innerText = `$${(v.p1 * swipeQty).toLocaleString('es-AR')}`;
+      document.getElementById('sw-qty-val').innerText = displayQty;
+
+      const price = getProductPrice(v, displayQty);
+      document.getElementById('sw-total-val').innerText = `$${(price * displayQty).toLocaleString('es-AR')}`;
+      document.getElementById('sw-unit-val').innerText = inCartQty > 0 ? `(${inCartQty} en tu carrito)` : `($${price.toLocaleString('es-AR')} / u)`;
     }
 
     function selectSwipeVariant(prodId, vIdx) {
@@ -1235,9 +1346,24 @@
     }
 
     function adjustSwipeQty(delta) {
-      swipeQty += delta;
-      if (swipeQty < 1) swipeQty = 1;
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const current = CART_ITEMS[cartKey]?.qty || 0;
+      const next = Math.max(0, (current > 0 ? current : 1) + delta);
+
+      if (next === 0) {
+        delete CART_ITEMS[cartKey];
+      } else {
+        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: next };
+      }
+
       renderSwipeStore();
+      updateFloatingCart();
     }
 
     function triggerSwipeAction(dir) {
@@ -1248,11 +1374,11 @@
         const v = variants[vIdx] || variants[0];
         const cartKey = `${p.id}_${v.id || v.label}`;
         const prev = CART_ITEMS[cartKey]?.qty || 0;
-        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: prev + swipeQty };
+        const addQty = prev > 0 ? 1 : 1;
+        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: prev + addQty };
         updateFloatingCart();
       }
 
-      swipeQty = 1;
       ACTIVE_PRODUCT_INDEX = (ACTIVE_PRODUCT_INDEX + 1) % DISPLAY_PRODUCTS.length;
       renderProductTabs();
       renderSwipeStore();
