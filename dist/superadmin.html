@@ -557,7 +557,7 @@
               <tr>
                 <th>Producto</th>
                 <th>Origen y Variedad</th>
-                <th>Unidad</th>
+                <th>Unidad / Presentaciones</th>
                 <th style="color: #DC2626;">Costo Base ($)</th>
                 <th>Escalas Colectivas de Precio ($)</th>
                 <th>Disponibilidad</th>
@@ -824,90 +824,64 @@
       <!-- Datos Principales -->
       <div class="input-field-group">
         <label>Nombre del Producto *</label>
-        <input type="text" id="edit-prod-nombre" class="input-field" placeholder="Ej: Bolsón Agroecológico de Estación" required>
+        <input type="text" id="edit-prod-nombre" class="input-field" placeholder="Ej: Pasta Pura Cacao Silvestre Amazónico de Bolivia" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="input-field-group">
+          <label>Categoría Spotify *</label>
+          <select id="edit-prod-categoria" class="input-field">
+            <option value="granos">🌾 Granos & Legumbres</option>
+            <option value="cacao">🍫 Cacao Silvestre</option>
+            <option value="yerba">🌿 Yerba Mate</option>
+            <option value="aceite">🫒 Aceite Oliva</option>
+            <option value="hongos">🍄 Hongos del Delta</option>
+            <option value="huerta">🥬 Huerta & Frescos</option>
+            <option value="granja">🥚 Granja & Mieles</option>
+          </select>
+        </div>
+        <div class="input-field-group">
+          <label>Meta Colectiva Red (Unidades)</label>
+          <input type="number" id="edit-prod-meta" class="input-field" placeholder="Ej: 100">
+        </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
         <div class="input-field-group">
           <label>Origen / Productor *</label>
-          <input type="text" id="edit-prod-origen" class="input-field" placeholder="Ej: Finca Ovoro (La Plata)">
+          <input type="text" id="edit-prod-origen" class="input-field" placeholder="Ej: Familias Recolectoras de Rurrenabaque">
         </div>
         <div class="input-field-group">
           <label>Variedad / Certificación</label>
-          <input type="text" id="edit-prod-variedad" class="input-field" placeholder="Ej: Agroecológica Certificada">
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-        <div class="input-field-group">
-          <label>Unidad de Medida *</label>
-          <input type="text" id="edit-prod-unidad" class="input-field" placeholder="Ej: bolsón, bidón 2L, frasco 1kg, kg" required>
-        </div>
-        <div class="input-field-group">
-          <label>Meta de Acopio (Unidades)</label>
-          <input type="number" id="edit-prod-meta" class="input-field" placeholder="Ej: 150">
+          <input type="text" id="edit-prod-variedad" class="input-field" placeholder="Ej: Cacao Criollo Silvestre Amazónico">
         </div>
       </div>
 
       <div class="input-field-group">
-        <label>URL de Imagen del Producto</label>
-        <input type="text" id="edit-prod-img" class="input-field" placeholder="https://images.unsplash.com/photo-...">
+        <label>URL o Ruta de Imagen del Producto</label>
+        <input type="text" id="edit-prod-img" class="input-field" placeholder="Ej: assets/cacao_bolivia.jpg o URL web">
       </div>
 
       <div class="input-field-group">
         <label>Subtítulo / Detalle corto</label>
-        <input type="text" id="edit-prod-subtitulo" class="input-field" placeholder="Ej: Cosechado 24hs antes de la entrega">
+        <input type="text" id="edit-prod-subtitulo" class="input-field" placeholder="Ej: 100% puro cacao silvestre de recolección ancestral">
       </div>
 
-      <!-- COSTO BASE DE PRODUCCIÓN (PRIVADO SUPER ADMIN Y NODOS) -->
-      <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <strong style="font-size: 13px; color: #991B1B;"><i class="fas fa-lock"></i> Costo Base de Producción (Privado)</strong>
-          <span style="font-size: 11px; color: #B91C1C; font-weight: 600;">Solo Super Admin y Nodos</span>
+      <!-- SECCIÓN DINÁMICA: PRESENTACIONES Y FORMATOS DEL PRODUCTO -->
+      <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: var(--radius-md); padding: 14px; margin-bottom: 18px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="font-size: 13.5px; font-weight: 800; color: #166534; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-boxes"></i> Presentaciones / Formatos del Producto
+          </div>
+          <button type="button" class="btn-checkout-cta" style="padding: 5px 12px; font-size: 11.5px; background: #16A34A;" onclick="addPresentationRow()">
+            <i class="fas fa-plus"></i> Sumar Formato
+          </button>
         </div>
-        <p style="font-size: 12px; color: #7F1D1D; margin: 2p0 8px;">
-          Monto transferido al productor. La diferencia con el precio de venta genera el margen cooperativo a dividir (33.3% Vrde • 33.3% Nodo • 33.3% Vrdedor).
+        <p style="font-size: 11.5px; color: #15803D; margin-bottom: 12px; line-height: 1.4;">
+          Configura los diferentes pesos o formatos (ej: <strong>Barra 100g</strong>, <strong>Barra 500g</strong>, <strong>Barra 1kg</strong> o <strong>1kg, 5kg, 25kg</strong>). Cada formato tiene su costo al productor y sus 3 escalas de precio ($) independientes.
         </p>
-        <input type="number" id="edit-prod-costo" class="input-field" placeholder="$ Costo del Productor (Ej: 6800)" style="border-color: #FCA5A5; background: white;" required>
-      </div>
-
-      <!-- ESCALAS COLECTIVAS DE PRECIOS POR VOLUMEN -->
-      <div class="scale-card-box">
-        <div style="font-size: 14px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
-          <i class="fas fa-layer-group" style="color: var(--primary);"></i>
-          Escala Colectiva de Precios de Venta (Público)
-        </div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-          A medida que la red acumula pedidos en el ciclo, el precio baja automáticamente para todos.
-        </p>
-
-        <!-- Nivel 1: Minorista -->
-        <div style="margin-top: 12px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 14px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <strong style="font-size: 13px; color: #0F172A;">1. Precio Minorista (Base)</strong>
-            <span style="font-size: 11px; color: var(--text-muted);">Desde 1 unidad</span>
-          </div>
-          <div style="margin-top: 6px;">
-            <input type="number" id="edit-prod-p1" class="input-field" placeholder="$ Precio Minorista (Ej: 11500)" required>
-          </div>
-        </div>
-
-        <!-- Nivel 2: Mayorista -->
-        <div style="margin-top: 10px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 14px;">
-          <strong style="font-size: 13px; color: #0F172A;">2. Precio Mayorista (Escala Media)</strong>
-          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; margin-top: 6px;">
-            <input type="number" id="edit-prod-m2" class="input-field" placeholder="Meta un. (Ej: 30)">
-            <input type="number" id="edit-prod-p2" class="input-field" placeholder="$ Precio Mayorista (Ej: 9800)">
-          </div>
-        </div>
-
-        <!-- Nivel 3: Distribuidora -->
-        <div style="margin-top: 10px; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 14px;">
-          <strong style="font-size: 13px; color: #0F172A;">3. Precio Distribuidora (Gran Volumen)</strong>
-          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; margin-top: 6px;">
-            <input type="number" id="edit-prod-m3" class="input-field" placeholder="Meta un. (Ej: 60)">
-            <input type="number" id="edit-prod-p3" class="input-field" placeholder="$ Precio Distribuidora (Ej: 8900)">
-          </div>
+        <div id="edit-prod-variants-container" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Inyectado dinámicamente por JS -->
         </div>
       </div>
 
@@ -928,7 +902,7 @@
       </div>
 
       <button class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); margin-top: 24px;" onclick="saveProductFromModal()">
-        GUARDAR PRODUCTO
+        GUARDAR PRODUCTO Y PRESENTACIONES
       </button>
     </div>
   </div>
@@ -942,18 +916,25 @@
       </div>
 
       <input type="hidden" id="quick-prod-id">
-      <h4 id="quick-prod-name" style="font-size: 16px; color: var(--primary); margin-bottom: 16px;">Producto</h4>
+      <h4 id="quick-prod-name" style="font-size: 16px; color: var(--primary); margin-bottom: 12px;">Producto</h4>
+
+      <div class="input-field-group" id="quick-variant-group" style="margin-bottom: 12px;">
+        <label style="font-weight: 700;">Presentación / Formato a ajustar:</label>
+        <select id="quick-variant-select" class="input-field" onchange="onQuickVariantChange()" style="background: #F8FAFC; font-weight: 600;">
+          <!-- Inyectado por JS -->
+        </select>
+      </div>
 
       <div class="input-field-group">
-        <label>Precio Minorista (Base) $</label>
-        <input type="number" id="quick-p1" class="input-field">
+        <label>Precio Minorista Base ($)</label>
+        <input type="number" id="quick-p1" class="input-field" style="font-weight: 700;">
       </div>
       <div class="input-field-group">
-        <label>Precio Mayorista (Meta Media) $</label>
+        <label>Precio Mayorista (Meta Media) ($)</label>
         <input type="number" id="quick-p2" class="input-field">
       </div>
       <div class="input-field-group">
-        <label>Precio Distribuidora (Gran Volumen) $</label>
+        <label>Precio Distribuidora (Gran Volumen) ($)</label>
         <input type="number" id="quick-p3" class="input-field">
       </div>
 
@@ -1306,14 +1287,64 @@
           nodesLabel = p.nodos.join(', ');
         }
 
+        // Renderizado de la columna Unidad / Presentaciones
+        let presentacionesHtml = '';
+        if (p.variantes && p.variantes.length > 0) {
+          presentacionesHtml = `<div style="display: flex; flex-direction: column; gap: 4px; min-width: 170px;">`;
+          p.variantes.forEach(v => {
+            presentacionesHtml += `
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 3px 8px; border-radius: 8px; font-size: 11.5px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 700; color: #334155;">${v.label}</span>
+                <strong style="color: var(--primary);">$${(v.p1 || 0).toLocaleString('es-AR')}</strong>
+              </div>
+            `;
+          });
+          presentacionesHtml += `</div>`;
+        } else {
+          presentacionesHtml = `<span style="background: #F1F5F9; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">${p.unidad}</span>`;
+        }
+
+        // Renderizado de Costo Base
+        let costoHtml = '';
+        if (p.variantes && p.variantes.length > 1) {
+          const minCosto = Math.min(...p.variantes.map(v => v.costo || 0));
+          const maxCosto = Math.max(...p.variantes.map(v => v.costo || 0));
+          costoHtml = `
+            <strong style="color: #DC2626; font-size: 13px;">$${minCosto.toLocaleString('es-AR')} ~ $${maxCosto.toLocaleString('es-AR')}</strong>
+            <div style="font-size: 10px; color: var(--text-muted);">${p.variantes.length} formatos</div>
+          `;
+        } else {
+          costoHtml = `
+            <strong style="color: #DC2626; font-size: 14px;">$${(p.costo || 0).toLocaleString('es-AR')}</strong>
+            <div style="font-size: 10px; color: var(--text-muted);">Pago al productor</div>
+          `;
+        }
+
+        // Renderizado de Escalas
+        let escalasHtml = '';
+        if (p.variantes && p.variantes.length > 0) {
+          const v0 = p.variantes[0];
+          escalasHtml = `
+            <div><span class="tier-badge-pill">Minorista: <strong>$${(v0.p1 || p.p1 || 0).toLocaleString('es-AR')}</strong></span></div>
+            ${v0.p2 ? `<div><span class="tier-badge-pill">Mayorista (+${v0.m2 || p.m2 || 20}): <strong>$${(v0.p2 || p.p2).toLocaleString('es-AR')}</strong></span></div>` : ''}
+            ${v0.p3 ? `<div><span class="tier-badge-pill">Distribuidora (+${v0.m3 || p.m3 || 50}): <strong>$${(v0.p3 || p.p3).toLocaleString('es-AR')}</strong></span></div>` : ''}
+          `;
+        } else {
+          escalasHtml = `
+            <div><span class="tier-badge-pill">Minorista: <strong>$${(p.p1 || 0).toLocaleString('es-AR')}</strong></span></div>
+            ${p.p2 ? `<div><span class="tier-badge-pill">Mayorista (+${p.m2}): <strong>$${p.p2.toLocaleString('es-AR')}</strong></span></div>` : ''}
+            ${p.p3 ? `<div><span class="tier-badge-pill">Distribuidora (+${p.m3}): <strong>$${p.p3.toLocaleString('es-AR')}</strong></span></div>` : ''}
+          `;
+        }
+
         html += `
           <tr>
             <td>
               <div style="display: flex; align-items: center; gap: 12px;">
                 <img src="${p.img}" alt="${p.nombre}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);">
                 <div>
-                  <strong style="color: #0F172A; font-size: 15px;">${p.nombre}</strong>
-                  <div style="font-size: 12px; color: var(--text-muted);">${p.subtitulo || ''}</div>
+                  <strong style="color: #0F172A; font-size: 14.5px;">${p.nombre}</strong>
+                  <div style="font-size: 11.5px; color: var(--text-muted);">${p.subtitulo || ''}</div>
                 </div>
               </div>
             </td>
@@ -1321,16 +1352,9 @@
               <div><strong>${p.origen}</strong></div>
               <div style="font-size: 12px; color: var(--text-muted);">${p.variedad}</div>
             </td>
-            <td><span style="background: #F1F5F9; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;">${p.unidad}</span></td>
-            <td>
-              <strong style="color: #DC2626; font-size: 14px;">$${(p.costo || 0).toLocaleString('es-AR')}</strong>
-              <div style="font-size: 10px; color: var(--text-muted);">Pago al productor</div>
-            </td>
-            <td>
-              <div><span class="tier-badge-pill">Minorista: <strong>$${p.p1?.toLocaleString('es-AR')}</strong></span></div>
-              ${p.p2 ? `<div><span class="tier-badge-pill">Mayorista (+${p.m2}): <strong>$${p.p2?.toLocaleString('es-AR')}</strong></span></div>` : ''}
-              ${p.p3 ? `<div><span class="tier-badge-pill">Distribuidora (+${p.m3}): <strong>$${p.p3?.toLocaleString('es-AR')}</strong></span></div>` : ''}
-            </td>
+            <td>${presentacionesHtml}</td>
+            <td>${costoHtml}</td>
+            <td>${escalasHtml}</td>
             <td><span style="font-size: 12px; color: #475569; font-weight: 600;">${nodesLabel}</span></td>
             <td>${statusBtn}</td>
             <td style="text-align: right;">
@@ -1338,7 +1362,7 @@
                 <button class="btn-action-icon" title="Ajuste Rápido de Precios" onclick="openQuickPriceModal('${p.id}')">
                   <i class="fas fa-dollar-sign"></i>
                 </button>
-                <button class="btn-action-icon" title="Editar Producto Completo" onclick="openEditProductModal('${p.id}')">
+                <button class="btn-action-icon" title="Editar Producto y Formatos" onclick="openEditProductModal('${p.id}')">
                   <i class="fas fa-edit"></i>
                 </button>
                 <button class="btn-action-icon" style="color: #DC2626;" title="Eliminar Producto" onclick="deleteProduct('${p.id}')">
@@ -1353,23 +1377,101 @@
       document.getElementById('super-products-tbody').innerHTML = html;
     }
 
+    function addPresentationRow(v = null) {
+      const container = document.getElementById('edit-prod-variants-container');
+      const count = container.querySelectorAll('.variant-editor-card').length + 1;
+      const vId = v?.id || ('v_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
+      const vLabel = v?.label || `Formato ${count}`;
+      const vUnidad = v?.unidad || 'unidad';
+      const vCosto = v?.costo !== undefined ? v.costo : 0;
+      const vP1 = v?.p1 !== undefined ? v.p1 : 0;
+      const vM2 = v?.m2 !== undefined ? v.m2 : 20;
+      const vP2 = v?.p2 !== undefined ? v.p2 : (vP1 ? Math.round(vP1 * 0.85) : 0);
+      const vM3 = v?.m3 !== undefined ? v.m3 : 50;
+      const vP3 = v?.p3 !== undefined ? v.p3 : (vP1 ? Math.round(vP1 * 0.75) : 0);
+      const vImg = v?.img || '';
+
+      const card = document.createElement('div');
+      card.className = 'variant-editor-card';
+      card.dataset.vid = vId;
+      card.style = "background: white; border: 1px solid #CBD5E1; border-radius: 8px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);";
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #F1F5F9; padding-bottom: 6px;">
+          <strong style="color: #0F172A; font-size: 13px;"><i class="fas fa-cube" style="color: var(--primary);"></i> Presentación / Formato</strong>
+          <button type="button" onclick="this.closest('.variant-editor-card').remove()" style="background: none; border: none; color: #EF4444; font-size: 12px; font-weight: 600; cursor: pointer; padding: 2px 6px;" title="Eliminar este formato">
+            <i class="fas fa-trash-alt"></i> Eliminar Formato
+          </button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; margin-bottom: 8px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #64748B;">Etiqueta / Presentación *</label>
+            <input type="text" class="v-input-label input-field" value="${vLabel}" placeholder="Ej: Barra 500g (1/2 kg)" style="font-size: 12px; padding: 6px 8px;" required>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #64748B;">Unidad de Medida *</label>
+            <input type="text" class="v-input-unidad input-field" value="${vUnidad}" placeholder="Ej: barra, kg, paquete" style="font-size: 12px; padding: 6px 8px;" required>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #DC2626;">Costo Base ($ Productor) *</label>
+            <input type="number" class="v-input-costo input-field" value="${vCosto}" placeholder="$ Costo" style="font-size: 12px; padding: 6px 8px; border-color: #FECACA;" required>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: var(--primary);">Precio Minorista Base ($) *</label>
+            <input type="number" class="v-input-p1 input-field" value="${vP1}" placeholder="$ Minorista" style="font-size: 12px; padding: 6px 8px; font-weight: 700;" required>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr 1fr 1.2fr; gap: 6px; margin-bottom: 8px;">
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: #64748B;">Mín. Mayor.</label>
+            <input type="number" class="v-input-m2 input-field" value="${vM2}" placeholder="20" style="font-size: 11px; padding: 4px 6px;">
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: #64748B;">$ Mayorista</label>
+            <input type="number" class="v-input-p2 input-field" value="${vP2}" placeholder="$" style="font-size: 11px; padding: 4px 6px;">
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: #64748B;">Mín. Distrib.</label>
+            <input type="number" class="v-input-m3 input-field" value="${vM3}" placeholder="50" style="font-size: 11px; padding: 4px 6px;">
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: #64748B;">$ Distribuidora</label>
+            <input type="number" class="v-input-p3 input-field" value="${vP3}" placeholder="$" style="font-size: 11px; padding: 4px 6px;">
+          </div>
+        </div>
+        <div>
+          <label style="font-size: 10px; color: #64748B;">Foto específica del formato (opcional, URL o ruta):</label>
+          <input type="text" class="v-input-img input-field" value="${vImg}" placeholder="Ej: assets/cacao_bolivia.jpg" style="font-size: 11px; padding: 4px 8px;">
+        </div>
+      `;
+      container.appendChild(card);
+    }
+
     function openCreateProductModal() {
       document.getElementById('prod-editor-title').innerText = "Crear Nuevo Producto";
       document.getElementById('edit-prod-id').value = 'P-' + Math.floor(Math.random() * 90000 + 10000);
       document.getElementById('edit-prod-nombre').value = '';
+      document.getElementById('edit-prod-categoria').value = 'granos';
       document.getElementById('edit-prod-origen').value = '';
       document.getElementById('edit-prod-variedad').value = '';
-      document.getElementById('edit-prod-unidad').value = 'bolsón';
       document.getElementById('edit-prod-meta').value = '100';
       document.getElementById('edit-prod-img').value = 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400';
       document.getElementById('edit-prod-subtitulo').value = '';
-      document.getElementById('edit-prod-costo').value = '';
-      document.getElementById('edit-prod-p1').value = '';
-      document.getElementById('edit-prod-m2').value = '20';
-      document.getElementById('edit-prod-p2').value = '';
-      document.getElementById('edit-prod-m3').value = '40';
-      document.getElementById('edit-prod-p3').value = '';
       document.getElementById('edit-prod-activo').checked = true;
+
+      // Limpiar y crear 1 formato por defecto
+      document.getElementById('edit-prod-variants-container').innerHTML = '';
+      addPresentationRow({
+        label: 'Formato Estándar 1kg',
+        unidad: '1kg',
+        costo: 0,
+        p1: 0,
+        m2: 20,
+        p2: 0,
+        m3: 50,
+        p3: 0
+      });
 
       renderNodeCheckboxes(['TODOS']);
       openModal('modal-product-editor');
@@ -1383,19 +1485,34 @@
       document.getElementById('prod-editor-title').innerText = `Editar: ${p.nombre}`;
       document.getElementById('edit-prod-id').value = p.id;
       document.getElementById('edit-prod-nombre').value = p.nombre || '';
+      document.getElementById('edit-prod-categoria').value = p.categoria || 'granos';
       document.getElementById('edit-prod-origen').value = p.origen || '';
       document.getElementById('edit-prod-variedad').value = p.variedad || '';
-      document.getElementById('edit-prod-unidad').value = p.unidad || '';
       document.getElementById('edit-prod-meta').value = p.meta || 100;
       document.getElementById('edit-prod-img').value = p.img || '';
       document.getElementById('edit-prod-subtitulo').value = p.subtitulo || '';
-      document.getElementById('edit-prod-costo').value = p.costo || '';
-      document.getElementById('edit-prod-p1').value = p.p1 || '';
-      document.getElementById('edit-prod-m2').value = p.m2 || '';
-      document.getElementById('edit-prod-p2').value = p.p2 || '';
-      document.getElementById('edit-prod-m3').value = p.m3 || '';
-      document.getElementById('edit-prod-p3').value = p.p3 || '';
       document.getElementById('edit-prod-activo').checked = p.activo !== false;
+
+      // Cargar formatos / presentaciones existentes
+      const container = document.getElementById('edit-prod-variants-container');
+      container.innerHTML = '';
+
+      if (p.variantes && p.variantes.length > 0) {
+        p.variantes.forEach(v => addPresentationRow(v));
+      } else {
+        addPresentationRow({
+          label: p.unidad || 'Unidad',
+          unidad: p.unidad || 'unidad',
+          costo: p.costo || 0,
+          p1: p.p1 || 0,
+          m1: 1,
+          m2: p.m2 || 20,
+          p2: p.p2 || 0,
+          m3: p.m3 || 50,
+          p3: p.p3 || 0,
+          img: p.img || ''
+        });
+      }
 
       renderNodeCheckboxes(p.nodos || ['TODOS']);
       openModal('modal-product-editor');
@@ -1427,12 +1544,62 @@
     function saveProductFromModal() {
       const id = document.getElementById('edit-prod-id').value;
       const nombre = document.getElementById('edit-prod-nombre').value.trim();
-      const p1 = parseFloat(document.getElementById('edit-prod-p1').value);
-      const costo = parseFloat(document.getElementById('edit-prod-costo').value) || 0;
+      const categoria = document.getElementById('edit-prod-categoria').value;
 
-      if (!nombre || !p1) {
-        alert("Por favor completa al menos el nombre y el precio minorista base.");
+      if (!nombre) {
+        alert("Por favor completa el nombre del producto.");
         return;
+      }
+
+      // Leer todas las tarjetas de presentación
+      const variantCards = document.querySelectorAll('#edit-prod-variants-container .variant-editor-card');
+      if (variantCards.length === 0) {
+        alert("Debes agregar al menos una presentación/formato para el producto.");
+        return;
+      }
+
+      const variantes = [];
+      let primerP1 = 0;
+      let primerCosto = 0;
+      let primerUnidad = 'unidad';
+
+      for (let i = 0; i < variantCards.length; i++) {
+        const card = variantCards[i];
+        const vId = card.dataset.vid || ('v_' + (i + 1));
+        const label = card.querySelector('.v-input-label').value.trim();
+        const unidad = card.querySelector('.v-input-unidad').value.trim() || 'unidad';
+        const costo = parseFloat(card.querySelector('.v-input-costo').value) || 0;
+        const p1 = parseFloat(card.querySelector('.v-input-p1').value) || 0;
+        const m2 = parseInt(card.querySelector('.v-input-m2').value) || 20;
+        const p2 = parseFloat(card.querySelector('.v-input-p2').value) || (p1 ? Math.round(p1 * 0.85) : 0);
+        const m3 = parseInt(card.querySelector('.v-input-m3').value) || 50;
+        const p3 = parseFloat(card.querySelector('.v-input-p3').value) || (p1 ? Math.round(p1 * 0.75) : 0);
+        const img = card.querySelector('.v-input-img').value.trim();
+
+        if (!label || !p1) {
+          alert(`En la presentación #${i+1}, por favor completa la etiqueta y el precio minorista base.`);
+          return;
+        }
+
+        if (i === 0) {
+          primerP1 = p1;
+          primerCosto = costo;
+          primerUnidad = unidad;
+        }
+
+        variantes.push({
+          id: vId,
+          label: label,
+          unidad: unidad,
+          costo: costo,
+          p1: p1,
+          m1: 1,
+          m2: m2,
+          p2: p2,
+          m3: m3,
+          p3: p3,
+          img: img || document.getElementById('edit-prod-img').value.trim()
+        });
       }
 
       const nodeCheckboxes = document.querySelectorAll('.single-node-check:checked');
@@ -1444,23 +1611,23 @@
       const prodData = {
         id: id,
         nombre: nombre,
-        categoria: existing?.categoria || 'granos',
+        categoria: categoria,
         subcategoria: existing?.subcategoria || 'otros',
         productorInfo: existing?.productorInfo || null,
-        variantes: existing?.variantes || null,
+        variantes: variantes,
         origen: document.getElementById('edit-prod-origen').value.trim() || 'Agroecológico',
         variedad: document.getElementById('edit-prod-variedad').value.trim() || 'Estación',
-        unidad: document.getElementById('edit-prod-unidad').value.trim() || 'unidad',
+        unidad: primerUnidad,
         meta: parseInt(document.getElementById('edit-prod-meta').value) || 100,
         img: document.getElementById('edit-prod-img').value.trim() || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400',
         subtitulo: document.getElementById('edit-prod-subtitulo').value.trim(),
-        costo: costo,
-        p1: p1,
+        costo: primerCosto,
+        p1: primerP1,
         m1: 1,
-        m2: parseInt(document.getElementById('edit-prod-m2').value) || 0,
-        p2: parseFloat(document.getElementById('edit-prod-p2').value) || 0,
-        m3: parseInt(document.getElementById('edit-prod-m3').value) || 0,
-        p3: parseFloat(document.getElementById('edit-prod-p3').value) || 0,
+        m2: variantes[0].m2,
+        p2: variantes[0].p2,
+        m3: variantes[0].m3,
+        p3: variantes[0].p3,
         activo: document.getElementById('edit-prod-activo').checked,
         nodos: selectedNodes.length === Object.keys(LUNAR_CONFIG.nodos).length ? ['TODOS'] : selectedNodes
       };
@@ -1468,37 +1635,94 @@
       LunarEngine.guardarProducto(prodData);
       closeModal('modal-product-editor');
       renderProductsTable();
-      alert("✅ Producto guardado con éxito.");
+      alert("✅ Producto y presentaciones guardados con éxito.");
     }
+
+    let QUICK_PROD_CACHED = null;
 
     function openQuickPriceModal(prodId) {
       const prods = LunarEngine.obtenerProductos(null, false);
       const p = prods.find(item => item.id === prodId);
       if (!p) return;
 
+      QUICK_PROD_CACHED = p;
       document.getElementById('quick-prod-id').value = p.id;
       document.getElementById('quick-prod-name').innerText = p.nombre;
-      document.getElementById('quick-p1').value = p.p1 || '';
-      document.getElementById('quick-p2').value = p.p2 || '';
-      document.getElementById('quick-p3').value = p.p3 || '';
+
+      const vGroup = document.getElementById('quick-variant-group');
+      const vSelect = document.getElementById('quick-variant-select');
+
+      if (p.variantes && p.variantes.length > 0) {
+        vGroup.style.display = 'block';
+        let vHtml = '';
+        p.variantes.forEach((v, idx) => {
+          vHtml += `<option value="${idx}">${v.label} ($${(v.p1 || 0).toLocaleString('es-AR')})</option>`;
+        });
+        vSelect.innerHTML = vHtml;
+        vSelect.value = "0";
+        loadQuickVariantData(0);
+      } else {
+        vGroup.style.display = 'none';
+        document.getElementById('quick-p1').value = p.p1 || '';
+        document.getElementById('quick-p2').value = p.p2 || '';
+        document.getElementById('quick-p3').value = p.p3 || '';
+      }
 
       openModal('modal-quick-price');
+    }
+
+    function onQuickVariantChange() {
+      const idx = parseInt(document.getElementById('quick-variant-select').value) || 0;
+      loadQuickVariantData(idx);
+    }
+
+    function loadQuickVariantData(idx) {
+      if (!QUICK_PROD_CACHED) return;
+      if (QUICK_PROD_CACHED.variantes && QUICK_PROD_CACHED.variantes[idx]) {
+        const v = QUICK_PROD_CACHED.variantes[idx];
+        document.getElementById('quick-p1').value = v.p1 || '';
+        document.getElementById('quick-p2').value = v.p2 || '';
+        document.getElementById('quick-p3').value = v.p3 || '';
+      }
     }
 
     function saveQuickPrice() {
       const id = document.getElementById('quick-prod-id').value;
       const p1 = parseFloat(document.getElementById('quick-p1').value);
-      const p2 = parseFloat(document.getElementById('quick-p2').value);
-      const p3 = parseFloat(document.getElementById('quick-p3').value);
+      const p2 = parseFloat(document.getElementById('quick-p2').value) || 0;
+      const p3 = parseFloat(document.getElementById('quick-p3').value) || 0;
 
       if (!p1) {
         alert("El precio minorista es obligatorio.");
         return;
       }
 
-      LunarEngine.guardarProducto({ id: id, p1: p1, p2: p2 || 0, p3: p3 || 0 });
+      const prods = LunarEngine.obtenerProductos(null, false);
+      const p = prods.find(item => item.id === id);
+      if (!p) return;
+
+      if (p.variantes && p.variantes.length > 0) {
+        const vIdx = parseInt(document.getElementById('quick-variant-select').value) || 0;
+        if (p.variantes[vIdx]) {
+          p.variantes[vIdx].p1 = p1;
+          p.variantes[vIdx].p2 = p2;
+          p.variantes[vIdx].p3 = p3;
+          if (vIdx === 0) {
+            p.p1 = p1;
+            p.p2 = p2;
+            p.p3 = p3;
+          }
+        }
+      } else {
+        p.p1 = p1;
+        p.p2 = p2;
+        p.p3 = p3;
+      }
+
+      LunarEngine.guardarProducto(p);
       closeModal('modal-quick-price');
       renderProductsTable();
+      alert("✅ Precios actualizados con éxito.");
     }
 
     function toggleProductActive(prodId) {

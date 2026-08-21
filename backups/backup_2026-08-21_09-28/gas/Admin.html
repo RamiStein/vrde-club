@@ -1,0 +1,158 @@
+<!-- =========================================
+     VIEW 3: ADMIN
+     ========================================= -->
+<div id="admin-login" class="hidden">
+  <div class="card admin-login-card">
+    <div class="shop-brand-logo" id="admin-login-logo" style="margin: 0 auto 15px; width: 60px; height: 60px; font-size: 30px;"></div>
+    <h2 style="margin-bottom: 5px;" id="admin-login-name">Panel</h2>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">âš™ï¸ AdministraciÃ³n de Nodo</p>
+    
+    <div class="input-group">
+      <input type="password" id="pinInput" class="input-control pin-input" maxlength="4" placeholder="â€¢â€¢â€¢â€¢" onkeypress="if(event.keyCode===13) attemptLogin()">
+    </div>
+    
+    <p id="pin-error" style="color: red; font-size: 14px; margin-bottom: 15px; display: none;">PIN incorrecto</p>
+    
+    <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="attemptLogin()">INGRESAR</button>
+    
+    <a href="javascript:void(0)" onclick="window.location.href = APP_URL + '?ref=' + CURRENT_REF" style="font-size: 14px; color: var(--text-muted);">â¬…ï¸ Volver a la tienda</a>
+  </div>
+</div>
+
+<div id="admin-dashboard" class="hidden">
+  <div class="admin-header">
+    <h2 class="admin-title" id="ad-title">Panel</h2>
+    <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" onclick="logout()">Salir</button>
+  </div>
+
+  <div class="container">
+    <!-- Lunar status -->
+    <div class="dark-card" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h3 style="color: var(--accent); margin-bottom: 5px;" id="ad-lunar-title">Luna</h3>
+        <p style="font-size: 14px; margin: 0;" id="ad-lunar-status">Status</p>
+      </div>
+      <div style="font-size: 30px;" id="ad-lunar-emoji"></div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="admin-metrics">
+      <div class="card metric-card">
+        <div class="metric-value" id="ad-m-pedidos">0</div>
+        <div class="metric-label">Pedidos</div>
+      </div>
+      <div class="card metric-card">
+        <div class="metric-value" id="ad-m-socios">0</div>
+        <div class="metric-label">Socios</div>
+      </div>
+      <div class="card metric-card">
+        <div class="metric-value" id="ad-m-recaudado">$0</div>
+        <div class="metric-label">Recaudado</div>
+      </div>
+      <div class="card metric-card">
+        <div class="metric-value" id="ad-m-unidades">0</div>
+        <div class="metric-label">Unidades</div>
+      </div>
+    </div>
+
+    <!-- Orders -->
+    <div class="section-header">
+      <h3 style="margin: 0;">PEDIDOS DEL CICLO ACTUAL</h3>
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterOrders('Todos', this)">Todos</button>
+        <button class="filter-btn" onclick="filterOrders('Pendiente', this)">Pendientes</button>
+        <button class="filter-btn" onclick="filterOrders('Pagado', this)">Pagados</button>
+        <button class="filter-btn" onclick="filterOrders('Entregado', this)">Entregados</button>
+      </div>
+    </div>
+    
+    <div class="orders-list" id="ad-orders-list">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- Past Cycles -->
+    <h3 style="margin-bottom: 15px; margin-top: 30px;">CICLOS ANTERIORES</h3>
+    <div class="past-cycles-grid" id="ad-past-cycles">
+      <!-- Injected via JS -->
+    </div>
+    <div id="ad-past-orders-container" class="hidden" style="margin-bottom: 30px;">
+      <h4 id="ad-past-orders-title" style="margin-bottom: 15px; color: var(--primary);">Pedidos del ciclo</h4>
+      <div class="orders-list" id="ad-past-orders-list"></div>
+    </div>
+
+    <!-- Members -->
+    <h3 style="margin-bottom: 15px; margin-top: 30px;">DIRECTORIO DE SOCIOS</h3>
+    <div class="input-group">
+      <input type="text" id="memberSearch" class="input-control" placeholder="Buscar socio..." onkeyup="filterMembers()">
+    </div>
+    <div class="members-table-wrapper">
+      <table class="members-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>TelÃ©fono</th>
+            <th>Pedidos</th>
+            <th>Total G.</th>
+            <th>Ãšltimo</th>
+          </tr>
+        </thead>
+        <tbody id="ad-members-tbody">
+          <!-- Injected via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Share & Setup -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+      <div class="card">
+        <h4 style="margin-bottom: 15px;">DifusiÃ³n</h4>
+        <div class="input-group">
+          <label>Link de tu tienda</label>
+          <div class="copy-group">
+            <input type="text" id="ad-link-tienda" class="input-control" readonly>
+            <button class="btn btn-outline" onclick="copyText('ad-link-tienda')">Copiar</button>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Resumen para WhatsApp</label>
+          <textarea id="ad-wsp-text" class="input-control" rows="4" readonly></textarea>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 10px;" onclick="copyText('ad-wsp-text')">Copiar Resumen</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="margin-bottom: 15px;">ConfiguraciÃ³n del Nodo</h4>
+        <div class="input-group">
+          <label>Nombre del Nodo</label>
+          <input type="text" id="editNombre" class="input-control">
+        </div>
+        <div class="input-group">
+          <label>Logo (URL o Emoji)</label>
+          <input type="text" id="editLogo" class="input-control">
+        </div>
+        <div class="input-group">
+          <label>DirecciÃ³n de retiro</label>
+          <input type="text" id="editDireccion" class="input-control">
+        </div>
+        <div class="input-group">
+          <label>Contacto (Nombre)</label>
+          <input type="text" id="editContacto" class="input-control">
+        </div>
+        <div class="input-group">
+          <label>DescripciÃ³n corta</label>
+          <textarea id="editDesc" class="input-control" rows="2"></textarea>
+        </div>
+        <div class="input-group">
+          <label>DÃ­a de entrega (ej: SÃ¡bado de 10 a 14hs)</label>
+          <input type="text" id="editDia" class="input-control">
+        </div>
+        <button class="btn btn-primary" style="width: 100%;" id="btn-save-profile" onclick="saveProfile()">Guardar Cambios</button>
+        <div id="save-msg" style="text-align: center; margin-top: 10px; font-size: 14px; font-weight: bold;"></div>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 14px;">
+      Vrde Club â€¢ Red Fractal
+    </div>
+  </div>
+</div>

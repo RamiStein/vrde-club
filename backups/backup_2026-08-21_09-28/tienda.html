@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tienda Lunar • Vrde Club</title>
+  <meta name="description" content="Compra comunitaria y soberana de alimentos agroecológicos sincronizada con los ciclos lunares.">
+
+  <!-- Favicon e Icono de Navegador -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Hoja de estilos del sistema Lunar -->
+  <link rel="stylesheet" href="lunar-style.css">
+
+  <style>
+    :root {
+      --spotify-radius: 12px;
+    }
+
+    /* Header Compacto */
+    .shop-header {
+      padding: 10px 16px;
+    }
+
+    /* Banner Lunar Compacto */
+    .lunar-banner-card {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 12px 18px;
+      margin: 6px auto 10px;
+      max-width: 1100px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .lunar-top-row {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+    }
+
+    /* Switch de Modos de Vista */
+    .view-mode-bar-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 6px 0 10px;
+      padding: 0 16px;
+    }
+    .view-mode-pill-btn {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .view-mode-pill-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(16,163,82,0.25);
+    }
+
+    /* Bloques de Categorías Spotify: 2 FILAS DE 4 COLUMNAS (8 EN TOTAL) */
+    .spotify-categories-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 10px;
+      padding: 0 16px;
+    }
+    .spotify-categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 768px) {
+      .spotify-categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+    }
+
+    .spotify-cat-card {
+      position: relative;
+      height: 54px;
+      border-radius: var(--spotify-radius);
+      padding: 6px 10px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      line-height: 1.15;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      flex-shrink: 0;
+    }
+    .spotify-cat-card:hover { transform: translateY(-1.5px); }
+    .spotify-cat-card.active { outline: 3px solid #0F172A; outline-offset: 1px; }
+    .spotify-cat-card .cat-name { z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .spotify-cat-card .cat-icon {
+      position: absolute;
+      right: 2px;
+      bottom: -2px;
+      font-size: 24px;
+      opacity: 0.85;
+      transform: rotate(15deg);
+    }
+
+    .scat-all { background: linear-gradient(135deg, #10A352, #059669); }
+    .scat-granos { background: linear-gradient(135deg, #D97706, #B45309); }
+    .scat-cacao { background: linear-gradient(135deg, #92400E, #78350F); }
+    .scat-yerba { background: linear-gradient(135deg, #0D9488, #115E59); }
+    .scat-aceite { background: linear-gradient(135deg, #65A30D, #4D7C0F); }
+    .scat-hongos { background: linear-gradient(135deg, #475569, #334155); }
+    .scat-huerta { background: linear-gradient(135deg, #16A34A, #15803D); }
+    .scat-granja { background: linear-gradient(135deg, #EA580C, #C2410C); }
+
+    /* Pestañas de Variedades de Producto con Flechas de Navegación */
+    .product-tabs-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 12px;
+      padding: 0 16px;
+      position: relative;
+    }
+    .product-tabs-outer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+    .tab-nav-arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid var(--border-color);
+      color: #334155;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.15s ease;
+      z-index: 5;
+    }
+    .tab-nav-arrow:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .tab-nav-arrow:active { transform: scale(0.9); }
+
+    .product-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 4px 2px 8px;
+      white-space: nowrap;
+      flex: 1;
+      cursor: grab;
+      user-select: none;
+      min-height: 42px;
+    }
+    .product-tabs:active { cursor: grabbing; }
+    
+    .product-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-track {
+      background: #F1F5F9;
+      border-radius: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    .tab-item {
+      flex-shrink: 0;
+      padding: 7px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: white;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-item:hover { border-color: var(--primary); color: var(--primary); }
+    .tab-item.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(16, 163, 82, 0.25);
+    }
+
+    /* =========================================================
+       ESCAPARATE SHOWCASE 3 COLUMNAS
+       ========================================================= */
+    .product-showcase {
+      max-width: 1100px;
+      margin: 0 auto 20px;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 290px 1fr 330px;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 960px) {
+      .product-showcase {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .showcase-center { order: 1; }
+      .showcase-right { order: 2; }
+      .showcase-left { order: 3; }
+    }
+
+    .showcase-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Columna Izquierda: Origen, Presentación e Impacto */
+    .card-section-title {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94A3B8;
+      margin-bottom: 5px;
+      font-weight: 800;
+    }
+    .showcase-producer-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.25;
+      margin-bottom: 3px;
+    }
+    .showcase-variedad-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* Selector de Presentación en la Columna Izquierda */
+    .presentation-selector-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .pres-header {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #64748B;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pres-chips-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pres-chip-btn {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      background: white;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.15s;
+    }
+    .pres-chip-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(16,163,82,0.2);
+    }
+    .pres-chip-btn .pres-sub { font-size: 11px; opacity: 0.9; font-weight: 600; }
+
+    /* Impacto en la Red */
+    .impact-badge-box {
+      background: rgba(16, 163, 82, 0.06);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      border: 1px solid rgba(16, 163, 82, 0.15);
+    }
+    .impact-badge-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .impact-badge-desc { font-size: 10.5px; color: #475569; line-height: 1.3; }
+
+    /* Columna Central: Foto y Título */
+    .showcase-center {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .prod-main-img {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 5px solid white;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .prod-main-img:hover { transform: scale(1.03); }
+    .prod-badge-unit {
+      display: inline-block;
+      background: #F1F5F9;
+      color: #475569;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .prod-title { font-size: 21px; font-weight: 800; color: #0F172A; margin: 0 0 4px; line-height: 1.2; }
+    .prod-subtitle { font-size: 12px; color: #64748B; margin: 0; }
+
+    .btn-show-story-flip {
+      margin-top: 10px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-show-story-flip:hover { background: var(--primary); color: white; }
+
+    /* Columna Derecha: Escalas por Volumen & Cantidades */
+    .showcase-right {
+      justify-content: space-between;
+    }
+    .scale-tier-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      background: #F8FAFC;
+      border-radius: var(--radius-md);
+      border: 2px solid transparent;
+      margin-bottom: 7px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .scale-tier-card:hover { border-color: #CBD5E1; }
+    .scale-tier-card.active {
+      background: rgba(16, 163, 82, 0.08);
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(16, 163, 82, 0.1);
+    }
+    .scale-tier-info .st-title { font-size: 14.5px; font-weight: 700; color: #0F172A; }
+    .scale-tier-info .st-sub { font-size: 10.5px; color: #64748B; }
+    .scale-tier-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .scale-tier-card.active .scale-tier-price {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .qty-control-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F1F5F9;
+      border-radius: 40px;
+      padding: 4px;
+      margin-top: 8px;
+    }
+    .qty-btn-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease;
+    }
+    .qty-btn-circle:active { transform: scale(0.9); }
+    .qty-input-text {
+      width: 60px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #0F172A;
+    }
+
+    /* Modal Ficha Productor y Mapa */
+    .story-modal-body {
+      padding: 14px 0;
+    }
+    .story-impact-box {
+      background: rgba(16,163,82,0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      margin: 12px 0;
+      border: 1px solid rgba(16,163,82,0.2);
+    }
+    .story-map-box {
+      width: 100%;
+      height: 120px;
+      background: #1E293B;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      position: relative;
+    }
+
+    /* =========================================================
+       MODO SWIPE (TINDER)
+       ========================================================= */
+    #swipe-view-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-width: 380px;
+      margin: 0 auto 30px;
+      padding: 0 12px;
+    }
+    .swipe-actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .btn-act-circle {
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease;
+    }
+    .btn-act-circle:active { transform: scale(0.9); }
+    .btn-act-pass { width: 48px; height: 48px; background: white; color: #EF4444; border: 2px solid #FEE2E2; font-size: 18px; }
+    .btn-act-info { width: 40px; height: 40px; background: white; color: #6366F1; border: 2px solid #E0E7FF; font-size: 14px; }
+    .btn-act-like { width: 56px; height: 56px; background: var(--primary); color: white; font-size: 22px; box-shadow: 0 6px 18px rgba(16,163,82,0.35); }
+  </style>
+</head>
+<body>
+
+  <!-- Header del Nodo Activo -->
+  <header class="shop-header">
+    <div class="shop-header-left">
+      <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" title="Volver a la página anterior">
+        <i class="fas fa-arrow-left"></i>
+        <span class="btn-back-text">Volver</span>
+      </button>
+      <div class="shop-brand" onclick="openNodeProfile()" title="Toca para ver info completa del nodo">
+        <div class="shop-brand-logo" id="shop-logo">🌱</div>
+        <div class="shop-brand-text">
+          <h2 class="shop-brand-name" id="shop-name">Nodo Escobar</h2>
+          <div class="shop-brand-sub" id="shop-subheading">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary); font-size: 10px;"></i>
+            <span>Ver dirección y entrega &rarr;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-header-info" onclick="openNodeProfile()" title="Ver datos del nodo">
+      <i class="fas fa-info-circle"></i>
+      <span class="btn-info-text">Info del Nodo</span>
+    </button>
+  </header>
+
+  <!-- Banner de Estado Lunar & Metas Colectivas -->
+  <div style="padding: 0 16px;">
+    <div class="lunar-banner-card">
+      <div class="lunar-top-row">
+        <div>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 2px;">Ciclo Astronómico de Compra</div>
+          <h2 style="font-size: 22px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
+          <p style="font-size: 13px; color: #CBD5E1; margin-top: 2px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días (28 de Agosto)</p>
+        </div>
+        <div style="text-align: right;">
+          <div class="lunar-phase-badge">
+            <span style="font-size: 14px;">🌕</span> Compra Abierta
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-grid">
+        <!-- Meta del Nodo -->
+        <div class="progress-box">
+          <div class="progress-info">
+            <span class="label">Meta del <span id="shop-nodo-label">Nodo Escobar</span>:</span>
+            <span class="val" id="shop-nodo-prog-text">48 / 120 unidades</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="shop-nodo-prog-bar" style="width: 40%; background: #D4F1A0;"></div>
+          </div>
+        </div>
+
+        <!-- Meta Global de la Red -->
+        <div class="progress-box">
+          <div class="progress-info">
+            <span class="label">Meta Colectiva de la Red:</span>
+            <span class="val" id="shop-global-prog-text">385 / 500 unidades</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="shop-global-prog-bar" style="width: 77%; background: #10A352;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Switch de Modos de Vista: Showcase vs Swipe -->
+  <div class="view-mode-bar-container">
+    <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')">
+      <i class="fas fa-th-large"></i> Formato Catálogo
+    </button>
+    <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')">
+      <i class="fas fa-layer-group"></i> Modo Swipe (Tinder 🎴)
+    </button>
+  </div>
+
+  <!-- Bloques de Categorías Spotify (4x2 en Desktop) -->
+  <div class="spotify-categories-wrapper">
+    <div class="spotify-categories-grid">
+      <div class="spotify-cat-card scat-all active" onclick="filterByStoreCategory('TODOS', this)">
+        <div class="cat-name">Ver Todo</div>
+        <div class="cat-icon">🌱</div>
+      </div>
+      <div class="spotify-cat-card scat-granos" onclick="filterByStoreCategory('granos', this)">
+        <div class="cat-name">Granos & Legumbres</div>
+        <div class="cat-icon">🌾</div>
+      </div>
+      <div class="spotify-cat-card scat-cacao" onclick="filterByStoreCategory('cacao', this)">
+        <div class="cat-name">Cacao Silvestre</div>
+        <div class="cat-icon">🍫</div>
+      </div>
+      <div class="spotify-cat-card scat-yerba" onclick="filterByStoreCategory('yerba', this)">
+        <div class="cat-name">Yerba Mate</div>
+        <div class="cat-icon">🌿</div>
+      </div>
+      <div class="spotify-cat-card scat-aceite" onclick="filterByStoreCategory('aceite', this)">
+        <div class="cat-name">Aceite Oliva</div>
+        <div class="cat-icon">🫒</div>
+      </div>
+      <div class="spotify-cat-card scat-hongos" onclick="filterByStoreCategory('hongos', this)">
+        <div class="cat-name">Hongos del Delta</div>
+        <div class="cat-icon">🍄</div>
+      </div>
+      <div class="spotify-cat-card scat-huerta" onclick="filterByStoreCategory('huerta', this)">
+        <div class="cat-name">Huerta & Frescos</div>
+        <div class="cat-icon">🥬</div>
+      </div>
+      <div class="spotify-cat-card scat-granja" onclick="filterByStoreCategory('granja', this)">
+        <div class="cat-name">Granja & Mieles</div>
+        <div class="cat-icon">🥚</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pestañas de Variedades de Producto con Flechas de Desplazamiento -->
+  <div class="product-tabs-wrapper">
+    <div class="product-tabs-outer">
+      <button class="tab-nav-arrow" onclick="scrollTabs(-200)" title="Anterior"><i class="fas fa-chevron-left"></i></button>
+      <div class="product-tabs" id="shop-product-tabs">
+        <!-- Inyectado por JS -->
+      </div>
+      <button class="tab-nav-arrow" onclick="scrollTabs(200)" title="Siguiente"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+
+  <!-- =========================================
+       1. ESCAPARATE PRINCIPAL (3 COLUMNAS)
+       ========================================= -->
+  <main class="product-showcase" id="showcase-container">
+    <!-- Inyectado dinámicamente -->
+  </main>
+
+  <!-- =========================================
+       2. MODO SWIPE (TINDER)
+       ========================================= -->
+  <div id="swipe-view-container">
+    <div class="showcase-card" style="max-width: 380px; width: 100%; padding: 16px;">
+      <div style="position: relative; text-align: center;">
+        <img id="sw-img" src="" alt="Producto" style="width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+        <div class="prod-badge-unit" id="sw-badge" style="display: block; width: fit-content; margin: 8px auto 4px;">Formato</div>
+        <h3 class="prod-title" id="sw-title" style="font-size: 19px;">Producto</h3>
+        <p class="prod-subtitle" id="sw-desc" style="font-size: 12px; margin-bottom: 12px;">Descripción</p>
+      </div>
+
+      <!-- Presentación en Swipe -->
+      <div class="presentation-selector-box" style="margin-bottom: 10px;">
+        <div class="pres-header">
+          <span>Presentación / Peso:</span>
+        </div>
+        <div class="pres-chips-grid" id="sw-chips-grid"></div>
+      </div>
+
+      <!-- Cantidad y Precio en Swipe -->
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 10px; padding: 6px 12px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 11px; font-weight: 700;">Cant:</span>
+          <div class="qty-control-box" style="margin-top: 0; padding: 2px;">
+            <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(-1)">-</button>
+            <span id="sw-qty-val" style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">1</span>
+            <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(1)">+</button>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <div class="scale-tier-price" id="sw-total-val" style="color: var(--primary); font-size: 18px;">$0</div>
+          <div style="font-size: 9.5px; color: var(--text-muted);" id="sw-unit-val"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Acción Swipe -->
+    <div class="swipe-actions-bar">
+      <button class="btn-act-circle btn-act-pass" onclick="triggerSwipeAction('left')" title="Pasar al siguiente">
+        <i class="fas fa-times"></i>
+      </button>
+      <button class="btn-act-circle btn-act-info" onclick="openProductStoryModal(ACTIVE_PRODUCT_INDEX)" title="Ver historia y mapa">
+        <i class="fas fa-info"></i>
+      </button>
+      <button class="btn-act-circle btn-act-like" onclick="triggerSwipeAction('right')" title="¡Sumar al pedido!">
+        <i class="fas fa-heart"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Espacio de seguridad inferior para la barra flotante -->
+  <div style="height: 60px; width: 100%; pointer-events: none;"></div>
+
+  <!-- Barra Flotante de Carrito -->
+  <div class="floating-cart-bar" id="floating-cart">
+    <div>
+      <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Total de tu pedido</div>
+      <div class="cart-summary-total" id="cart-total-text">$0</div>
+    </div>
+    <button class="btn-checkout-cta" id="btn-checkout" onclick="openCheckoutModal()">
+      FINALIZAR PEDIDO <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+    </button>
+  </div>
+
+  <!-- =========================================
+       MODALES
+       ========================================= -->
+
+  <!-- Modal Ficha de Historia y Mapa del Productor -->
+  <div class="modal-overlay" id="modal-story">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="st-modal-title">Origen y Trazabilidad</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-story')">&times;</span>
+      </div>
+      <div class="story-modal-body">
+        <h4 style="font-size: 17px; color: var(--primary); margin: 0 0 6px;" id="st-producer-name">Productor</h4>
+        <p style="font-size: 13.5px; color: #334155; line-height: 1.45; margin: 0 0 10px;" id="st-producer-desc"></p>
+        
+        <div class="story-impact-box">
+          <strong style="color: var(--primary);"><i class="fas fa-seedling"></i> Impacto Agroecológico:</strong>
+          <div style="margin-top: 4px; color: #1E293B;" id="st-producer-impact"></div>
+        </div>
+
+        <div class="story-map-box">
+          <i class="fas fa-map-marker-alt" style="font-size: 24px; color: var(--accent); animation: bounce 1.5s infinite;"></i>
+          <span style="position: absolute; bottom: 8px; font-size: 11px; background: rgba(0,0,0,0.7); padding: 3px 10px; border-radius: 4px;" id="st-producer-loc">📍 Ubicación</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Checkout -->
+  <div class="modal-overlay" id="modal-checkout">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <h3 style="font-size: 20px; color: #0F172A; margin: 0;">Finalizar Pedido Comunitario</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-checkout')">&times;</span>
+      </div>
+
+      <!-- Resumen del Carrito -->
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 12px;">Tu Selección Agroecológica</div>
+        <div id="checkout-items"></div>
+
+        <!-- Donación Solidaria 3% -->
+        <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; font-weight: 700; color: #0F172A;">Aporte a la red (Sostén cooperativo)</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Contribución voluntaria para la logística y mantenimiento del sistema.</p>
+          <div class="don-btn-group">
+            <button class="don-btn-opt active" id="don-3" onclick="setDonation('3')">3% Sugerido</button>
+            <button class="don-btn-opt" id="don-custom" onclick="setDonation('custom')">Otro monto</button>
+            <button class="don-btn-opt" id="don-0" onclick="setDonation('0')">Sin aporte</button>
+          </div>
+          <div id="custom-donation-div" class="hidden" style="margin-top: 10px;">
+            <input type="number" id="custom-don-val" class="input-field" placeholder="$ Monto voluntario" oninput="updateTotalFinal()">
+          </div>
+        </div>
+
+        <div class="total-row" style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #CBD5E1;">
+          <span style="font-size: 16px; font-weight: 700; color: #0F172A;">Total a Transferir:</span>
+          <span style="font-size: 22px; font-weight: 800; color: var(--primary);" id="checkout-total-final">$0</span>
+        </div>
+      </div>
+
+      <!-- Formulario de Pedido -->
+      <form onsubmit="event.preventDefault(); submitOrder();">
+        
+        <!-- Asignación de Vrdedor/a -->
+        <div class="form-group" id="vrdedor-selector-group">
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>🤝 ¿Quién te invitó o acompaña tu compra?</span>
+            <span style="font-weight: 400; color: var(--text-muted); font-size: 11px;">(Vrdedores Locales)</span>
+          </label>
+          <select id="chk-vrdedor-select" class="input-field" style="background: #F8FAFC; font-weight: 600;">
+            <!-- Inyectado por JS -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nombre y Apellido *</label>
+          <input type="text" id="chk-nombre" class="input-field" placeholder="Tu nombre completo" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teléfono / WhatsApp *</label>
+          <input type="tel" id="chk-tel" class="input-field" placeholder="Ej: 1123456789 (Sin 0 ni 15)" required>
+        </div>
+
+        <!-- Opciones de Entrega -->
+        <div class="form-group">
+          <label class="form-label">Forma de Entrega *</label>
+          <div class="delivery-options-grid">
+            <button type="button" class="delivery-card active" id="btn-entrega-retiro" onclick="setDeliveryType('Retiro en Nodo')">
+              <i class="fas fa-store"></i>
+              <div class="title">Retiro en Nodo</div>
+              <div class="sub">Sin costo adicional</div>
+            </button>
+            <button type="button" class="delivery-card" id="btn-entrega-delivery" onclick="setDeliveryType('Delivery')">
+              <i class="fas fa-motorcycle"></i>
+              <div class="title">Envío a Domicilio</div>
+              <div class="sub">Coordinar con el nodo</div>
+            </button>
+          </div>
+        </div>
+
+        <div id="info-entrega-retiro" class="delivery-info-box">
+          <i class="fas fa-map-pin" style="color: var(--primary); margin-right: 6px;"></i>
+          <span>Retiras tu pedido el día asignado en la sede del nodo.</span>
+        </div>
+
+        <div id="form-entrega-delivery" class="hidden" style="margin-bottom: 16px;">
+          <div class="form-group">
+            <label class="form-label">Dirección de Entrega</label>
+            <input type="text" id="chk-direccion-delivery" class="input-field" placeholder="Calle, número, piso/depto">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Localidad / Barrio</label>
+            <input type="text" id="chk-localidad-delivery" class="input-field" placeholder="Ej: Maschwitz, Loma Verde, etc.">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notas o aclaraciones (opcional)</label>
+          <textarea id="chk-msg" class="input-field" rows="2" placeholder="Indicaciones para la entrega o retiro..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 15px; margin-top: 10px;">
+          CONFIRMAR Y ENVIAR PEDIDO
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Éxito -->
+  <div class="modal-overlay" id="modal-success">
+    <div class="modal-card" style="text-align: center;">
+      <div style="font-size: 54px; color: var(--primary); margin-bottom: 10px;">🎉</div>
+      <h3 style="font-size: 22px; color: #0F172A; margin: 0 0 8px;">¡Pedido Registrado con Éxito!</h3>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+        Tu pedido comunitario <strong id="succ-id">#G-000000</strong> ha sido guardado en la red.
+      </p>
+
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 24px; text-align: left;">
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 6px;">Datos para Transferir</div>
+        <div style="font-size: 13px; color: #0F172A; margin-bottom: 4px;">Alias / CBU: <strong id="succ-alias" style="color: var(--primary);">escobar.vrde.mp</strong></div>
+        <div style="font-size: 13px; color: #0F172A;">Total a Transferir: <strong id="succ-total" style="font-size: 16px; color: #0F172A;">$0</strong></div>
+      </div>
+
+      <button class="btn-checkout-cta" onclick="sendWsp()" style="width: 100%; background: #25D366; border-radius: var(--radius-md); padding: 14px; font-size: 15px;">
+        <i class="fab fa-whatsapp" style="font-size: 18px; margin-right: 8px;"></i> ENVIAR COMPROBANTE AL NODO
+      </button>
+
+      <button onclick="closeModal('modal-success')" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 16px;">
+        Cerrar ventana
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Perfil del Nodo -->
+  <div class="modal-overlay" id="modal-node">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 32px;" id="prof-logo">🌱</div>
+          <div>
+            <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="prof-name">Nodo Escobar</h3>
+            <span style="font-size: 12px; color: var(--primary); font-weight: 600;">Punto Oficial de Acopio y Entrega</span>
+          </div>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('modal-node')">&times;</span>
+      </div>
+
+      <div style="padding: 10px 0;">
+        <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-bottom: 16px;" id="prof-desc"></p>
+
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary); width: 20px;"></i>
+            <strong id="prof-dir">Dirección</strong>
+          </div>
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-user-check" style="color: var(--primary); width: 20px;"></i>
+            <span id="prof-contacto">Responsable</span>
+          </div>
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-calendar-alt" style="color: var(--primary); width: 20px;"></i>
+            <span id="prof-entrega">Horario de entrega</span>
+          </div>
+          <div style="font-size: 13px; color: #334155;">
+            <i class="fas fa-university" style="color: var(--primary); width: 20px;"></i>
+            <span>Alias / CBU: <strong id="prof-cbu" style="color: var(--primary);">alias</strong></span>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 8px;">Redes y Difusión del Nodo:</div>
+          <div id="prof-social-badges" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+        </div>
+
+        <!-- Botón de Acceso a Gestión de Nodo (PIN) -->
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <a id="prof-admin-link" href="admin.html" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 700; background: #F8FAFC;">
+            <i class="fas fa-lock" style="color: var(--primary);"></i> Panel Gestor (PIN)
+          </a>
+          <button class="btn-checkout-cta" style="flex: 1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts del Sistema Lunar -->
+  <script src="lunar-engine.js"></script>
+
+  <script>
+    let CURRENT_REF = 'escobar';
+    let CICLO_LUNAR = null;
+    let DONATION_TYPE = '3';
+    let ORDER_SUCCESS_DATA = null;
+
+    // Estado del Catálogo y Selección
+    let CURRENT_CATEGORY = 'TODOS';
+    let DISPLAY_PRODUCTS = [];
+    let ACTIVE_PRODUCT_INDEX = 0;
+    let SELECTED_VARIANT_INDEX = {}; // { prodId: variantIndex }
+    let CART_ITEMS = {}; // { "prodId_variantId": { prod, variant, qty } }
+    let STORE_VIEW_MODE = 'showcase'; // 'showcase' o 'swipe'
+
+    function initStore() {
+      const urlParams = new URLSearchParams(window.location.search);
+      CURRENT_REF = urlParams.get('ref') || 'escobar';
+      CICLO_LUNAR = LunarEngine.obtenerCicloVigente();
+
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+
+      // Cargar Header del Nodo
+      document.getElementById('shop-name').innerText = nodoData.nombre;
+      document.getElementById('shop-logo').innerText = nodoData.logo || '🌱';
+      document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
+      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
+
+      // Cargar Banner Lunar
+      document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
+      document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+
+      // Inicializar selección de variantes por defecto (índice 0)
+      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      if (!allProds || allProds.length === 0) {
+        allProds = LUNAR_CONFIG.productos;
+      }
+      allProds.forEach(p => {
+        SELECTED_VARIANT_INDEX[p.id] = 0;
+      });
+
+      updateProgressBars();
+      filterCategoryAndRender('TODOS');
+      initTabsScrollBehavior();
+    }
+
+    function updateProgressBars() {
+      const orders = LunarEngine.obtenerPedidos(CURRENT_REF);
+      let nodoUnits = 0;
+      orders.forEach(o => {
+        if (o.items) o.items.forEach(i => nodoUnits += (Number(i.cant) || 0));
+        else if (o.unidades) nodoUnits += Number(o.unidades);
+      });
+
+      const allOrders = LunarEngine.obtenerPedidos(null);
+      let globalUnits = 0;
+      allOrders.forEach(o => {
+        if (o.items) o.items.forEach(i => globalUnits += (Number(i.cant) || 0));
+        else if (o.unidades) globalUnits += Number(o.unidades);
+      });
+
+      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || {};
+      const nodoMeta = nodoData.metaPropia || 120;
+      const globalMeta = 500;
+
+      document.getElementById('shop-nodo-prog-text').innerText = `${nodoUnits} / ${nodoMeta} unidades`;
+      document.getElementById('shop-nodo-prog-bar').style.width = `${Math.min(100, Math.round((nodoUnits / nodoMeta) * 100))}%`;
+
+      document.getElementById('shop-global-prog-text').innerText = `${globalUnits} / ${globalMeta} unidades`;
+      document.getElementById('shop-global-prog-bar').style.width = `${Math.min(100, Math.round((globalUnits / globalMeta) * 100))}%`;
+    }
+
+    // ==========================================
+    // FILTRADO POR CATEGORÍAS SPOTIFY
+    // ==========================================
+    function filterByStoreCategory(cat, el) {
+      document.querySelectorAll('.spotify-cat-card').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      filterCategoryAndRender(cat);
+    }
+
+    function filterCategoryAndRender(cat) {
+      CURRENT_CATEGORY = cat;
+      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      if (!allProds || allProds.length === 0) {
+        allProds = LunarEngine.obtenerProductos(null, false);
+      }
+      if (!allProds || allProds.length === 0) {
+        allProds = LUNAR_CONFIG.productos;
+      }
+
+      if (cat === 'TODOS') {
+        DISPLAY_PRODUCTS = allProds;
+      } else {
+        const filtered = allProds.filter(p => p.categoria === cat);
+        DISPLAY_PRODUCTS = (filtered && filtered.length > 0) ? filtered : allProds;
+      }
+
+      ACTIVE_PRODUCT_INDEX = 0;
+      renderProductTabs();
+      loadActiveProductView();
+    }
+
+    function renderProductTabs() {
+      const tabsContainer = document.getElementById('shop-product-tabs');
+      let html = '';
+
+      DISPLAY_PRODUCTS.forEach((p, idx) => {
+        const activeClass = (idx === ACTIVE_PRODUCT_INDEX) ? 'active' : '';
+        html += `
+          <button class="tab-item ${activeClass}" onclick="selectProductTab(${idx})">
+            ${p.nombre}
+          </button>
+        `;
+      });
+
+      tabsContainer.innerHTML = html;
+    }
+
+    function selectProductTab(idx) {
+      ACTIVE_PRODUCT_INDEX = idx;
+      renderProductTabs();
+      loadActiveProductView();
+    }
+
+    function scrollTabs(delta) {
+      const el = document.getElementById('shop-product-tabs');
+      if (el) el.scrollBy({ left: delta, behavior: 'smooth' });
+    }
+
+    function initTabsScrollBehavior() {
+      const slider = document.getElementById('shop-product-tabs');
+      if (!slider) return;
+
+      slider.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          slider.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+      slider.addEventListener('mouseleave', () => { isDown = false; });
+      slider.addEventListener('mouseup', () => { isDown = false; });
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    }
+
+    // ==========================================
+    // RENDERIZADO DEL SHOWCASE (3 COLUMNAS)
+    // ==========================================
+    function loadActiveProductView() {
+      if (STORE_VIEW_MODE === 'swipe') {
+        renderSwipeStore();
+        return;
+      }
+
+      if (!DISPLAY_PRODUCTS || DISPLAY_PRODUCTS.length === 0) {
+        DISPLAY_PRODUCTS = LUNAR_CONFIG.productos;
+      }
+
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX] || DISPLAY_PRODUCTS[0];
+      if (!p) return;
+
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [
+        { id: 'v1', label: p.unidad || 'Unidad', unidad: p.unidad, costo: p.costo, p1: p.p1, p2: p.p2, p3: p.p3, m1: 1, m2: p.m2 || 20, m3: p.m3 || 50 }
+      ];
+
+      const currentVIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const currentV = variants[currentVIdx] || variants[0];
+      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía alimentaria real.', loc: p.origen };
+
+      const cartKey = `${p.id}_${currentV.id || currentV.label}`;
+      const currentQty = CART_ITEMS[cartKey]?.qty || 0;
+
+      // Calcular escalas activas para la variante seleccionada
+      const m1 = currentV.m1 || 1;
+      const m2 = currentV.m2 || 20;
+      const m3 = currentV.m3 || 50;
+      const p1 = currentV.p1;
+      const p2 = currentV.p2 || p1;
+      const p3 = currentV.p3 || p2;
+
+      const isTier1 = currentQty >= m1 && currentQty < m2;
+      const isTier2 = currentQty >= m2 && currentQty < m3;
+      const isTier3 = currentQty >= m3;
+
+      // Generar Botones de Presentación para Columna Izquierda
+      let presChipsHtml = '';
+      variants.forEach((v, vIdx) => {
+        const isAct = vIdx === currentVIdx ? 'active' : '';
+        presChipsHtml += `
+          <button class="pres-chip-btn ${isAct}" onclick="selectProductVariant('${p.id}', ${vIdx})">
+            <span>${v.label}</span>
+            <span class="pres-sub">$${v.p1.toLocaleString('es-AR')}</span>
+          </button>
+        `;
+      });
+
+      // Calcular unidades pedidas en la red para el badge de impacto
+      let totalRealUnits = 0;
+      LunarEngine.obtenerPedidos(null).forEach(o => {
+        if (o.items) {
+          o.items.forEach(it => {
+            if (it.prodId === p.id) totalRealUnits += (Number(it.cant) || 0);
+          });
+        }
+      });
+
+      const showcaseContainer = document.getElementById('showcase-container');
+      showcaseContainer.innerHTML = `
+        <!-- COLUMNA IZQUIERDA: ORIGEN, PRESENTACIÓN E IMPACTO -->
+        <div class="showcase-card showcase-left">
+          <div>
+            <div class="card-section-title">ORIGEN Y PRODUCCIÓN</div>
+            <div class="showcase-producer-name">${info.productor || p.origen}</div>
+            <div class="showcase-variedad-badge">
+              <i class="fas fa-check-circle"></i>
+              <span>${p.variedad}</span>
+            </div>
+
+            <!-- SECTOR PRESENTACIÓN DEL PRODUCTO -->
+            <div class="presentation-selector-box">
+              <div class="pres-header">
+                <span>PRESENTACIÓN / FORMATO:</span>
+                <span style="color: var(--primary);">${currentV.label}</span>
+              </div>
+              <div class="pres-chips-grid">
+                ${presChipsHtml}
+              </div>
+            </div>
+          </div>
+
+          <!-- IMPACTO EN LA RED LUNAR -->
+          <div class="impact-badge-box">
+            <div class="card-section-title" style="color: var(--primary); margin-bottom: 2px;">IMPACTO EN LA RED LUNAR</div>
+            <div class="impact-badge-num">${totalRealUnits}</div>
+            <div class="impact-badge-desc">unidades pedidas entre todos los nodos en este ciclo lunar.</div>
+            <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px; border-top: 1px dashed rgba(16,163,82,0.2); padding-top: 4px;">
+              Meta colectiva: ${p.meta || 100} ${currentV.unidad || p.unidad}
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA CENTRAL: FOTO PROTAGONISTA Y DETALLE -->
+        <div class="showcase-card showcase-center">
+          <div style="position: relative;">
+            <img src="${currentV.img || p.img}" alt="${p.nombre}" class="prod-main-img" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})">
+          </div>
+          <div>
+            <div class="prod-badge-unit">${currentV.unidad || p.unidad}</div>
+            <h2 class="prod-title">${p.nombre}</h2>
+            <p class="prod-subtitle">${p.subtitulo || p.titulo}</p>
+            <button class="btn-show-story-flip" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})">
+              <i class="fas fa-book-open"></i> Ver Historia y Mapa del Productor
+            </button>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: ESCALAS POR VOLUMEN Y CANTIDADES -->
+        <div class="showcase-card showcase-right">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="card-section-title" style="margin: 0;">ESCALAS POR VOLUMEN</span>
+              <span style="font-size: 11px; font-weight: 700; color: var(--primary);">CLIC PARA APLICAR</span>
+            </div>
+
+            <!-- Escala 1: Minorista -->
+            <div class="scale-tier-card ${isTier1 ? 'active' : ''}" onclick="applyTierDirectly(1)">
+              <div class="scale-tier-info">
+                <div class="st-title">Minorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(1 a ${m2 - 1} un.)</span></div>
+                <div class="st-sub">Precio Base</div>
+              </div>
+              <div class="scale-tier-price">$${p1.toLocaleString('es-AR')}</div>
+            </div>
+
+            <!-- Escala 2: Mayorista -->
+            <div class="scale-tier-card ${isTier2 ? 'active' : ''}" onclick="applyTierDirectly(2)">
+              <div class="scale-tier-info">
+                <div class="st-title">Mayorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(${m2} a ${m3 - 1} un.)</span></div>
+                <div class="st-sub">Descuento +${m2} un.</div>
+              </div>
+              <div class="scale-tier-price">$${p2.toLocaleString('es-AR')}</div>
+            </div>
+
+            <!-- Escala 3: Distribuidora / Gran Volumen -->
+            <div class="scale-tier-card ${isTier3 ? 'active' : ''}" onclick="applyTierDirectly(3)">
+              <div class="scale-tier-info">
+                <div class="st-title">Distribuidora <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(+${m3} un.)</span></div>
+                <div class="st-sub">Gran Volumen +${m3} un.</div>
+              </div>
+              <div class="scale-tier-price">$${p3.toLocaleString('es-AR')}</div>
+            </div>
+          </div>
+
+          <!-- Selector de Cantidad -->
+          <div>
+            <div class="qty-control-box">
+              <button class="qty-btn-circle" onclick="adjustProductQty(-1)">-</button>
+              <input type="text" class="qty-input-text" value="${currentQty}" readonly>
+              <button class="qty-btn-circle" onclick="adjustProductQty(1)">+</button>
+            </div>
+            <div style="font-size: 10.5px; text-align: center; color: var(--text-muted); margin-top: 5px;">
+              Ajusta cantidades o haz clic en las escalas arriba
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectProductVariant(prodId, vIdx) {
+      SELECTED_VARIANT_INDEX[prodId] = vIdx;
+      loadActiveProductView();
+    }
+
+    function applyTierDirectly(tierNum) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1, m1: 1, m2: 20, m3: 50 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      let targetQty = 1;
+      if (tierNum === 2) targetQty = v.m2 || 20;
+      else if (tierNum === 3) targetQty = v.m3 || 50;
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      CART_ITEMS[cartKey] = {
+        prod: p,
+        variant: v,
+        qty: targetQty
+      };
+
+      loadActiveProductView();
+      updateFloatingCart();
+    }
+
+    function adjustProductQty(delta) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const current = CART_ITEMS[cartKey]?.qty || 0;
+      const next = Math.max(0, current + delta);
+
+      if (next === 0) {
+        delete CART_ITEMS[cartKey];
+      } else {
+        CART_ITEMS[cartKey] = {
+          prod: p,
+          variant: v,
+          qty: next
+        };
+      }
+
+      loadActiveProductView();
+      updateFloatingCart();
+    }
+
+    function openProductStoryModal(prodIdx) {
+      const p = DISPLAY_PRODUCTS[prodIdx];
+      if (!p) return;
+      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía y precio justo.', loc: p.origen };
+
+      document.getElementById('st-modal-title').innerText = `Origen: ${p.nombre}`;
+      document.getElementById('st-producer-name').innerText = info.productor || p.origen;
+      document.getElementById('st-producer-desc').innerText = info.historia || p.tipsVrdedor;
+      document.getElementById('st-producer-impact').innerText = info.impacto || 'Comercio transparente y agroecología comunitaria.';
+      document.getElementById('st-producer-loc').innerText = info.loc || p.origen;
+
+      openModal('modal-story');
+    }
+
+    // ==========================================
+    // RENDERIZADO MODO SWIPE (TINDER)
+    // ==========================================
+    function renderSwipeStore() {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const inCartQty = CART_ITEMS[cartKey]?.qty || 0;
+      const displayQty = inCartQty > 0 ? inCartQty : 1;
+
+      document.getElementById('sw-img').src = v.img || p.img;
+      document.getElementById('sw-badge').innerText = v.unidad || p.unidad;
+      document.getElementById('sw-title').innerText = p.nombre;
+      document.getElementById('sw-desc').innerText = p.subtitulo || p.titulo;
+
+      let chipsHtml = '';
+      variants.forEach((vr, idx) => {
+        const isAct = idx === vIdx ? 'active' : '';
+        chipsHtml += `
+          <button class="pres-chip-btn ${isAct}" onclick="selectSwipeVariant('${p.id}', ${idx})">
+            <span>${vr.label}</span>
+            <span class="pres-sub">$${vr.p1.toLocaleString('es-AR')}</span>
+          </button>
+        `;
+      });
+      document.getElementById('sw-chips-grid').innerHTML = chipsHtml;
+      document.getElementById('sw-qty-val').innerText = displayQty;
+
+      const price = getProductPrice(v, displayQty);
+      document.getElementById('sw-total-val').innerText = `$${(price * displayQty).toLocaleString('es-AR')}`;
+      document.getElementById('sw-unit-val').innerText = inCartQty > 0 ? `(${inCartQty} en tu carrito)` : `($${price.toLocaleString('es-AR')} / u)`;
+    }
+
+    function selectSwipeVariant(prodId, vIdx) {
+      SELECTED_VARIANT_INDEX[prodId] = vIdx;
+      renderSwipeStore();
+    }
+
+    function adjustSwipeQty(delta) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const current = CART_ITEMS[cartKey]?.qty || 0;
+      const next = Math.max(0, (current > 0 ? current : 1) + delta);
+
+      if (next === 0) {
+        delete CART_ITEMS[cartKey];
+      } else {
+        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: next };
+      }
+
+      renderSwipeStore();
+      updateFloatingCart();
+    }
+
+    function triggerSwipeAction(dir) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (dir === 'right' && p) {
+        const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+        const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+        const v = variants[vIdx] || variants[0];
+        const cartKey = `${p.id}_${v.id || v.label}`;
+        const prev = CART_ITEMS[cartKey]?.qty || 0;
+        const addQty = prev > 0 ? 1 : 1;
+        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: prev + addQty };
+        updateFloatingCart();
+      }
+
+      ACTIVE_PRODUCT_INDEX = (ACTIVE_PRODUCT_INDEX + 1) % DISPLAY_PRODUCTS.length;
+      renderProductTabs();
+      renderSwipeStore();
+    }
+
+    // ==========================================
+    // CARRITO Y MODAL CHECKOUT
+    // ==========================================
+    function getProductPrice(variant, qty) {
+      if (qty >= (variant.m3 || 50)) return variant.p3 || variant.p1;
+      if (qty >= (variant.m2 || 20)) return variant.p2 || variant.p1;
+      return variant.p1;
+    }
+
+    function updateFloatingCart() {
+      let total = 0;
+      let totalUnits = 0;
+
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        total += item.qty * price;
+        totalUnits += item.qty;
+      });
+
+      document.getElementById('cart-total-text').innerText = `$${total.toLocaleString('es-AR')}`;
+      document.getElementById('floating-cart').classList.toggle('visible', totalUnits > 0);
+    }
+
+    function openCheckoutModal() {
+      let html = '';
+      let subtotal = 0;
+
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        const lineTotal = item.qty * price;
+        subtotal += lineTotal;
+
+        html += `
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; margin-bottom: 8px; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
+            <div>
+              <strong>${item.qty}x</strong> ${item.prod.nombre}
+              <div style="font-size: 11px; color: var(--text-muted);">${item.variant.label}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 700; color: var(--primary);">$${lineTotal.toLocaleString('es-AR')}</span>
+              <button onclick="removeCartItemByKey('${k}')" style="background: none; border: none; color: #EF4444; font-size: 12px; cursor: pointer;">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('checkout-items').innerHTML = html;
+      document.getElementById('checkout-items').setAttribute('data-subtotal', subtotal);
+
+      // Cargar opciones de Vrdedores del nodo actual
+      const vrdedoresData = LunarEngine.obtenerVrdedoresNodo(CURRENT_REF);
+      let vHtml = '<option value="Coordinación General del Nodo">🌱 Coordinación General del Nodo</option>';
+      if (vrdedoresData.lista && vrdedoresData.lista.length > 0) {
+        vrdedoresData.lista.forEach(v => {
+          vHtml += `<option value="${v.nombre}">${v.avatar || '👤'} ${v.nombre} (${v.rol || 'Vrdedor'})</option>`;
+        });
+      }
+      vHtml += '<option value="Directo por la Web">🌐 Directo por la Web / Sin Vrdedor previo</option>';
+      document.getElementById('chk-vrdedor-select').innerHTML = vHtml;
+
+      setDonation('3');
+      openModal('modal-checkout');
+    }
+
+    function removeCartItemByKey(k) {
+      delete CART_ITEMS[k];
+      updateFloatingCart();
+      loadActiveProductView();
+      if (Object.keys(CART_ITEMS).length === 0) {
+        closeModal('modal-checkout');
+      } else {
+        openCheckoutModal();
+      }
+    }
+
+    let DELIVERY_TYPE = 'Retiro en Nodo';
+
+    function setDeliveryType(type) {
+      DELIVERY_TYPE = type;
+      document.getElementById('btn-entrega-retiro').classList.toggle('active', type === 'Retiro en Nodo');
+      document.getElementById('btn-entrega-delivery').classList.toggle('active', type === 'Delivery');
+
+      document.getElementById('info-entrega-retiro').classList.toggle('hidden', type !== 'Retiro en Nodo');
+      document.getElementById('form-entrega-delivery').classList.toggle('hidden', type !== 'Delivery');
+    }
+
+    function setDonation(type) {
+      DONATION_TYPE = type;
+      document.getElementById('don-3').classList.toggle('active', type === '3');
+      document.getElementById('don-custom').classList.toggle('active', type === 'custom');
+      document.getElementById('don-0').classList.toggle('active', type === '0');
+
+      document.getElementById('custom-donation-div').classList.toggle('hidden', type !== 'custom');
+      updateTotalFinal();
+    }
+
+    function updateTotalFinal() {
+      const sub = parseFloat(document.getElementById('checkout-items').getAttribute('data-subtotal')) || 0;
+      let don = 0;
+      if (DONATION_TYPE === '3') don = Math.round(sub * 0.03);
+      else if (DONATION_TYPE === 'custom') don = parseFloat(document.getElementById('custom-don-val').value) || 0;
+
+      const total = Math.round(sub + don);
+      document.getElementById('checkout-total-final').innerText = `$${total.toLocaleString('es-AR')}`;
+      return { sub, don, total };
+    }
+
+    function submitOrder() {
+      const nombre = document.getElementById('chk-nombre').value.trim();
+      const tel = document.getElementById('chk-tel').value.trim();
+      const msg = document.getElementById('chk-msg').value.trim();
+      const vrdedorElegido = document.getElementById('chk-vrdedor-select').value;
+
+      if (!nombre || !tel) {
+        alert("Por favor completa tu nombre y número de teléfono/WhatsApp.");
+        return;
+      }
+
+      let direccionDelivery = '';
+      if (DELIVERY_TYPE === 'Delivery') {
+        const dir = document.getElementById('chk-direccion-delivery').value.trim();
+        const loc = document.getElementById('chk-localidad-delivery').value.trim();
+        if (!dir) {
+          alert("Por favor indica la dirección para el envío a domicilio.");
+          return;
+        }
+        direccionDelivery = `${dir}${loc ? ' (' + loc + ')' : ''}`;
+      }
+
+      const tData = updateTotalFinal();
+      const cartDetails = [];
+      const orderItems = [];
+
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        cartDetails.push(`${item.qty}x ${item.prod.nombre} (${item.variant.label})`);
+        orderItems.push({
+          prodId: item.prod.id,
+          nombre: item.prod.nombre,
+          variante: item.variant.label,
+          cant: item.qty,
+          unidad: item.variant.unidad || item.prod.unidad,
+          precio: price
+        });
+      });
+
+      const orderId = 'G-' + Math.floor(Math.random() * 900000 + 100000);
+      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LunarEngine.obtenerNodos()['escobar'];
+      const totalUnidadesPedido = orderItems.reduce((s, it) => s + (Number(it.cant) || 0), 0);
+
+      ORDER_SUCCESS_DATA = {
+        id: orderId,
+        fecha: new Date().toLocaleString('es-AR'),
+        cicloId: CICLO_LUNAR.id,
+        ciclo: CICLO_LUNAR.nombre,
+        nombre: nombre,
+        telefono: tel,
+        nodo: nodoData.nombre,
+        nodoId: CURRENT_REF,
+        vrdedor: vrdedorElegido,
+        tipoEntrega: DELIVERY_TYPE,
+        direccionEntrega: direccionDelivery,
+        detalle: cartDetails.join(', '),
+        items: orderItems,
+        unidades: totalUnidadesPedido,
+        total: tData.total,
+        donacion: tData.don,
+        mensaje: msg,
+        cbu: nodoData.cbu,
+        wsp: nodoData.wspPedidos,
+        estado: 'Pendiente'
+      };
+
+      // Guardar centralmente
+      LunarEngine.guardarNuevoPedido(ORDER_SUCCESS_DATA);
+      LunarEngine.enviarPedidoApi(ORDER_SUCCESS_DATA);
+      updateProgressBars();
+
+      closeModal('modal-checkout');
+      document.getElementById('succ-id').innerText = orderId;
+      document.getElementById('succ-alias').innerText = nodoData.cbu;
+      document.getElementById('succ-total').innerText = `$${tData.total.toLocaleString('es-AR')}`;
+
+      CART_ITEMS = {};
+      updateFloatingCart();
+      loadActiveProductView();
+      openModal('modal-success');
+    }
+
+    function sendWsp() {
+      if (!ORDER_SUCCESS_DATA) return;
+      const d = ORDER_SUCCESS_DATA;
+
+      let msg = `🌱 *Nuevo Pedido Vrde Club*\n`;
+      msg += `🔖 Pedido: #${d.id}\n`;
+      msg += `👤 Nombre: ${d.nombre}\n`;
+      msg += `📞 Teléfono: ${d.telefono}\n`;
+      if (d.vrdedor) msg += `🤝 Vrdedor/a: ${d.vrdedor}\n`;
+      msg += `📦 Detalle:\n${d.detalle}\n`;
+      msg += `💰 Total a transferir: $${d.total.toLocaleString('es-AR')}\n`;
+      
+      if (d.tipoEntrega === 'Delivery') {
+        msg += `🛵 *Entrega:* Envío a Domicilio: ${d.direccionEntrega}\n`;
+      } else {
+        msg += `📍 *Entrega:* Retiro en ${d.nodo}\n`;
+      }
+
+      msg += `🌑 Ciclo: ${d.ciclo}\n`;
+      if (d.mensaje) msg += `💬 Nota: ${d.mensaje}\n`;
+      msg += `\n_Adjunto el comprobante de transferencia._`;
+
+      const num = d.wsp.replace(/\D/g, '');
+      const url = `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    function openNodeProfile() {
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      document.getElementById('prof-logo').innerText = nodoData.logo || '🌱';
+      document.getElementById('prof-name').innerText = nodoData.nombre;
+      document.getElementById('prof-desc').innerText = nodoData.descripcion || '';
+      document.getElementById('prof-dir').innerText = nodoData.direccion;
+      document.getElementById('prof-contacto').innerText = nodoData.contacto;
+      document.getElementById('prof-entrega').innerText = nodoData.diaEntrega;
+      document.getElementById('prof-cbu').innerText = nodoData.cbu;
+      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
+
+      const redes = nodoData.redes || {};
+      let socialHtml = '';
+      if (redes.instagram && redes.instagram.trim() !== '') {
+        const ig = redes.instagram.trim().replace('@', '');
+        socialHtml += `<a href="https://instagram.com/${ig}" target="_blank" style="background: rgba(225,48,108,0.1); color: #E1306C; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-instagram"></i> @${ig}</a>`;
+      }
+      if (redes.wspComunidad && redes.wspComunidad.trim() !== '') {
+        const wsp = redes.wspComunidad.trim();
+        socialHtml += `<a href="${wsp}" target="_blank" style="background: rgba(37,211,102,0.1); color: #16A34A; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-whatsapp"></i> Comunidad WhatsApp</a>`;
+      }
+      if (redes.facebook && redes.facebook.trim() !== '') {
+        const fb = redes.facebook.trim();
+        const fbUrl = fb.startsWith('http') ? fb : `https://facebook.com/${fb.replace('@', '')}`;
+        socialHtml += `<a href="${fbUrl}" target="_blank" style="background: rgba(24,119,242,0.1); color: #1877F2; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><i class="fab fa-facebook"></i> ${fb}</a>`;
+      }
+      document.getElementById('prof-social-badges').innerHTML = socialHtml;
+
+      openModal('modal-node');
+    }
+
+    function switchStoreView(mode) {
+      STORE_VIEW_MODE = mode;
+      document.getElementById('btn-view-showcase').classList.toggle('active', mode === 'showcase');
+      document.getElementById('btn-view-swipe').classList.toggle('active', mode === 'swipe');
+
+      document.getElementById('showcase-container').style.display = (mode === 'showcase') ? 'grid' : 'none';
+      document.getElementById('swipe-view-container').style.display = (mode === 'swipe') ? 'flex' : 'none';
+
+      loadActiveProductView();
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', initStore);
+  </script>
+</body>
+</html>
