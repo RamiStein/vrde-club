@@ -76,7 +76,7 @@
       box-shadow: 0 4px 12px rgba(16,163,82,0.25);
     }
 
-    /* Bloques de Categorías Spotify: 2 FILAS DE 4 COLUMNAS PERFECTAS (8 EN TOTAL) */
+    /* Bloques de Categorías Spotify: 2 FILAS DE 4 COLUMNAS (8 EN TOTAL) */
     .spotify-categories-wrapper {
       max-width: 1100px;
       margin: 0 auto 10px;
@@ -96,9 +96,9 @@
 
     .spotify-cat-card {
       position: relative;
-      height: 56px;
+      height: 54px;
       border-radius: var(--spotify-radius);
-      padding: 8px 12px;
+      padding: 6px 10px;
       overflow: hidden;
       cursor: pointer;
       display: flex;
@@ -106,7 +106,7 @@
       justify-content: center;
       color: white;
       font-weight: 800;
-      font-size: 12.5px;
+      font-size: 12px;
       line-height: 1.15;
       transition: all 0.2s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
@@ -119,7 +119,7 @@
       position: absolute;
       right: 2px;
       bottom: -2px;
-      font-size: 26px;
+      font-size: 24px;
       opacity: 0.85;
       transform: rotate(15deg);
     }
@@ -180,10 +180,10 @@
       flex: 1;
       cursor: grab;
       user-select: none;
+      min-height: 42px;
     }
     .product-tabs:active { cursor: grabbing; }
     
-    /* Scrollbar moderna y sutil para las pestañas */
     .product-tabs::-webkit-scrollbar {
       height: 4px;
     }
@@ -917,6 +917,16 @@
           <div style="font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 8px;">Redes y Difusión del Nodo:</div>
           <div id="prof-social-badges" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
         </div>
+
+        <!-- Botón de Acceso a Gestión de Nodo (PIN) -->
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <a id="prof-admin-link" href="admin.html" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 700; background: #F8FAFC;">
+            <i class="fas fa-lock" style="color: var(--primary);"></i> Panel Gestor (PIN)
+          </a>
+          <button class="btn-checkout-cta" style="flex: 1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
+            Entendido
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -950,22 +960,24 @@
       document.getElementById('shop-name').innerText = nodoData.nombre;
       document.getElementById('shop-logo').innerText = nodoData.logo || '🌱';
       document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
+      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
       // Cargar Banner Lunar
       document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
       document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
 
       // Inicializar selección de variantes por defecto (índice 0)
-      const allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      if (!allProds || allProds.length === 0) {
+        allProds = LUNAR_CONFIG.productos;
+      }
       allProds.forEach(p => {
         SELECTED_VARIANT_INDEX[p.id] = 0;
       });
 
-      // Configurar Drag & Wheel para las pestañas de producto
-      initTabsScrollBehavior();
-
       updateProgressBars();
       filterCategoryAndRender('TODOS');
+      initTabsScrollBehavior();
     }
 
     function updateProgressBars() {
@@ -1005,12 +1017,19 @@
 
     function filterCategoryAndRender(cat) {
       CURRENT_CATEGORY = cat;
-      const allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      if (!allProds || allProds.length === 0) {
+        allProds = LunarEngine.obtenerProductos(null, false);
+      }
+      if (!allProds || allProds.length === 0) {
+        allProds = LUNAR_CONFIG.productos;
+      }
 
       if (cat === 'TODOS') {
         DISPLAY_PRODUCTS = allProds;
       } else {
-        DISPLAY_PRODUCTS = allProds.filter(p => p.categoria === cat);
+        const filtered = allProds.filter(p => p.categoria === cat);
+        DISPLAY_PRODUCTS = (filtered && filtered.length > 0) ? filtered : allProds;
       }
 
       ACTIVE_PRODUCT_INDEX = 0;
@@ -1049,7 +1068,6 @@
       const slider = document.getElementById('shop-product-tabs');
       if (!slider) return;
 
-      // Soporte para rueda del ratón horizontal
       slider.addEventListener('wheel', (e) => {
         if (e.deltaY !== 0) {
           e.preventDefault();
@@ -1057,7 +1075,6 @@
         }
       }, { passive: false });
 
-      // Soporte para arrastrar con el ratón (drag to scroll)
       let isDown = false;
       let startX;
       let scrollLeft;
@@ -1087,7 +1104,11 @@
         return;
       }
 
-      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!DISPLAY_PRODUCTS || DISPLAY_PRODUCTS.length === 0) {
+        DISPLAY_PRODUCTS = LUNAR_CONFIG.productos;
+      }
+
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX] || DISPLAY_PRODUCTS[0];
       if (!p) return;
 
       const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [
@@ -1615,6 +1636,7 @@
       document.getElementById('prof-contacto').innerText = nodoData.contacto;
       document.getElementById('prof-entrega').innerText = nodoData.diaEntrega;
       document.getElementById('prof-cbu').innerText = nodoData.cbu;
+      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
       const redes = nodoData.redes || {};
       let socialHtml = '';

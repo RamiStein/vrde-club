@@ -540,16 +540,22 @@ class LunarEngine {
     }
 
     if (soloActivos) {
-      prods = prods.filter(p => p.activo !== false);
+      const activos = prods.filter(p => p.activo !== false);
+      if (activos.length > 0) prods = activos;
     }
 
     if (nodoId) {
-      prods = prods.filter(p => {
-        if (!p.nodos || p.nodos.includes('TODOS') || p.nodos.includes(nodoId.toLowerCase())) {
+      const porNodo = prods.filter(p => {
+        if (!p.nodos || p.nodos.length === 0 || p.nodos.includes('TODOS') || p.nodos.includes(nodoId.toLowerCase())) {
           return true;
         }
         return false;
       });
+      if (porNodo.length > 0) prods = porNodo;
+    }
+
+    if (!prods || prods.length === 0) {
+      prods = LUNAR_CONFIG.productos;
     }
 
     return prods;

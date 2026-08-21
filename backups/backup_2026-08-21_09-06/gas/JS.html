@@ -1,0 +1,930 @@
+<script>
+  // =========================================
+  // TEMPLATE VARIABLES & GLOBALS
+  // =========================================
+  var CURRENT_REF = '';
+  var APP_URL = '';
+  var PANEL_MODE = 'false';
+
+  // Globals Shop
+  var SHOP_DATA = null;
+  var CARRITO = {}; // index -> qty
+  var ACTIVE_INDEX = 0;
+  var DONATION_TYPE = '3';
+  var ORDER_SUCCESS_DATA = null;
+
+  // Globals Admin
+  var ADMIN_PIN = '';
+  var ADMIN_DATA = null;
+  var CURRENT_CYCLE_NAME = '';
+  var CURRENT_ORDERS = [];
+
+  // =========================================
+  // INITIALIZATION & ROUTING
+  // =========================================
+  var loaderTimer = null;
+
+  function switchView(viewId) {
+    document.getElementById('landing-view').classList.add('hidden');
+    document.getElementById('shop-view').classList.add('hidden');
+    var adminLoginEl = document.getElementById('admin-login');
+    var adminDashEl = document.getElementById('admin-dashboard');
+    if (adminLoginEl) adminLoginEl.classList.add('hidden');
+    if (adminDashEl) adminDashEl.classList.add('hidden');
+    
+    var targetEl = document.getElementById(viewId);
+    if (targetEl) targetEl.classList.remove('hidden');
+  }
+
+  function initApp() {
+    if (PANEL_MODE === 'true' && CURRENT_REF && CURRENT_REF !== 'null') {
+      showAdminLogin();
+    } else if (!CURRENT_REF || CURRENT_REF === 'null' || CURRENT_REF === '') {
+      initLanding();
+    } else {
+      initShop();
+    }
+  }
+
+  // Polling robusto: Espera a que la API de Google Apps Script estÃ© inyectada y lista
+  var initLoops = 0;
+  function waitAndInit() {
+    initLoops++;
+    if (typeof google !== 'undefined' && google.script && google.script.run && google.script.url) {
+      // Fetch location parameters natively on client side
+      google.script.url.getLocation(function(location) {
+        CURRENT_REF = location.parameter.ref || '';
+        PANEL_MODE = location.parameter.panel ? 'true' : 'false';
+        // Also fetch the app URL from server asynchronously
+        google.script.run.withSuccessHandler(function(url) {
+          APP_URL = url;
+          initApp();
+        }).getAppUrl();
+      });
+    } else {
+      if (initLoops > 100) {
+        var loaderText = document.getElementById('loader-text');
+        if (loaderText) loaderText.innerText = "ERROR: google.script.run no cargÃ³.";
+        return;
+      }
+      setTimeout(waitAndInit, 50);
+    }
+  }
+  
+  // Iniciar verificaciÃ³n
+  try {
+    waitAndInit();
+  } catch(e) {
+    console.error("Crash en waitAndInit: " + e.message);
+  }
+
+  function showLoader(text) {
+    if (loaderTimer) clearTimeout(loaderTimer);
+    var loaderEl = document.getElementById('loader');
+    var loaderTextEl = document.getElementById('loader-text');
+    
+    if (loaderTextEl) loaderTextEl.innerHTML = text || 'Cargando...';
+    if (loaderEl) loaderEl.classList.remove('hidden');
+
+    // Timeout de seguridad: si pasan 10 segundos sin respuesta, ofrecer reintento
+    loaderTimer = setTimeout(function() {
+      if (loaderEl && !loaderEl.classList.contains('hidden')) {
+        loaderTextEl.innerHTML = '<div style="text-align:center; padding: 20px; max-width: 400px;">' +
+          '<p style="margin-bottom: 15px; font-size: 15px;">âš ï¸ La conexiÃ³n con Google Sheets tardÃ³ demasiado.</p>' +
+          '<p style="margin-bottom: 15px; font-size: 13px; opacity: 0.8;">Asegurate de haber creado una <strong>Nueva versiÃ³n</strong> al implementar en Apps Script.</p>' +
+          '<button onclick="location.reload()" style="background:#b6e936; color:#111; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; border:none;">ðŸ”„ Reintentar</button>' +
+          '</div>';
+      }
+    }, 10000);
+  }
+
+  function hideLoader() {
+    if (loaderTimer) clearTimeout(loaderTimer);
+    var loaderEl = document.getElementById('loader');
+    if (loaderEl) loaderEl.classList.add('hidden');
+  }
+
+  function handleError(err) {
+    console.error('Error GAS:', err);
+    hideLoader();
+    var errorMsg = (err && err.message) ? err.message : String(err);
+    alert("Error de conexiÃ³n: " + errorMsg);
+  }
+
+  // =========================================
+  // LANDING LOGIC
+  // =========================================
+  function initLanding() {
+    var loaderEl = document.getElementById('loader');
+    if (loaderEl) loaderEl.classList.add('dark');
+    showLoader('ðŸŒ‘ Sincronizando con la luna...');
+    switchView('landing-view');
+    
+    google.script.run
+      .withSuccessHandler(function(data) {
+        try {
+          renderLanding(data);
+        } catch(e) {
+          hideLoader();
+          console.error('Error renderLanding:', e);
+          alert('Error al renderizar: ' + e.message);
+        }
+      })
+      .withFailureHandler(handleError)
+      .obtenerLandingData();
+  }
+
+  function renderLanding(data) {
+    hideLoader();
+    
+    if (!data || !data.success) {
+      alert('Error al cargar datos: ' + (data ? data.error : 'Sin respuesta'));
+      return;
+    }
+    
+    // Lunar Info
+    var c = data.ciclo || {};
+    var emojiEl = document.getElementById('lan-lunar-emoji');
+    var titleEl = document.getElementById('lan-lunar-title');
+    var statusEl = document.getElementById('lan-lunar-status');
+    var progressEl = document.getElementById('lan-lunar-progress');
+    var progressTextEl = document.getElementById('lan-lunar-progress-text');
+    
+    if (emojiEl) emojiEl.innerText = c.signo ? c.signo : 'ðŸŒ‘';
+    if (titleEl) titleEl.innerText = c.nombre || 'Ciclo de Compra';
+    
+    var status = c.abierta 
+      ? "Cierra en " + c.diasRestantes + " dÃ­as"
+      : "Compra cerrada";
+    if (statusEl) statusEl.innerText = status;
+    
+    var p = 0;
+    if (data.metaGeneral > 0) {
+      p = Math.min(100, Math.round((data.totalGeneral / data.metaGeneral) * 100));
+    }
+    if (progressEl) progressEl.style.width = p + '%';
+    if (progressTextEl) progressTextEl.innerText = data.totalGeneral + ' / ' + data.metaGeneral + ' ðŸ“¦ unidades pedidas';
+
+    // Nodes Grid
+    var nodesHtml = '';
+    if (data.aliados && data.aliados.length > 0) {
+      data.aliados.forEach(function(n) {
+        var color = n.color || '#4e8d26';
+        var logoHtml = '';
+        if (isEmoji(n.logo)) {
+          logoHtml = n.logo;
+        } else if (n.logo) {
+          var src = n.logo;
+          if (src.includes('drive.google.com/file/d/')) {
+            var match = src.match(/file\/d\/([^\/]+)/);
+            if (match && match[1]) src = 'https://drive.google.com/uc?id=' + match[1];
+          }
+          logoHtml = '<img src="' + src + '" onerror="this.style.display=\'none\'; this.parentNode.innerText=this.parentNode.innerText || \'\';">';
+        } else {
+          logoHtml = n.nombre.charAt(0).toUpperCase();
+        }
+        
+        nodesHtml += '<div class="node-card dark-card" style="border-color: ' + color + '40;">' +
+          '<div class="node-logo" style="color: ' + color + ';">' + logoHtml + '</div>' +
+          '<div class="node-info">' +
+          '<div class="node-name" style="color: ' + color + ';">' + n.nombre + '</div>' +
+          '<div class="node-stats">' + (n.ventasCiclo || 0) + ' ðŸ“¦ unidades aportadas</div>' +
+          '<a href="javascript:void(0)" onclick="CURRENT_REF=\'' + n.id + '\'; initApp();" class="node-link" style="color: ' + color + ';">ðŸ›’ Entrar a la tienda &rarr;</a>' +
+          '</div></div>';
+      });
+    } else {
+      nodesHtml = '<p style="color: #aaa;">No hay nodos activos en este momento.</p>';
+    }
+    var nodesGridEl = document.getElementById('lan-nodes-grid');
+    if (nodesGridEl) nodesGridEl.innerHTML = nodesHtml;
+
+    // Testimonials
+    var testHtml = '';
+    if (data.comentarios && data.comentarios.length > 0) {
+      data.comentarios.forEach(function(t) {
+        var color = t.color || '#b6e936';
+        var nombre = t.nombre || t.name || '';
+        var texto = t.texto || t.text || '';
+        testHtml += '<div class="testimonial-card dark-card">' +
+          '<div class="test-header">' +
+          '<div class="test-avatar" style="background: ' + color + ';">' + nombre.charAt(0).toUpperCase() + '</div>' +
+          '<div class="test-name">' + nombre + '</div>' +
+          '</div>' +
+          '<div class="test-text">"' + texto + '"</div>' +
+          '</div>';
+      });
+    } else {
+      var testEl = document.getElementById('lan-testimonials');
+      if (testEl && testEl.previousElementSibling) testEl.previousElementSibling.style.display = 'none';
+    }
+    var testimonialsEl = document.getElementById('lan-testimonials');
+    if (testimonialsEl) testimonialsEl.innerHTML = testHtml;
+  }
+
+  function isEmoji(str) {
+    if(!str) return false;
+    var regex = new RegExp("(?:[\\u2700-\\u27bf]|(?:\\ud83c[\\udde6-\\uddff]){2}|[\\ud800-\\udbff][\\udc00-\\udfff]|[\\u0023-\\u0039]\\ufe0f?\\u20e3|\\u3299|\\u3297|\\u303d|\\u3030|\\u24c2|\\ud83c[\\udd70-\\udd71]|\\ud83c[\\udd7e-\\udd7f]|\\ud83c\\udd8e|\\ud83c[\\udd91-\\udd9a]|\\ud83c[\\udde6-\\uddff]|\\ud83c\\ude01-\\ude02]|\\ud83c\\ude1a|\\ud83c\\ude2f|\\ud83c[\\ude32-\\ude3a]|\\ud83c\\ude50-\\ude51]|\\u203c|\\u2049|[\\u25aa-\\u25ab]|\\u25b6|\\u25c0|[\\u25fb-\\u25fe]|\\u00a9|\\u00ae|\\u2122|\\u2139|\\ud83c\\udc04|[\\u2600-\\u26FF]|\\u2b05|\\u2b06|\\u2b07|\\u2b1b|\\u2b1c|\\u2b50|\\u2b55|\\u231a|\\u231b|\\u2328|\\u23cf|[\\u23e9-\\u23f3]|[\\u23f8-\\u23fa]|\\ud83c\\udccf|\\u2934|\\u2935|[\\u2190-\\u21ff])");
+    return regex.test(str);
+  }
+
+  // =========================================
+  // SHOP LOGIC
+  // =========================================
+  function initShop() {
+    var loaderEl = document.getElementById('loader');
+    if (loaderEl) loaderEl.classList.remove('dark');
+    showLoader('Abriendo tienda...');
+    switchView('shop-view');
+    
+    google.script.run
+      .withSuccessHandler(function(res) {
+        try {
+          renderShop(res);
+        } catch(e) {
+          hideLoader();
+          console.error('Error renderShop:', e);
+          alert('Error al cargar la tienda: ' + e.message);
+        }
+      })
+      .withFailureHandler(handleError)
+      .obtenerConfig(CURRENT_REF);
+  }
+
+  function renderShop(res) {
+    hideLoader();
+    if (!res.success) {
+      alert("Nodo no encontrado.");
+      goHome();
+      return;
+    }
+    SHOP_DATA = res;
+    CARRITO = {};
+    
+    var v = res.VISUAL;
+    var c = res.CICLO_LUNAR;
+    
+    // Theme colors
+    var root = document.documentElement;
+    if (v.color) root.style.setProperty('--primary', v.color);
+    
+    // Branding
+    document.getElementById('shop-name').innerText = v.nombre;
+    var logoHtml = '';
+    if (isEmoji(v.logo)) {
+      logoHtml = v.logo;
+    } else if (v.logo) {
+      var src = v.logo;
+      if (src.includes('drive.google.com/file/d/')) {
+        var match = src.match(/file\/d\/([^\/]+)/);
+        if (match && match[1]) src = 'https://drive.google.com/uc?id=' + match[1];
+      }
+      logoHtml = '<img src="' + src + '" style="width:100%; height:100%; border-radius:50%;" onerror="this.style.display=\'none\'; this.parentNode.innerText=this.parentNode.innerText || \'\';">';
+    }
+    document.getElementById('shop-logo').innerHTML = logoHtml;
+    
+    // Banner
+    var bannerEl = document.getElementById('shop-banner');
+    if (v.banner && bannerEl) {
+      bannerEl.style.backgroundImage = "url('" + v.banner + "')";
+    }
+    
+    // Lunar Info
+    document.getElementById('shop-lunar-title').innerText = c.nombre || 'Ciclo Lunar';
+    document.getElementById('shop-lunar-desc').innerText = c.abierta ? "Cierra en " + c.diasRestantes + " dÃ­as" : "Compra Cerrada";
+    document.getElementById('shop-lunar-emoji').innerText = c.signo || '';
+    
+    if (!c.abierta) {
+      document.getElementById('shop-closed-notice').classList.remove('hidden');
+      var chkBtn = document.getElementById('btn-checkout');
+      if (chkBtn) {
+        chkBtn.disabled = true;
+        chkBtn.innerText = "CERRADO";
+        chkBtn.style.opacity = "0.5";
+      }
+    }
+    
+    // Progress Node (sumar todas las ventas del nodo)
+    var nVentas = 0;
+    for (var nk in res.VENTAS_NODO) { nVentas += res.VENTAS_NODO[nk] || 0; }
+    var nMeta = v.metaPropia || 50;
+    var nP = Math.min(100, Math.round((nVentas/nMeta)*100));
+    document.getElementById('shop-nodo-prog-text').innerText = nVentas + ' / ' + nMeta;
+    document.getElementById('shop-nodo-prog-bar').style.width = nP + '%';
+    
+    // Progress Global (sumar todas las ventas globales)
+    var gVentas = 0;
+    for (var gk in res.VENTAS_GLOBALES) { gVentas += res.VENTAS_GLOBALES[gk] || 0; }
+    var gMeta = res.META_GLOBAL_NODOS || 500;
+    var gP = Math.min(100, Math.round((gVentas/gMeta)*100));
+    document.getElementById('shop-global-prog-text').innerText = gVentas + ' / ' + gMeta;
+    document.getElementById('shop-global-prog-bar').style.width = gP + '%';
+    
+    buildShopTabs();
+    if (res.PRODUCTOS.length > 0) {
+      loadProductView(0);
+    }
+  }
+
+  function buildShopTabs() {
+    var html = '';
+    SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+      html += '<div class="tab-item ' + (i === 0 ? 'active' : '') + '" onclick="loadProductView(' + i + ')" id="tab-' + i + '">' + p.nombre + '</div>';
+    });
+    document.getElementById('shop-tabs').innerHTML = html;
+  }
+
+  function loadProductView(index) {
+    ACTIVE_INDEX = index;
+    var prod = SHOP_DATA.PRODUCTOS[index];
+    
+    // Update tabs
+    document.querySelectorAll('.tab-item').forEach(function(t, i) {
+      if(i === index) t.classList.add('active');
+      else t.classList.remove('active');
+    });
+    
+    var qty = CARRITO[index] || 0;
+    var totalGlobalProd = (SHOP_DATA.VENTAS_GLOBALES[prod.nombre.toLowerCase().trim()] || 0) + qty;
+    
+    var activeTier = 1;
+    var price = prod.p1;
+    if (prod.p3 > 0 && prod.m3 > 0 && totalGlobalProd >= prod.m3) {
+      activeTier = 3; price = prod.p3;
+    } else if (prod.p2 > 0 && prod.m2 > 0 && totalGlobalProd >= prod.m2) {
+      activeTier = 2; price = prod.p2;
+    }
+
+    // Build showcase HTML
+    var html = '<div class="prod-col-left">' +
+      '<div class="widget">' +
+      '<div class="widget-title">Origen</div>' +
+      '<p style="font-weight: 600;">' + (prod.origen || 'AgroecolÃ³gico') + '</p>' +
+      '<p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">Variedad: ' + (prod.variedad || '-') + '</p>' +
+      '</div>' +
+      '<div class="widget">' +
+      '<div class="widget-title">Impacto Comunitario</div>' +
+      '<div style="font-size: 24px; color: var(--primary); font-weight: bold;">' + totalGlobalProd + '</div>' +
+      '<p style="font-size: 12px; color: var(--text-muted);">unidades pedidas en toda la red en este ciclo.</p>' +
+      '<div class="progress-bar-container" style="background: var(--bg); margin-top:10px;">' +
+      '<div class="progress-bar-fill" style="width: ' + Math.min(100, (totalGlobalProd / (prod.meta || 100))*100) + '%;"></div>' +
+      '</div>' +
+      '<p style="font-size: 11px; text-align: right; color: #999;">Meta: ' + (prod.meta || 100) + '</p>' +
+      '</div></div>' +
+      '<div class="prod-col-center">' +
+      '<img src="' + (prod.img || 'https://via.placeholder.com/250?text=Producto') + '" class="prod-image">' +
+      '<h2 class="prod-title">' + prod.nombre + '</h2>' +
+      '<p class="prod-subtitle">' + (prod.subtitulo || '') + '</p>' +
+      '<div class="badge" style="background: var(--bg); color: var(--text-muted); margin-top: 15px;">' + prod.unidad + '</div>' +
+      '</div>' +
+      '<div class="prod-col-right">' +
+      '<div class="widget">' +
+      '<div class="widget-title">Precio Colaborativo</div>' +
+      '<div class="price-tiers">' +
+      '<div class="price-tier ' + (activeTier===1 ? 'active' : '') + '">' +
+      '<div><div class="tier-name">Minorista</div><div class="tier-req">Base</div></div>' +
+      '<div class="tier-price">$' + prod.p1 + '</div></div>';
+    
+    if (prod.p2 > 0 && prod.m2 > 0) {
+      html += '<div class="price-tier ' + (activeTier===2 ? 'active' : '') + '">' +
+        '<div><div class="tier-name">Mayorista</div><div class="tier-req">Meta: ' + prod.m2 + ' un.</div></div>' +
+        '<div class="tier-price">$' + prod.p2 + '</div></div>';
+    }
+    
+    if (prod.p3 > 0 && prod.m3 > 0) {
+      html += '<div class="price-tier ' + (activeTier===3 ? 'active' : '') + '">' +
+        '<div><div class="tier-name">Distribuidora</div><div class="tier-req">Meta: ' + prod.m3 + ' un.</div></div>' +
+        '<div class="tier-price">$' + prod.p3 + '</div></div>';
+    }
+
+    var disabledStr = SHOP_DATA.CICLO_LUNAR.abierta ? '' : 'disabled';
+    var op = SHOP_DATA.CICLO_LUNAR.abierta ? '1' : '0.5';
+
+    html += '</div><div class="qty-selector" style="opacity: ' + op + ';">' +
+      '<button class="qty-btn" onclick="changeQty(-1)" ' + disabledStr + '>-</button>' +
+      '<input type="text" class="qty-input" value="' + qty + '" readonly>' +
+      '<button class="qty-btn" onclick="changeQty(1)" ' + disabledStr + '>+</button>' +
+      '</div></div></div>';
+    
+    document.getElementById('shop-product-container').innerHTML = html;
+  }
+
+  function changeQty(delta) {
+    if (!SHOP_DATA.CICLO_LUNAR.abierta) return;
+    var current = CARRITO[ACTIVE_INDEX] || 0;
+    var next = current + delta;
+    if (next < 0) next = 0;
+    CARRITO[ACTIVE_INDEX] = next;
+    
+    loadProductView(ACTIVE_INDEX);
+    updateFloatingCart();
+  }
+
+  function getActivePrice(product, index) {
+    var qty = CARRITO[index] || 0;
+    var totalSold = (SHOP_DATA.VENTAS_GLOBALES[product.nombre.toLowerCase().trim()] || 0) + qty;
+    var price = product.p1;
+    if (product.p3 > 0 && product.m3 > 0 && totalSold >= product.m3) price = product.p3;
+    else if (product.p2 > 0 && product.m2 > 0 && totalSold >= product.m2) price = product.p2;
+    return price;
+  }
+
+  function updateFloatingCart() {
+    var total = 0;
+    var items = 0;
+    SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+      var q = CARRITO[i] || 0;
+      if (q > 0) {
+        total += q * getActivePrice(p, i);
+        items++;
+      }
+    });
+    
+    document.getElementById('cart-total-text').innerText = '$' + total;
+    var cartEl = document.getElementById('floating-cart');
+    if (items > 0) {
+      cartEl.classList.add('visible');
+    } else {
+      cartEl.classList.remove('visible');
+    }
+  }
+
+  function openCheckoutModal() {
+    if (!SHOP_DATA.CICLO_LUNAR.abierta) return;
+    var html = '';
+    var subtotal = 0;
+    
+    SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+      var q = CARRITO[i] || 0;
+      if (q > 0) {
+        var price = getActivePrice(p, i);
+        var lineTotal = q * price;
+        subtotal += lineTotal;
+        html += '<div class="summary-item">' +
+          '<span>' + q + 'x ' + p.nombre + '</span>' +
+          '<span style="font-weight:600;">$' + lineTotal + '</span>' +
+          '</div>';
+      }
+    });
+    
+    document.getElementById('checkout-items').innerHTML = html;
+    document.getElementById('checkout-items').setAttribute('data-subtotal', subtotal);
+    
+    setDonation('3'); // reset to default
+    openModal('modal-checkout');
+  }
+
+  function setDonation(type) {
+    DONATION_TYPE = type;
+    document.getElementById('don-3').classList.remove('active');
+    document.getElementById('don-custom').classList.remove('active');
+    document.getElementById('don-0').classList.remove('active');
+    
+    document.getElementById('don-' + (type==='custom'?'custom':type)).classList.add('active');
+    
+    if (type === 'custom') {
+      document.getElementById('custom-donation-div').classList.remove('hidden');
+    } else {
+      document.getElementById('custom-donation-div').classList.add('hidden');
+    }
+    updateTotalFinal();
+  }
+
+  function updateTotalFinal() {
+    var sub = parseFloat(document.getElementById('checkout-items').getAttribute('data-subtotal')) || 0;
+    var don = 0;
+    if (DONATION_TYPE === '3') don = sub * 0.03;
+    else if (DONATION_TYPE === 'custom') don = parseFloat(document.getElementById('custom-don-val').value) || 0;
+    
+    var total = Math.round(sub + don);
+    document.getElementById('checkout-total-final').innerText = '$' + total;
+    return { sub: sub, don: Math.round(don), total: total };
+  }
+
+  function submitOrder() {
+    var nombre = document.getElementById('chk-nombre').value.trim();
+    var tel = document.getElementById('chk-tel').value.trim();
+    var msg = document.getElementById('chk-msg').value.trim();
+    
+    if (!nombre || !tel) {
+      alert("Por favor completÃ¡ tu nombre y telÃ©fono.");
+      return;
+    }
+    
+    var tData = updateTotalFinal();
+    var cartArr = [];
+    SHOP_DATA.PRODUCTOS.forEach(function(p, i) {
+      var q = CARRITO[i] || 0;
+      if (q > 0) {
+        cartArr.push({
+          nombre: p.nombre,
+          cant: q,
+          unidad: p.unidad,
+          precio: getActivePrice(p, i)
+        });
+      }
+    });
+    
+    var data = {
+      carrito: cartArr,
+      nombre: nombre,
+      telefono: tel,
+      nodo: SHOP_DATA.VISUAL.nombre,
+      totalPagar: tData.total,
+      donacion: tData.don,
+      mensaje: msg,
+      aliadoId: CURRENT_REF
+    };
+    
+    document.getElementById('btn-submit-order').disabled = true;
+    document.getElementById('btn-submit-order').innerText = "ENVIANDO...";
+    
+    google.script.run
+      .withSuccessHandler(function(res) {
+        document.getElementById('btn-submit-order').disabled = false;
+        document.getElementById('btn-submit-order').innerText = "ENVIAR PEDIDO";
+        if (res.success) {
+          closeModal('modal-checkout');
+          showSuccess(res);
+        } else {
+          alert("Error al guardar el pedido. IntentÃ¡ nuevamente.");
+        }
+      })
+      .withFailureHandler(function(e){
+        document.getElementById('btn-submit-order').disabled = false;
+        document.getElementById('btn-submit-order').innerText = "ENVIAR PEDIDO";
+        alert("Error de conexiÃ³n.");
+      })
+      .guardarPedido(data);
+  }
+
+  function showSuccess(data) {
+    ORDER_SUCCESS_DATA = data;
+    document.getElementById('succ-id').innerText = data.id;
+    document.getElementById('succ-alias').innerText = SHOP_DATA.VISUAL.cbu || 'Consultar al nodo';
+    document.getElementById('succ-total').innerText = '$' + data.total;
+    
+    // Clear cart
+    CARRITO = {};
+    updateFloatingCart();
+    if(SHOP_DATA.PRODUCTOS.length > 0) loadProductView(ACTIVE_INDEX);
+    
+    openModal('modal-success');
+  }
+
+  function sendWsp() {
+    if (!ORDER_SUCCESS_DATA) return;
+    var d = ORDER_SUCCESS_DATA;
+    
+    var msg = "ðŸŒ± *Nuevo Pedido Vrde Club*\n";
+    msg += "ðŸ”– Pedido: " + d.id + "\n";
+    msg += "ðŸ‘¤ Nombre: " + d.nombre + "\n";
+    msg += "ðŸ“¦ Detalle:\n" + d.detalle + "\n";
+    msg += "ðŸ’° Total a transferir: $" + d.total + "\n";
+    msg += "ðŸ“ Retiro: " + d.nodo + "\n";
+    msg += "ðŸŒ‘ Ciclo: " + d.ciclo;
+    
+    var num = SHOP_DATA.VISUAL.wspPedidos || '5491127452476';
+    num = num.replace(/\D/g, '');
+    var url = "https://wa.me/" + num + "?text=" + encodeURIComponent(msg);
+    window.open(url, '_blank');
+  }
+
+  function openNodeProfile() {
+    if (!SHOP_DATA) return;
+    var v = SHOP_DATA.VISUAL;
+    var profLogoHtml = '';
+    if (isEmoji(v.logo)) {
+      profLogoHtml = v.logo;
+    } else if (v.logo) {
+      var src = v.logo;
+      if (src.includes('drive.google.com/file/d/')) {
+        var match = src.match(/file\/d\/([^\/]+)/);
+        if (match && match[1]) src = 'https://drive.google.com/uc?id=' + match[1];
+      }
+      profLogoHtml = '<img src="' + src + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'; this.parentNode.innerText=this.parentNode.innerText || \'\';">';
+    }
+    document.getElementById('prof-logo').innerHTML = profLogoHtml;
+    document.getElementById('prof-name').innerText = v.nombre;
+    document.getElementById('prof-desc').innerText = v.descripcion || '';
+    document.getElementById('prof-dir').innerText = v.direccion || '-';
+    document.getElementById('prof-contacto').innerText = v.contacto || '-';
+    document.getElementById('prof-entrega').innerText = v.diaEntrega || '-';
+    openModal('modal-node');
+  }
+
+  // =========================================
+  // ADMIN LOGIC
+  // =========================================
+  function showAdminLogin() {
+    var loaderEl = document.getElementById('loader');
+    if (loaderEl) loaderEl.classList.add('hidden');
+    var adminLoginEl = document.getElementById('admin-login');
+    if (adminLoginEl) adminLoginEl.classList.remove('hidden');
+  }
+
+  function attemptLogin() {
+    var pin = document.getElementById('pinInput').value;
+    if(pin.length < 4) return;
+    
+    document.getElementById('pin-error').style.display = 'none';
+    var btn = document.querySelector('#admin-login button');
+    btn.innerText = "VERIFICANDO...";
+    
+    google.script.run
+      .withSuccessHandler(function(r) {
+        btn.innerText = "INGRESAR";
+        if (r.success) {
+          ADMIN_PIN = pin;
+          document.getElementById('admin-login').classList.add('hidden');
+          document.getElementById('admin-dashboard').classList.remove('hidden');
+          loadAdminDashboard();
+        } else {
+          document.getElementById('pin-error').style.display = 'block';
+          document.getElementById('pinInput').value = '';
+        }
+      })
+      .withFailureHandler(function(e){
+        btn.innerText = "INGRESAR";
+        alert("Error de conexiÃ³n.");
+      })
+      .verificarPinNodo(CURRENT_REF, pin);
+  }
+
+  function loadAdminDashboard() {
+    showLoader('Cargando panel...');
+    var loaderEl = document.getElementById('loader');
+    if (loaderEl) loaderEl.classList.remove('dark');
+    
+    google.script.run
+      .withSuccessHandler(renderAdminDashboard)
+      .obtenerDatosAdmin(CURRENT_REF);
+  }
+
+  function renderAdminDashboard(data) {
+    hideLoader();
+    ADMIN_DATA = data;
+    CURRENT_CYCLE_NAME = data.cicloActual.nombre;
+    var v = data.visual;
+    
+    // Header & Lunar
+    document.getElementById('ad-title').innerText = "Panel de " + v.nombre;
+    document.getElementById('ad-lunar-title').innerText = data.cicloActual.nombre;
+    document.getElementById('ad-lunar-status').innerText = data.cicloActual.abierta ? "Cierra en " + data.cicloActual.diasRestantes + " dÃ­as" : "Cerrada";
+    document.getElementById('ad-lunar-emoji').innerText = data.cicloActual.signo || '';
+    
+    // Metrics
+    document.getElementById('ad-m-pedidos').innerText = data.metricas.totalPedidos;
+    document.getElementById('ad-m-socios').innerText = data.metricas.totalSocios;
+    document.getElementById('ad-m-recaudado').innerText = "$" + data.metricas.totalRecaudado;
+    document.getElementById('ad-m-unidades').innerText = data.metricas.totalUnidades;
+    
+    // Orders
+    CURRENT_ORDERS = data.pedidos || [];
+    renderOrdersList(CURRENT_ORDERS, 'ad-orders-list', true);
+    
+    // Past Cycles
+    var pastHtml = '';
+    if (data.ciclosAnteriores && data.ciclosAnteriores.length > 0) {
+      data.ciclosAnteriores.forEach(function(c) {
+        pastHtml += '<div class="card cycle-card" onclick="loadPastCycle(\'' + c.nombre + '\')">' +
+          '<div class="cycle-name">' + c.nombre + '</div>' +
+          '<div class="cycle-stats">ðŸ“¦ ' + c.totalPedidos + ' | ðŸ’° $' + c.totalMonto + '</div>' +
+          '</div>';
+      });
+    } else {
+      pastHtml = '<p style="color:var(--text-muted); font-size:14px;">No hay ciclos anteriores registrados.</p>';
+    }
+    document.getElementById('ad-past-cycles').innerHTML = pastHtml;
+    
+    // Members
+    renderMembersTable(data.socios || []);
+    
+    // Profile inputs
+    document.getElementById('editNombre').value = v.nombre || '';
+    document.getElementById('editLogo').value = v.logo || '';
+    document.getElementById('editDireccion').value = v.direccion || '';
+    document.getElementById('editContacto').value = v.contacto || '';
+    document.getElementById('editDesc').value = v.descripcion || '';
+    document.getElementById('editDia').value = v.diaEntrega || '';
+    
+    // Links & Text
+    document.getElementById('ad-link-tienda').value = data.linkTienda;
+    var wspText = "ðŸŒ‘ " + data.cicloActual.nombre + " - " + v.nombre + "\n";
+    wspText += "ðŸ“¦ " + data.metricas.totalPedidos + " pedidos | ðŸ’° $" + data.metricas.totalRecaudado + " recaudado | ðŸ‘¥ " + data.metricas.totalSocios + " socios\n";
+    wspText += "ðŸ›’ " + data.linkTienda;
+    document.getElementById('ad-wsp-text').value = wspText;
+  }
+
+  function renderOrdersList(orders, containerId, isCurrentCycle) {
+    var html = '';
+    if (orders.length === 0) {
+      html = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:20px;">No hay pedidos para mostrar.</p>';
+    } else {
+      orders.forEach(function(o) {
+        var badgeClass = 'badge-pendiente';
+        var est = (o.estado || '').toLowerCase();
+        if (est === 'pagado') badgeClass = 'badge-pagado';
+        if (est === 'entregado') badgeClass = 'badge-entregado';
+        
+        var actionsHtml = '';
+        if (isCurrentCycle) {
+          if (est === 'pendiente') {
+            actionsHtml = '<button class="btn btn-outline btn-action" style="color:var(--primary); border-color:var(--primary);" onclick="changeOrderStatus(\'' + o.id + '\', \'Pagado\', this)">âœ“ Marcar Pagado</button>';
+          } else if (est === 'pagado') {
+            actionsHtml = '<button class="btn btn-outline btn-action" style="color:#004085; border-color:#004085;" onclick="changeOrderStatus(\'' + o.id + '\', \'Entregado\', this)">ðŸ“¦ Marcar Entregado</button>';
+          } else {
+            actionsHtml = '<div style="flex:1; text-align:center; color:var(--text-muted); font-size:13px; padding:8px;">âœ“ Entregado</div>';
+          }
+        }
+        
+        var wspNum = String(o.telefono).replace(/\D/g, '');
+        var wspBtn = wspNum ? '<a href="https://wa.me/549' + wspNum + '" target="_blank" class="btn-wsp">ðŸ“²</a>' : '';
+
+        html += '<div class="order-card">' +
+          '<div class="order-row">' +
+          '<span class="order-id">#' + o.id + '</span>' +
+          '<span class="badge ' + badgeClass + '">' + (o.estado || 'Pendiente') + '</span>' +
+          '</div>' +
+          '<div class="order-row" style="margin-bottom:15px;">' +
+          '<span class="order-name">' + o.nombre + '</span>' +
+          '<span style="font-size:14px; color:var(--text-muted);">' + o.telefono + '</span>' +
+          '</div>' +
+          '<div class="order-detail">' + o.detalle + '</div>' +
+          '<div class="order-row" style="margin-bottom:0; margin-top:10px;">' +
+          '<span style="font-size:14px;">Unidades: <strong>' + o.unidades + '</strong></span>' +
+          '<span class="order-total">$' + o.total + '</span>' +
+          '</div>' +
+          (isCurrentCycle || wspBtn ? '<div class="order-actions">' + actionsHtml + wspBtn + '</div>' : '') +
+          '</div>';
+      });
+    }
+    document.getElementById(containerId).innerHTML = html;
+  }
+
+  function filterOrders(status, btnEl) {
+    document.querySelectorAll('.filters .filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btnEl.classList.add('active');
+    
+    var filtered = CURRENT_ORDERS;
+    if (status !== 'Todos') {
+      filtered = CURRENT_ORDERS.filter(function(o) {
+        return (o.estado || 'Pendiente').toLowerCase() === status.toLowerCase();
+      });
+    }
+    renderOrdersList(filtered, 'ad-orders-list', true);
+  }
+
+  function changeOrderStatus(orderId, newStatus, btnEl) {
+    btnEl.innerText = "...";
+    btnEl.disabled = true;
+    google.script.run
+      .withSuccessHandler(function(r) {
+        if (r.success) loadAdminDashboard();
+      })
+      .withFailureHandler(function(e){
+        alert("Error de conexiÃ³n");
+        btnEl.disabled = false;
+      })
+      .actualizarEstadoPedido(orderId, newStatus, CURRENT_CYCLE_NAME);
+  }
+
+  function loadPastCycle(cycleName) {
+    document.getElementById('ad-past-orders-container').classList.add('hidden');
+    document.getElementById('loader').classList.remove('hidden');
+    document.getElementById('loader-text').innerText = "Cargando " + cycleName + "...";
+    
+    google.script.run
+      .withSuccessHandler(function(r) {
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('ad-past-orders-title').innerText = "Pedidos: " + cycleName;
+        document.getElementById('ad-past-orders-container').classList.remove('hidden');
+        renderOrdersList(r.pedidos, 'ad-past-orders-list', false);
+        document.getElementById('ad-past-orders-container').scrollIntoView({behavior: "smooth"});
+      })
+      .withFailureHandler(function(){
+        document.getElementById('loader').classList.add('hidden');
+        alert("Error al cargar.");
+      })
+      .obtenerPedidosCiclo(CURRENT_REF, cycleName);
+  }
+
+  function renderMembersTable(members) {
+    ADMIN_DATA.socios = members;
+    drawMembersTable(members);
+  }
+  
+  function drawMembersTable(arr) {
+    var html = '';
+    if(arr.length === 0) {
+      html = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No hay socios.</td></tr>';
+    } else {
+      arr.forEach(function(s) {
+        var wspNum = String(s.telefono).replace(/\D/g, '');
+        var wspBtn = wspNum ? '<a href="https://wa.me/549' + wspNum + '" target="_blank" style="text-decoration:none;">ðŸ“²</a>' : '';
+        html += '<tr>' +
+          '<td><strong>' + s.nombre + '</strong></td>' +
+          '<td>' + s.telefono + ' ' + wspBtn + '</td>' +
+          '<td>' + s.totalPedidos + '</td>' +
+          '<td>$' + (s.totalGastado || s.totalMonto || 0) + '</td>' +
+          '<td>' + (s.ultimoPedido || '-') + '</td></tr>';
+      });
+    }
+    document.getElementById('ad-members-tbody').innerHTML = html;
+  }
+
+  function filterMembers() {
+    var query = document.getElementById('memberSearch').value.toLowerCase();
+    if (!ADMIN_DATA || !ADMIN_DATA.socios) return;
+    var filtered = ADMIN_DATA.socios.filter(function(s) {
+      return s.nombre.toLowerCase().indexOf(query) > -1 || String(s.telefono).indexOf(query) > -1;
+    });
+    drawMembersTable(filtered);
+  }
+
+  function saveProfile() {
+    var btn = document.getElementById('btn-save-profile');
+    var msg = document.getElementById('save-msg');
+    btn.innerText = "Guardando...";
+    btn.disabled = true;
+    msg.innerText = "";
+    
+    var datos = {
+      nombre: document.getElementById('editNombre').value,
+      logo: document.getElementById('editLogo').value,
+      direccion: document.getElementById('editDireccion').value,
+      contacto: document.getElementById('editContacto').value,
+      descripcion: document.getElementById('editDesc').value,
+      diaEntrega: document.getElementById('editDia').value
+    };
+    
+    google.script.run
+      .withSuccessHandler(function(r) {
+        btn.innerText = "Guardar Cambios";
+        btn.disabled = false;
+        if (r.success) {
+          msg.style.color = "var(--primary)";
+          msg.innerText = "Â¡Perfil actualizado!";
+          setTimeout(function(){ msg.innerText = ""; }, 3000);
+        } else {
+          msg.style.color = "red";
+          msg.innerText = "Error al guardar.";
+        }
+      })
+      .withFailureHandler(function(e){
+        btn.innerText = "Guardar Cambios";
+        btn.disabled = false;
+        msg.style.color = "red";
+        msg.innerText = "Error de conexiÃ³n.";
+      })
+      .actualizarPerfilNodo(CURRENT_REF, ADMIN_PIN, datos);
+  }
+
+  function logout() {
+    ADMIN_PIN = '';
+    window.location.reload();
+  }
+
+  // =========================================
+  // UTILS
+  // =========================================
+  function goHome() {
+    CURRENT_REF = null; 
+    initApp();
+  }
+
+  function openModal(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add('active');
+  }
+  
+  function closeModal(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  }
+
+  function copyText(elementId) {
+    var copyText = document.getElementById(elementId);
+    if (!copyText) return;
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    
+    try {
+      navigator.clipboard.writeText(copyText.value).then(function() {
+        var btn = copyText.nextElementSibling;
+        if (btn) {
+          var originalText = btn.innerText;
+          btn.innerText = "Â¡Copiado!";
+          btn.style.backgroundColor = "var(--primary)";
+          btn.style.color = "white";
+          setTimeout(function() {
+            btn.innerText = originalText;
+            btn.style.backgroundColor = "";
+            btn.style.color = "";
+          }, 2000);
+        }
+      });
+    } catch (err) {
+      document.execCommand("copy");
+    }
+  }
+</script>
