@@ -487,7 +487,7 @@
     }
 
     /* =========================================================
-       MODO SWIPE (TINDER)
+       MODO JUEGO (SWIPE)
        ========================================================= */
     #swipe-view-container {
       display: none;
@@ -589,13 +589,13 @@
     </div>
   </div>
 
-  <!-- Switch de Modos de Vista: Showcase vs Swipe -->
+  <!-- Switch de Modos de Vista: Showcase vs Modo Juego -->
   <div class="view-mode-bar-container">
     <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')">
       <i class="fas fa-th-large"></i> Formato Catálogo
     </button>
     <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')">
-      <i class="fas fa-layer-group"></i> Modo Swipe (Tinder 🎴)
+      <i class="fas fa-gamepad"></i> Modo Juego 🎮
     </button>
   </div>
 
@@ -625,7 +625,7 @@
   </main>
 
   <!-- =========================================
-       2. MODO SWIPE (TINDER)
+       2. MODO JUEGO (SWIPE)
        ========================================= -->
   <div id="swipe-view-container">
     <div class="showcase-card" style="max-width: 380px; width: 100%; padding: 16px;">
@@ -1322,7 +1322,7 @@
     }
 
     // ==========================================
-    // RENDERIZADO MODO SWIPE (TINDER)
+    // RENDERIZADO MODO JUEGO (SWIPE)
     // ==========================================
     function renderSwipeStore() {
       const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
