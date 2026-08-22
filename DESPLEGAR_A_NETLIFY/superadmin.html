@@ -838,11 +838,12 @@
             <option value="hongos">🍄 Hongos del Delta</option>
             <option value="huerta">🥬 Huerta & Frescos</option>
             <option value="granja">🥚 Granja & Mieles</option>
+            <option value="panificados">🍞 Panadería & Masa Madre</option>
           </select>
         </div>
         <div class="input-field-group">
-          <label>Meta Colectiva Red (Unidades)</label>
-          <input type="number" id="edit-prod-meta" class="input-field" placeholder="Ej: 100">
+          <label>Subcategoría (opcional)</label>
+          <input type="text" id="edit-prod-subcategoria" class="input-field" placeholder="Ej: Arroz, Garbanzos, Masa Madre">
         </div>
       </div>
 
@@ -855,6 +856,11 @@
           <label>Variedad / Certificación</label>
           <input type="text" id="edit-prod-variedad" class="input-field" placeholder="Ej: Cacao Criollo Silvestre Amazónico">
         </div>
+      </div>
+
+      <div class="input-field-group">
+        <label>Meta Colectiva Red (Unidades)</label>
+        <input type="number" id="edit-prod-meta" class="input-field" placeholder="Ej: 100">
       </div>
 
       <div class="input-field-group">
@@ -1453,6 +1459,7 @@
       document.getElementById('edit-prod-id').value = 'P-' + Math.floor(Math.random() * 90000 + 10000);
       document.getElementById('edit-prod-nombre').value = '';
       document.getElementById('edit-prod-categoria').value = 'granos';
+      document.getElementById('edit-prod-subcategoria').value = '';
       document.getElementById('edit-prod-origen').value = '';
       document.getElementById('edit-prod-variedad').value = '';
       document.getElementById('edit-prod-meta').value = '100';
@@ -1486,6 +1493,7 @@
       document.getElementById('edit-prod-id').value = p.id;
       document.getElementById('edit-prod-nombre').value = p.nombre || '';
       document.getElementById('edit-prod-categoria').value = p.categoria || 'granos';
+      document.getElementById('edit-prod-subcategoria').value = p.subcategoria || '';
       document.getElementById('edit-prod-origen').value = p.origen || '';
       document.getElementById('edit-prod-variedad').value = p.variedad || '';
       document.getElementById('edit-prod-meta').value = p.meta || 100;
@@ -1545,6 +1553,7 @@
       const id = document.getElementById('edit-prod-id').value;
       const nombre = document.getElementById('edit-prod-nombre').value.trim();
       const categoria = document.getElementById('edit-prod-categoria').value;
+      const subcategoria = document.getElementById('edit-prod-subcategoria').value.trim();
 
       if (!nombre) {
         alert("Por favor completa el nombre del producto.");
@@ -1612,7 +1621,7 @@
         id: id,
         nombre: nombre,
         categoria: categoria,
-        subcategoria: existing?.subcategoria || 'otros',
+        subcategoria: subcategoria || existing?.subcategoria || 'otros',
         productorInfo: existing?.productorInfo || null,
         variantes: variantes,
         origen: document.getElementById('edit-prod-origen').value.trim() || 'Agroecológico',
