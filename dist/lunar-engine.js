@@ -678,10 +678,12 @@ class LunarEngine {
   static obtenerNodos() {
     let nodos = LUNAR_CONFIG.nodos;
     if (typeof localStorage !== 'undefined') {
-      const stored = localStorage.getItem('VRDE_NODOS');
-      if (stored) {
-        try { nodos = JSON.parse(stored); } catch(e){}
-      }
+      try {
+        const stored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS') : null;
+        if (stored) {
+          nodos = JSON.parse(stored);
+        }
+      } catch(e){}
     }
 
     // Auto-sanear iconos corruptos o caracteres residuales (ej: 'x')
@@ -712,11 +714,58 @@ class LunarEngine {
    * Guarda configuración de nodos
    */
   static guardarNodos(nodosData) {
-    if (typeof localStorage !== 'undefined') {
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
       localStorage.setItem('VRDE_NODOS', JSON.stringify(nodosData));
     }
     LUNAR_CONFIG.nodos = nodosData;
     return nodosData;
+  }
+
+  /**
+   * Guarda o actualiza un Nodo Almacén individual
+   */
+  static guardarNodo(nodoData) {
+    const nodos = this.obtenerNodos();
+    const id = String(nodoData.id || '').trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
+    if (!id) return null;
+
+    const existing = nodos[id] || {};
+    nodos[id] = {
+      id: id,
+      nombre: nodoData.nombre || existing.nombre || 'Nuevo Nodo',
+      color: nodoData.color || existing.color || '#10A352',
+      logo: nodoData.logo || existing.logo || '🌱',
+      descripcion: nodoData.descripcion || existing.descripcion || 'Punto comunitario de acopio y distribución agroecológica.',
+      direccion: nodoData.direccion || existing.direccion || 'A coordinar con el responsable',
+      diaEntrega: nodoData.diaEntrega || existing.diaEntrega || 'Viernes 16 a 20 hs',
+      contacto: nodoData.contacto || existing.contacto || 'Coordinador Nodo',
+      telefono: nodoData.telefono || existing.telefono || '',
+      pin: String(nodoData.pin || existing.pin || '1234').trim(),
+      metaPropia: parseInt(nodoData.metaPropia || existing.metaPropia || 100, 10),
+      imagen: nodoData.imagen || existing.imagen || '',
+      redes: {
+        instagram: (nodoData.redes && nodoData.redes.instagram) || (existing.redes && existing.redes.instagram) || '',
+        wspGrupo: (nodoData.redes && nodoData.redes.wspGrupo) || (existing.redes && existing.redes.wspGrupo) || '',
+        maps: (nodoData.redes && nodoData.redes.maps) || (existing.redes && existing.redes.maps) || ''
+      },
+      vrdedores: existing.vrdedores || [],
+      mostrarVrdedores: existing.mostrarVrdedores !== false
+    };
+
+    this.guardarNodos(nodos);
+    return nodos[id];
+  }
+
+  /**
+   * Elimina un Nodo Almacén de la red
+   */
+  static eliminarNodo(nodoId) {
+    const nodos = this.obtenerNodos();
+    const id = String(nodoId || '').trim().toLowerCase();
+    if (!nodos[id]) return false;
+    delete nodos[id];
+    this.guardarNodos(nodos);
+    return true;
   }
 
   /**

@@ -728,11 +728,14 @@
            SECCIÓN 3: GESTIÓN DE NODOS
            ========================================================= -->
       <div id="super-section-nodes" class="hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
           <div>
             <h3 style="font-size: 20px; color: #0F172A; margin: 0;">Red Fractal de Nodos Almacén</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Puntos de acopio, contactos y direcciones barriales.</p>
           </div>
+          <button class="btn-checkout-cta" style="padding: 10px 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; background: #2563EB;" onclick="openCreateNodeModal()">
+            <i class="fas fa-plus-circle"></i> Nuevo Nodo Almacén
+          </button>
         </div>
         <div id="super-nodes-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
           <!-- Inyectado por JS -->
@@ -1518,6 +1521,141 @@
 
       <button class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); margin-top: 14px;" onclick="saveSuperVrdedorFromModal()">
         GUARDAR VRDEDOR EN NODO
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Crear / Editar Nodo Almacén -->
+  <div class="modal-overlay" id="modal-node-editor">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; margin: 0;" id="node-editor-title">Nuevo Nodo Almacén</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-node-editor')">&times;</span>
+      </div>
+
+      <input type="hidden" id="edit-node-id">
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+        <div class="input-field-group">
+          <label>ID / Slug Único (sin espacios) *</label>
+          <input type="text" id="edit-node-slug" class="input-field" placeholder="ej: san-isidro, pilar" required>
+        </div>
+        <div class="input-field-group">
+          <label>Emoji / Logo *</label>
+          <input type="text" id="edit-node-logo" class="input-field" placeholder="🌱" value="🌱" style="font-size: 16px; text-align: center;" required>
+        </div>
+      </div>
+
+      <div class="input-field-group">
+        <label>Nombre del Nodo *</label>
+        <input type="text" id="edit-node-nombre" class="input-field" placeholder="Ej: Nodo San Isidro" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="input-field-group">
+          <label>Responsable / Coordinador *</label>
+          <input type="text" id="edit-node-contacto" class="input-field" placeholder="Ej: Marcela Gómez" required>
+        </div>
+        <div class="input-field-group">
+          <label>Teléfono (WhatsApp)</label>
+          <input type="tel" id="edit-node-telefono" class="input-field" placeholder="Ej: 11 2345 6789">
+        </div>
+      </div>
+
+      <div class="input-field-group">
+        <label>Dirección física de retiro *</label>
+        <input type="text" id="edit-node-direccion" class="input-field" placeholder="Ej: Av. del Libertador 14200, San Isidro" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+        <div class="input-field-group">
+          <label>Día y Horario de Entrega *</label>
+          <input type="text" id="edit-node-dia-entrega" class="input-field" placeholder="Ej: Viernes 16 a 20 hs" required>
+        </div>
+        <div class="input-field-group">
+          <label>PIN de Acceso al Nodo *</label>
+          <input type="text" id="edit-node-pin" class="input-field" placeholder="1234" value="1234" style="text-align: center; font-weight: 700;" autocomplete="off" required>
+        </div>
+      </div>
+
+      <div class="input-field-group">
+        <label>Descripción / Mensaje para las familias</label>
+        <textarea id="edit-node-desc" class="input-field" rows="2" placeholder="Ej: Punto de encuentro y retiro de compras agroecológicas en zona norte."></textarea>
+      </div>
+
+      <div class="input-field-group">
+        <label>Meta Comunitaria Propia (Unidades)</label>
+        <input type="number" id="edit-node-meta" class="input-field" placeholder="100" value="100">
+      </div>
+
+      <button class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); margin-top: 14px; background: #2563EB;" onclick="saveNodeFromModal()">
+        GUARDAR NODO ALMACÉN
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Editar Ciclo Lunar -->
+  <div class="modal-overlay" id="modal-cycle-editor">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; margin: 0;" id="cycle-editor-title">Editar Ciclo Lunar</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-cycle-editor')">&times;</span>
+      </div>
+
+      <input type="hidden" id="modal-cfg-cycle-id">
+
+      <div class="input-field-group">
+        <label>Nombre del Ciclo *</label>
+        <input type="text" id="modal-cfg-cycle-name" class="input-field" placeholder="Ej: 🌑 Luna Llena en Piscis" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Signo Zodiacal Lunar *</label>
+        <select id="modal-cfg-cycle-sign" class="input-field">
+          <option value="Piscis">Piscis ♓</option>
+          <option value="Aries">Aries ♈</option>
+          <option value="Tauro">Tauro ♉</option>
+          <option value="Géminis">Géminis ♊</option>
+          <option value="Cáncer">Cáncer ♋</option>
+          <option value="Leo">Leo ♌</option>
+          <option value="Virgo">Virgo ♍</option>
+          <option value="Libra">Libra ♎</option>
+          <option value="Escorpio">Escorpio ♏</option>
+          <option value="Sagitario">Sagitario ♐</option>
+          <option value="Capricornio">Capricornio ♑</option>
+          <option value="Acuario">Acuario ♒</option>
+        </select>
+      </div>
+
+      <div class="input-field-group">
+        <label style="color: #16A34A; font-weight: 700;">🟢 Fecha de Inicio (Apertura de Tienda) *</label>
+        <input type="date" id="modal-cfg-cycle-start" class="input-field" required>
+      </div>
+
+      <div class="input-field-group">
+        <label style="color: #D97706; font-weight: 700;">🟡 Fecha de Cierre (Luna Llena) *</label>
+        <input type="date" id="modal-cfg-cycle-close" class="input-field" required>
+      </div>
+
+      <div class="input-field-group">
+        <label style="color: #6366F1; font-weight: 700;">📦 Fecha de Entrega y Retiro en Nodos *</label>
+        <input type="date" id="modal-cfg-cycle-delivery" class="input-field" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Mensaje / Aviso Especial en Tienda (Opcional)</label>
+        <input type="text" id="modal-cfg-cycle-msg" class="input-field" placeholder="Ej: ¡Hacé tu pedido antes de Luna Llena!">
+      </div>
+
+      <div style="margin: 12px 0 16px; display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="modal-cfg-cycle-activate" style="width: 18px; height: 18px; accent-color: var(--primary);" checked>
+        <label for="modal-cfg-cycle-activate" style="font-size: 13px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          Activar inmediatamente como Ciclo Vigente en toda la red
+        </label>
+      </div>
+
+      <button type="button" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); padding: 12px; font-size: 14px; background: #6366F1;" onclick="saveCycleFromModal()">
+        <i class="fas fa-save" style="margin-right: 6px;"></i> GUARDAR CAMBIOS DEL CICLO
       </button>
     </div>
   </div>
@@ -2462,43 +2600,55 @@
         if (redes.instagram) {
           redesHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="color: #E1306C; font-size: 14px;" title="Instagram @${redes.instagram}"><i class="fab fa-instagram"></i></a>`;
         }
-        if (redes.wspComunidad) {
-          redesHtml += `<a href="${redes.wspComunidad}" target="_blank" style="color: #25D366; font-size: 14px;" title="Comunidad WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
-        }
-        if (redes.facebook) {
-          redesHtml += `<span style="color: #1877F2; font-size: 14px;" title="Facebook"><i class="fab fa-facebook"></i></span>`;
+        if (redes.wspComunidad || redes.wspGrupo) {
+          redesHtml += `<a href="${redes.wspComunidad || redes.wspGrupo}" target="_blank" style="color: #25D366; font-size: 14px;" title="Comunidad WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
         }
 
         html += `
-          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);">
-            ${n.imagen ? `
-              <div style="height: 110px; position: relative;">
-                <img src="${n.imagen}" alt="${n.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
-                <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">PIN: ${n.pin}</div>
-              </div>
-            ` : ''}
-            
-            <div style="padding: 18px;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 24px;">${(n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌑'}</span>
-                  <div>
-                    <h4 style="margin: 0; font-size: 16px; color: #0F172A;">${n.nombre}</h4>
-                    <span style="font-size: 11px; color: var(--text-muted);">${n.contacto}</span>
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              ${n.imagen ? `
+                <div style="height: 110px; position: relative;">
+                  <img src="${n.imagen}" alt="${n.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
+                  <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700;">PIN: ${n.pin || '1234'}</div>
+                </div>
+              ` : ''}
+              
+              <div style="padding: 18px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 26px;">${(n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌱'}</span>
+                    <div>
+                      <h4 style="margin: 0; font-size: 16px; color: #0F172A; font-weight: 800;">${n.nombre}</h4>
+                      <span style="font-size: 11.5px; color: var(--text-muted);">${n.contacto || 'Sin coordinador'}</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${redesHtml}
+                    <button class="btn-action-icon" style="color: #2563EB; width: 30px; height: 30px;" title="Editar Nodo" onclick="openEditNodeModal('${k}')">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-action-icon" style="color: #EF4444; width: 30px; height: 30px;" title="Eliminar Nodo" onclick="deleteNodeConfirm('${k}')">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
                   </div>
                 </div>
-                <div style="display: flex; gap: 8px;">
-                  ${redesHtml}
-                </div>
-              </div>
 
-              <p style="font-size: 12px; color: #475569; margin-bottom: 6px;"><strong>📍 Dirección:</strong> ${n.direccion}</p>
-              <p style="font-size: 12px; color: #475569; margin-bottom: 12px;"><strong>🌱 Entrega:</strong> ${n.diaEntrega}</p>
-              
-              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                <span style="font-size: 12px; color: var(--text-muted);">Meta: <strong>${n.metaPropia || 100} un.</strong></span>
-                <a href="tienda.html?ref=${k}" target="_blank" style="font-size: 12px; color: var(--primary); font-weight: 700; text-decoration: none;">
-                  Ver Tienda &rarr;
+                <p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>📍 Dirección:</strong> ${n.direccion || 'Sin dirección'}</p>
+                <p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>🌱 Entrega:</strong> ${n.diaEntrega || 'A coordinar'}</p>
+                ${n.telefono ? `<p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>📱 WhatsApp:</strong> ${n.telefono}</p>` : ''}
+                ${!n.imagen ? `<div style="font-size: 12px; color: #64748B; margin-bottom: 6px; background: #F8FAFC; padding: 4px 8px; border-radius: 6px; display: inline-block;">🔑 PIN Acceso: <strong>${n.pin || '1234'}</strong></div>` : ''}
+              </div>
+            </div>
+
+            <div style="padding: 12px 18px; background: #F8FAFC; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: var(--text-muted);">Meta: <strong>${n.metaPropia || 100} un.</strong></span>
+              <div style="display: flex; gap: 12px;">
+                <a href="admin.html?ref=${k}" target="_blank" style="font-size: 12px; color: #2563EB; font-weight: 700; text-decoration: none;" title="Ingresar al panel de gestión de este nodo">
+                  Panel Nodo &rarr;
+                </a>
+                <a href="tienda.html?ref=${k}" target="_blank" style="font-size: 12px; color: var(--primary); font-weight: 700; text-decoration: none;" title="Abrir tienda personalizada para este nodo">
+                  Tienda &rarr;
                 </a>
               </div>
             </div>
@@ -2507,6 +2657,98 @@
       });
 
       document.getElementById('super-nodes-grid').innerHTML = html;
+    }
+
+    // =================================================================
+    // CRUD DE NODOS (CREAR / EDITAR / ELIMINAR)
+    // =================================================================
+    function openCreateNodeModal() {
+      document.getElementById('node-editor-title').innerText = 'Nuevo Nodo Almacén';
+      document.getElementById('edit-node-id').value = '';
+      document.getElementById('edit-node-slug').value = '';
+      document.getElementById('edit-node-slug').disabled = false;
+      document.getElementById('edit-node-logo').value = '🌱';
+      document.getElementById('edit-node-nombre').value = '';
+      document.getElementById('edit-node-contacto').value = '';
+      document.getElementById('edit-node-telefono').value = '';
+      document.getElementById('edit-node-direccion').value = '';
+      document.getElementById('edit-node-dia-entrega').value = 'Viernes 16 a 20 hs';
+      document.getElementById('edit-node-pin').value = '1234';
+      document.getElementById('edit-node-desc').value = '';
+      document.getElementById('edit-node-meta').value = '100';
+      openModal('modal-node-editor');
+    }
+
+    function openEditNodeModal(nodeId) {
+      const nodos = LunarEngine.obtenerNodos();
+      const n = nodos[nodeId];
+      if (!n) return;
+
+      document.getElementById('node-editor-title').innerText = `Editar ${n.nombre}`;
+      document.getElementById('edit-node-id').value = nodeId;
+      document.getElementById('edit-node-slug').value = nodeId;
+      document.getElementById('edit-node-slug').disabled = true;
+      document.getElementById('edit-node-logo').value = n.logo || '🌱';
+      document.getElementById('edit-node-nombre').value = n.nombre || '';
+      document.getElementById('edit-node-contacto').value = n.contacto || '';
+      document.getElementById('edit-node-telefono').value = n.telefono || '';
+      document.getElementById('edit-node-direccion').value = n.direccion || '';
+      document.getElementById('edit-node-dia-entrega').value = n.diaEntrega || '';
+      document.getElementById('edit-node-pin').value = n.pin || '1234';
+      document.getElementById('edit-node-desc').value = n.descripcion || '';
+      document.getElementById('edit-node-meta').value = n.metaPropia || 100;
+      openModal('modal-node-editor');
+    }
+
+    function saveNodeFromModal() {
+      const editId = document.getElementById('edit-node-id').value;
+      const slug = (editId || document.getElementById('edit-node-slug').value).trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
+      const nombre = document.getElementById('edit-node-nombre').value.trim();
+      const logo = document.getElementById('edit-node-logo').value.trim() || '🌱';
+      const contacto = document.getElementById('edit-node-contacto').value.trim();
+      const telefono = document.getElementById('edit-node-telefono').value.trim();
+      const direccion = document.getElementById('edit-node-direccion').value.trim();
+      const diaEntrega = document.getElementById('edit-node-dia-entrega').value.trim();
+      const pin = document.getElementById('edit-node-pin').value.trim() || '1234';
+      const desc = document.getElementById('edit-node-desc').value.trim();
+      const meta = parseInt(document.getElementById('edit-node-meta').value || 100, 10);
+
+      if (!slug || !nombre || !contacto || !direccion || !diaEntrega) {
+        alert("Por favor completa los campos obligatorios: ID único, Nombre, Responsable, Dirección y Día de Entrega.");
+        return;
+      }
+
+      const nodeData = {
+        id: slug,
+        nombre: nombre,
+        logo: logo,
+        contacto: contacto,
+        telefono: telefono,
+        direccion: direccion,
+        diaEntrega: diaEntrega,
+        pin: pin,
+        descripcion: desc,
+        metaPropia: meta
+      };
+
+      LunarEngine.guardarNodo(nodeData);
+      closeModal('modal-node-editor');
+      renderNodesSection();
+      renderSecuritySection();
+      alert(`✅ Nodo "${nombre}" guardado con éxito.`);
+    }
+
+    function deleteNodeConfirm(nodeId) {
+      const nodos = LunarEngine.obtenerNodos();
+      const n = nodos[nodeId];
+      if (!n) return;
+
+      if (confirm(`¿Estás seguro de que deseas eliminar el nodo "${n.nombre}" (${nodeId}) de la red?`)) {
+        LunarEngine.eliminarNodo(nodeId);
+        renderNodesSection();
+        renderSecuritySection();
+        alert(`🗑️ Nodo "${n.nombre}" eliminado correctamente.`);
+      }
     }
 
     // =================================================================
@@ -2977,6 +3219,67 @@
       document.getElementById('cfg-cycle-activate').checked = ciclo.esVigente;
     }
 
+    function openEditCycleModal(cycleId) {
+      const ciclo = LunarEngine.obtenerCicloPorId(cycleId);
+      if (!ciclo) return;
+
+      document.getElementById('modal-cfg-cycle-id').value = ciclo.id;
+      document.getElementById('modal-cfg-cycle-name').value = ciclo.nombre;
+      document.getElementById('modal-cfg-cycle-sign').value = ciclo.llenaSigno || 'Piscis';
+
+      const fmtDate = (d) => {
+        if (!d) return '';
+        const dt = (d instanceof Date) ? d : new Date(d);
+        const y = dt.getFullYear();
+        const m = String(dt.getMonth() + 1).padStart(2, '0');
+        const day = String(dt.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      };
+
+      document.getElementById('modal-cfg-cycle-start').value = fmtDate(ciclo.nuevaFecha);
+      document.getElementById('modal-cfg-cycle-close').value = fmtDate(ciclo.llenaFecha);
+      document.getElementById('modal-cfg-cycle-delivery').value = fmtDate(ciclo.entregaFecha);
+      document.getElementById('modal-cfg-cycle-msg').value = ciclo.mensajeTienda || '';
+      document.getElementById('modal-cfg-cycle-activate').checked = ciclo.esVigente;
+
+      // También cargar en el formulario lateral por conveniencia
+      loadCycleToForm(cycleId);
+
+      openModal('modal-cycle-editor');
+    }
+
+    function saveCycleFromModal() {
+      const id = document.getElementById('modal-cfg-cycle-id').value;
+      const nombre = document.getElementById('modal-cfg-cycle-name').value.trim();
+      const signo = document.getElementById('modal-cfg-cycle-sign').value;
+      const start = document.getElementById('modal-cfg-cycle-start').value;
+      const close = document.getElementById('modal-cfg-cycle-close').value;
+      const delivery = document.getElementById('modal-cfg-cycle-delivery').value;
+      const msg = document.getElementById('modal-cfg-cycle-msg').value.trim();
+      const activate = document.getElementById('modal-cfg-cycle-activate').checked;
+
+      if (!nombre || !start || !close || !delivery) {
+        alert("Por favor completa el nombre, fecha de inicio, fecha de cierre y fecha de entrega.");
+        return;
+      }
+
+      const cycleData = {
+        id: id || `ciclo_${signo.toLowerCase()}_${Date.now()}`,
+        nombre: nombre,
+        llenaSigno: signo,
+        nuevaFecha: start,
+        llenaFecha: close,
+        entregaFecha: delivery,
+        mensajeTienda: msg,
+        activar: activate
+      };
+
+      LunarEngine.guardarCicloConfigurado(cycleData);
+      closeModal('modal-cycle-editor');
+      renderLunarSynchronary();
+      alert("✅ Ciclo lunar actualizado y aplicado con éxito a toda la red.");
+    }
+
     function saveLunarCycleFromForm() {
       const id = document.getElementById('cfg-cycle-id').value;
       const nombre = document.getElementById('cfg-cycle-name').value.trim();
@@ -3045,7 +3348,7 @@
             <td style="text-align: right;">
               <div style="display: flex; justify-content: flex-end; gap: 6px;">
                 ${!c.esVigente ? `<button class="btn-action-icon" style="color: #16A34A; background: #DCFCE7; border-color: #BBF7D0;" title="Activar como Vigente" onclick="activateCycleDirect('${c.id}')"><i class="fas fa-check"></i></button>` : ''}
-                <button class="btn-action-icon" title="Cargar en Formulario" onclick="loadCycleToForm('${c.id}')">
+                <button class="btn-action-icon" title="Editar Ciclo Lunar" onclick="openEditCycleModal('${c.id}')" style="color: #2563EB;">
                   <i class="fas fa-edit"></i>
                 </button>
               </div>
