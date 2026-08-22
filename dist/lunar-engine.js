@@ -472,6 +472,18 @@ const LUNAR_CONFIG = {
       activo: true,
       nodos: ['TODOS']
     }
+  ],
+
+  // Categorías Principales del Ecosistema (Barra Spotify y Filtros)
+  categorias: [
+    { id: 'granos', nombre: 'Granos & Legumbres', emoji: '🌾', colorBg: '#F59E0B', colorText: '#FFFFFF', orden: 1, activa: true },
+    { id: 'cacao', nombre: 'Cacao Silvestre', emoji: '🍫', colorBg: '#854D0E', colorText: '#FFFFFF', orden: 2, activa: true },
+    { id: 'yerba', nombre: 'Yerba Mate', emoji: '🌿', colorBg: '#15803D', colorText: '#FFFFFF', orden: 3, activa: true },
+    { id: 'aceite', nombre: 'Aceite Oliva', emoji: '🫒', colorBg: '#4D7C0F', colorText: '#FFFFFF', orden: 4, activa: true },
+    { id: 'hongos', nombre: 'Hongos del Delta', emoji: '🍄', colorBg: '#B91C1C', colorText: '#FFFFFF', orden: 5, activa: true },
+    { id: 'huerta', nombre: 'Huerta & Frescos', emoji: '🥬', colorBg: '#16A34A', colorText: '#FFFFFF', orden: 6, activa: true },
+    { id: 'granja', nombre: 'Granja & Mieles', emoji: '🥚', colorBg: '#D97706', colorText: '#FFFFFF', orden: 7, activa: true },
+    { id: 'panificados', nombre: 'Panadería & Masa Madre', emoji: '🍞', colorBg: '#C2410C', colorText: '#FFFFFF', orden: 8, activa: true }
   ]
 };
 
@@ -480,6 +492,72 @@ const LUNAR_CONFIG = {
 // =================================================================
 
 class LunarEngine {
+  /**
+   * Obtiene todas las categorías (activas o todas con orden y persistencia)
+   */
+  static obtenerCategorias(soloActivas = true) {
+    let cats = LUNAR_CONFIG.categorias;
+    if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
+      const stored = localStorage.getItem('VRDE_CATEGORIAS');
+      if (stored) {
+        try {
+          cats = JSON.parse(stored);
+          // Asegurar que las categorías por defecto existan
+          LUNAR_CONFIG.categorias.forEach(def => {
+            if (!cats.some(c => c.id === def.id)) {
+              cats.push(def);
+            }
+          });
+        } catch(e) {
+          cats = LUNAR_CONFIG.categorias;
+        }
+      } else {
+        localStorage.setItem('VRDE_CATEGORIAS', JSON.stringify(cats));
+      }
+    }
+    if (soloActivas) {
+      cats = cats.filter(c => c.activa !== false);
+    }
+    return cats.sort((a, b) => (a.orden || 99) - (b.orden || 99));
+  }
+
+  /**
+   * Guarda o actualiza una categoría
+   */
+  static guardarCategoria(catData) {
+    let cats = this.obtenerCategorias(false);
+    const idx = cats.findIndex(c => c.id === catData.id);
+    if (idx >= 0) {
+      cats[idx] = { ...cats[idx], ...catData };
+    } else {
+      cats.push({
+        id: catData.id || ('cat_' + Date.now()),
+        nombre: catData.nombre || 'Nueva Categoría',
+        emoji: catData.emoji || '🌱',
+        colorBg: catData.colorBg || '#10A352',
+        colorText: catData.colorText || '#FFFFFF',
+        orden: catData.orden || (cats.length + 1),
+        activa: catData.activa !== false
+      });
+    }
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_CATEGORIAS', JSON.stringify(cats));
+    }
+    return cats;
+  }
+
+  /**
+   * Elimina una categoría
+   */
+  static eliminarCategoria(catId) {
+    let cats = this.obtenerCategorias(false);
+    cats = cats.filter(c => c.id !== catId);
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_CATEGORIAS', JSON.stringify(cats));
+    }
+    return cats;
+  }
+
   /**
    * Obtiene todos los productos (con persistencia local y filtros de nodo/activo)
    */

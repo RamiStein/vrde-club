@@ -599,41 +599,10 @@
     </button>
   </div>
 
-  <!-- Bloques de Categorías Spotify (4x2 en Desktop) -->
+  <!-- Bloques de Categorías Spotify (Dinámicas 4x2 en Desktop) -->
   <div class="spotify-categories-wrapper">
-    <div class="spotify-categories-grid">
-      <div class="spotify-cat-card scat-all active" onclick="filterByStoreCategory('TODOS', this)">
-        <div class="cat-name">Ver Todo</div>
-        <div class="cat-icon">🌱</div>
-      </div>
-      <div class="spotify-cat-card scat-granos" onclick="filterByStoreCategory('granos', this)">
-        <div class="cat-name">Granos & Legumbres</div>
-        <div class="cat-icon">🌾</div>
-      </div>
-      <div class="spotify-cat-card scat-cacao" onclick="filterByStoreCategory('cacao', this)">
-        <div class="cat-name">Cacao Silvestre</div>
-        <div class="cat-icon">🍫</div>
-      </div>
-      <div class="spotify-cat-card scat-yerba" onclick="filterByStoreCategory('yerba', this)">
-        <div class="cat-name">Yerba Mate</div>
-        <div class="cat-icon">🌿</div>
-      </div>
-      <div class="spotify-cat-card scat-aceite" onclick="filterByStoreCategory('aceite', this)">
-        <div class="cat-name">Aceite Oliva</div>
-        <div class="cat-icon">🫒</div>
-      </div>
-      <div class="spotify-cat-card scat-hongos" onclick="filterByStoreCategory('hongos', this)">
-        <div class="cat-name">Hongos del Delta</div>
-        <div class="cat-icon">🍄</div>
-      </div>
-      <div class="spotify-cat-card scat-huerta" onclick="filterByStoreCategory('huerta', this)">
-        <div class="cat-name">Huerta & Frescos</div>
-        <div class="cat-icon">🥬</div>
-      </div>
-      <div class="spotify-cat-card scat-granja" onclick="filterByStoreCategory('granja', this)">
-        <div class="cat-name">Granja & Mieles</div>
-        <div class="cat-icon">🥚</div>
-      </div>
+    <div class="spotify-categories-grid" id="spotify-categories-container">
+      <!-- Inyectado dinámicamente por JS desde LunarEngine.obtenerCategorias() -->
     </div>
   </div>
 
@@ -976,6 +945,7 @@
       });
 
       updateProgressBars();
+      renderSpotifyCategories();
       filterCategoryAndRender('TODOS');
       initTabsScrollBehavior();
     }
@@ -1007,8 +977,34 @@
     }
 
     // ==========================================
-    // FILTRADO POR CATEGORÍAS SPOTIFY
+    // FILTRADO POR CATEGORÍAS SPOTIFY (DINÁMICAS)
     // ==========================================
+    function renderSpotifyCategories() {
+      const container = document.getElementById('spotify-categories-container');
+      if (!container) return;
+      const cats = LunarEngine.obtenerCategorias(true);
+
+      let html = `
+        <div class="spotify-cat-card scat-all ${CURRENT_CATEGORY === 'TODOS' ? 'active' : ''}" onclick="filterByStoreCategory('TODOS', this)">
+          <div class="cat-name">Ver Todo</div>
+          <div class="cat-icon">🌱</div>
+        </div>
+      `;
+
+      cats.forEach(c => {
+        const isActive = (CURRENT_CATEGORY === c.id) ? 'active' : '';
+        const bgStyle = c.colorBg ? `background: linear-gradient(135deg, ${c.colorBg}, rgba(0,0,0,0.35));` : '';
+        html += `
+          <div class="spotify-cat-card scat-${c.id} ${isActive}" style="${bgStyle}" onclick="filterByStoreCategory('${c.id}', this)">
+            <div class="cat-name">${c.nombre}</div>
+            <div class="cat-icon">${c.emoji || '🌱'}</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
     function filterByStoreCategory(cat, el) {
       document.querySelectorAll('.spotify-cat-card').forEach(c => c.classList.remove('active'));
       if (el) el.classList.add('active');

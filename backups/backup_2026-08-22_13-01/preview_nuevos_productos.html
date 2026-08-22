@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Previsualización de Productos Oficiales - Vrde Club</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10A352;
+      --primary-dark: #0B7339;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+    body { background: var(--bg); color: var(--text-main); padding: 40px 20px; line-height: 1.5; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+    .header p { color: var(--text-muted); font-size: 16px; }
+    .badge { display: inline-block; background: rgba(16,163,82,0.1); color: var(--primary); padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 700; margin-bottom: 12px; border: 1px solid rgba(16,163,82,0.2); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: transform 0.2s; }
+    .card:hover { transform: translateY(-4px); }
+    .img-wrapper { position: relative; width: 100%; aspect-ratio: 1/1; background: #F1F5F9; overflow: hidden; }
+    .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+    .card-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .prod-origin { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .prod-name { font-size: 19px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; line-height: 1.3; }
+    .prod-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; flex: 1; line-height: 1.5; }
+    .prices-box { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-top: auto; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 6px; }
+    .price-row:last-child { margin-bottom: 0; padding-top: 8px; border-top: 1px dashed #CBD5E1; }
+    .price-label { color: var(--text-muted); font-weight: 600; }
+    .price-val { font-weight: 800; color: var(--text-main); }
+    .price-highlight { color: var(--primary); font-size: 16px; }
+    .note-badge { display: inline-block; font-size: 11px; background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="badge">🌱 Catálogo Vrde Club • Nuevos Ingresos Oficiales</span>
+      <h1>Nuevos Productos y Fotografías Oficiales</h1>
+      <p>Imágenes reales proporcionadas y propuestas de integración al sistema astronómico de compras</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- 1. CACAO SILVESTRE BOLIVIA 1KG -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/cacao_bolivia.jpg" alt="Pasta Pura Cacao Silvestre Amazónico de Bolivia">
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">Rurrenabaque, Bolivia 🇧🇴 • Recolección Silvícola</div>
+          <h2 class="prod-name">Pasta Pura Cacao Silvestre Amazónico (Barra 1 kg)</h2>
+          <p class="prod-desc">100% puro agroecológico y sustentable. Elaborado a partir de semillas fermentadas, suavemente tostadas y prensadas. Sabor profundo, terroso y chocolatoso con notas de café. Retiro en Loma Verde o envíos.</p>
+          
+          <div class="prices-box">
+            <div class="note-badge">📅 Cierra: Martes 25-08 • Llega: 28 al 30 de Agosto</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 2 kg):</span>
+              <span class="price-val price-highlight">$60.000 / kg</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Escala 3kg en red:</span>
+              <span class="price-val">$57.000 / kg ($171.000)</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Escala 5kg en red:</span>
+              <span class="price-val">$55.000 / kg ($275.000)</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">4. Escala 10kg en red:</span>
+              <span class="price-val">$50.000 / kg ($500.000)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. CACAO SILVESTRE BOLIVIA 500G -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/cacao_bolivia.jpg" alt="Pasta Pura Cacao Silvestre Amazónico 500g">
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">Rurrenabaque, Bolivia 🇧🇴 • Recolección Silvícola</div>
+          <h2 class="prod-name">Pasta Pura Cacao Silvestre Amazónico (Barra 500g)</h2>
+          <p class="prod-desc">Formato fraccionado de 1/2 kg en barra compacta pura. Ideal para preparación de chocolate ceremonial, repostería pura o consumo saludable diario sin conservantes ni aditivos.</p>
+          
+          <div class="prices-box">
+            <div class="note-badge">📅 Cierra: Martes 25-08 • Llega: 28 al 30 de Agosto</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (Barra 500g):</span>
+              <span class="price-val price-highlight">$32.500 ($65.000/kg)</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Escala +6 unidades (3kg):</span>
+              <span class="price-val">$28.500 / barra</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Escala +10 unidades (5kg):</span>
+              <span class="price-val">$27.500 / barra</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">4. Escala +20 unidades (10kg):</span>
+              <span class="price-val">$25.000 / barra</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. ACEITE LORENZO CABRERA -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/aceite_lorenzo_cabrera.jpg" alt="Aceite de Oliva Lorenzo Cabrera">
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">Traslasierra, Córdoba • Lorenzo Cabrera</div>
+          <h2 class="prod-name">Aceite de Oliva Extra Virgen Lorenzo Cabrera (1 Litro / 2 Litros)</h2>
+          <p class="prod-desc">Aceite de oliva virgen extra agroecológico de primera prensada en frío. Pureza absoluta de olivares tradicionales, acidez ultra baja y sabor balanceado frutado.</p>
+          
+          <div class="prices-box">
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 19 litros):</span>
+              <span class="price-val price-highlight">$19.300 / litro</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Mayorista (+20 litros en red):</span>
+              <span class="price-val">$17.900 / litro</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Distribuidora (+50 litros en red):</span>
+              <span class="price-val">$16.500 / litro</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. ARROZ CAUPOLICAN -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/arroz_caupolican.jpg" alt="Arroz Yamaní Caupolicán">
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">San Salvador, Entre Ríos • Caupolicán</div>
+          <h2 class="prod-name">Arroz Yamaní Integral Agroecológico Caupolicán (1 kg)</h2>
+          <p class="prod-desc">Grano entero integral libre de agroquímicos y pesticidas. Cultivo natural sin TACC de la Capital Nacional del Arroz. Procesado físico sin aditivos químicos.</p>
+          
+          <div class="prices-box">
+            <div class="cost-badge" style="font-size: 11px; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-bottom: 8px; display: inline-block;">Costo Productor: $2.400 / kg</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 5 kg):</span>
+              <span class="price-val price-highlight">$3.800</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Mayorista (+6 kg en red):</span>
+              <span class="price-val">$3.200</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Distribuidora (+20 kg en red):</span>
+              <span class="price-val">$2.800</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. LENTEJAS SALVE LA TIERRA -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/lentejas_salve_tierra.jpg" alt="Lentejas Salve la Tierra">
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">Capilla del Señor, Buenos Aires • Salve la Tierra</div>
+          <h2 class="prod-name">Lentejas Agroecológicas Salve la Tierra (1 kg)</h2>
+          <p class="prod-desc">Lentejas verdes seleccionadas de suelo vivo y agricultura regenerativa. Semillas 100% libres de transgénicos (NO OGM), ricas en hierro, fibra y proteínas vegetales.</p>
+          
+          <div class="prices-box">
+            <div class="cost-badge" style="font-size: 11px; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-bottom: 8px; display: inline-block;">Costo Productor: $2.200 / kg</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 5 kg):</span>
+              <span class="price-val price-highlight">$3.500</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Mayorista (+6 kg en red):</span>
+              <span class="price-val">$3.000</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Distribuidora (+20 kg en red):</span>
+              <span class="price-val">$2.600</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. GARBANZOS SALVE LA TIERRA -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/garbanzos_salve_tierra.jpg" alt="Garbanzos Salve la Tierra">
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">Capilla del Señor, Buenos Aires • Salve la Tierra</div>
+          <h2 class="prod-name">Garbanzos Agroecológicos Salve la Tierra (1 kg)</h2>
+          <p class="prod-desc">Garbanzos grandes de producción agroecológica sin pesticidas ni fertilizantes sintéticos. Textura cremosa, ideales para hummus, guisos, ensaladas y tostados.</p>
+          
+          <div class="prices-box">
+            <div class="cost-badge" style="font-size: 11px; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-bottom: 8px; display: inline-block;">Costo Productor: $2.200 / kg</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 5 kg):</span>
+              <span class="price-val price-highlight">$3.500</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Mayorista (+6 kg en red):</span>
+              <span class="price-val">$3.000</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Distribuidora (+20 kg en red):</span>
+              <span class="price-val">$2.600</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

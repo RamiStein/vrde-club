@@ -399,6 +399,11 @@
           <span>Catálogo y Costos Base</span>
         </button>
 
+        <button class="sidebar-btn" id="sp-sbtn-categories" onclick="switchSuperTab('categories')">
+          <i class="fas fa-th-large" style="color: #EC4899;"></i>
+          <span>Categorías Spotify</span>
+        </button>
+
         <button class="sidebar-btn" id="sp-sbtn-nodes" onclick="switchSuperTab('nodes')">
           <i class="fas fa-map-marker-alt" style="color: #2563EB;"></i>
           <span>Red de Nodos y Redes</span>
@@ -566,6 +571,43 @@
               </tr>
             </thead>
             <tbody id="super-products-tbody">
+              <!-- Inyectado dinámicamente por JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- =========================================================
+           SECCIÓN: GESTIÓN DE CATEGORÍAS SPOTIFY (DINÁMICAS)
+           ========================================================= -->
+      <div id="super-section-categories" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 20px; color: #0F172A; margin: 0;">Gestor de Categorías Visuales (Barra Spotify)</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+              Crea nuevas categorías personalizadas, edita nombres, emojis, colores de tarjetas y orden de aparición en la tienda.
+            </p>
+          </div>
+          <button class="btn-checkout-cta" style="padding: 10px 22px; font-size: 14px; display: flex; align-items: center; gap: 8px; background: #EC4899;" onclick="openCreateCategoryModal()">
+            <i class="fas fa-plus"></i> Nueva Categoría
+          </button>
+        </div>
+
+        <!-- Tabla de Categorías -->
+        <div style="overflow-x: auto; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+          <table class="product-admin-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Orden</th>
+                <th>Tarjeta en Tienda (Preview)</th>
+                <th>Nombre de Categoría</th>
+                <th>ID / Slug Técnico</th>
+                <th>Color de Fondo</th>
+                <th>Estado</th>
+                <th style="text-align: right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="super-categories-tbody">
               <!-- Inyectado dinámicamente por JS -->
             </tbody>
           </table>
@@ -950,6 +992,68 @@
     </div>
   </div>
 
+  <!-- Modal Crear / Editar Categoría Spotify -->
+  <div class="modal-overlay" id="modal-category-editor">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; margin: 0;" id="cat-editor-title">Nueva Categoría Spotify</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-category-editor')">&times;</span>
+      </div>
+
+      <input type="hidden" id="edit-cat-id">
+
+      <div class="input-field-group">
+        <label>Nombre de la Categoría *</label>
+        <input type="text" id="edit-cat-nombre" class="input-field" placeholder="Ej: Cosmética Natural, Frutos Secos" required oninput="autoGenerateCatSlug()">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+        <div class="input-field-group">
+          <label>ID / Slug Único *</label>
+          <input type="text" id="edit-cat-slug" class="input-field" placeholder="ej: cosmetica, frutos-secos" required>
+        </div>
+        <div class="input-field-group">
+          <label>Emoji / Icono *</label>
+          <input type="text" id="edit-cat-emoji" class="input-field" placeholder="🌱" value="🌱" style="font-size: 16px; text-align: center;" required>
+        </div>
+      </div>
+
+      <div class="input-field-group">
+        <label>Color de Tarjeta (Gradiente)</label>
+        <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+          <input type="color" id="edit-cat-color" value="#10A352" style="width: 44px; height: 38px; border: 1px solid #CBD5E1; border-radius: 6px; cursor: pointer; padding: 2px;">
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button type="button" style="background: #F59E0B; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#F59E0B')" title="Dorado"></button>
+            <button type="button" style="background: #854D0E; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#854D0E')" title="Cacao"></button>
+            <button type="button" style="background: #15803D; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#15803D')" title="Verde"></button>
+            <button type="button" style="background: #4D7C0F; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#4D7C0F')" title="Oliva"></button>
+            <button type="button" style="background: #B91C1C; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#B91C1C')" title="Rojo"></button>
+            <button type="button" style="background: #D97706; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#D97706')" title="Naranja"></button>
+            <button type="button" style="background: #C2410C; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#C2410C')" title="Pan"></button>
+            <button type="button" style="background: #EC4899; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#EC4899')" title="Rosa"></button>
+            <button type="button" style="background: #8B5CF6; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#8B5CF6')" title="Violeta"></button>
+            <button type="button" style="background: #0284C7; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;" onclick="setCatColor('#0284C7')" title="Azul"></button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="input-field-group">
+          <label>Orden de aparición</label>
+          <input type="number" id="edit-cat-orden" class="input-field" placeholder="1, 2, 3..." value="10">
+        </div>
+        <div class="input-field-group" style="display: flex; align-items: center; gap: 8px; margin-top: 24px;">
+          <input type="checkbox" id="edit-cat-activa" style="width: 18px; height: 18px; accent-color: var(--primary);" checked>
+          <label for="edit-cat-activa" style="font-size: 13px; font-weight: 600; cursor: pointer;">Categoría Activa</label>
+        </div>
+      </div>
+
+      <button class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); margin-top: 14px; background: #EC4899;" onclick="saveCategoryFromModal()">
+        GUARDAR CATEGORÍA
+      </button>
+    </div>
+  </div>
+
   <!-- Modal Crear / Editar Vrdedor desde Super Admin -->
   <div class="modal-overlay" id="modal-super-vrdedor">
     <div class="modal-card" style="max-width: 460px;">
@@ -1057,6 +1161,7 @@
 
       renderOrdersDashboard();
       renderProductsTable();
+      renderCategoriesSection();
       renderNodesSection();
       renderTeamsSection();
       renderSuperCrmSection();
@@ -1070,12 +1175,14 @@
 
       document.getElementById('super-section-orders').classList.toggle('hidden', tabId !== 'orders');
       document.getElementById('super-section-products').classList.toggle('hidden', tabId !== 'products');
+      document.getElementById('super-section-categories').classList.toggle('hidden', tabId !== 'categories');
       document.getElementById('super-section-nodes').classList.toggle('hidden', tabId !== 'nodes');
       document.getElementById('super-section-teams').classList.toggle('hidden', tabId !== 'teams');
       document.getElementById('super-section-crm').classList.toggle('hidden', tabId !== 'crm');
       document.getElementById('super-section-finances').classList.toggle('hidden', tabId !== 'finances');
       document.getElementById('super-section-cycle').classList.toggle('hidden', tabId !== 'cycle');
 
+      if (tabId === 'categories') renderCategoriesSection();
       if (tabId === 'teams') renderTeamsSection();
       if (tabId === 'crm') renderSuperCrmSection();
       if (tabId === 'finances') renderFinancesSection();
@@ -1454,11 +1561,175 @@
       container.appendChild(card);
     }
 
+    // =================================================================
+    // GESTIÓN DE CATEGORÍAS SPOTIFY (DINÁMICAS)
+    // =================================================================
+
+    function renderCategoriesSection() {
+      const cats = LunarEngine.obtenerCategorias(false);
+      let html = '';
+
+      cats.forEach((c, idx) => {
+        const isActive = c.activa !== false;
+        const statusBtn = isActive 
+          ? `<button class="status-toggle-btn status-active" onclick="toggleCategoryActive('${c.id}')"><i class="fas fa-check-circle"></i> Activa</button>`
+          : `<button class="status-toggle-btn status-paused" onclick="toggleCategoryActive('${c.id}')"><i class="fas fa-pause-circle"></i> Pausada</button>`;
+
+        const bgStyle = c.colorBg ? `background: linear-gradient(135deg, ${c.colorBg}, rgba(0,0,0,0.3));` : 'background: #10A352;';
+
+        html += `
+          <tr>
+            <td><strong style="color: #64748B; font-size: 13px;">#${c.orden || (idx + 1)}</strong></td>
+            <td>
+              <div style="${bgStyle}; width: 150px; height: 42px; border-radius: 8px; padding: 4px 10px; display: flex; align-items: center; justify-content: space-between; color: white; font-weight: 800; font-size: 11.5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <span>${c.nombre}</span>
+                <span style="font-size: 20px;">${c.emoji || '🌱'}</span>
+              </div>
+            </td>
+            <td>
+              <strong style="color: #0F172A; font-size: 14.5px;">${c.nombre}</strong>
+            </td>
+            <td>
+              <span style="background: #F1F5F9; border: 1px solid #CBD5E1; padding: 2px 8px; border-radius: 6px; font-family: monospace; font-size: 11.5px; color: #475569;">${c.id}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 18px; height: 18px; border-radius: 50%; background: ${c.colorBg || '#10A352'}; border: 1px solid #CBD5E1;"></div>
+                <span style="font-size: 12px; color: #64748B; font-family: monospace;">${c.colorBg || '#10A352'}</span>
+              </div>
+            </td>
+            <td>${statusBtn}</td>
+            <td style="text-align: right;">
+              <div style="display: flex; justify-content: flex-end; gap: 6px;">
+                <button class="btn-action-icon" title="Editar Categoría" onclick="openEditCategoryModal('${c.id}')">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-action-icon" style="color: #DC2626;" title="Eliminar Categoría" onclick="deleteCategory('${c.id}')">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('super-categories-tbody').innerHTML = html;
+    }
+
+    function populateCategoryDropdown(selectedVal = 'granos') {
+      const select = document.getElementById('edit-prod-categoria');
+      if (!select) return;
+      const cats = LunarEngine.obtenerCategorias(false);
+      let html = '';
+      cats.forEach(c => {
+        const isSel = (c.id === selectedVal) ? 'selected' : '';
+        html += `<option value="${c.id}" ${isSel}>${c.emoji || '🌱'} ${c.nombre}</option>`;
+      });
+      select.innerHTML = html;
+    }
+
+    function openCreateCategoryModal() {
+      document.getElementById('cat-editor-title').innerText = "Nueva Categoría Spotify";
+      document.getElementById('edit-cat-id').value = '';
+      document.getElementById('edit-cat-nombre').value = '';
+      document.getElementById('edit-cat-slug').value = '';
+      document.getElementById('edit-cat-slug').readOnly = false;
+      document.getElementById('edit-cat-emoji').value = '🌱';
+      document.getElementById('edit-cat-color').value = '#10A352';
+      document.getElementById('edit-cat-orden').value = (LunarEngine.obtenerCategorias(false).length + 1);
+      document.getElementById('edit-cat-activa').checked = true;
+
+      openModal('modal-category-editor');
+    }
+
+    function openEditCategoryModal(catId) {
+      const cats = LunarEngine.obtenerCategorias(false);
+      const c = cats.find(x => x.id === catId);
+      if (!c) return;
+
+      document.getElementById('cat-editor-title').innerText = `Editar: ${c.nombre}`;
+      document.getElementById('edit-cat-id').value = c.id;
+      document.getElementById('edit-cat-nombre').value = c.nombre;
+      document.getElementById('edit-cat-slug').value = c.id;
+      document.getElementById('edit-cat-slug').readOnly = true;
+      document.getElementById('edit-cat-emoji').value = c.emoji || '🌱';
+      document.getElementById('edit-cat-color').value = c.colorBg || '#10A352';
+      document.getElementById('edit-cat-orden').value = c.orden || 1;
+      document.getElementById('edit-cat-activa').checked = c.activa !== false;
+
+      openModal('modal-category-editor');
+    }
+
+    function autoGenerateCatSlug() {
+      const editId = document.getElementById('edit-cat-id').value;
+      if (editId) return; // No sobreescribir si estamos editando
+      const name = document.getElementById('edit-cat-nombre').value;
+      const slug = name.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+      document.getElementById('edit-cat-slug').value = slug;
+    }
+
+    function setCatColor(hex) {
+      document.getElementById('edit-cat-color').value = hex;
+    }
+
+    function saveCategoryFromModal() {
+      const editId = document.getElementById('edit-cat-id').value;
+      const nombre = document.getElementById('edit-cat-nombre').value.trim();
+      const slug = document.getElementById('edit-cat-slug').value.trim().toLowerCase();
+      const emoji = document.getElementById('edit-cat-emoji').value.trim() || '🌱';
+      const colorBg = document.getElementById('edit-cat-color').value;
+      const orden = parseInt(document.getElementById('edit-cat-orden').value) || 10;
+      const activa = document.getElementById('edit-cat-activa').checked;
+
+      if (!nombre || !slug) {
+        alert("Por favor completa el nombre y el ID / slug de la categoría.");
+        return;
+      }
+
+      const catData = {
+        id: editId || slug,
+        nombre: nombre,
+        emoji: emoji,
+        colorBg: colorBg,
+        colorText: '#FFFFFF',
+        orden: orden,
+        activa: activa
+      };
+
+      LunarEngine.guardarCategoria(catData);
+      closeModal('modal-category-editor');
+      renderCategoriesSection();
+      populateCategoryDropdown();
+      alert("✅ Categoría guardada con éxito.");
+    }
+
+    function toggleCategoryActive(catId) {
+      const cats = LunarEngine.obtenerCategorias(false);
+      const c = cats.find(x => x.id === catId);
+      if (c) {
+        c.activa = (c.activa === false);
+        LunarEngine.guardarCategoria(c);
+        renderCategoriesSection();
+      }
+    }
+
+    function deleteCategory(catId) {
+      if (confirm(`¿Estás seguro de que deseas eliminar la categoría "${catId}"?`)) {
+        LunarEngine.eliminarCategoria(catId);
+        renderCategoriesSection();
+        populateCategoryDropdown();
+      }
+    }
+
     function openCreateProductModal() {
       document.getElementById('prod-editor-title').innerText = "Crear Nuevo Producto";
       document.getElementById('edit-prod-id').value = 'P-' + Math.floor(Math.random() * 90000 + 10000);
       document.getElementById('edit-prod-nombre').value = '';
-      document.getElementById('edit-prod-categoria').value = 'granos';
+      populateCategoryDropdown('granos');
       document.getElementById('edit-prod-subcategoria').value = '';
       document.getElementById('edit-prod-origen').value = '';
       document.getElementById('edit-prod-variedad').value = '';
@@ -1492,7 +1763,7 @@
       document.getElementById('prod-editor-title').innerText = `Editar: ${p.nombre}`;
       document.getElementById('edit-prod-id').value = p.id;
       document.getElementById('edit-prod-nombre').value = p.nombre || '';
-      document.getElementById('edit-prod-categoria').value = p.categoria || 'granos';
+      populateCategoryDropdown(p.categoria || 'granos');
       document.getElementById('edit-prod-subcategoria').value = p.subcategoria || '';
       document.getElementById('edit-prod-origen').value = p.origen || '';
       document.getElementById('edit-prod-variedad').value = p.variedad || '';
