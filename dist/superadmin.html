@@ -401,7 +401,7 @@
 
         <button class="sidebar-btn" id="sp-sbtn-categories" onclick="switchSuperTab('categories')">
           <i class="fas fa-th-large" style="color: #EC4899;"></i>
-          <span>Categorías Spotify</span>
+          <span>Categorías</span>
         </button>
 
         <button class="sidebar-btn" id="sp-sbtn-nodes" onclick="switchSuperTab('nodes')">
@@ -578,12 +578,12 @@
       </div>
 
       <!-- =========================================================
-           SECCIÓN: GESTIÓN DE CATEGORÍAS SPOTIFY (DINÁMICAS)
+           SECCIÓN: GESTIÓN DE CATEGORÍAS (DINÁMICAS)
            ========================================================= -->
       <div id="super-section-categories" class="hidden">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
           <div>
-            <h3 style="font-size: 20px; color: #0F172A; margin: 0;">Gestor de Categorías Visuales (Barra Spotify)</h3>
+            <h3 style="font-size: 20px; color: #0F172A; margin: 0;">Gestor de Categorías de Alimentos</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
               Crea nuevas categorías personalizadas, edita nombres, emojis, colores de tarjetas y orden de aparición en la tienda.
             </p>
@@ -871,7 +871,7 @@
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
         <div class="input-field-group">
-          <label>Categoría Spotify *</label>
+          <label>Categoría del Producto *</label>
           <select id="edit-prod-categoria" class="input-field">
             <option value="granos">🌾 Granos & Legumbres</option>
             <option value="cacao">🍫 Cacao Silvestre</option>
@@ -992,11 +992,11 @@
     </div>
   </div>
 
-  <!-- Modal Crear / Editar Categoría Spotify -->
+  <!-- Modal Crear / Editar Categoría -->
   <div class="modal-overlay" id="modal-category-editor">
     <div class="modal-card" style="max-width: 480px;">
       <div class="modal-header-row">
-        <h3 style="font-size: 18px; margin: 0;" id="cat-editor-title">Nueva Categoría Spotify</h3>
+        <h3 style="font-size: 18px; margin: 0;" id="cat-editor-title">Nueva Categoría</h3>
         <span class="modal-close-icon" onclick="closeModal('modal-category-editor')">&times;</span>
       </div>
 
@@ -1629,7 +1629,7 @@
     }
 
     function openCreateCategoryModal() {
-      document.getElementById('cat-editor-title').innerText = "Nueva Categoría Spotify";
+      document.getElementById('cat-editor-title').innerText = "Nueva Categoría";
       document.getElementById('edit-cat-id').value = '';
       document.getElementById('edit-cat-nombre').value = '';
       document.getElementById('edit-cat-slug').value = '';

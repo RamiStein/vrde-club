@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Vrde Club • Tienda con Swipe, Cuadrícula y Carrito</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #10A352;
+      --primary-dark: #0B7339;
+      --accent: #D4F1A0;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 90px;
+      overflow-x: hidden;
+    }
+
+    /* =========================================================
+       1. TOP BAR ULTRA COMPACTA
+       ========================================================= */
+    .top-nav {
+      background: #0F172A;
+      color: white;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+    }
+    .brand-logo span { color: var(--accent); }
+
+    /* Switch de Modos */
+    .view-switch {
+      display: flex;
+      background: rgba(255,255,255,0.1);
+      padding: 2px;
+      border-radius: 20px;
+    }
+    .switch-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .switch-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* =========================================================
+       2. BARRA DE CATEGORÍAS PLEGABLE (DRAWER / COMPACT PILL)
+       ========================================================= */
+    .categories-bar-wrapper {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      margin-bottom: 14px;
+    }
+
+    .cat-compact-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .active-cat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F1F5F9;
+      color: #0F172A;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #E2E8F0;
+    }
+    .btn-toggle-cats {
+      background: none;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Bloques Spotify Desplegables */
+    .spotify-drawer {
+      display: none;
+      padding: 10px 0 4px;
+      animation: fadeIn 0.2s ease;
+    }
+    .spotify-drawer.open {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .spotify-scroll-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scroll-snap-type: x mandatory;
+    }
+    .spotify-card {
+      min-width: 115px;
+      height: 62px;
+      border-radius: 12px;
+      padding: 8px 10px;
+      color: white;
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1.15;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+    .spotify-card.active { outline: 2px solid #0F172A; outline-offset: 1px; }
+    .spotify-card .cat-name { z-index: 2; }
+    .spotify-card .cat-icon {
+      position: absolute;
+      right: -2px;
+      bottom: -4px;
+      font-size: 26px;
+      opacity: 0.85;
+      transform: rotate(15deg);
+    }
+    .cat-all { background: linear-gradient(135deg, #10A352, #059669); }
+    .cat-granos { background: linear-gradient(135deg, #D97706, #B45309); }
+    .cat-cacao { background: linear-gradient(135deg, #92400E, #78350F); }
+    .cat-yerba { background: linear-gradient(135deg, #0D9488, #115E59); }
+    .cat-aceite { background: linear-gradient(135deg, #65A30D, #4D7C0F); }
+
+    /* Pastillas de Subcategorías */
+    .subcat-pills-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-top: 6px;
+    }
+    .sub-pill {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .sub-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* =========================================================
+       3. MODO SWIPE TINDER (SIN HUECOS Y PEGADO A LOS BOTONES)
+       ========================================================= */
+    .swipe-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 380px;
+      margin: 0 auto;
+      padding: 0 12px;
+    }
+
+    .tinder-viewport {
+      perspective: 1200px;
+      width: 100%;
+      height: 440px; /* Altura compacta calibrada */
+      position: relative;
+    }
+
+    .tinder-card-wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tinder-card-wrapper.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .tinder-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .tinder-front { z-index: 2; transform: rotateY(0deg); }
+    .tinder-back {
+      transform: rotateY(180deg);
+      background: #0F172A;
+      color: white;
+      padding: 16px;
+      overflow-y: auto;
+      z-index: 1;
+    }
+
+    .t-img-box {
+      position: relative;
+      width: 100%;
+      height: 165px;
+      background: #F1F5F9;
+      overflow: hidden;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .t-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    .origin-tag-float {
+      position: absolute;
+      top: 8px; left: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-info-flip {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #0F172A;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 14px;
+      padding: 4px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      z-index: 5;
+    }
+
+    .t-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+    }
+    .t-title { font-size: 16px; font-weight: 800; color: #0F172A; line-height: 1.2; margin-bottom: 2px; }
+    .t-subtitle { font-size: 11px; color: var(--text-muted); line-height: 1.3; margin-bottom: 8px; }
+
+    .t-chips-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 8px;
+      margin-bottom: 8px;
+    }
+    .t-chips-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .t-chips-grid { display: flex; gap: 5px; }
+    .t-chip {
+      flex: 1;
+      padding: 5px 4px;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1;
+      background: white;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.1s;
+    }
+    .t-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .t-chip .c-sub { font-size: 8.5px; opacity: 0.85; font-weight: 500; }
+
+    .t-calc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F1F5F9;
+      border-radius: 10px;
+      padding: 6px 10px;
+    }
+    .t-counter {
+      display: flex;
+      align-items: center;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2px 4px;
+    }
+    .t-cnt-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: none;
+      background: #F1F5F9;
+      color: #0F172A;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .t-cnt-num {
+      width: 26px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .t-price-box { text-align: right; }
+    .t-price-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .t-price-unit { font-size: 9.5px; color: var(--text-muted); font-weight: 600; }
+
+    /* BOTONES DE ACCIÓN (DIRECTAMENTE PEGADOS A LA CARD) */
+    .action-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 10px; /* Sin separación excesiva */
+      width: 100%;
+    }
+    .btn-act {
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease;
+    }
+    .btn-act:active { transform: scale(0.9); }
+    .btn-act-pass { width: 48px; height: 48px; background: white; color: #EF4444; border: 2px solid #FEE2E2; font-size: 18px; }
+    .btn-act-info { width: 40px; height: 40px; background: white; color: #6366F1; border: 2px solid #E0E7FF; font-size: 14px; }
+    .btn-act-add { width: 56px; height: 56px; background: var(--primary); color: white; font-size: 22px; box-shadow: 0 6px 18px rgba(16,163,82,0.35); }
+
+    .counter-pill {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* Mapa en Dorso */
+    .map-box {
+      width: 100%;
+      height: 95px;
+      border-radius: 8px;
+      background: #1E293B;
+      margin: 8px 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .pin-anim { font-size: 20px; color: var(--primary); animation: bounce 1.5s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+    /* =========================================================
+       4. MODO CUADRÍCULA COMPLETO Y RICO EN INFORMACIÓN
+       ========================================================= */
+    #grid-view-container {
+      display: none;
+      padding: 0 14px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 380px));
+      gap: 20px;
+      justify-content: center;
+    }
+    .prod-card-g {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+    }
+    .prod-card-g .g-img-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: #F1F5F9;
+      overflow: hidden;
+    }
+    .prod-card-g .g-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .g-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+    .g-title { font-size: 18px; font-weight: 800; color: #0F172A; margin-bottom: 4px; line-height: 1.25; }
+    .g-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.35; }
+
+    /* Selector de Presentación en Grilla */
+    .g-variant-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+    .g-variant-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .g-chips-row { display: flex; gap: 6px; }
+    .g-chip {
+      flex: 1;
+      padding: 6px 6px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      background: white;
+      font-size: 11px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .g-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .g-chip .c-sub { font-size: 9px; opacity: 0.85; font-weight: 500; }
+
+    /* Escala y Precios en Grilla */
+    .g-scale-box {
+      background: #F1F5F9;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+    .g-price-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+    .g-price-big { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--primary); }
+    .g-tiers-list { font-size: 11px; color: #475569; border-top: 1px dashed #CBD5E1; padding-top: 4px; margin-top: 4px; }
+
+    /* Footer de Grilla: Cantidad + Botón Agregar */
+    .g-footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: auto;
+    }
+    .g-counter {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: white;
+      padding: 2px 4px;
+    }
+    .g-cnt-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: #F1F5F9; font-weight: 800; cursor: pointer; }
+    .g-cnt-num { width: 28px; text-align: center; font-weight: 800; font-size: 13px; }
+    
+    .btn-add-grid {
+      flex: 1;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-add-grid:hover { background: var(--primary-dark); }
+
+    /* =========================================================
+       5. BARRA FLOTANTE DE CARRITO & MODAL DE CHECKOUT
+       ========================================================= */
+    .floating-cart-bar {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 440px;
+      background: #0F172A;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 999;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .floating-cart-bar:active { transform: translateX(-50%) scale(0.98); }
+    .cart-badge-count {
+      background: var(--primary);
+      color: white;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      margin-right: 6px;
+    }
+    .cart-info-text { font-size: 13px; font-weight: 700; }
+    .cart-total-text { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--accent); }
+    .cart-btn-arrow {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Modal Checkout */
+    .cart-drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: flex-end;
+    }
+    .cart-drawer-overlay.open { display: flex; }
+    
+    .cart-drawer-content {
+      background: white;
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      border-radius: 24px 24px 0 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .cart-drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+    .cart-drawer-header h3 { font-size: 18px; font-weight: 800; }
+    .btn-close-drawer {
+      background: #F1F5F9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .cart-items-list {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .cart-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .cart-item-title { font-size: 13px; font-weight: 700; }
+    .cart-item-variant { font-size: 11px; color: var(--text-muted); }
+    .cart-item-price { font-weight: 800; font-size: 14px; color: var(--primary); }
+
+    .cart-summary-box {
+      background: #F1F5F9;
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .summary-total {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+      border-top: 1px dashed #CBD5E1;
+      padding-top: 8px;
+      margin-top: 6px;
+    }
+
+    .btn-checkout-wa {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(16,163,82,0.3);
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. TOP NAV MINIMALISTA -->
+  <header class="top-nav">
+    <div class="brand-logo">🌱 <span>VRDE</span> CLUB</div>
+    <div class="view-switch">
+      <button class="switch-btn active" id="btn-sw-swipe" onclick="setMode('swipe')">
+        <i class="fas fa-layer-group"></i> Swipe 🎴
+      </button>
+      <button class="switch-btn" id="btn-sw-grid" onclick="setMode('grid')">
+        <i class="fas fa-th-large"></i> Cuadrícula
+      </button>
+    </div>
+  </header>
+
+  <!-- 2. BARRA DE CATEGORÍAS PLEGABLE -->
+  <div class="categories-bar-wrapper">
+    <div class="cat-compact-header" onclick="toggleCategoriesDrawer()">
+      <div class="active-cat-badge" id="active-cat-indicator">
+        <span>🌱 Todo el Catálogo</span>
+      </div>
+      <button class="btn-toggle-cats" id="btn-cat-toggle-text">
+        <span>Filtrar</span> <i class="fas fa-chevron-down" id="drawer-arrow"></i>
+      </button>
+    </div>
+
+    <!-- Drawer de Categorías Spotify -->
+    <div class="spotify-drawer" id="spotify-drawer">
+      <div class="spotify-scroll-row">
+        <div class="spotify-card cat-all active" onclick="selectCategory('TODOS', '🌱 Todo el Catálogo', this)">
+          <div class="cat-name">Ver Todo</div>
+          <div class="cat-icon">🌱</div>
+        </div>
+        <div class="spotify-card cat-granos" onclick="selectCategory('granos', '🌾 Granos & Legumbres', this)">
+          <div class="cat-name">Granos & Legumbres</div>
+          <div class="cat-icon">🌾</div>
+        </div>
+        <div class="spotify-card cat-cacao" onclick="selectCategory('cacao', '🍫 Cacao Silvestre', this)">
+          <div class="cat-name">Cacao Silvestre</div>
+          <div class="cat-icon">🍫</div>
+        </div>
+        <div class="spotify-card cat-yerba" onclick="selectCategory('yerba', '🌿 Yerba Mate', this)">
+          <div class="cat-name">Yerba Mate</div>
+          <div class="cat-icon">🌿</div>
+        </div>
+        <div class="spotify-card cat-aceite" onclick="selectCategory('aceite', '🫒 Aceite Lorenzo Cabrera', this)">
+          <div class="cat-name">Aceite Oliva</div>
+          <div class="cat-icon">🫒</div>
+        </div>
+      </div>
+
+      <!-- Pastillas de Subcategorías -->
+      <div class="subcat-pills-row" id="subcat-pills">
+        <button class="sub-pill active" onclick="selectSubcat('ALL', this)">Todas las variedades</button>
+        <button class="sub-pill" data-cat="granos" onclick="selectSubcat('legumbres', this)">🫘 Legumbres (Lentejas / Garbanzos)</button>
+        <button class="sub-pill" data-cat="granos" onclick="selectSubcat('arroz', this)">🍚 Arroces (Yamaní)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MODO SWIPE TINDER -->
+  <div class="swipe-container" id="swipe-stage">
+    
+    <div class="tinder-viewport">
+      <div class="tinder-card-wrapper" id="tinder-card">
+        
+        <!-- FRENTE DE LA TARJETA -->
+        <div class="tinder-face tinder-front">
+          <button class="btn-info-flip" onclick="event.stopPropagation(); flipCard();">
+            <i class="fas fa-sync-alt"></i> Info & Mapa
+          </button>
+
+          <div class="t-img-box" onclick="flipCard();">
+            <img id="t-img" src="assets/lentejas_salve_tierra.jpg" alt="Producto">
+            <div class="origin-tag-float" id="t-origin">🌾 Capilla del Señor, Bs. As.</div>
+          </div>
+
+          <div class="t-body">
+            <div>
+              <h3 class="t-title" id="t-title">Lentejas Agroecológicas Salve la Tierra</h3>
+              <p class="t-subtitle" id="t-subtitle">Lentejas verdes seleccionadas de suelo vivo y semillas 100% no OGM.</p>
+            </div>
+
+            <!-- Selector de Presentación -->
+            <div class="t-chips-box" onclick="event.stopPropagation();">
+              <div class="t-chips-label">
+                <span>Presentación:</span>
+                <span id="t-chip-label" style="color: var(--primary);">Bolsa 1 kg</span>
+              </div>
+              <div class="t-chips-grid" id="t-chips-grid">
+                <!-- Inyectado por JS -->
+              </div>
+            </div>
+
+            <!-- Cantidad y Precio Total -->
+            <div class="t-calc-row" onclick="event.stopPropagation();">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 11px; font-weight: 700; color: #475569;">Cant:</span>
+                <div class="t-counter">
+                  <button class="t-cnt-btn" onclick="adjustQty(-1)">-</button>
+                  <span class="t-cnt-num" id="t-qty-val">1</span>
+                  <button class="t-cnt-btn" onclick="adjustQty(1)">+</button>
+                </div>
+              </div>
+
+              <div class="t-price-box">
+                <div class="t-price-val" id="t-total-val">$3.500</div>
+                <div class="t-price-unit" id="t-unit-val">($3.500 / u)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DORSO DE LA TARJETA -->
+        <div class="tinder-face tinder-back">
+          <button class="btn-info-flip" style="background: rgba(255,255,255,0.2); color: white;" onclick="event.stopPropagation(); flipCard();">
+            <i class="fas fa-undo"></i> Volver a la Foto
+          </button>
+
+          <div style="font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase;">
+            Historia y Trazabilidad
+          </div>
+          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 4px; color: white;" id="t-back-name">
+            Salve la Tierra • Suelo Vivo
+          </h3>
+
+          <p style="font-size: 11px; color: #CBD5E1; line-height: 1.35; margin-bottom: 6px;" id="t-back-desc">
+            Agricultura regenerativa en Capilla del Señor. Cultivo sin fertilizantes químicos ni pesticidas que regenera la materia orgánica del suelo pampeano.
+          </p>
+
+          <div style="background: rgba(255,255,255,0.08); border-radius: 6px; padding: 6px 8px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.1);">
+            <strong style="color: var(--accent);"><i class="fas fa-seedling"></i> Impacto:</strong>
+            <span id="t-back-impact">Alimentos limpios a precio accesible y regeneración de suelos.</span>
+          </div>
+
+          <div class="map-box">
+            <i class="fas fa-map-marker-alt pin-anim"></i>
+            <span style="position: absolute; bottom: 4px; font-size: 9.5px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;" id="t-back-loc">📍 Capilla del Señor, Buenos Aires</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BOTONES DE ACCIÓN (INMEDIATAMENTE DEBAJO DE LA CARD) -->
+    <div class="action-controls-bar">
+      <button class="btn-act btn-act-pass" onclick="swipe('left')" title="Pasar al siguiente">
+        <i class="fas fa-times"></i>
+      </button>
+      <button class="btn-act btn-act-info" onclick="flipCard()" title="Girar para ver historia y mapa">
+        <i class="fas fa-info"></i>
+      </button>
+      <button class="btn-act btn-act-add" onclick="swipe('right')" title="¡Sumar al pedido!">
+        <i class="fas fa-heart"></i>
+      </button>
+    </div>
+
+    <div class="counter-pill" id="t-counter-tag">
+      Producto 1 de 6 • Toca la foto para darla vuelta
+    </div>
+
+  </div>
+
+  <!-- 4. MODO CUADRÍCULA COMPLETO -->
+  <div id="grid-view-container">
+    <div class="products-grid" id="grid-list">
+      <!-- Inyectado dinámicamente con toda la riqueza -->
+    </div>
+  </div>
+
+  <!-- 5. BARRA FLOTANTE DE CARRITO -->
+  <div class="floating-cart-bar" id="floating-cart" onclick="openCartDrawer()">
+    <div style="display: flex; align-items: center;">
+      <span class="cart-badge-count" id="cart-items-count">0</span>
+      <div>
+        <div class="cart-info-text">Tu Pedido Colectivo</div>
+        <div class="cart-total-text" id="cart-total-display">$0</div>
+      </div>
+    </div>
+    <div class="cart-btn-arrow">
+      <span>Ver Pedido</span> <i class="fas fa-chevron-up"></i>
+    </div>
+  </div>
+
+  <!-- 6. DRAWER / MODAL DE CHECKOUT -->
+  <div class="cart-drawer-overlay" id="cart-drawer">
+    <div class="cart-drawer-content">
+      <div class="cart-drawer-header">
+        <h3><i class="fas fa-shopping-basket" style="color: var(--primary);"></i> Resumen de tu Pedido</h3>
+        <button class="btn-close-drawer" onclick="closeCartDrawer()"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="cart-items-list" id="drawer-items-list">
+        <!-- Inyectado por JS -->
+      </div>
+
+      <div class="cart-summary-box">
+        <div class="summary-row">
+          <span>Subtotal estimado:</span>
+          <strong id="drawer-subtotal">$0</strong>
+        </div>
+        <div class="summary-row">
+          <span>Ahorro compra en red:</span>
+          <span style="color: var(--primary); font-weight: 700;">🟢 Aplicado</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>Total Final:</span>
+          <span id="drawer-total-final" style="color: var(--primary);">$0</span>
+        </div>
+      </div>
+
+      <button class="btn-checkout-wa" onclick="checkoutWhatsApp()">
+        <i class="fab fa-whatsapp" style="font-size: 20px;"></i> Confirmar Pedido por WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // BASE DE DATOS COMPLETA DE PRODUCTOS
+    // ==========================================
+    const PRODUCTS = [
+      {
+        id: 'lentejas',
+        cat: 'granos',
+        subcat: 'legumbres',
+        title: 'Lentejas Agroecológicas Salve la Tierra',
+        subtitle: 'Lentejas verdes seleccionadas de suelo vivo y semillas 100% no OGM.',
+        origin: '🌾 Capilla del Señor, Bs. As.',
+        img: 'assets/lentejas_salve_tierra.jpg',
+        producer: 'Salve la Tierra • Suelo Vivo',
+        desc: 'Agricultura regenerativa en Capilla del Señor. Cultivo sin fertilizantes químicos ni pesticidas que regenera la materia orgánica del suelo pampeano.',
+        impact: 'Alimentos limpios a precio accesible y regeneración de suelos.',
+        loc: '📍 Capilla del Señor, Buenos Aires',
+        variants: [
+          { label: 'Bolsa 1 kg', price: 3500, p2: 3000, p3: 2600, tiers: 'Mayorista (+6u): $3.000 • Dist (+20u): $2.600' },
+          { label: 'Bolsa 5 kg', price: 16000, p2: 14000, p3: 12000, tiers: 'Mayorista (+6u): $14.000 • Dist (+20u): $12.000' },
+          { label: 'Bolsa 25 kg', price: 70000, p2: 62000, p3: 55000, tiers: 'Mayorista: $62.000 • Dist: $55.000' }
+        ]
+      },
+      {
+        id: 'garbanzos',
+        cat: 'granos',
+        subcat: 'legumbres',
+        title: 'Garbanzos Agroecológicos Salve la Tierra',
+        subtitle: 'Garbanzos grandes de cultivo natural sin agroquímicos. Textura cremosa.',
+        origin: '🌾 Capilla del Señor, Bs. As.',
+        img: 'assets/garbanzos_salve_tierra.jpg',
+        producer: 'Salve la Tierra • Suelo Vivo',
+        desc: 'Garbanzos seleccionados de ciclo natural secados al sol. Granos enteros de alta proteína y pureza biológica garantizada.',
+        impact: 'Cuidado de semillas nativas y arraigo campesino.',
+        loc: '📍 Capilla del Señor, Buenos Aires',
+        variants: [
+          { label: 'Bolsa 1 kg', price: 3500, p2: 3000, p3: 2600, tiers: 'Mayorista (+6u): $3.000 • Dist (+20u): $2.600' },
+          { label: 'Bolsa 5 kg', price: 16000, p2: 14000, p3: 12000, tiers: 'Mayorista (+6u): $14.000 • Dist (+20u): $12.000' },
+          { label: 'Bolsa 25 kg', price: 70000, p2: 62000, p3: 55000, tiers: 'Mayorista: $62.000 • Dist: $55.000' }
+        ]
+      },
+      {
+        id: 'cacao',
+        cat: 'cacao',
+        subcat: 'cacao',
+        title: 'Pasta Pura Cacao Silvestre Amazónico',
+        subtitle: '100% puro elaborado a partir de semillas fermentadas y tostadas.',
+        origin: '🇧🇴 Rurrenabaque, Bolivia',
+        img: 'assets/cacao_bolivia.jpg',
+        producer: 'Familias Recolectoras del Río Beni',
+        desc: 'El cacao silvestre crece de manera espontánea en islas del río Beni. Familias indígenas recolectan las mazorcas en canoas respetando los ciclos del bosque.',
+        impact: 'Conservación de biodiversidad amazónica y soberanía comunitaria.',
+        loc: '📍 Rurrenabaque, Amazonía Boliviana',
+        variants: [
+          { label: 'Barra 1 kg', price: 60000, p2: 57000, p3: 55000, tiers: 'Mayorista (+3kg): $57.000 • Dist (+5kg): $55.000' },
+          { label: 'Barra 500g', price: 32500, p2: 28500, p3: 27500, tiers: 'Mayorista (+6u): $28.500 • Dist (+10u): $27.500' },
+          { label: 'Barra 100g', price: 7500, p2: 6800, p3: 6200, tiers: 'Mayorista (+10u): $6.800 • Dist (+20u): $6.200' }
+        ]
+      },
+      {
+        id: 'arroz',
+        cat: 'granos',
+        subcat: 'arroz',
+        title: 'Arroz Yamaní Integral Caupolicán',
+        subtitle: 'Grano entero integral sin TACC de la Capital Nacional del Arroz.',
+        origin: '🌾 San Salvador, Entre Ríos',
+        img: 'assets/arroz_caupolican.jpg',
+        producer: 'Molino Arrocero Caupolicán S.R.L.',
+        desc: 'Molino tradicional de San Salvador con compromiso agroecológico. Procesamiento mecánico sin blanqueadores químicos.',
+        impact: 'Cuidado de cuencas de agua y nutrición integral.',
+        loc: '📍 San Salvador, Entre Ríos',
+        variants: [
+          { label: 'Paquete 1 kg', price: 3800, p2: 3200, p3: 2800, tiers: 'Mayorista (+6u): $3.200 • Dist (+20u): $2.800' },
+          { label: 'Bolsa 5 kg', price: 17500, p2: 15000, p3: 13000, tiers: 'Mayorista (+6u): $15.000 • Dist (+20u): $13.000' },
+          { label: 'Bolsa 30 kg', price: 95000, p2: 84000, p3: 75000, tiers: 'Mayorista: $84.000 • Dist: $75.000' }
+        ]
+      },
+      {
+        id: 'yerba',
+        cat: 'yerba',
+        subcat: 'yerba',
+        title: 'Yerba Mate Grapia Milenaria',
+        subtitle: 'Estacionamiento natural 24 meses y secado en cinta sin humo.',
+        origin: '🌿 Campo Ramón, Misiones',
+        img: 'assets/yerba_grapia_1kg.jpg',
+        producer: 'Cooperativa El Colono',
+        desc: 'Familias de pequeños colonos misioneros dedicadas al cultivo bajo monte. Secado suave sin humo que evita la acidez.',
+        impact: 'Comercio justo cooperativo y reforestación de selva.',
+        loc: '📍 Campo Ramón, Misiones',
+        variants: [
+          { label: 'Paquete 1 kg', price: 5100, p2: 4400, p3: 3800, tiers: 'Mayorista (+12u): $4.400 • Dist (+52u): $3.800' },
+          { label: 'Paquete 2 kg', price: 8600, p2: 7400, p3: 6400, tiers: 'Mayorista (+6u): $7.400 • Dist (+26u): $6.400' },
+          { label: 'Bolsón 10 kg', price: 37000, p2: 32000, p3: 27500, tiers: 'Mayorista (+3u): $32.000 • Dist (+6u): $27.500' }
+        ]
+      },
+      {
+        id: 'aceite',
+        cat: 'aceite',
+        subcat: 'aceite',
+        title: 'Aceite de Oliva Lorenzo Cabrera',
+        subtitle: 'Primera prensada en frío de olivares tradicionales. Acidez ultra baja.',
+        origin: '🫒 Traslasierra, Córdoba',
+        img: 'assets/aceite_lorenzo_cabrera.jpg',
+        producer: 'Finca Lorenzo Cabrera',
+        desc: 'Olivares regados con agua pura de vertientes serranas. Prensado mecánico en frío a pocas horas de la cosecha.',
+        impact: 'Tradición olivícola artesanal sin químicos sintéticos.',
+        loc: '📍 Valle de Traslasierra, Córdoba',
+        variants: [
+          { label: 'Botella 1 Litro', price: 19300, p2: 17900, p3: 16500, tiers: 'Mayorista (+20L): $17.900 • Dist (+50L): $16.500' },
+          { label: 'Bidón 2 Litros', price: 36000, p2: 33500, p3: 31000, tiers: 'Mayorista (+10u): $33.500 • Dist (+25u): $31.000' }
+        ]
+      }
+    ];
+
+    let CURRENT_CAT = 'TODOS';
+    let CURRENT_SUBCAT = 'ALL';
+    let filtered = [...PRODUCTS];
+
+    let currentIdx = 0;
+    let variantIdx = 0;
+    let qty = 1;
+
+    // Estado del Carrito
+    let CART = [];
+
+    // ==========================================
+    // CONTROL DE DRAWER DE CATEGORÍAS
+    // ==========================================
+    function toggleCategoriesDrawer() {
+      const drawer = document.getElementById('spotify-drawer');
+      const arrow = document.getElementById('drawer-arrow');
+      drawer.classList.toggle('open');
+      arrow.style.transform = drawer.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0)';
+    }
+
+    function selectCategory(cat, label, el) {
+      document.querySelectorAll('.spotify-card').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      CURRENT_CAT = cat;
+      CURRENT_SUBCAT = 'ALL';
+      document.getElementById('active-cat-indicator').innerHTML = `<span>${label}</span>`;
+
+      document.querySelectorAll('.sub-pill').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.includes('Todas')) btn.classList.add('active');
+        if (cat === 'TODOS' || !btn.dataset.cat || btn.dataset.cat === cat) {
+          btn.style.display = 'inline-block';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+
+      toggleCategoriesDrawer();
+      applyFilters();
+    }
+
+    function selectSubcat(sub, el) {
+      document.querySelectorAll('.sub-pill').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      CURRENT_SUBCAT = sub;
+      applyFilters();
+    }
+
+    function applyFilters() {
+      filtered = PRODUCTS.filter(p => {
+        const matchCat = (CURRENT_CAT === 'TODOS' || p.cat === CURRENT_CAT);
+        const matchSub = (CURRENT_SUBCAT === 'ALL' || p.subcat === CURRENT_SUBCAT);
+        return matchCat && matchSub;
+      });
+
+      currentIdx = 0;
+      renderSwipe();
+      renderGrid();
+    }
+
+    function flipCard() {
+      document.getElementById('tinder-card').classList.toggle('flipped');
+    }
+
+    // ==========================================
+    // RENDERIZADO DEL MODO SWIPE
+    // ==========================================
+    function renderSwipe() {
+      if (filtered.length === 0) return;
+      const p = filtered[currentIdx];
+      const card = document.getElementById('tinder-card');
+      card.classList.remove('flipped');
+
+      document.getElementById('t-img').src = p.img;
+      document.getElementById('t-origin').innerText = p.origin;
+      document.getElementById('t-title').innerText = p.title;
+      document.getElementById('t-subtitle').innerText = p.subtitle;
+
+      // Dorso
+      document.getElementById('t-back-name').innerText = p.producer;
+      document.getElementById('t-back-desc').innerText = p.desc;
+      document.getElementById('t-back-impact').innerText = p.impact;
+      document.getElementById('t-back-loc').innerText = p.loc;
+
+      // Variantes
+      variantIdx = 0;
+      qty = 1;
+      document.getElementById('t-qty-val').innerText = qty;
+
+      let html = '';
+      p.variants.forEach((v, vIdx) => {
+        html += `
+          <button class="t-chip ${vIdx === 0 ? 'active' : ''}" onclick="selectChip(${vIdx}, this)">
+            <span>${v.label}</span>
+            <span class="c-sub">$${v.price.toLocaleString('es-AR')}</span>
+          </button>
+        `;
+      });
+      document.getElementById('t-chips-grid').innerHTML = html;
+      updateCalculation();
+
+      document.getElementById('t-counter-tag').innerText = `Producto ${currentIdx + 1} de ${filtered.length} • Toca la foto para darla vuelta`;
+    }
+
+    function selectChip(vIdx, btn) {
+      btn.parentElement.querySelectorAll('.t-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      variantIdx = vIdx;
+      updateCalculation();
+    }
+
+    function adjustQty(delta) {
+      qty += delta;
+      if (qty < 1) qty = 1;
+      document.getElementById('t-qty-val').innerText = qty;
+      updateCalculation();
+    }
+
+    function updateCalculation() {
+      const p = filtered[currentIdx];
+      const v = p.variants[variantIdx];
+      const total = v.price * qty;
+
+      document.getElementById('t-chip-label').innerText = `${v.label} (x${qty})`;
+      document.getElementById('t-total-val').innerText = `$${total.toLocaleString('es-AR')}`;
+      document.getElementById('t-unit-val').innerText = `($${v.price.toLocaleString('es-AR')} / u)`;
+    }
+
+    function swipe(dir) {
+      const card = document.getElementById('tinder-card');
+      const p = filtered[currentIdx];
+      const v = p.variants[variantIdx];
+
+      if (dir === 'right') {
+        addToCart(p, v, qty);
+      }
+
+      card.style.transform = (dir === 'right') ? 'translateX(100px) rotate(10deg) scale(0.92)' : 'translateX(-100px) rotate(-10deg) scale(0.92)';
+      card.style.opacity = '0';
+
+      setTimeout(() => {
+        currentIdx = (currentIdx + 1) % filtered.length;
+        renderSwipe();
+        card.style.transition = 'none';
+        card.style.transform = 'none';
+        card.style.opacity = '1';
+        setTimeout(() => {
+          card.style.transition = 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)';
+        }, 40);
+      }, 200);
+    }
+
+    // ==========================================
+    // RENDERIZADO DEL MODO CUADRÍCULA (RICO Y COMPLETO)
+    // ==========================================
+    const gridState = {}; // Guarda { variantIdx, qty } por producto en la grilla
+
+    function renderGrid() {
+      const grid = document.getElementById('grid-list');
+      let html = '';
+
+      filtered.forEach((p, pIdx) => {
+        if (!gridState[p.id]) {
+          gridState[p.id] = { variantIdx: 0, qty: 1 };
+        }
+        const state = gridState[p.id];
+        const v = p.variants[state.variantIdx];
+
+        let chipsHtml = '';
+        p.variants.forEach((varItem, vIdx) => {
+          chipsHtml += `
+            <button class="g-chip ${vIdx === state.variantIdx ? 'active' : ''}" onclick="selectGridVariant('${p.id}', ${vIdx})">
+              <span>${varItem.label}</span>
+              <span class="c-sub">$${varItem.price.toLocaleString('es-AR')}</span>
+            </button>
+          `;
+        });
+
+        html += `
+          <div class="prod-card-g">
+            <div class="g-img-box">
+              <img src="${p.img}" alt="${p.title}">
+              <div class="origin-tag-float">${p.origin}</div>
+            </div>
+            <div class="g-body">
+              <div>
+                <h3 class="g-title">${p.title}</h3>
+                <p class="g-subtitle">${p.subtitle}</p>
+              </div>
+
+              <!-- Selector de Presentación -->
+              <div class="g-variant-box">
+                <div class="g-variant-label">
+                  <span>Selecciona Presentación:</span>
+                  <span style="color: var(--primary);">${v.label}</span>
+                </div>
+                <div class="g-chips-row">
+                  ${chipsHtml}
+                </div>
+              </div>
+
+              <!-- Escala de Precios -->
+              <div class="g-scale-box">
+                <div class="g-price-row">
+                  <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Precio unidad:</span>
+                  <div class="g-price-big">$${v.price.toLocaleString('es-AR')}</div>
+                </div>
+                <div class="g-tiers-list">
+                  <div>• ${v.tiers}</div>
+                </div>
+              </div>
+
+              <!-- Footer: Cantidad + Botón -->
+              <div class="g-footer">
+                <div class="g-counter">
+                  <button class="g-cnt-btn" onclick="adjustGridQty('${p.id}', -1)">-</button>
+                  <span class="g-cnt-num" id="g-qty-${p.id}">${state.qty}</span>
+                  <button class="g-cnt-btn" onclick="adjustGridQty('${p.id}', 1)">+</button>
+                </div>
+                <button class="btn-add-grid" onclick="addGridToCart('${p.id}')">
+                  <i class="fas fa-cart-plus"></i> Sumar al Pedido
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+    }
+
+    function selectGridVariant(prodId, vIdx) {
+      gridState[prodId].variantIdx = vIdx;
+      renderGrid();
+    }
+
+    function adjustGridQty(prodId, delta) {
+      gridState[prodId].qty += delta;
+      if (gridState[prodId].qty < 1) gridState[prodId].qty = 1;
+      document.getElementById(`g-qty-${prodId}`).innerText = gridState[prodId].qty;
+    }
+
+    function addGridToCart(prodId) {
+      const p = PRODUCTS.find(x => x.id === prodId);
+      const state = gridState[prodId];
+      const v = p.variants[state.variantIdx];
+      addToCart(p, v, state.qty);
+    }
+
+    // ==========================================
+    // GESTIÓN DEL CARRITO & CHECKOUT
+    // ==========================================
+    function addToCart(product, variant, quantity) {
+      const itemKey = `${product.id}_${variant.label}`;
+      const existing = CART.find(item => item.key === itemKey);
+
+      if (existing) {
+        existing.qty += quantity;
+      } else {
+        CART.push({
+          key: itemKey,
+          id: product.id,
+          title: product.title,
+          variant: variant.label,
+          price: variant.price,
+          qty: quantity,
+          img: product.img
+        });
+      }
+
+      updateCartBadge();
+      openCartDrawer(); // Muestra el resumen inmediatamente al sumar
+    }
+
+    function updateCartBadge() {
+      const totalItems = CART.reduce((sum, item) => sum + item.qty, 0);
+      const totalPrice = CART.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+      document.getElementById('cart-items-count').innerText = totalItems;
+      document.getElementById('cart-total-display').innerText = `$${totalPrice.toLocaleString('es-AR')}`;
+      
+      const cartBar = document.getElementById('floating-cart');
+      if (totalItems > 0) {
+        cartBar.style.display = 'flex';
+      }
+    }
+
+    function openCartDrawer() {
+      renderCartDrawer();
+      document.getElementById('cart-drawer').classList.add('open');
+    }
+
+    function closeCartDrawer() {
+      document.getElementById('cart-drawer').classList.remove('open');
+    }
+
+    function renderCartDrawer() {
+      const container = document.getElementById('drawer-items-list');
+      if (CART.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 30px 10px; color: var(--text-muted);">
+            <i class="fas fa-shopping-basket" style="font-size: 32px; margin-bottom: 8px; opacity: 0.5;"></i>
+            <p>Tu pedido está vacío todavía.</p>
+          </div>
+        `;
+        document.getElementById('drawer-subtotal').innerText = '$0';
+        document.getElementById('drawer-total-final').innerText = '$0';
+        return;
+      }
+
+      let html = '';
+      let subtotal = 0;
+
+      CART.forEach((item, idx) => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+
+        html += `
+          <div class="cart-item-row">
+            <div style="flex: 1;">
+              <div class="cart-item-title">${item.title}</div>
+              <div class="cart-item-variant">${item.variant} • Cant: ${item.qty} u</div>
+            </div>
+            <div style="text-align: right; margin-left: 10px;">
+              <div class="cart-item-price">$${itemTotal.toLocaleString('es-AR')}</div>
+              <button onclick="removeFromCart(${idx})" style="background: none; border: none; color: #EF4444; font-size: 11px; font-weight: 700; cursor: pointer; margin-top: 2px;">
+                <i class="fas fa-trash-alt"></i> Quitar
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      document.getElementById('drawer-subtotal').innerText = `$${subtotal.toLocaleString('es-AR')}`;
+      document.getElementById('drawer-total-final').innerText = `$${subtotal.toLocaleString('es-AR')}`;
+    }
+
+    function removeFromCart(idx) {
+      CART.splice(idx, 1);
+      updateCartBadge();
+      renderCartDrawer();
+    }
+
+    function checkoutWhatsApp() {
+      if (CART.length === 0) {
+        alert('El pedido está vacío.');
+        return;
+      }
+
+      let text = '🌱 *PEDIDO VRDE CLUB - COMPRA COLECTIVA*\n\n';
+      let total = 0;
+      CART.forEach(item => {
+        const sub = item.price * item.qty;
+        total += sub;
+        text += `• *${item.title}*\n  Presentación: ${item.variant}\n  Cantidad: ${item.qty} u ➔ $${sub.toLocaleString('es-AR')}\n\n`;
+      });
+
+      text += `💰 *TOTAL ESTIMADO: $${total.toLocaleString('es-AR')}*\n`;
+      text += `📍 Retiro en Nodo / Coordinar entrega\n\n¡Hola! Quiero confirmar este pedido para la compra actual.`;
+
+      const encoded = encodeURIComponent(text);
+      window.open(`https://wa.me/5491127452476?text=${encoded}`, '_blank');
+    }
+
+    // ==========================================
+    // SWITCH DE MODOS
+    // ==========================================
+    function setMode(mode) {
+      document.getElementById('btn-sw-grid').classList.toggle('active', mode === 'grid');
+      document.getElementById('btn-sw-swipe').classList.toggle('active', mode === 'swipe');
+      document.getElementById('swipe-stage').style.display = (mode === 'swipe') ? 'flex' : 'none';
+      document.getElementById('grid-view-container').style.display = (mode === 'grid') ? 'block' : 'none';
+
+      if (mode === 'grid') {
+        renderGrid();
+      } else {
+        renderSwipe();
+      }
+    }
+
+    // Inicializar
+    applyFilters();
+  </script>
+</body>
+</html>
