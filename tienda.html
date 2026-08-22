@@ -933,7 +933,9 @@
 
       // Cargar Banner Lunar
       document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
-      document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+      document.getElementById('shop-lunar-desc').innerText = CICLO_LUNAR.mensajeTienda 
+        ? `${CICLO_LUNAR.mensajeTienda} • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`
+        : `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
 
       // Inicializar selección de variantes por defecto (índice 0)
       let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);

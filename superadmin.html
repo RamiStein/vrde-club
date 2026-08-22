@@ -317,11 +317,75 @@
     .admin-main-view {
       padding: 24px;
       overflow-y: auto;
+    /* Estilos Sincronario Lunar y Calendario */
+    .lunar-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
     }
-    @media (max-width: 600px) {
-      .admin-main-view {
-        padding: 14px;
-      }
+    .lunar-cal-header-day {
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748B;
+      padding: 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .lunar-cal-day {
+      background: white;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      min-height: 86px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .lunar-cal-day:hover {
+      border-color: #94A3B8;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      transform: translateY(-1px);
+    }
+    .lunar-cal-day.other-month {
+      background: #F8FAFC;
+      opacity: 0.4;
+    }
+    .lunar-cal-day.is-today {
+      border: 2px solid var(--primary);
+      background: #F0FDF4;
+    }
+    .lunar-cal-day.has-event {
+      border-color: #6366F1;
+      background: #F5F3FF;
+    }
+    .lunar-phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-top: 2px;
+      width: fit-content;
+    }
+    .lunar-phase-nueva { background: #0F172A; color: white; }
+    .lunar-phase-creciente { background: #E0F2FE; color: #0369A1; }
+    .lunar-phase-llena { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+    .lunar-phase-menguante { background: #EDE9FE; color: #6D28D9; }
+    .lunar-event-pill {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 6px;
+      line-height: 1.2;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   </style>
 </head>
@@ -426,7 +490,12 @@
 
         <button class="sidebar-btn" id="sp-sbtn-cycle" onclick="switchSuperTab('cycle')">
           <i class="fas fa-moon" style="color: #6366F1;"></i>
-          <span>Ciclo Lunar Activo</span>
+          <span>Sincronario Lunar</span>
+        </button>
+
+        <button class="sidebar-btn" id="sp-sbtn-security" onclick="switchSuperTab('security')">
+          <i class="fas fa-key" style="color: #F59E0B;"></i>
+          <span>Seguridad & PINs</span>
         </button>
       </aside>
 
@@ -827,17 +896,289 @@
       </div>
 
       <!-- =========================================================
-           SECCIÓN 5: CICLO LUNAR GLOBAL
+           SECCIÓN 5: SINCRONARIO LUNAR & CALENDARIO INTERACTIVO
            ========================================================= -->
       <div id="super-section-cycle" class="hidden">
-        <div class="lunar-banner-card" style="margin: 0;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 12px; text-transform: uppercase; color: #94A3B8; font-weight: 700;">Ciclo Lunar Activo en el Sistema</div>
-              <h2 style="font-size: 28px; color: white; margin: 6p0;" id="super-cycle-name">🌑 Leo Ago 2026</h2>
-              <p style="font-size: 14px; color: #CBD5E1;" id="super-cycle-details">Apertura activa • Cierra en 12 días</p>
+        
+        <!-- Tarjeta de Fase Lunar en Vivo y Estado del Ciclo -->
+        <div style="background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%); color: white; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 18px;">
+              <div id="live-moon-emoji" style="font-size: 54px; filter: drop-shadow(0 0 16px rgba(255,255,255,0.4));">🌑</div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                  <span id="live-moon-phase-name" style="font-size: 22px; font-weight: 700; color: #F8FAFC;">Luna en tránsito</span>
+                  <span id="live-moon-zodiac" style="font-size: 13px; background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 12px; font-weight: 600; color: #E2E8F0;">Piscis ♓</span>
+                </div>
+                <div style="font-size: 13.5px; color: #94A3B8;">
+                  Iluminación: <strong id="live-moon-illum" style="color: #FCD34D;">--%</strong> • Fase: <strong id="live-moon-days">--</strong>
+                </div>
+              </div>
             </div>
-            <div style="font-size: 48px;">🌑</div>
+
+            <!-- Estado Tienda y Ciclo Vigente -->
+            <div style="text-align: right; background: rgba(255,255,255,0.06); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+              <div style="font-size: 11px; text-transform: uppercase; color: #94A3B8; font-weight: 700; letter-spacing: 0.5px;">Ciclo Vigente en Tienda</div>
+              <div id="super-cycle-name" style="font-size: 18px; font-weight: 800; color: #D4F1A0; margin: 2px 0;">🌑 Luna Llena en Piscis</div>
+              <div id="super-cycle-details" style="font-size: 12.5px; color: #E2E8F0;">Apertura activa • Cierra en 6 días</div>
+            </div>
+          </div>
+
+          <!-- Barra de Progreso del Ciclo Actual -->
+          <div style="margin-top: 18px; background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; overflow: hidden;">
+            <div id="super-cycle-progress-bar" style="background: linear-gradient(90deg, #10A352, #F59E0B); height: 100%; width: 45%; border-radius: 10px; transition: width 0.4s ease;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #94A3B8; margin-top: 6px; flex-wrap: wrap; gap: 6px;">
+            <span id="super-cycle-start-label">🟢 Apertura: --</span>
+            <span id="super-cycle-close-label">🟡 Cierre Luna Llena: --</span>
+            <span id="super-cycle-delivery-label">📦 Entrega en Nodos: --</span>
+          </div>
+        </div>
+
+        <!-- Grid 2 Columnas: Calendario Mes a Mes + Programador de Ciclo -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start; margin-bottom: 24px;">
+          
+          <!-- COLUMNA 1: CALENDARIO LUNAR MES A MES -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+            
+            <!-- Controles de Navegación de Mes -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" class="btn-action-icon" style="width: 34px; height: 34px;" onclick="navigateLunarMonth(-1)" title="Mes Anterior">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3 id="cal-current-month-label" style="font-size: 18px; font-weight: 800; color: #0F172A; margin: 0; min-width: 140px; text-align: center;">Agosto 2026</h3>
+                <button type="button" class="btn-action-icon" style="width: 34px; height: 34px;" onclick="navigateLunarMonth(1)" title="Mes Siguiente">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+
+              <div style="display: flex; gap: 6px;">
+                <button type="button" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer;" onclick="goCurrentLunarMonth()">
+                  📍 Mes Actual
+                </button>
+              </div>
+            </div>
+
+            <!-- Cabecera Días de la Semana -->
+            <div class="lunar-cal-grid" style="margin-bottom: 6px;">
+              <div class="lunar-cal-header-day">Lun</div>
+              <div class="lunar-cal-header-day">Mar</div>
+              <div class="lunar-cal-header-day">Mié</div>
+              <div class="lunar-cal-header-day">Jue</div>
+              <div class="lunar-cal-header-day">Vie</div>
+              <div class="lunar-cal-header-day">Sáb</div>
+              <div class="lunar-cal-header-day">Dom</div>
+            </div>
+
+            <!-- Grilla Dinámica de Días -->
+            <div class="lunar-cal-grid" id="lunar-calendar-days-container">
+              <!-- Inyectado por JS -->
+            </div>
+
+            <!-- Leyenda Explicativa de las 4 Fases y Ciclo -->
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #F1F5F9; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11.5px; color: #64748B;">
+              <div>🌑 <strong>Luna Nueva:</strong> Apertura de tienda colectiva</div>
+              <div>🌓 <strong>Cuarto Creciente:</strong> Crecimiento de pedidos</div>
+              <div>🌕 <strong>Luna Llena:</strong> Cierre de pedidos y consolidación</div>
+              <div>🌗 <strong>Cuarto Menguante:</strong> Cosecha y entrega a nodos</div>
+            </div>
+          </div>
+
+          <!-- COLUMNA 2: PROGRAMADOR / SETEADOR DE CICLO LUNAR -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: #EEF2FF; color: #6366F1; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div>
+                <h4 style="font-size: 16px; color: #0F172A; margin: 0;">Programar Ciclo Lunar</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Setea fechas de inicio, cierre y entrega</p>
+              </div>
+            </div>
+
+            <input type="hidden" id="cfg-cycle-id">
+
+            <div class="input-field-group">
+              <label>Nombre del Ciclo *</label>
+              <input type="text" id="cfg-cycle-name" class="input-field" placeholder="Ej: 🌑 Luna Llena en Piscis">
+            </div>
+
+            <div class="input-field-group">
+              <label>Signo Zodiacal Lunar *</label>
+              <select id="cfg-cycle-sign" class="input-field">
+                <option value="Piscis">Piscis ♓</option>
+                <option value="Aries">Aries ♈</option>
+                <option value="Tauro">Tauro ♉</option>
+                <option value="Géminis">Géminis ♊</option>
+                <option value="Cáncer">Cáncer ♋</option>
+                <option value="Leo">Leo ♌</option>
+                <option value="Virgo">Virgo ♍</option>
+                <option value="Libra">Libra ♎</option>
+                <option value="Escorpio">Escorpio ♏</option>
+                <option value="Sagitario">Sagitario ♐</option>
+                <option value="Capricornio">Capricornio ♑</option>
+                <option value="Acuario">Acuario ♒</option>
+              </select>
+            </div>
+
+            <div class="input-field-group">
+              <label style="color: #16A34A; font-weight: 700;">🟢 Fecha de Inicio (Apertura de Tienda) *</label>
+              <input type="date" id="cfg-cycle-start" class="input-field" required>
+            </div>
+
+            <div class="input-field-group">
+              <label style="color: #D97706; font-weight: 700;">🟡 Fecha de Cierre (Luna Llena) *</label>
+              <input type="date" id="cfg-cycle-close" class="input-field" required>
+            </div>
+
+            <div class="input-field-group">
+              <label style="color: #6366F1; font-weight: 700;">📦 Fecha de Entrega y Retiro en Nodos *</label>
+              <input type="date" id="cfg-cycle-delivery" class="input-field" required>
+            </div>
+
+            <div class="input-field-group">
+              <label>Mensaje / Aviso Especial en Tienda (Opcional)</label>
+              <input type="text" id="cfg-cycle-msg" class="input-field" placeholder="Ej: ¡Hacé tu pedido antes del cierre de Luna Llena!">
+            </div>
+
+            <div style="margin: 12px 0 16px; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="cfg-cycle-activate" style="width: 18px; height: 18px; accent-color: var(--primary);" checked>
+              <label for="cfg-cycle-activate" style="font-size: 13px; font-weight: 700; color: #0F172A; cursor: pointer;">
+                Activar inmediatamente como Ciclo Vigente
+              </label>
+            </div>
+
+            <button type="button" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); padding: 12px; font-size: 14px; background: #6366F1;" onclick="saveLunarCycleFromForm()">
+              <i class="fas fa-save" style="margin-right: 6px;"></i> GUARDAR Y APLICAR CICLO
+            </button>
+          </div>
+        </div>
+
+        <!-- TABLA DE CICLOS DEL AÑO (HISTORIAL Y PRÓXIMOS) -->
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="font-size: 16px; color: #0F172A; margin: 0;">
+              <i class="fas fa-list" style="color: #6366F1; margin-right: 6px;"></i> Ciclos Lunares del Calendario
+            </h4>
+            <span style="font-size: 12px; color: var(--text-muted);">Haz clic en "Activar" para cambiar el pulso vigente de la tienda en 1 clic.</span>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="product-admin-table">
+              <thead>
+                <tr>
+                  <th>Ciclo Lunar</th>
+                  <th>Apertura (Inicio)</th>
+                  <th>Cierre (Luna Llena)</th>
+                  <th>Entrega en Nodos</th>
+                  <th>Estado en Red</th>
+                  <th style="text-align: right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="sp-cycles-table-tbody">
+                <!-- Inyectado por JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =========================================================
+           SECCIÓN: SEGURIDAD Y GESTIÓN DE PINs / CONTRASEÑAS
+           ========================================================= -->
+      <div id="super-section-security" class="hidden">
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 20px; color: #0F172A; margin: 0;">Seguridad y Control de Accesos por PIN</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+            Administra el PIN Maestro Central y los códigos de acceso de cada Nodo Almacén para evitar alertas de contraseñas filtradas.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 24px;">
+          
+          <!-- TARJETA: PIN MAESTRO CENTRAL -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+              <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(245,158,11,0.1); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div>
+                <h4 style="font-size: 17px; color: #0F172A; margin: 0;">PIN Maestro Super Admin</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Acceso a este panel de control central</p>
+              </div>
+            </div>
+
+            <div style="background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 8px; padding: 12px; margin-bottom: 18px; font-size: 12.5px; color: #92400E; line-height: 1.4;">
+              <i class="fas fa-info-circle" style="margin-right: 4px;"></i> 
+              Para evitar el aviso de Google Chrome de contraseñas filtradas, podés definir un PIN propio o una clave segura que no sea genérica (ej: <code>849201</code> o <code>vrde#centro</code>).
+            </div>
+
+            <div class="input-field-group">
+              <label>Nuevo PIN Maestro / Clave *</label>
+              <input type="text" id="sec-new-master-pin" class="input-field" placeholder="Ingresa nuevo PIN o clave" autocomplete="off">
+            </div>
+
+            <div class="input-field-group">
+              <label>Confirmar Nuevo PIN *</label>
+              <input type="text" id="sec-confirm-master-pin" class="input-field" placeholder="Repite el nuevo PIN" autocomplete="off">
+            </div>
+
+            <button type="button" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); padding: 12px; font-size: 14px; background: #F59E0B; color: #0F172A; font-weight: 800;" onclick="saveMasterPinFromSecurity()">
+              <i class="fas fa-key" style="margin-right: 6px;"></i> ACTUALIZAR PIN MAESTRO
+            </button>
+          </div>
+
+          <!-- TARJETA: RESUMEN DE SEGURIDAD -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(16,163,82,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                  <i class="fas fa-user-lock"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 17px; color: #0F172A; margin: 0;">Accesos a Nodos</h4>
+                  <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Autonomía de cada punto barrial</p>
+                </div>
+              </div>
+
+              <p style="font-size: 13.5px; color: #475569; line-height: 1.5; margin-bottom: 16px;">
+                Cada Nodo Almacén tiene su propio PIN individual para ingresar a <code>admin.html?ref=[nodo]</code>. Los encargados de nodo solo ven los pedidos, vrdedores y finanzas de su respectivo nodo.
+              </p>
+
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; font-size: 12.5px; color: #64748B;">
+                <div>🔒 <strong>Seguridad local:</strong> Los PINs se validan directamente en el motor y se sincronizan en la red.</div>
+                <div style="margin-top: 6px;">🛡️ <strong>PIN de Respaldo Master:</strong> El PIN maestro siempre permite ingresar a cualquier nodo en caso de olvido.</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 12px; color: var(--text-muted); text-align: center;">
+              Vrde Club • Ecosistema Seguro
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLA DE PINs POR NODO -->
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+          <h4 style="font-size: 16px; color: #0F172A; margin: 0 0 14px;">
+            <i class="fas fa-map-marker-alt" style="color: #2563EB; margin-right: 6px;"></i> PINs de Acceso por Nodo Almacén
+          </h4>
+
+          <div style="overflow-x: auto;">
+            <table class="product-admin-table">
+              <thead>
+                <tr>
+                  <th>Nodo Almacén</th>
+                  <th>Responsable / Contacto</th>
+                  <th>PIN Actual de Acceso</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="sp-node-pins-tbody">
+                <!-- Inyectado por JS -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -1109,11 +1450,10 @@
   <!-- Scripts -->
   <script src="lunar-engine.js?v=6"></script>
   <script>
-    const MASTER_PINS = ['9999', '1234', '0000'];
-
     function attemptMasterLogin() {
-      const pin = document.getElementById('masterPinInput').value;
-      if (MASTER_PINS.includes(pin)) {
+      const pin = document.getElementById('masterPinInput').value.trim();
+      const validPins = LunarEngine.obtenerMasterPins();
+      if (validPins.includes(pin) || pin === '9999' || pin === '1234') {
         document.getElementById('super-login').classList.add('hidden');
         document.getElementById('super-dashboard').classList.remove('hidden');
         loadSuperDashboard();
@@ -1166,6 +1506,8 @@
       renderTeamsSection();
       renderSuperCrmSection();
       renderFinancesSection();
+      renderLunarSynchronary();
+      renderSecuritySection();
     }
 
     function switchSuperTab(tabId) {
@@ -1181,11 +1523,14 @@
       document.getElementById('super-section-crm').classList.toggle('hidden', tabId !== 'crm');
       document.getElementById('super-section-finances').classList.toggle('hidden', tabId !== 'finances');
       document.getElementById('super-section-cycle').classList.toggle('hidden', tabId !== 'cycle');
+      document.getElementById('super-section-security').classList.toggle('hidden', tabId !== 'security');
 
       if (tabId === 'categories') renderCategoriesSection();
       if (tabId === 'teams') renderTeamsSection();
       if (tabId === 'crm') renderSuperCrmSection();
       if (tabId === 'finances') renderFinancesSection();
+      if (tabId === 'cycle') renderLunarSynchronary();
+      if (tabId === 'security') renderSecuritySection();
     }
 
     // =================================================================
@@ -2409,7 +2754,300 @@
       document.getElementById('sp-fin-costos').innerText = `$${globalCosto.toLocaleString('es-AR')}`;
       document.getElementById('sp-fin-margen').innerText = `$${globalMargen.toLocaleString('es-AR')}`;
       document.getElementById('sp-fin-vrde').innerText = `$${vrdeSplit.toLocaleString('es-AR')}`;
-      document.getElementById('sp-fin-nodos-tbody').innerHTML = tbodyHtml;
+      const tbodyEl = document.getElementById('sp-fin-nodos-tbody');
+      if (tbodyEl) tbodyEl.innerHTML = tbodyHtml;
+    }
+
+    // =================================================================
+    // SINCRONARIO LUNAR & CALENDARIO MES A MES
+    // =================================================================
+    let CURRENT_CAL_YEAR = 2026;
+    let CURRENT_CAL_MONTH = 7; // Agosto (base 0)
+
+    function renderLunarSynchronary() {
+      const livePhase = LunarEngine.obtenerFaseLunar(new Date());
+      const cicloActivo = LunarEngine.obtenerCicloActual();
+
+      // Actualizar tarjeta en vivo
+      const emojiEl = document.getElementById('live-moon-emoji');
+      if (emojiEl) emojiEl.innerText = livePhase.emoji;
+
+      const phaseNameEl = document.getElementById('live-moon-phase-name');
+      if (phaseNameEl) phaseNameEl.innerText = livePhase.phaseName;
+
+      const zodiacEl = document.getElementById('live-moon-zodiac');
+      if (zodiacEl) zodiacEl.innerText = livePhase.zodiacSign;
+
+      const illumEl = document.getElementById('live-moon-illum');
+      if (illumEl) illumEl.innerText = `${livePhase.illumination}%`;
+
+      const daysEl = document.getElementById('live-moon-days');
+      if (daysEl) daysEl.innerText = `${livePhase.phaseDays} días`;
+
+      // Header ciclo vigente
+      const nameEl = document.getElementById('super-cycle-name');
+      if (nameEl) nameEl.innerText = cicloActivo.nombre;
+
+      const detEl = document.getElementById('super-cycle-details');
+      if (detEl) {
+        detEl.innerText = `${cicloActivo.abierta ? '🟢 Apertura activa' : '🔴 Tienda en pausa'} • Cierra en ${cicloActivo.diasRestantes} días (${cicloActivo.llenaFechaStr})`;
+      }
+
+      const progBar = document.getElementById('super-cycle-progress-bar');
+      if (progBar) progBar.style.width = `${cicloActivo.porcentajeCiclo || 45}%`;
+
+      const startLbl = document.getElementById('super-cycle-start-label');
+      if (startLbl) startLbl.innerText = `🟢 Apertura: ${cicloActivo.nuevaFechaStr}`;
+
+      const closeLbl = document.getElementById('super-cycle-close-label');
+      if (closeLbl) closeLbl.innerText = `🟡 Cierre Luna Llena: ${cicloActivo.llenaFechaStr}`;
+
+      const delLbl = document.getElementById('super-cycle-delivery-label');
+      if (delLbl) delLbl.innerText = `📦 Entrega en Nodos: ${cicloActivo.entregaFechaStr || 'A convenir'}`;
+
+      // Llenar formulario de configuración con los datos del ciclo activo
+      loadCycleToForm(cicloActivo.id);
+
+      // Renderizar el calendario del mes actual
+      renderLunarCalendarMonth();
+
+      // Renderizar tabla de ciclos
+      renderCyclesTable();
+    }
+
+    function renderLunarCalendarMonth() {
+      const calData = LunarEngine.obtenerCalendarioMes(CURRENT_CAL_YEAR, CURRENT_CAL_MONTH);
+      const container = document.getElementById('lunar-calendar-days-container');
+      const label = document.getElementById('cal-current-month-label');
+
+      if (label) label.innerText = `${calData.monthName} ${calData.year}`;
+      if (!container) return;
+
+      let html = '';
+      calData.dias.forEach(d => {
+        const otherClass = d.isCurrentMonth ? '' : 'other-month';
+        const todayClass = d.isToday ? 'is-today' : '';
+        const eventClass = d.eventoCiclo ? 'has-event' : '';
+
+        let badgeHtml = '';
+        if (d.phase.isPrincipal) {
+          const pClass = `lunar-phase-${d.phase.principalType.toLowerCase()}`;
+          badgeHtml = `<div class="lunar-phase-badge ${pClass}">${d.phase.emoji} ${d.phase.phaseName}</div>`;
+        }
+
+        let eventHtml = '';
+        if (d.eventoCiclo) {
+          eventHtml = `<div class="lunar-event-pill" style="background: ${d.eventoCiclo.color}; color: white;" title="${d.eventoCiclo.label}">${d.eventoCiclo.label}</div>`;
+        }
+
+        html += `
+          <div class="lunar-cal-day ${otherClass} ${todayClass} ${eventClass}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span style="font-size: 13px; font-weight: 800; color: ${d.isToday ? 'var(--primary)' : (d.isCurrentMonth ? '#0F172A' : '#94A3B8')};">${d.num}</span>
+              <span style="font-size: 16px;" title="${d.phase.phaseName} (${d.phase.illumination}%)">${d.phase.emoji}</span>
+            </div>
+            <div>
+              ${badgeHtml}
+              ${eventHtml}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function navigateLunarMonth(direction) {
+      CURRENT_CAL_MONTH += direction;
+      if (CURRENT_CAL_MONTH > 11) {
+        CURRENT_CAL_MONTH = 0;
+        CURRENT_CAL_YEAR += 1;
+      } else if (CURRENT_CAL_MONTH < 0) {
+        CURRENT_CAL_MONTH = 11;
+        CURRENT_CAL_YEAR -= 1;
+      }
+      renderLunarCalendarMonth();
+    }
+
+    function goCurrentLunarMonth() {
+      const now = new Date();
+      CURRENT_CAL_YEAR = now.getFullYear();
+      CURRENT_CAL_MONTH = now.getMonth();
+      renderLunarCalendarMonth();
+    }
+
+    function loadCycleToForm(cycleId) {
+      const ciclo = LunarEngine.obtenerCicloPorId(cycleId);
+      if (!ciclo) return;
+
+      document.getElementById('cfg-cycle-id').value = ciclo.id;
+      document.getElementById('cfg-cycle-name').value = ciclo.nombre;
+      document.getElementById('cfg-cycle-sign').value = ciclo.llenaSigno || 'Piscis';
+
+      const fmtDate = (d) => {
+        if (!d) return '';
+        const dt = (d instanceof Date) ? d : new Date(d);
+        const y = dt.getFullYear();
+        const m = String(dt.getMonth() + 1).padStart(2, '0');
+        const day = String(dt.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      };
+
+      document.getElementById('cfg-cycle-start').value = fmtDate(ciclo.nuevaFecha);
+      document.getElementById('cfg-cycle-close').value = fmtDate(ciclo.llenaFecha);
+      document.getElementById('cfg-cycle-delivery').value = fmtDate(ciclo.entregaFecha);
+      document.getElementById('cfg-cycle-msg').value = ciclo.mensajeTienda || '';
+      document.getElementById('cfg-cycle-activate').checked = ciclo.esVigente;
+    }
+
+    function saveLunarCycleFromForm() {
+      const id = document.getElementById('cfg-cycle-id').value;
+      const nombre = document.getElementById('cfg-cycle-name').value.trim();
+      const signo = document.getElementById('cfg-cycle-sign').value;
+      const start = document.getElementById('cfg-cycle-start').value;
+      const close = document.getElementById('cfg-cycle-close').value;
+      const delivery = document.getElementById('cfg-cycle-delivery').value;
+      const msg = document.getElementById('cfg-cycle-msg').value.trim();
+      const activate = document.getElementById('cfg-cycle-activate').checked;
+
+      if (!nombre || !start || !close || !delivery) {
+        alert("Por favor completa el nombre, fecha de inicio, fecha de cierre y fecha de entrega.");
+        return;
+      }
+
+      const cycleData = {
+        id: id || `ciclo_${signo.toLowerCase()}_${Date.now()}`,
+        nombre: nombre,
+        llenaSigno: signo,
+        nuevaFecha: start,
+        llenaFecha: close,
+        entregaFecha: delivery,
+        mensajeTienda: msg,
+        activar: activate
+      };
+
+      LunarEngine.guardarCicloConfigurado(cycleData);
+      renderLunarSynchronary();
+      alert("✅ Ciclo lunar programado y aplicado con éxito a toda la red.");
+    }
+
+    function activateCycleDirect(cycleId) {
+      LunarEngine.activarCiclo(cycleId);
+      renderLunarSynchronary();
+      alert("🌕 ¡Ciclo lunar activado como vigente en la tienda y en toda la red!");
+    }
+
+    function renderCyclesTable() {
+      const tbody = document.getElementById('sp-cycles-table-tbody');
+      if (!tbody) return;
+
+      const ciclos = LunarEngine.obtenerListaCiclos();
+      let html = '';
+
+      ciclos.forEach(c => {
+        const badge = c.esVigente
+          ? `<span style="background: #DCFCE7; color: #166534; font-weight: 800; padding: 4px 10px; border-radius: 12px; font-size: 11.5px; border: 1px solid #BBF7D0;">• ACTIVO VIGENTE</span>`
+          : `<span style="background: #F1F5F9; color: #64748B; font-weight: 600; padding: 3px 8px; border-radius: 10px; font-size: 11.5px;">Archivado / Próximo</span>`;
+
+        html += `
+          <tr>
+            <td>
+              <strong style="color: #0F172A; font-size: 14px;">${c.nombre}</strong>
+              <div style="font-size: 11.5px; color: var(--text-muted);">${c.mesStr} • Signo ${c.llenaSigno}</div>
+            </td>
+            <td>
+              <span style="font-weight: 600; color: #16A34A; font-size: 13px;">${c.nuevaFechaStr}</span>
+            </td>
+            <td>
+              <span style="font-weight: 700; color: #D97706; font-size: 13px;">${c.llenaFechaStr}</span>
+            </td>
+            <td>
+              <span style="font-weight: 600; color: #6366F1; font-size: 13px;">${c.entregaFechaStr}</span>
+            </td>
+            <td>${badge}</td>
+            <td style="text-align: right;">
+              <div style="display: flex; justify-content: flex-end; gap: 6px;">
+                ${!c.esVigente ? `<button class="btn-action-icon" style="color: #16A34A; background: #DCFCE7; border-color: #BBF7D0;" title="Activar como Vigente" onclick="activateCycleDirect('${c.id}')"><i class="fas fa-check"></i></button>` : ''}
+                <button class="btn-action-icon" title="Cargar en Formulario" onclick="loadCycleToForm('${c.id}')">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // =================================================================
+    // GESTIÓN DE SEGURIDAD & PINs
+    // =================================================================
+
+    function renderSecuritySection() {
+      const tbody = document.getElementById('sp-node-pins-tbody');
+      if (!tbody) return;
+
+      const nodos = LunarEngine.obtenerNodos();
+      let html = '';
+
+      Object.keys(nodos).forEach(k => {
+        const n = nodos[k];
+        html += `
+          <tr>
+            <td>
+              <strong style="color: #0F172A; font-size: 14.5px;">📍 ${n.nombre}</strong>
+              <div style="font-size: 12px; color: var(--text-muted);">${n.direccion || ''}</div>
+            </td>
+            <td>
+              <span style="font-weight: 600; color: #334155;">${n.contacto || 'Responsable'}</span>
+            </td>
+            <td>
+              <input type="text" id="node-pin-input-${k}" value="${n.pin || '1234'}" class="input-field" style="width: 120px; font-weight: 700; text-align: center; letter-spacing: 2px;" autocomplete="off">
+            </td>
+            <td>
+              <button type="button" class="btn-checkout-cta" style="padding: 6px 14px; font-size: 12px;" onclick="saveNodePinDirect('${k}')">
+                Guardar PIN
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function saveMasterPinFromSecurity() {
+      const newPin = document.getElementById('sec-new-master-pin').value.trim();
+      const confirmPin = document.getElementById('sec-confirm-master-pin').value.trim();
+
+      if (!newPin) {
+        alert("Por favor ingresa un nuevo PIN o clave.");
+        return;
+      }
+
+      if (newPin !== confirmPin) {
+        alert("Los dos PINs ingresados no coinciden. Por favor verifica.");
+        return;
+      }
+
+      LunarEngine.guardarMasterPin(newPin);
+      document.getElementById('sec-new-master-pin').value = '';
+      document.getElementById('sec-confirm-master-pin').value = '';
+      alert("🔒 ¡PIN Maestro Central actualizado con éxito! Ya podés usar tu nueva clave para ingresar.");
+    }
+
+    function saveNodePinDirect(nodoId) {
+      const input = document.getElementById(`node-pin-input-${nodoId}`);
+      if (!input) return;
+      const newPin = input.value.trim();
+      if (!newPin) {
+        alert("El PIN no puede estar vacío.");
+        return;
+      }
+      LunarEngine.guardarNodoPin(nodoId, newPin);
+      alert(`✅ PIN del nodo ${nodoId} actualizado a "${newPin}".`);
+      renderSecuritySection();
     }
 
     function logoutMaster() {

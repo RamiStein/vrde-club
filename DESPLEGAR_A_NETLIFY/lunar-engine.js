@@ -12,18 +12,18 @@ const LUNAR_CONFIG = {
   // Ciclos lunares 2026-2027 identificados por la Luna Llena de cierre (Meses base 0: Ene=0, Dic=11)
   ciclosLunares: [
     // 2026
-    { id: 'leo-ene-2026', nuevaFecha: new Date(2026, 0, 18), nuevaSigno: 'Capricornio', llenaFecha: new Date(2026, 1, 1), llenaSigno: 'Leo', nombreLlena: '🌑 Luna Llena en Leo', mesStr: 'Ene/Feb 2026', archivado: true },
-    { id: 'virgo-feb-2026', nuevaFecha: new Date(2026, 1, 17), nuevaSigno: 'Acuario', llenaFecha: new Date(2026, 2, 3), llenaSigno: 'Virgo', nombreLlena: '🌑 Luna Llena en Virgo', mesStr: 'Feb/Mar 2026', archivado: true },
-    { id: 'libra-mar-2026', nuevaFecha: new Date(2026, 2, 19), nuevaSigno: 'Piscis', llenaFecha: new Date(2026, 3, 1), llenaSigno: 'Libra', nombreLlena: '🌑 Luna Llena en Libra', mesStr: 'Mar/Abr 2026', archivado: true },
-    { id: 'escorpio-abr-2026', nuevaFecha: new Date(2026, 3, 17), nuevaSigno: 'Aries', llenaFecha: new Date(2026, 4, 1), llenaSigno: 'Escorpio', nombreLlena: '🌑 Luna Llena en Escorpio', mesStr: 'Abr/May 2026', archivado: true },
-    { id: 'sagitario-may-2026', nuevaFecha: new Date(2026, 4, 17), nuevaSigno: 'Tauro', llenaFecha: new Date(2026, 4, 31), llenaSigno: 'Sagitario', nombreLlena: '🌑 Luna Llena en Sagitario', mesStr: 'Mayo 2026', archivado: true },
-    { id: 'capricornio-jun-2026', nuevaFecha: new Date(2026, 5, 15), nuevaSigno: 'Géminis', llenaFecha: new Date(2026, 5, 29), llenaSigno: 'Capricornio', nombreLlena: '🌑 Luna Llena en Capricornio', mesStr: 'Junio 2026', archivado: true },
-    { id: 'acuario-jul-2026', nuevaFecha: new Date(2026, 6, 14), nuevaSigno: 'Cáncer', llenaFecha: new Date(2026, 6, 29), llenaSigno: 'Acuario', nombreLlena: '🌑 Luna Llena en Acuario', mesStr: 'Julio 2026', archivado: true },
-    { id: 'piscis-ago-2026', nuevaFecha: new Date(2026, 7, 12), nuevaSigno: 'Leo', llenaFecha: new Date(2026, 7, 28), llenaSigno: 'Piscis', nombreLlena: '🌑 Luna Llena en Piscis', mesStr: 'Agosto 2026', esVigente: true, archivado: false },
-    { id: 'aries-sep-2026', nuevaFecha: new Date(2026, 8, 11), nuevaSigno: 'Virgo', llenaFecha: new Date(2026, 8, 26), llenaSigno: 'Aries', nombreLlena: '🌑 Luna Llena en Aries', mesStr: 'Septiembre 2026', archivado: false },
-    { id: 'tauro-oct-2026', nuevaFecha: new Date(2026, 9, 10), nuevaSigno: 'Libra', llenaFecha: new Date(2026, 9, 26), llenaSigno: 'Tauro', nombreLlena: '🌑 Luna Llena en Tauro', mesStr: 'Octubre 2026', archivado: false },
-    { id: 'geminis-nov-2026', nuevaFecha: new Date(2026, 10, 9), nuevaSigno: 'Escorpio', llenaFecha: new Date(2026, 10, 24), llenaSigno: 'Géminis', nombreLlena: '🌑 Luna Llena en Géminis', mesStr: 'Noviembre 2026', archivado: false },
-    { id: 'cancer-dic-2026', nuevaFecha: new Date(2026, 11, 8), nuevaSigno: 'Sagitario', llenaFecha: new Date(2026, 11, 24), llenaSigno: 'Cáncer', nombreLlena: '🌑 Luna Llena en Cáncer', mesStr: 'Diciembre 2026', archivado: false }
+    { id: 'leo-ene-2026', nuevaFecha: new Date(2026, 0, 18), nuevaSigno: 'Capricornio', llenaFecha: new Date(2026, 1, 1), llenaSigno: 'Leo', entregaFecha: new Date(2026, 1, 6), nombreLlena: '🌑 Luna Llena en Leo', mesStr: 'Ene/Feb 2026', archivado: true },
+    { id: 'virgo-feb-2026', nuevaFecha: new Date(2026, 1, 17), nuevaSigno: 'Acuario', llenaFecha: new Date(2026, 2, 3), llenaSigno: 'Virgo', entregaFecha: new Date(2026, 2, 10), nombreLlena: '🌑 Luna Llena en Virgo', mesStr: 'Feb/Mar 2026', archivado: true },
+    { id: 'libra-mar-2026', nuevaFecha: new Date(2026, 2, 19), nuevaSigno: 'Piscis', llenaFecha: new Date(2026, 3, 1), llenaSigno: 'Libra', entregaFecha: new Date(2026, 3, 8), nombreLlena: '🌑 Luna Llena en Libra', mesStr: 'Mar/Abr 2026', archivado: true },
+    { id: 'escorpio-abr-2026', nuevaFecha: new Date(2026, 3, 17), nuevaSigno: 'Aries', llenaFecha: new Date(2026, 4, 1), llenaSigno: 'Escorpio', entregaFecha: new Date(2026, 4, 8), nombreLlena: '🌑 Luna Llena en Escorpio', mesStr: 'Abr/May 2026', archivado: true },
+    { id: 'sagitario-may-2026', nuevaFecha: new Date(2026, 4, 17), nuevaSigno: 'Tauro', llenaFecha: new Date(2026, 4, 31), llenaSigno: 'Sagitario', entregaFecha: new Date(2026, 5, 5), nombreLlena: '🌑 Luna Llena en Sagitario', mesStr: 'Mayo 2026', archivado: true },
+    { id: 'capricornio-jun-2026', nuevaFecha: new Date(2026, 5, 15), nuevaSigno: 'Géminis', llenaFecha: new Date(2026, 5, 29), llenaSigno: 'Capricornio', entregaFecha: new Date(2026, 6, 3), nombreLlena: '🌑 Luna Llena en Capricornio', mesStr: 'Junio 2026', archivado: true },
+    { id: 'acuario-jul-2026', nuevaFecha: new Date(2026, 6, 14), nuevaSigno: 'Cáncer', llenaFecha: new Date(2026, 6, 29), llenaSigno: 'Acuario', entregaFecha: new Date(2026, 7, 7), nombreLlena: '🌑 Luna Llena en Acuario', mesStr: 'Julio 2026', archivado: true },
+    { id: 'piscis-ago-2026', nuevaFecha: new Date(2026, 7, 12), nuevaSigno: 'Leo', llenaFecha: new Date(2026, 7, 28), llenaSigno: 'Piscis', entregaFecha: new Date(2026, 8, 4), nombreLlena: '🌑 Luna Llena en Piscis', mesStr: 'Agosto 2026', esVigente: true, archivado: false },
+    { id: 'aries-sep-2026', nuevaFecha: new Date(2026, 8, 11), nuevaSigno: 'Virgo', llenaFecha: new Date(2026, 8, 26), llenaSigno: 'Aries', entregaFecha: new Date(2026, 9, 2), nombreLlena: '🌑 Luna Llena en Aries', mesStr: 'Septiembre 2026', archivado: false },
+    { id: 'tauro-oct-2026', nuevaFecha: new Date(2026, 9, 10), nuevaSigno: 'Libra', llenaFecha: new Date(2026, 9, 26), llenaSigno: 'Tauro', entregaFecha: new Date(2026, 10, 30), nombreLlena: '🌑 Luna Llena en Tauro', mesStr: 'Octubre 2026', archivado: false },
+    { id: 'geminis-nov-2026', nuevaFecha: new Date(2026, 10, 9), nuevaSigno: 'Escorpio', llenaFecha: new Date(2026, 10, 24), llenaSigno: 'Géminis', entregaFecha: new Date(2026, 11, 4), nombreLlena: '🌑 Luna Llena en Géminis', mesStr: 'Noviembre 2026', archivado: false },
+    { id: 'cancer-dic-2026', nuevaFecha: new Date(2026, 11, 8), nuevaSigno: 'Sagitario', llenaFecha: new Date(2026, 11, 24), llenaSigno: 'Cáncer', entregaFecha: new Date(2026, 11, 30), nombreLlena: '🌑 Luna Llena en Cáncer', mesStr: 'Diciembre 2026', archivado: false }
   ],
 
   // Base inicial de Nodos y Aliados
@@ -949,42 +949,296 @@ class LunarEngine {
     };
   }
 
+  // =================================================================
+  // ASTRONOMÍA LUNAR & CALENDARIO INTERACTIVO
+  // =================================================================
+
+  /**
+   * Calcula la fase lunar astronómica exacta, iluminación y signo zodiacal para cualquier fecha
+   */
+  static obtenerFaseLunar(dateParam = new Date()) {
+    const date = (dateParam instanceof Date) ? dateParam : new Date(dateParam);
+    // Ancla astronómica: Luna Nueva del 18 de Enero de 2026, 17:52 UTC
+    const anchor = new Date(Date.UTC(2026, 0, 18, 17, 52, 0));
+    const synodicMonth = 29.53058770576; // días por lunación
+
+    const diffDays = (date.getTime() - anchor.getTime()) / (1000 * 60 * 60 * 24);
+    let phaseDays = diffDays % synodicMonth;
+    if (phaseDays < 0) phaseDays += synodicMonth;
+
+    const phaseNormalized = phaseDays / synodicMonth; // 0 a 1
+    const illumination = Math.round((1 - Math.cos(phaseNormalized * 2 * Math.PI)) / 2 * 100);
+
+    let phaseName = '';
+    let emoji = '🌑';
+    let isPrincipal = false;
+    let principalType = null;
+
+    if (phaseDays < 1.4 || phaseDays >= 28.1) {
+      phaseName = 'Luna Nueva';
+      emoji = '🌑';
+      isPrincipal = true;
+      principalType = 'NUEVA';
+    } else if (phaseDays < 6.4) {
+      phaseName = 'Luna Creciente';
+      emoji = '🌒';
+    } else if (phaseDays < 8.4) {
+      phaseName = 'Cuarto Creciente';
+      emoji = '🌓';
+      isPrincipal = true;
+      principalType = 'CRECIENTE';
+    } else if (phaseDays < 13.6) {
+      phaseName = 'Gibosa Creciente';
+      emoji = '🌔';
+    } else if (phaseDays < 16.0) {
+      phaseName = 'Luna Llena';
+      emoji = '🌕';
+      isPrincipal = true;
+      principalType = 'LLENA';
+    } else if (phaseDays < 20.8) {
+      phaseName = 'Gibosa Menguante';
+      emoji = '🌖';
+    } else if (phaseDays < 23.0) {
+      phaseName = 'Cuarto Menguante';
+      emoji = '🌗';
+      isPrincipal = true;
+      principalType = 'MENGUANTE';
+    } else {
+      phaseName = 'Luna Menguante';
+      emoji = '🌘';
+    }
+
+    const zodiacSigns = [
+      'Aries ♈', 'Tauro ♉', 'Géminis ♊', 'Cáncer ♋', 
+      'Leo ♌', 'Virgo ♍', 'Libra ♎', 'Escorpio ♏', 
+      'Sagitario ♐', 'Capricornio ♑', 'Acuario ♒', 'Piscis ♓'
+    ];
+    const zodiacDays = 27.321661; // mes sideral
+    const diffSidereal = (date.getTime() - anchor.getTime()) / (1000 * 60 * 60 * 24);
+    let siderealDays = diffSidereal % zodiacDays;
+    if (siderealDays < 0) siderealDays += zodiacDays;
+    const signIndex = Math.floor(((siderealDays / zodiacDays) * 12 + 9) % 12);
+    const zodiacSign = zodiacSigns[signIndex];
+
+    return {
+      phaseName,
+      emoji,
+      phaseNormalized,
+      phaseDays: parseFloat(phaseDays.toFixed(1)),
+      illumination,
+      zodiacSign,
+      isPrincipal,
+      principalType
+    };
+  }
+
+  /**
+   * Genera la grilla de días con fases lunares y eventos del ciclo para un mes específico
+   */
+  static obtenerCalendarioMes(year, monthIndex) {
+    const mesesFull = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const cicloActivo = this.obtenerCicloActual();
+
+    const inicioMes = new Date(year, monthIndex, 1);
+    const totalDiasMes = new Date(year, monthIndex + 1, 0).getDate();
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    // Ajustar para empezar en Lunes (0 = Lun, 6 = Dom)
+    let diaSemanaPrimerDia = inicioMes.getDay() - 1;
+    if (diaSemanaPrimerDia < 0) diaSemanaPrimerDia = 6;
+
+    const totalDiasPrevio = new Date(year, monthIndex, 0).getDate();
+    const dias = [];
+
+    // Días del mes anterior para completar la primera semana
+    for (let i = diaSemanaPrimerDia - 1; i >= 0; i--) {
+      const dNum = totalDiasPrevio - i;
+      const dDate = new Date(year, monthIndex - 1, dNum);
+      dDate.setHours(12, 0, 0, 0);
+      dias.push({
+        num: dNum,
+        date: dDate,
+        isCurrentMonth: false,
+        isToday: false,
+        phase: this.obtenerFaseLunar(dDate)
+      });
+    }
+
+    // Fechas clave del ciclo activo para resaltar
+    const cicloInicioDate = new Date(cicloActivo.nuevaFecha);
+    cicloInicioDate.setHours(0, 0, 0, 0);
+    const cicloCierreDate = new Date(cicloActivo.llenaFecha);
+    cicloCierreDate.setHours(0, 0, 0, 0);
+    const cicloEntregaDate = cicloActivo.entregaFecha ? new Date(cicloActivo.entregaFecha) : null;
+    if (cicloEntregaDate) cicloEntregaDate.setHours(0, 0, 0, 0);
+
+    // Días del mes actual
+    for (let d = 1; d <= totalDiasMes; d++) {
+      const dDate = new Date(year, monthIndex, d);
+      dDate.setHours(12, 0, 0, 0);
+      const dDateZero = new Date(year, monthIndex, d);
+      dDateZero.setHours(0, 0, 0, 0);
+
+      const isToday = dDateZero.getTime() === hoy.getTime();
+      const phase = this.obtenerFaseLunar(dDate);
+
+      const isInicio = dDateZero.getTime() === cicloInicioDate.getTime();
+      const isCierre = dDateZero.getTime() === cicloCierreDate.getTime();
+      const isEntrega = cicloEntregaDate && dDateZero.getTime() === cicloEntregaDate.getTime();
+
+      let eventoCiclo = null;
+      if (isInicio) eventoCiclo = { tipo: 'INICIO', label: '🟢 Apertura Tienda', color: '#16A34A' };
+      else if (isCierre) eventoCiclo = { tipo: 'CIERRE', label: '🟡 Cierre Pedidos', color: '#D97706' };
+      else if (isEntrega) eventoCiclo = { tipo: 'ENTREGA', label: '📦 Entrega en Nodos', color: '#6366F1' };
+
+      dias.push({
+        num: d,
+        date: dDate,
+        isCurrentMonth: true,
+        isToday: isToday,
+        phase: phase,
+        isInicio: isInicio,
+        isCierre: isCierre,
+        isEntrega: isEntrega,
+        eventoCiclo: eventoCiclo
+      });
+    }
+
+    // Días del mes siguiente para completar la última semana
+    const rest = (7 - (dias.length % 7)) % 7;
+    for (let j = 1; j <= rest; j++) {
+      const dDate = new Date(year, monthIndex + 1, j);
+      dDate.setHours(12, 0, 0, 0);
+      dias.push({
+        num: j,
+        date: dDate,
+        isCurrentMonth: false,
+        isToday: false,
+        phase: this.obtenerFaseLunar(dDate)
+      });
+    }
+
+    return {
+      year,
+      monthIndex,
+      monthName: mesesFull[monthIndex],
+      dias
+    };
+  }
+
   /**
    * Obtiene la lista de todos los ciclos lunares configurados (vigentes y archivados)
    */
-    static obtenerListaCiclos() {
+  static obtenerListaCiclos() {
     const hoy = new Date();
     const mesesFull = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    const actual = this.obtenerCicloActual();
+    
+    let baseList = LUNAR_CONFIG.ciclosLunares;
+    if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
+      const stored = localStorage.getItem('VRDE_CICLOS_LUNARES');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) baseList = parsed;
+        } catch(e) {}
+      }
+    }
 
-    return LUNAR_CONFIG.ciclosLunares.map(c => {
+    const activoId = this.obtenerIdCicloActivo();
+
+    return baseList.map(c => {
       const nuevaF = (c.nuevaFecha instanceof Date) ? c.nuevaFecha : new Date(c.nuevaFecha || '2026-08-12');
       const llenaF = (c.llenaFecha instanceof Date) ? c.llenaFecha : new Date(c.llenaFecha || '2026-08-28');
-      const esVigente = (c.id === actual.id);
+      const entregaF = c.entregaFecha ? ((c.entregaFecha instanceof Date) ? c.entregaFecha : new Date(c.entregaFecha)) : new Date(llenaF.getTime() + (7 * 24 * 3600 * 1000));
+      
+      const esVigente = (c.id === activoId);
       
       const milisegundosRestantes = llenaF.getTime() - hoy.getTime();
       const diasRestantes = Math.max(0, Math.ceil(milisegundosRestantes / (1000 * 3600 * 24)));
       const abierta = hoy >= nuevaF && hoy <= llenaF;
       const llenaFechaStr = `${llenaF.getDate()} de ${mesesFull[llenaF.getMonth()]}`;
       const nuevaFechaStr = `${nuevaF.getDate()} de ${mesesFull[nuevaF.getMonth()]}`;
+      const entregaFechaStr = `${entregaF.getDate()} de ${mesesFull[entregaF.getMonth()]}`;
 
       return {
         id: c.id,
-        nombre: c.nombreLlena || `🌑 Luna Llena en ${c.llenaSigno}`,
-        llenaSigno: c.llenaSigno,
-        nuevaSigno: c.nuevaSigno,
-        mesStr: c.mesStr,
+        nombre: c.nombreLlena || c.nombre || `🌑 Luna Llena en ${c.llenaSigno || 'Piscis'}`,
+        nombreLlena: c.nombreLlena || c.nombre,
+        llenaSigno: c.llenaSigno || 'Piscis',
+        nuevaSigno: c.nuevaSigno || 'Leo',
+        mesStr: c.mesStr || `${mesesFull[llenaF.getMonth()]} ${llenaF.getFullYear()}`,
         nuevaFecha: nuevaF,
         llenaFecha: llenaF,
+        entregaFecha: entregaF,
         nuevaFechaStr: nuevaFechaStr,
         llenaFechaStr: llenaFechaStr,
+        entregaFechaStr: entregaFechaStr,
         diasRestantes: diasRestantes,
         abierta: abierta,
         esVigente: esVigente,
-        archivado: c.archivado !== false && !esVigente,
+        mensajeTienda: c.mensajeTienda || '',
+        archivado: !esVigente && (c.archivado === true || hoy > llenaF),
         badge: esVigente ? 'Compra Vigente' : 'Archivada'
       };
     });
+  }
+
+  /**
+   * Obtiene el ID del ciclo activo en el sistema
+   */
+  static obtenerIdCicloActivo() {
+    if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
+      const stored = localStorage.getItem('VRDE_CICLO_ACTIVO');
+      if (stored) return stored;
+    }
+    return 'piscis-ago-2026';
+  }
+
+  /**
+   * Activa un ciclo como el vigente para toda la tienda y red
+   */
+  static activarCiclo(cicloId) {
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_CICLO_ACTIVO', cicloId);
+    }
+    return this.obtenerCicloActual();
+  }
+
+  /**
+   * Guarda o actualiza la configuración de un ciclo lunar
+   */
+  static guardarCicloConfigurado(cicloData) {
+    let lista = this.obtenerListaCiclos();
+    const idx = lista.findIndex(c => c.id === cicloData.id);
+
+    const formatData = {
+      id: cicloData.id || (`ciclo_${Date.now()}`),
+      nombre: cicloData.nombre || '🌑 Luna Llena',
+      nombreLlena: cicloData.nombre || '🌑 Luna Llena',
+      llenaSigno: cicloData.llenaSigno || 'Piscis',
+      nuevaSigno: cicloData.nuevaSigno || 'Leo',
+      mesStr: cicloData.mesStr || '',
+      nuevaFecha: new Date(cicloData.nuevaFecha),
+      llenaFecha: new Date(cicloData.llenaFecha),
+      entregaFecha: cicloData.entregaFecha ? new Date(cicloData.entregaFecha) : new Date(new Date(cicloData.llenaFecha).getTime() + (7 * 24 * 3600 * 1000)),
+      mensajeTienda: cicloData.mensajeTienda || '',
+      archivado: false
+    };
+
+    if (idx >= 0) {
+      lista[idx] = { ...lista[idx], ...formatData };
+    } else {
+      lista.push(formatData);
+    }
+
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_CICLOS_LUNARES', JSON.stringify(lista));
+      if (cicloData.activar !== false) {
+        localStorage.setItem('VRDE_CICLO_ACTIVO', formatData.id);
+      }
+    }
+    return formatData;
   }
 
   /**
@@ -994,6 +1248,58 @@ class LunarEngine {
     const lista = this.obtenerListaCiclos();
     const found = lista.find(c => c.id === cicloId);
     return found || this.obtenerCicloActual();
+  }
+
+  // =================================================================
+  // GESTIÓN DE SEGURIDAD, PINs Y CONTRASEÑAS
+  // =================================================================
+
+  /**
+   * Obtiene los PINs maestros autorizados para el Super Admin
+   */
+  static obtenerMasterPins() {
+    let pins = ['9999', '1234', '0000', 'vrde2026'];
+    if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
+      const stored = localStorage.getItem('VRDE_MASTER_PINS');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) pins = parsed;
+        } catch(e) {}
+      }
+    }
+    return pins;
+  }
+
+  /**
+   * Guarda un nuevo PIN Maestro de Super Admin
+   */
+  static guardarMasterPin(nuevoPin) {
+    let pins = this.obtenerMasterPins();
+    const cleanPin = String(nuevoPin).trim();
+    if (!cleanPin) return false;
+    
+    // Poner el nuevo PIN al principio como el principal
+    pins = pins.filter(p => p !== cleanPin);
+    pins.unshift(cleanPin);
+
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_MASTER_PINS', JSON.stringify(pins));
+    }
+    return true;
+  }
+
+  /**
+   * Guarda o actualiza el PIN de acceso de un Nodo Almacén
+   */
+  static guardarNodoPin(nodoId, nuevoPin) {
+    const nodos = this.obtenerNodos();
+    const key = String(nodoId).toLowerCase();
+    if (!nodos[key]) return false;
+    
+    nodos[key].pin = String(nuevoPin).trim();
+    this.guardarNodos(nodos);
+    return true;
   }
 
   /**
@@ -1250,43 +1556,38 @@ class LunarEngine {
   }
 
   /**
-   * Obtiene el ciclo lunar actual o más reciente según la fecha del sistema
+   * Obtiene el ciclo lunar actual o activo según la configuración y almacenamiento
    */
   static obtenerCicloActual(customDate = null) {
-    const hoy = customDate ? new Date(customDate) : new Date();
-    const mesesAbbr = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-    const mesesFull = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    
-    let cicloActual = null;
-    
-    // Buscar de más reciente a más antiguo el ciclo cuya luna nueva ya pasó o está activa
-    for (let i = LUNAR_CONFIG.ciclosLunares.length - 1; i >= 0; i--) {
-      if (hoy >= LUNAR_CONFIG.ciclosLunares[i].nuevaFecha) {
-        cicloActual = LUNAR_CONFIG.ciclosLunares[i];
-        break;
-      }
-    }
-    
+    const lista = this.obtenerListaCiclos();
+    const activoId = this.obtenerIdCicloActivo();
+    let cicloActual = lista.find(c => c.id === activoId);
+
     if (!cicloActual) {
-      cicloActual = LUNAR_CONFIG.ciclosLunares.find(c => c.id === 'piscis-ago-2026') || LUNAR_CONFIG.ciclosLunares[0];
+      cicloActual = lista.find(c => c.esVigente) || lista.find(c => c.id === 'piscis-ago-2026') || lista[0];
     }
 
+    const hoy = customDate ? new Date(customDate) : new Date();
     const nuevaF = (cicloActual.nuevaFecha instanceof Date) ? cicloActual.nuevaFecha : new Date(cicloActual.nuevaFecha || '2026-08-12');
     const llenaF = (cicloActual.llenaFecha instanceof Date) ? cicloActual.llenaFecha : new Date(cicloActual.llenaFecha || '2026-08-28');
+    const entregaF = cicloActual.entregaFecha ? ((cicloActual.entregaFecha instanceof Date) ? cicloActual.entregaFecha : new Date(cicloActual.entregaFecha)) : new Date(llenaF.getTime() + (7 * 24 * 3600 * 1000));
+    
+    const mesesAbbr = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const mesesFull = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     const mesIndex = nuevaF.getMonth();
     const ano = nuevaF.getFullYear();
-    const nombre = cicloActual.nombreLlena || `🌑 Luna Llena en ${cicloActual.llenaSigno}`;
+    const nombre = cicloActual.nombreLlena || cicloActual.nombre || `🌑 Luna Llena en ${cicloActual.llenaSigno || 'Piscis'}`;
     
     const milisegundosRestantes = llenaF.getTime() - hoy.getTime();
     const diasRestantes = Math.max(0, Math.ceil(milisegundosRestantes / (1000 * 3600 * 24)));
     const abierta = hoy >= nuevaF && hoy <= llenaF;
     
-    const duracionTotalMs = llenaF.getTime() - nuevaF.getTime();
+    const duracionTotalMs = Math.max(1, llenaF.getTime() - nuevaF.getTime());
     const transcurridoMs = Math.max(0, hoy.getTime() - nuevaF.getTime());
     const porcentajeCiclo = Math.min(100, Math.max(0, Math.round((transcurridoMs / duracionTotalMs) * 100)));
 
     return {
-      id: cicloActual.id || 'piscis-ago-2026',
+      id: cicloActual.id,
       nombre: nombre,
       nombreComercial: nombre,
       nombreCompleto: `${nombre} (${mesesFull[mesIndex]} ${ano})`,
@@ -1296,13 +1597,20 @@ class LunarEngine {
       mesStr: cicloActual.mesStr || `${mesesAbbr[mesIndex]} ${ano}`,
       nuevaFecha: nuevaF,
       llenaFecha: llenaF,
+      entregaFecha: entregaF,
       nuevaFechaStr: `${nuevaF.getDate()} de ${mesesFull[mesIndex]}`,
       llenaFechaStr: `${llenaF.getDate()} de ${mesesFull[llenaF.getMonth()]}`,
+      entregaFechaStr: `${entregaF.getDate()} de ${mesesFull[entregaF.getMonth()]}`,
       diasRestantes: diasRestantes,
       abierta: abierta,
       esVigente: true,
+      mensajeTienda: cicloActual.mensajeTienda || '',
       porcentajeCiclo: porcentajeCiclo
     };
+  }
+
+  static obtenerCicloVigente() {
+    return this.obtenerCicloActual();
   }
 
   /**
