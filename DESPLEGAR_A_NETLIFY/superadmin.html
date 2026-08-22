@@ -317,11 +317,42 @@
     .admin-main-view {
       padding: 24px;
       overflow-y: auto;
+      min-width: 0;
+    }
+    @media (max-width: 600px) {
+      .admin-main-view {
+        padding: 14px;
+      }
+    }
+
     /* Estilos Sincronario Lunar y Calendario */
+    .lunar-calendar-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .lunar-cal-scroll-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
+    }
+    .lunar-cal-table-min {
+      min-width: 600px;
+      width: 100%;
+    }
     .lunar-cal-grid {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 6px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .lunar-cal-header-day {
       text-align: center;
@@ -336,13 +367,16 @@
       background: white;
       border: 1px solid #E2E8F0;
       border-radius: 8px;
-      min-height: 86px;
+      min-height: 82px;
       padding: 6px 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transition: all 0.2s ease;
       position: relative;
+      min-width: 0;
+      box-sizing: border-box;
+      overflow: hidden;
     }
     .lunar-cal-day:hover {
       border-color: #94A3B8;
@@ -364,28 +398,34 @@
     .lunar-phase-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 10.5px;
+      gap: 3px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 10px;
+      padding: 2px 5px;
+      border-radius: 6px;
       margin-top: 2px;
-      width: fit-content;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
     }
     .lunar-phase-nueva { background: #0F172A; color: white; }
     .lunar-phase-creciente { background: #E0F2FE; color: #0369A1; }
     .lunar-phase-llena { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
     .lunar-phase-menguante { background: #EDE9FE; color: #6D28D9; }
     .lunar-event-pill {
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 800;
       padding: 2px 5px;
       border-radius: 6px;
       line-height: 1.2;
       margin-top: 2px;
+      max-width: 100%;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -935,64 +975,69 @@
           </div>
         </div>
 
-        <!-- Grid 2 Columnas: Calendario Mes a Mes + Programador de Ciclo -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start; margin-bottom: 24px;">
+        <!-- 1. CALENDARIO LUNAR MES A MES (FULL WIDTH CON SCROLL SEGURO) -->
+        <div class="lunar-calendar-card">
           
-          <!-- COLUMNA 1: CALENDARIO LUNAR MES A MES -->
-          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
-            
-            <!-- Controles de Navegación de Mes -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <button type="button" class="btn-action-icon" style="width: 34px; height: 34px;" onclick="navigateLunarMonth(-1)" title="Mes Anterior">
-                  <i class="fas fa-chevron-left"></i>
-                </button>
-                <h3 id="cal-current-month-label" style="font-size: 18px; font-weight: 800; color: #0F172A; margin: 0; min-width: 140px; text-align: center;">Agosto 2026</h3>
-                <button type="button" class="btn-action-icon" style="width: 34px; height: 34px;" onclick="navigateLunarMonth(1)" title="Mes Siguiente">
-                  <i class="fas fa-chevron-right"></i>
-                </button>
-              </div>
-
-              <div style="display: flex; gap: 6px;">
-                <button type="button" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer;" onclick="goCurrentLunarMonth()">
-                  📍 Mes Actual
-                </button>
-              </div>
+          <!-- Controles de Navegación de Mes -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <button type="button" class="btn-action-icon" style="width: 36px; height: 36px;" onclick="navigateLunarMonth(-1)" title="Mes Anterior">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <h3 id="cal-current-month-label" style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0; min-width: 160px; text-align: center;">Agosto 2026</h3>
+              <button type="button" class="btn-action-icon" style="width: 36px; height: 36px;" onclick="navigateLunarMonth(1)" title="Mes Siguiente">
+                <i class="fas fa-chevron-right"></i>
+              </button>
             </div>
 
-            <!-- Cabecera Días de la Semana -->
-            <div class="lunar-cal-grid" style="margin-bottom: 6px;">
-              <div class="lunar-cal-header-day">Lun</div>
-              <div class="lunar-cal-header-day">Mar</div>
-              <div class="lunar-cal-header-day">Mié</div>
-              <div class="lunar-cal-header-day">Jue</div>
-              <div class="lunar-cal-header-day">Vie</div>
-              <div class="lunar-cal-header-day">Sáb</div>
-              <div class="lunar-cal-header-day">Dom</div>
-            </div>
-
-            <!-- Grilla Dinámica de Días -->
-            <div class="lunar-cal-grid" id="lunar-calendar-days-container">
-              <!-- Inyectado por JS -->
-            </div>
-
-            <!-- Leyenda Explicativa de las 4 Fases y Ciclo -->
-            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #F1F5F9; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11.5px; color: #64748B;">
-              <div>🌑 <strong>Luna Nueva:</strong> Apertura de tienda colectiva</div>
-              <div>🌓 <strong>Cuarto Creciente:</strong> Crecimiento de pedidos</div>
-              <div>🌕 <strong>Luna Llena:</strong> Cierre de pedidos y consolidación</div>
-              <div>🌗 <strong>Cuarto Menguante:</strong> Cosecha y entrega a nodos</div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 12.5px; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer;" onclick="goCurrentLunarMonth()">
+                📍 Mes Actual
+              </button>
             </div>
           </div>
 
-          <!-- COLUMNA 2: PROGRAMADOR / SETEADOR DE CICLO LUNAR -->
-          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
-              <div style="width: 32px; height: 32px; border-radius: 50%; background: #EEF2FF; color: #6366F1; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+          <!-- Grilla del Calendario con Wrapper Responsivo -->
+          <div class="lunar-cal-scroll-wrapper">
+            <div class="lunar-cal-table-min">
+              <!-- Cabecera Días de la Semana -->
+              <div class="lunar-cal-grid" style="margin-bottom: 6px;">
+                <div class="lunar-cal-header-day">Lun</div>
+                <div class="lunar-cal-header-day">Mar</div>
+                <div class="lunar-cal-header-day">Mié</div>
+                <div class="lunar-cal-header-day">Jue</div>
+                <div class="lunar-cal-header-day">Vie</div>
+                <div class="lunar-cal-header-day">Sáb</div>
+                <div class="lunar-cal-header-day">Dom</div>
+              </div>
+
+              <!-- Grilla Dinámica de Días -->
+              <div class="lunar-cal-grid" id="lunar-calendar-days-container">
+                <!-- Inyectado por JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Leyenda Explicativa de las 4 Fases y Ciclo -->
+          <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #F1F5F9; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 12px; color: #64748B;">
+            <div>🌑 <strong>Luna Nueva:</strong> Apertura tienda colectiva</div>
+            <div>🌓 <strong>Cuarto Creciente:</strong> Crecimiento de pedidos</div>
+            <div>🌕 <strong>Luna Llena:</strong> Cierre de compras y consolidación</div>
+            <div>🌗 <strong>Cuarto Menguante:</strong> Cosecha y entrega en nodos</div>
+          </div>
+        </div>
+
+        <!-- 2. FILA INFERIOR: PROGRAMADOR DE CICLO + GUÍA DE PULSOS -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; align-items: start; margin-bottom: 24px;">
+          
+          <!-- PROGRAMADOR / SETEADOR DE CICLO LUNAR -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #EEF2FF; color: #6366F1; display: flex; align-items: center; justify-content: center; font-size: 18px;">
                 <i class="fas fa-calendar-alt"></i>
               </div>
               <div>
-                <h4 style="font-size: 16px; color: #0F172A; margin: 0;">Programar Ciclo Lunar</h4>
+                <h4 style="font-size: 17px; color: #0F172A; margin: 0;">Programar Ciclo Lunar</h4>
                 <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Setea fechas de inicio, cierre y entrega</p>
               </div>
             </div>
@@ -1052,6 +1097,35 @@
             <button type="button" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); padding: 12px; font-size: 14px; background: #6366F1;" onclick="saveLunarCycleFromForm()">
               <i class="fas fa-save" style="margin-right: 6px;"></i> GUARDAR Y APLICAR CICLO
             </button>
+          </div>
+
+          <!-- GUÍA Y PULSOS DE LA RED -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                  <i class="fas fa-seedling"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 17px; color: #0F172A; margin: 0;">Soberanía y Ritmos Naturales</h4>
+                  <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Cómo opera la logística comunitaria</p>
+                </div>
+              </div>
+
+              <div style="font-size: 13.5px; color: #475569; line-height: 1.5; margin-bottom: 18px;">
+                Vrde Club organiza sus pedidos por <strong>pulsos lunares mensuales</strong>. Al sincronizar las compras con la Luna Llena, se consolida la demanda de todas las familias para cosechar a escala y distribuir sin intermediarios especulativos.
+              </div>
+
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; font-size: 12.5px; color: #334155; line-height: 1.5;">
+                <div style="margin-bottom: 8px;">🌱 <strong>Apertura (Luna Nueva):</strong> Se reciben pedidos de socios y familias consumidoras.</div>
+                <div style="margin-bottom: 8px;">🌕 <strong>Cierre (Luna Llena):</strong> Se corta la toma de pedidos y se transmiten los totales a fincas y productores.</div>
+                <div>📦 <strong>Entrega (Menguante):</strong> Los pedidos llegan a cada nodo almacén barrial para retiro o delivery.</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 12px; color: var(--text-muted); text-align: center;">
+              Vrde Club • Sincronario 2026-2027
+            </div>
           </div>
         </div>
 
@@ -2830,9 +2904,11 @@
         const eventClass = d.eventoCiclo ? 'has-event' : '';
 
         let badgeHtml = '';
-        if (d.phase.isPrincipal) {
-          const pClass = `lunar-phase-${d.phase.principalType.toLowerCase()}`;
-          badgeHtml = `<div class="lunar-phase-badge ${pClass}">${d.phase.emoji} ${d.phase.phaseName}</div>`;
+        if (d.phase.isPrincipal && d.phase.principalType) {
+          const pClass = `lunar-phase-${(d.phase.principalType || '').toLowerCase()}`;
+          const pEmoji = d.phase.principalEmoji || d.phase.emoji;
+          const pName = d.phase.principalName || d.phase.phaseName;
+          badgeHtml = `<div class="lunar-phase-badge ${pClass}">${pEmoji} ${pName}</div>`;
         }
 
         let eventHtml = '';
@@ -2844,9 +2920,9 @@
           <div class="lunar-cal-day ${otherClass} ${todayClass} ${eventClass}">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <span style="font-size: 13px; font-weight: 800; color: ${d.isToday ? 'var(--primary)' : (d.isCurrentMonth ? '#0F172A' : '#94A3B8')};">${d.num}</span>
-              <span style="font-size: 16px;" title="${d.phase.phaseName} (${d.phase.illumination}%)">${d.phase.emoji}</span>
+              <span style="font-size: 16px; line-height: 1;" title="${d.phase.phaseName} (${d.phase.illumination}% - ${d.phase.zodiacSign})">${d.phase.emoji}</span>
             </div>
-            <div>
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; overflow: hidden;">
               ${badgeHtml}
               ${eventHtml}
             </div>

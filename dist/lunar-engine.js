@@ -1119,6 +1119,36 @@ class LunarEngine {
       });
     }
 
+    // Detectar exactamente 1 día por cada fase principal (sin duplicados)
+    const targets = [
+      { type: 'NUEVA', val: 0.0, name: 'Luna Nueva', emoji: '🌑' },
+      { type: 'CRECIENTE', val: 0.25, name: 'Cuarto Creciente', emoji: '🌓' },
+      { type: 'LLENA', val: 0.50, name: 'Luna Llena', emoji: '🌕' },
+      { type: 'MENGUANTE', val: 0.75, name: 'Cuarto Menguante', emoji: '🌗' }
+    ];
+
+    for (let i = 0; i < dias.length; i++) {
+      dias[i].phase.isPrincipal = false;
+      dias[i].phase.principalType = null;
+
+      const pCurr = dias[i].phase.phaseNormalized;
+      const pPrev = (i > 0) ? dias[i - 1].phase.phaseNormalized : (pCurr - 1/29.53);
+      const pNext = (i < dias.length - 1) ? dias[i + 1].phase.phaseNormalized : (pCurr + 1/29.53);
+
+      for (const t of targets) {
+        const dCurr = Math.min(Math.abs(pCurr - t.val), Math.abs(pCurr - (t.val + 1)), Math.abs(pCurr - (t.val - 1)));
+        const dPrev = Math.min(Math.abs(pPrev - t.val), Math.abs(pPrev - (t.val + 1)), Math.abs(pPrev - (t.val - 1)));
+        const dNext = Math.min(Math.abs(pNext - t.val), Math.abs(pNext - (t.val + 1)), Math.abs(pNext - (t.val - 1)));
+
+        if (dCurr <= dPrev && dCurr <= dNext && dCurr < 0.025) {
+          dias[i].phase.isPrincipal = true;
+          dias[i].phase.principalType = t.type;
+          dias[i].phase.principalName = t.name;
+          dias[i].phase.principalEmoji = t.emoji;
+        }
+      }
+    }
+
     return {
       year,
       monthIndex,
