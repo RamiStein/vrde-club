@@ -2507,7 +2507,7 @@
       document.getElementById('edit-prod-nombre').value = p.nombre || '';
       populateCategoryDropdown(p.categoria || 'granos');
       document.getElementById('edit-prod-subcategoria').value = p.subcategoria || '';
-      document.getElementById('edit-prod-origen').value = p.origen || '';
+      document.getElementById('edit-prod-origen').value = p.origen || p.productorInfo?.productor || '';
       document.getElementById('edit-prod-variedad').value = p.variedad || '';
       document.getElementById('edit-prod-meta').value = p.meta || 100;
       document.getElementById('edit-prod-img').value = p.img || '';
@@ -2540,9 +2540,9 @@
     }
 
     function renderNodeCheckboxes(selectedNodes) {
-      const nodos = LUNAR_CONFIG.nodos;
+      const nodos = LunarEngine.obtenerNodos();
       let html = '';
-      const isAll = selectedNodes.includes('TODOS');
+      const isAll = !selectedNodes || selectedNodes.length === 0 || selectedNodes.includes('TODOS');
 
       Object.keys(nodos).forEach(k => {
         const isChecked = isAll || selectedNodes.includes(k);
@@ -2567,6 +2567,12 @@
       const nombre = document.getElementById('edit-prod-nombre').value.trim();
       const categoria = document.getElementById('edit-prod-categoria').value;
       const subcategoria = document.getElementById('edit-prod-subcategoria').value.trim();
+      const origen = document.getElementById('edit-prod-origen').value.trim() || 'Agroecológico';
+      const variedad = document.getElementById('edit-prod-variedad').value.trim() || 'Estación';
+      const meta = parseInt(document.getElementById('edit-prod-meta').value) || 100;
+      const img = document.getElementById('edit-prod-img').value.trim() || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400';
+      const subtitulo = document.getElementById('edit-prod-subtitulo').value.trim();
+      const activo = document.getElementById('edit-prod-activo').checked;
 
       if (!nombre) {
         alert("Por favor completa el nombre del producto.");
@@ -2588,15 +2594,15 @@
       for (let i = 0; i < variantCards.length; i++) {
         const card = variantCards[i];
         const vId = card.dataset.vid || ('v_' + (i + 1));
-        const label = card.querySelector('.v-input-label').value.trim();
-        const unidad = card.querySelector('.v-input-unidad').value.trim() || 'unidad';
-        const costo = parseFloat(card.querySelector('.v-input-costo').value) || 0;
-        const p1 = parseFloat(card.querySelector('.v-input-p1').value) || 0;
-        const m2 = parseInt(card.querySelector('.v-input-m2').value) || 20;
-        const p2 = parseFloat(card.querySelector('.v-input-p2').value) || (p1 ? Math.round(p1 * 0.85) : 0);
-        const m3 = parseInt(card.querySelector('.v-input-m3').value) || 50;
-        const p3 = parseFloat(card.querySelector('.v-input-p3').value) || (p1 ? Math.round(p1 * 0.75) : 0);
-        const img = card.querySelector('.v-input-img').value.trim();
+        const label = (card.querySelector('.v-input-label')?.value || '').trim();
+        const unidad = (card.querySelector('.v-input-unidad')?.value || '').trim() || 'unidad';
+        const costo = parseFloat(card.querySelector('.v-input-costo')?.value) || 0;
+        const p1 = parseFloat(card.querySelector('.v-input-p1')?.value) || 0;
+        const m2 = parseInt(card.querySelector('.v-input-m2')?.value) || 20;
+        const p2 = parseFloat(card.querySelector('.v-input-p2')?.value) || (p1 ? Math.round(p1 * 0.85) : 0);
+        const m3 = parseInt(card.querySelector('.v-input-m3')?.value) || 50;
+        const p3 = parseFloat(card.querySelector('.v-input-p3')?.value) || (p1 ? Math.round(p1 * 0.75) : 0);
+        const vImg = (card.querySelector('.v-input-img')?.value || '').trim();
 
         if (!label || !p1) {
           alert(`En la presentación #${i+1}, por favor completa la etiqueta y el precio minorista base.`);
@@ -2620,10 +2626,11 @@
           p2: p2,
           m3: m3,
           p3: p3,
-          img: img || document.getElementById('edit-prod-img').value.trim()
+          img: vImg || img
         });
       }
 
+      const allNodos = LunarEngine.obtenerNodos();
       const nodeCheckboxes = document.querySelectorAll('.single-node-check:checked');
       const selectedNodes = [];
       nodeCheckboxes.forEach(cb => selectedNodes.push(cb.value));
@@ -2635,14 +2642,20 @@
         nombre: nombre,
         categoria: categoria,
         subcategoria: subcategoria || existing?.subcategoria || 'otros',
-        productorInfo: existing?.productorInfo || null,
+        productorInfo: {
+          ...(existing?.productorInfo || {}),
+          productor: origen,
+          loc: origen,
+          historia: existing?.productorInfo?.historia || subtitulo,
+          impacto: existing?.productorInfo?.impacto || 'Producción limpia y soberanía alimentaria.'
+        },
         variantes: variantes,
-        origen: document.getElementById('edit-prod-origen').value.trim() || 'Agroecológico',
-        variedad: document.getElementById('edit-prod-variedad').value.trim() || 'Estación',
+        origen: origen,
+        variedad: variedad,
         unidad: primerUnidad,
-        meta: parseInt(document.getElementById('edit-prod-meta').value) || 100,
-        img: document.getElementById('edit-prod-img').value.trim() || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400',
-        subtitulo: document.getElementById('edit-prod-subtitulo').value.trim(),
+        meta: meta,
+        img: img,
+        subtitulo: subtitulo,
         costo: primerCosto,
         p1: primerP1,
         m1: 1,
@@ -2650,8 +2663,8 @@
         p2: variantes[0].p2,
         m3: variantes[0].m3,
         p3: variantes[0].p3,
-        activo: document.getElementById('edit-prod-activo').checked,
-        nodos: selectedNodes.length === Object.keys(LUNAR_CONFIG.nodos).length ? ['TODOS'] : selectedNodes
+        activo: activo,
+        nodos: selectedNodes.length === Object.keys(allNodos).length ? ['TODOS'] : selectedNodes
       };
 
       LunarEngine.guardarProducto(prodData);

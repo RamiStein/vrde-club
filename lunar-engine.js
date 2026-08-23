@@ -564,56 +564,45 @@ class LunarEngine {
   static obtenerProductos(nodoId = null, soloActivos = false) {
     let prods = LUNAR_CONFIG.productos;
     if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
-      const stored = localStorage.getItem('VRDE_PRODUCTOS');
-      if (stored) {
-        try { 
-          prods = JSON.parse(stored);
-          let updated = false;
-          
-          // Asegurar que todos los productos oficiales estén presentes en storage
-          ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11'].forEach(pid => {
-            const hasP = prods.some(p => p.id === pid);
-            if (!hasP) {
-              const def = LUNAR_CONFIG.productos.find(p => p.id === pid);
-              if (def) {
+      try {
+        const stored = localStorage.getItem('VRDE_PRODUCTOS');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            prods = parsed;
+
+            // Asegurar que productos base por defecto se incorporen si no existen aún
+            LUNAR_CONFIG.productos.forEach(def => {
+              const exists = prods.some(p => p.id === def.id);
+              if (!exists) {
                 prods.push(def);
-                updated = true;
               }
-            }
-          });
+            });
 
-          // Sincronizar variantes y fotos actualizadas
-          prods.forEach(p => {
-            const def = LUNAR_CONFIG.productos.find(x => x.id === p.id);
-            if (def) {
-              if (!p.variantes || p.variantes.length === 0) {
-                p.variantes = def.variantes;
-                updated = true;
+            // Sincronizar campos estructurales mínimos sólo si faltan
+            prods.forEach(p => {
+              const def = LUNAR_CONFIG.productos.find(x => x.id === p.id);
+              if (def) {
+                if (!p.variantes || p.variantes.length === 0) {
+                  p.variantes = def.variantes;
+                }
+                if (!p.categoria) {
+                  p.categoria = def.categoria;
+                }
+                if (!p.subcategoria && def.subcategoria) {
+                  p.subcategoria = def.subcategoria;
+                }
+                if (!p.productorInfo && def.productorInfo) {
+                  p.productorInfo = def.productorInfo;
+                }
               }
-              if (!p.productorInfo) {
-                p.productorInfo = def.productorInfo;
-                updated = true;
-              }
-              if (!p.categoria) {
-                p.categoria = def.categoria;
-                p.subcategoria = def.subcategoria;
-                updated = true;
-              }
-              if (p.img !== def.img && def.img.startsWith('assets/')) {
-                p.img = def.img;
-                updated = true;
-              }
-            }
-          });
-
-          if (updated) {
-            localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+            });
           }
-        } catch(e) {
-          prods = LUNAR_CONFIG.productos;
+        } else if (typeof localStorage.setItem === 'function') {
+          localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
         }
-      } else {
-        localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+      } catch(e) {
+        prods = LUNAR_CONFIG.productos;
       }
     }
 
@@ -622,7 +611,7 @@ class LunarEngine {
       if (activos.length > 0) prods = activos;
     }
 
-    if (nodoId) {
+    if (nodoId && nodoId !== 'ALL') {
       const porNodo = prods.filter(p => {
         if (!p.nodos || p.nodos.length === 0 || p.nodos.includes('TODOS') || p.nodos.includes(nodoId.toLowerCase())) {
           return true;
@@ -652,8 +641,10 @@ class LunarEngine {
       prods.push(prodData);
     }
 
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      try {
+        localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+      } catch(e) {}
     }
     LUNAR_CONFIG.productos = prods;
     return prods;
@@ -665,8 +656,10 @@ class LunarEngine {
   static eliminarProducto(prodId) {
     let prods = this.obtenerProductos(null, false);
     prods = prods.filter(p => p.id !== prodId);
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      try {
+        localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+      } catch(e) {}
     }
     LUNAR_CONFIG.productos = prods;
     return prods;

@@ -1315,10 +1315,10 @@
       const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía y precio justo.', loc: p.origen };
 
       document.getElementById('st-modal-title').innerText = `Origen: ${p.nombre}`;
-      document.getElementById('st-producer-name').innerText = info.productor || p.origen;
-      document.getElementById('st-producer-desc').innerText = info.historia || p.tipsVrdedor;
+      document.getElementById('st-producer-name').innerText = p.origen || info.productor;
+      document.getElementById('st-producer-desc').innerText = info.historia || p.tipsVrdedor || p.subtitulo || '';
       document.getElementById('st-producer-impact').innerText = info.impacto || 'Comercio transparente y agroecología comunitaria.';
-      document.getElementById('st-producer-loc').innerText = info.loc || p.origen;
+      document.getElementById('st-producer-loc').innerText = p.origen || info.loc;
 
       openModal('modal-story');
     }
