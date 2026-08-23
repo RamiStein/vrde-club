@@ -851,14 +851,14 @@ class LunarEngine {
   }
 
   /**
-   * Edita completamente un pedido existente y lo sincroniza en vivo en Firebase Firestore
+   * Edita completamente un pedido existente y lo sincroniza en persistencia
    */
   static actualizarPedidoCompleto(pedidoId, nuevosDatos) {
-    let pedidos = this.obtenerPedidos();
+    let pedidos = this.obtenerPedidos(null, 'ALL');
     const index = pedidos.findIndex(p => String(p.id) === String(pedidoId));
     if (index > -1) {
       pedidos[index] = { ...pedidos[index], ...nuevosDatos, updatedAt: new Date().toISOString() };
-      if (typeof localStorage !== 'undefined') {
+      if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
         localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));
       }
 
@@ -870,6 +870,79 @@ class LunarEngine {
       }
     }
     return pedidos;
+  }
+
+  /**
+   * Elimina un pedido/compra individual de la base de datos
+   */
+  static eliminarPedido(pedidoId) {
+    let pedidos = this.obtenerPedidos(null, 'ALL');
+    const filtered = pedidos.filter(p => String(p.id) !== String(pedidoId));
+    if (filtered.length !== pedidos.length) {
+      if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+        localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(filtered));
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Actualiza los datos de un Socio en la base de datos y en sus compras asociadas
+   */
+  static actualizarSocio(identificador, nuevosDatos) {
+    let pedidos = this.obtenerPedidos(null, 'ALL');
+    const cleanPhone = (identificador || '').replace(/\D/g, '');
+    const cleanName = (identificador || '').toLowerCase().trim();
+
+    let updatedCount = 0;
+    pedidos.forEach(p => {
+      const pPhone = (p.telefono || '').replace(/\D/g, '');
+      const pName = (p.nombre || '').toLowerCase().trim();
+
+      const match = (cleanPhone && pPhone === cleanPhone) || (cleanName && pName === cleanName) || (p.socioId === identificador);
+      if (match) {
+        if (nuevosDatos.nombre) p.nombre = nuevosDatos.nombre;
+        if (nuevosDatos.telefono) p.telefono = nuevosDatos.telefono;
+        if (nuevosDatos.direccion !== undefined) p.direccionEntrega = nuevosDatos.direccion;
+        if (nuevosDatos.vrdedor) p.vrdedor = nuevosDatos.vrdedor;
+        if (nuevosDatos.nodoId) {
+          p.nodoId = nuevosDatos.nodoId;
+          const nodos = this.obtenerNodos();
+          if (nodos[nuevosDatos.nodoId]) p.nodo = nodos[nuevosDatos.nodoId].nombre;
+        }
+        updatedCount++;
+      }
+    });
+
+    if (updatedCount > 0 && typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));
+    }
+    return updatedCount;
+  }
+
+  /**
+   * Elimina un socio y todas sus compras/registros de la base de datos
+   */
+  static eliminarSocio(identificador) {
+    let pedidos = this.obtenerPedidos(null, 'ALL');
+    const cleanPhone = (identificador || '').replace(/\D/g, '');
+    const cleanName = (identificador || '').toLowerCase().trim();
+
+    const filtered = pedidos.filter(p => {
+      const pPhone = (p.telefono || '').replace(/\D/g, '');
+      const pName = (p.nombre || '').toLowerCase().trim();
+      const match = (cleanPhone && pPhone === cleanPhone) || (cleanName && pName === cleanName) || (p.socioId === identificador);
+      return !match;
+    });
+
+    if (filtered.length !== pedidos.length) {
+      if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+        localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(filtered));
+      }
+      return true;
+    }
+    return false;
   }
 
 
@@ -1562,15 +1635,14 @@ class LunarEngine {
     ];
 
     if (typeof localStorage !== 'undefined') {
-      const stored = localStorage.getItem('VRDE_PEDIDOS');
-      if (stored) {
-        try { 
-          pedidos = JSON.parse(stored); 
-        } catch(e){}
-      } else {
-        // Inicializar persistencia con la base completa
-        localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));
-      }
+      try {
+        const stored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PEDIDOS') : null;
+        if (stored) {
+          pedidos = JSON.parse(stored);
+        } else if (typeof localStorage.setItem === 'function') {
+          localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));
+        }
+      } catch(e){}
     }
 
     // Filtro por Nodo

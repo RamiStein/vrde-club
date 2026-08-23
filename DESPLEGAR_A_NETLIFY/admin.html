@@ -1674,6 +1674,7 @@
                 <span style="font-size: 13px; color: var(--text-muted);">Total: <strong style="font-size: 16px; color: var(--primary);">$${(o.total || 0).toLocaleString('es-AR')}</strong></span>
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <button onclick="openEditOrderModal('${o.id}')" style="background: #F1F5F9; color: #475569; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;" title="Editar datos del pedido"><i class="fas fa-pencil-alt"></i> Editar</button>
+                  <button onclick="deleteNodeOrder('${o.id}')" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;" title="Eliminar pedido permanentemente"><i class="fas fa-trash-alt"></i></button>
                   ${actionsHtml}
                   ${wspBtn}
                 </div>
@@ -1683,6 +1684,14 @@
         });
       }
       document.getElementById('ad-orders-list').innerHTML = html;
+    }
+
+    function deleteNodeOrder(orderId) {
+      if (confirm(`¿Estás seguro de que deseas eliminar permanentemente el pedido #${orderId}?`)) {
+        LunarEngine.eliminarPedido(orderId);
+        loadDashboard();
+        alert(`🗑️ Pedido #${orderId} eliminado.`);
+      }
     }
 
     function filterOrders(status, btnEl) {
@@ -1857,11 +1866,19 @@
                 ${statusBadge}
               </td>
               <td style="padding: 12px 14px; text-align: right;">
-                ${cleanPhone ? `
-                  <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6px 10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar recordatorio por WhatsApp">
-                    <i class="fab fa-whatsapp"></i> Chat
-                  </a>
-                ` : ''}
+                <div style="display: flex; justify-content: flex-end; gap: 6px;">
+                  ${cleanPhone ? `
+                    <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6px 10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar recordatorio por WhatsApp">
+                      <i class="fab fa-whatsapp"></i> Chat
+                    </a>
+                  ` : ''}
+                  <button type="button" class="btn-action-icon" style="color: #2563EB; width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: white; cursor: pointer;" title="Editar Datos del Socio" onclick="openEditSocioModalNode('${s.cleanPhone || s.nombre}')">
+                    <i class="fas fa-user-edit"></i>
+                  </button>
+                  <button type="button" class="btn-action-icon" style="color: #EF4444; width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid #FECACA; background: #FEF2F2; cursor: pointer;" title="Eliminar Socio de la Base" onclick="deleteSocioConfirmNode('${s.cleanPhone || s.nombre}')">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
               </td>
             </tr>
           `;
@@ -1869,6 +1886,53 @@
       }
 
       document.getElementById('crm-socios-tbody').innerHTML = html;
+    }
+
+    function openEditSocioModalNode(socioKey) {
+      const allSocios = LunarEngine.obtenerBaseSocios(CURRENT_REF, CURRENT_CICLO_ID, 'ALL');
+      const socio = allSocios.find(s => (s.cleanPhone && s.cleanPhone === socioKey) || s.nombre === socioKey);
+      if (!socio) return;
+
+      document.getElementById('ad-edit-socio-orig-key').value = socioKey;
+      document.getElementById('ad-edit-socio-nombre').value = socio.nombre || '';
+      document.getElementById('ad-edit-socio-tel').value = socio.telefono || '';
+      document.getElementById('ad-edit-socio-dir').value = socio.direccion || '';
+      document.getElementById('ad-edit-socio-vrdedor').value = socio.vrdedor || '';
+
+      openModal('modal-admin-edit-socio');
+    }
+
+    function saveAdminEditedSocio() {
+      const origKey = document.getElementById('ad-edit-socio-orig-key').value;
+      const nombre = document.getElementById('ad-edit-socio-nombre').value.trim();
+      const tel = document.getElementById('ad-edit-socio-tel').value.trim();
+      const dir = document.getElementById('ad-edit-socio-dir').value.trim();
+      const vrdedor = document.getElementById('ad-edit-socio-vrdedor').value.trim();
+
+      if (!nombre || !tel) {
+        alert("Por favor completa el nombre y teléfono del socio.");
+        return;
+      }
+
+      LunarEngine.actualizarSocio(origKey, {
+        nombre: nombre,
+        telefono: tel,
+        direccion: dir,
+        nodoId: CURRENT_REF,
+        vrdedor: vrdedor
+      });
+
+      closeModal('modal-admin-edit-socio');
+      loadDashboard();
+      alert("✅ Datos del socio actualizados con éxito.");
+    }
+
+    function deleteSocioConfirmNode(socioKey) {
+      if (confirm(`¿Estás seguro de que deseas eliminar a este socio y todos sus pedidos asociados de la base de datos?`)) {
+        LunarEngine.eliminarSocio(socioKey);
+        loadDashboard();
+        alert("🗑️ Socio y pedidos eliminados de la base de datos.");
+      }
     }
 
     function filterCrm(filterType, btnEl) {
@@ -2079,6 +2143,46 @@
           Cancelar
         </button>
         <button type="button" onclick="saveEditedOrderFromModal()" class="btn-checkout-cta" style="flex: 1; padding: 12px; border-radius: var(--radius-sm);">
+          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA EDITAR SOCIO EN CRM (NODO) -->
+  <div class="modal-overlay" id="modal-admin-edit-socio">
+    <div class="modal-card" style="max-width: 480px; text-align: left;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; margin: 0; color: #0F172A;"><i class="fas fa-user-edit" style="color: var(--primary); margin-right: 6px;"></i> Editar Socio / Cliente</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-admin-edit-socio')">&times;</span>
+      </div>
+      <input type="hidden" id="ad-edit-socio-orig-key">
+      
+      <div class="input-field-group">
+        <label>Nombre y Apellido *</label>
+        <input type="text" id="ad-edit-socio-nombre" class="input-field" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Teléfono / WhatsApp *</label>
+        <input type="text" id="ad-edit-socio-tel" class="input-field" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Dirección Habitual de Entrega</label>
+        <input type="text" id="ad-edit-socio-dir" class="input-field" placeholder="Calle, altura, localidad">
+      </div>
+
+      <div class="input-field-group">
+        <label>Vrdedor/a de Referencia</label>
+        <input type="text" id="ad-edit-socio-vrdedor" class="input-field" placeholder="Ej: Camila Rossi">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button type="button" onclick="closeModal('modal-admin-edit-socio')" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; cursor: pointer; font-weight: 600;">
+          Cancelar
+        </button>
+        <button type="button" onclick="saveAdminEditedSocio()" class="btn-checkout-cta" style="flex: 1; padding: 12px; border-radius: var(--radius-sm);">
           <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Cambios
         </button>
       </div>
