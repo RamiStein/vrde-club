@@ -169,30 +169,30 @@ const LUNAR_CONFIG = {
     },
     {
       id: 'P2',
-      nombre: 'Aceite de Oliva Extra Virgen Lorenzo Cabrera',
+      nombre: 'Aceite de Oliva Agroecológico Lorenzo Cabrera',
       categoria: 'aceite',
       subcategoria: 'aceite',
       img: 'assets/aceite_lorenzo_cabrera.jpg',
-      titulo: 'Aceite de oliva virgen extra de primera prensada en frío',
-      subtitulo: 'Acidez menor a 0.4% • Olivares tradicionales de Traslasierra',
-      origen: 'Finca Lorenzo Cabrera (Traslasierra, Córdoba)',
-      variedad: 'Arbequina / Arauco Agroecológico',
+      titulo: 'Aceite de oliva virgen extra de 1° prensada en frío',
+      subtitulo: 'Extra Virgen 1° Prensa • Olivares centenarios de Villa Mazán, La Rioja',
+      origen: 'Villa Mazán, La Rioja',
+      variedad: 'Arauco • Lote Agroecológico #GAIA-25-A',
       meta: 80,
       unidad: 'botella 1L',
-      costo: 12000,
-      p1: 19300, m1: 1,
-      p2: 17900, m2: 20,
-      p3: 16500, m3: 50,
-      tipsVrdedor: 'Primera prensada en frío con acidez garantizada < 0.4%. Aceite 100% puro sin cortes ni químicos.',
+      costo: 11500,
+      p1: 18300, m1: 1,
+      p2: 17385, m2: 20,
+      p3: null, m3: null,
+      tipsVrdedor: 'Extra Virgen 1° Prensa en frío de variedad Arauco. Cosechado en olivares centenarios de Villa Mazán, La Rioja. 100% agroecológico, puro y sin químicos (Lote #GAIA-25-A).',
       productorInfo: {
-        productor: 'Finca Lorenzo Cabrera',
-        historia: 'Olivares tradicionales en el microclima único de Traslasierra regados con agua pura de vertientes serranas. Prensado mecánico en frío a pocas horas de la cosecha.',
-        impacto: 'Cultura olivícola artesanal libre de agroquímicos sintéticos.',
-        loc: '📍 Valle de Traslasierra, Córdoba'
+        productor: 'Mónica Carrizo (Lorenzo Cabrera)',
+        historia: 'Mónica Carrizo creció entre olivos en Villa Mazán. Hoy elabora un aceite único, maneja su propio camión y sostiene la tradición junto a su familia en olivares centenarios.',
+        impacto: 'Cultura olivícola tradicional de olivares centenarios, 100% agroecológica y soberanía familiar.',
+        loc: '📍 Villa Mazán, La Rioja'
       },
       variantes: [
-        { id: '1L', label: 'Botella 1 Litro', unidad: 'botella 1L', costo: 12000, p1: 19300, p2: 17900, p3: 16500, m1: 1, m2: 20, m3: 50, tiers: 'Mayorista (+20L): $17.900 • Dist (+50L): $16.500' },
-        { id: '2L', label: 'Bidón 2 Litros (Ahorro)', unidad: 'bidón 2L', costo: 22500, p1: 36000, p2: 33500, p3: 31000, m1: 1, m2: 10, m3: 25, tiers: 'Mayorista (+10u): $33.500 • Dist (+25u): $31.000' }
+        { id: '1L', label: 'Botella 1 Litro', unidad: 'botella 1L', costo: 11500, p1: 18300, p2: 17385, p3: null, m1: 1, m2: 20, m3: null, tiers: 'Mayorista (+20L): $17.385' },
+        { id: '2L', label: 'Bidón 2 Litros (Ahorro)', unidad: 'bidón 2L', costo: 22000, p1: 34500, p2: 32500, p3: null, m1: 1, m2: 10, m3: null, tiers: 'Mayorista (+10u): $32.500' }
       ],
       activo: true,
       nodos: ['TODOS']
@@ -579,10 +579,24 @@ class LunarEngine {
               }
             });
 
-            // Sincronizar campos estructurales mínimos sólo si faltan
+            // Sincronizar campos estructurales y actualizar datos semilla desactualizados
             prods.forEach(p => {
               const def = LUNAR_CONFIG.productos.find(x => x.id === p.id);
               if (def) {
+                if (p.id === 'P2' && (p.origen && p.origen.includes('Traslasierra'))) {
+                  p.nombre = def.nombre;
+                  p.titulo = def.titulo;
+                  p.subtitulo = def.subtitulo;
+                  p.origen = def.origen;
+                  p.variedad = def.variedad;
+                  p.productorInfo = def.productorInfo;
+                  p.tipsVrdedor = def.tipsVrdedor;
+                  p.p1 = def.p1;
+                  p.p2 = def.p2;
+                  p.p3 = def.p3;
+                  p.costo = def.costo;
+                  p.variantes = def.variantes;
+                }
                 if (!p.variantes || p.variantes.length === 0) {
                   p.variantes = def.variantes;
                 }
