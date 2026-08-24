@@ -21,6 +21,135 @@
   
   <link rel="stylesheet" href="lunar-style.css">
   <style>
+    /* Header Responsive del Administrador de Nodo */
+    .admin-header-responsive {
+      background: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .admin-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .admin-header-logo {
+      font-size: 26px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .admin-header-titles {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .admin-header-titles h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.25;
+    }
+    .admin-header-subtitle {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .admin-header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header-btn-super {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 20px;
+      background: rgba(234,88,12,0.1);
+      color: #EA580C;
+      border: 1px solid rgba(234,88,12,0.25);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .header-btn-shop {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 20px;
+      background: #F1F5F9;
+      color: #475569;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .header-btn-logout {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 20px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    @media (max-width: 640px) {
+      .admin-header-responsive {
+        padding: 10px 14px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .admin-header-brand {
+        flex: 1 1 100%;
+      }
+      .admin-header-titles h2 {
+        font-size: 16px;
+      }
+      .admin-header-subtitle {
+        font-size: 11px;
+      }
+      .admin-header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr 0.9fr;
+        gap: 6px;
+      }
+      .header-btn-super, .header-btn-shop, .header-btn-logout {
+        justify-content: center;
+        padding: 7px 6px;
+        font-size: 11.5px;
+      }
+    }
+
     .admin-metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -500,23 +629,23 @@
 
   <!-- DASHBOARD PRINCIPAL CON SIDEBAR A LA IZQUIERDA -->
   <div id="admin-dashboard" class="hidden">
-    <header class="shop-header">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <span id="dash-logo" style="font-size: 26px;">🌱</span>
-        <div>
-          <h2 class="admin-title" id="ad-title" style="margin: 0; font-size: 18px; color: var(--primary);">Panel Nodo</h2>
-          <span style="font-size: 11px; color: var(--text-muted);" id="ad-active-cycle-header-text">🌕 Luna Llena en Piscis (Compra Vigente)</span>
+    <header class="admin-header-responsive">
+      <div class="admin-header-brand">
+        <span id="dash-logo" class="admin-header-logo">🌱</span>
+        <div class="admin-header-titles">
+          <h2 class="admin-title" id="ad-title">Panel Nodo</h2>
+          <span class="admin-header-subtitle" id="ad-active-cycle-header-text">🌕 Luna Llena en Piscis (Compra Vigente)</span>
         </div>
       </div>
-      <div style="display: flex; gap: 10px; align-items: center;">
-        <a href="superadmin.html" style="padding: 8px 14px; font-size: 12px; font-weight: 700; text-decoration: none; border-radius: 20px; background: rgba(234,88,12,0.1); color: #EA580C; border: 1px solid rgba(234,88,12,0.2); display: flex; align-items: center; gap: 6px;">
-          <i class="fas fa-carrot"></i> Super Admin
+      <div class="admin-header-actions">
+        <a href="superadmin.html" class="header-btn-super">
+          <i class="fas fa-carrot"></i> <span>Super Admin</span>
         </a>
-        <a id="btn-view-shop" href="tienda.html" style="padding: 8px 16px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 20px; background: #F1F5F9; color: #475569; display: flex; align-items: center; gap: 6px;">
-          <i class="fas fa-external-link-alt"></i> Ver Tienda
+        <a id="btn-view-shop" href="tienda.html" class="header-btn-shop">
+          <i class="fas fa-external-link-alt"></i> <span>Ver Tienda</span>
         </a>
-        <button onclick="logout()" style="padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 20px; background: transparent; border: 1px solid var(--border-color); color: #64748B;">
-          <i class="fas fa-sign-out-alt"></i> Salir
+        <button onclick="logout()" class="header-btn-logout">
+          <i class="fas fa-sign-out-alt"></i> <span>Salir</span>
         </button>
       </div>
     </header>
