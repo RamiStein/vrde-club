@@ -240,8 +240,8 @@
         gap: 16px;
       }
       .showcase-center { order: 1; }
-      .showcase-right { order: 2; }
-      .showcase-left { order: 3; }
+      .showcase-left { order: 2; }
+      .showcase-right { order: 3; }
     }
 
     .showcase-card {
@@ -305,11 +305,11 @@
     }
     .pres-chip-btn {
       width: 100%;
-      padding: 7px 10px;
-      border-radius: 8px;
-      border: 1px solid #CBD5E1;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #CBD5E1;
       background: white;
-      font-size: 11.5px;
+      font-size: 12.5px;
       font-weight: 700;
       color: #334155;
       cursor: pointer;
@@ -318,13 +318,17 @@
       align-items: center;
       transition: all 0.15s;
     }
+    .pres-chip-btn:hover {
+      border-color: var(--primary);
+    }
     .pres-chip-btn.active {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
-      box-shadow: 0 2px 8px rgba(16,163,82,0.2);
+      box-shadow: 0 3px 10px rgba(16,163,82,0.25);
     }
-    .pres-chip-btn .pres-sub { font-size: 11px; opacity: 0.9; font-weight: 600; }
+    .pres-chip-btn .pres-sub { font-size: 12px; opacity: 0.95; font-weight: 700; }
+    .pres-chip-btn.active .pres-sub { color: #F0FDF4; }
 
     /* Impacto en la Red */
     .impact-badge-box {
@@ -1134,13 +1138,22 @@
       const isTier2 = p2 && currentQty >= m2 && (!p3 || currentQty < m3);
       const isTier3 = p3 && currentQty >= m3;
 
-      // Generar Botones de Presentación para Columna Izquierda
+      // Generar Botones de Presentación para Columna Izquierda con badge de cantidad en carrito
       let presChipsHtml = '';
       variants.forEach((v, vIdx) => {
         const isAct = vIdx === currentVIdx ? 'active' : '';
+        const vKey = `${p.id}_${v.id || v.label}`;
+        const vInCart = CART_ITEMS[vKey]?.qty || 0;
+        const inCartBadge = vInCart > 0 
+          ? `<span style="background: #10B981; color: white; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; gap: 3px;"><i class="fas fa-shopping-bag" style="font-size: 9px;"></i> ${vInCart}</span>` 
+          : '';
+
         presChipsHtml += `
-          <button class="pres-chip-btn ${isAct}" onclick="selectProductVariant('${p.id}', ${vIdx})">
-            <span>${v.label}</span>
+          <button type="button" class="pres-chip-btn ${isAct}" onclick="selectProductVariant('${p.id}', ${vIdx})">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span>${v.label}</span>
+              ${inCartBadge}
+            </div>
             <span class="pres-sub">$${v.p1.toLocaleString('es-AR')}</span>
           </button>
         `;
@@ -1156,27 +1169,49 @@
         }
       });
 
+      // Subtotal y precio unitario para el formato activo
+      const activeUnitPrice = getProductPrice(currentV, currentQty || 1);
+      const activeFormatSubtotal = currentQty * activeUnitPrice;
+
+      // Resumen de otros formatos de este mismo producto en el carrito
+      let otherFormatsInCartHtml = '';
+      const otherInCart = variants.filter((v, vIdx) => vIdx !== currentVIdx && CART_ITEMS[`${p.id}_${v.id || v.label}`]?.qty > 0);
+      if (otherInCart.length > 0) {
+        otherFormatsInCartHtml = `
+          <div style="margin-top: 10px; padding: 8px 10px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; font-size: 11px; color: #166534;">
+            <div style="font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+              <i class="fas fa-check-circle" style="color: #10B981;"></i> Otros formatos en tu pedido:
+            </div>
+            ${otherInCart.map(ov => {
+              const oQty = CART_ITEMS[`${p.id}_${ov.id || ov.label}`].qty;
+              const oPrice = getProductPrice(ov, oQty);
+              return `<div style="display: flex; justify-content: space-between; margin-top: 2px;"><span>• ${oQty}x ${ov.label}</span><strong>$${(oQty * oPrice).toLocaleString('es-AR')}</strong></div>`;
+            }).join('')}
+          </div>
+        `;
+      }
+
       const showcaseContainer = document.getElementById('showcase-container');
       showcaseContainer.innerHTML = `
-        <!-- COLUMNA IZQUIERDA: ORIGEN, PRESENTACIÓN E IMPACTO -->
+        <!-- COLUMNA IZQUIERDA: PRESENTACIÓN, ORIGEN E IMPACTO -->
         <div class="showcase-card showcase-left">
           <div>
+            <!-- SECTOR PRESENTACIÓN DEL PRODUCTO (Primero para elegir formato) -->
+            <div class="presentation-selector-box">
+              <div class="pres-header">
+                <span>1. ELEGÍ EL FORMATO / PESO:</span>
+                <span style="color: var(--primary); font-weight: 800;">${currentV.label}</span>
+              </div>
+              <div class="pres-chips-grid">
+                ${presChipsHtml}
+              </div>
+            </div>
+
             <div class="card-section-title">ORIGEN Y PRODUCCIÓN</div>
             <div class="showcase-producer-name">${p.origen || info.productor}</div>
             <div class="showcase-variedad-badge">
               <i class="fas fa-check-circle"></i>
               <span>${p.variedad}</span>
-            </div>
-
-            <!-- SECTOR PRESENTACIÓN DEL PRODUCTO -->
-            <div class="presentation-selector-box">
-              <div class="pres-header">
-                <span>PRESENTACIÓN / FORMATO:</span>
-                <span style="color: var(--primary);">${currentV.label}</span>
-              </div>
-              <div class="pres-chips-grid">
-                ${presChipsHtml}
-              </div>
             </div>
           </div>
 
@@ -1209,9 +1244,12 @@
         <!-- COLUMNA DERECHA: ESCALAS POR VOLUMEN Y CANTIDADES -->
         <div class="showcase-card showcase-right">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <span class="card-section-title" style="margin: 0;">ESCALAS POR VOLUMEN</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span class="card-section-title" style="margin: 0;">2. CANTIDAD Y ESCALAS</span>
               <span style="font-size: 11px; font-weight: 700; color: var(--primary);">CLIC PARA APLICAR</span>
+            </div>
+            <div style="font-size: 11.5px; color: #64748B; margin-bottom: 8px;">
+              Para: <strong style="color: #0F172A;">${currentV.label}</strong>
             </div>
 
             <!-- Escala 1: Minorista -->
@@ -1249,10 +1287,24 @@
           <!-- Selector de Cantidad -->
           <div>
             <div class="qty-control-box">
-              <button class="qty-btn-circle" onclick="adjustProductQty(-1)">-</button>
-              <input type="text" class="qty-input-text" value="${currentQty}" readonly>
-              <button class="qty-btn-circle" onclick="adjustProductQty(1)">+</button>
+              <button class="qty-btn-circle" onclick="adjustProductQty(-1)" title="Restar">-</button>
+              <div style="text-align: center;">
+                <input type="text" class="qty-input-text" value="${currentQty}" readonly style="width: 50px; font-size: 18px; font-weight: 800; border: none; background: transparent; text-align: center; color: #0F172A;">
+                <div style="font-size: 10px; color: #64748B; font-weight: 700;">${currentV.unidad || p.unidad}</div>
+              </div>
+              <button class="qty-btn-circle" onclick="adjustProductQty(1)" title="Sumar">+</button>
             </div>
+            ${currentQty > 0 ? `
+              <div style="text-align: center; margin-top: 6px; font-size: 12px; color: #0F172A; font-weight: 700;">
+                Subtotal formato: <span style="color: var(--primary);">$${activeFormatSubtotal.toLocaleString('es-AR')}</span> ($${activeUnitPrice.toLocaleString('es-AR')} c/u)
+              </div>
+            ` : `
+              <div style="font-size: 10.5px; text-align: center; color: var(--text-muted); margin-top: 5px;">
+                Elegí la cantidad para este formato
+              </div>
+            `}
+
+            ${otherFormatsInCartHtml}
           </div>
         </div>
       `;
