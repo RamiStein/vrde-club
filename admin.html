@@ -2102,14 +2102,14 @@
 
       document.getElementById('compiled-products-grid').innerHTML = gridHtml;
 
-      // 3. Renderizar Fichas Detalladas con Costo Base y Tips para Vrdedores
+      // 3. Renderizar Fichas Detalladas con Costos Escalonados por Meta y Tips para Vrdedores
       let detailHtml = '';
       productsToDisplay.forEach(p => {
-        const costo = p.costo || 0;
-        const p1 = p.p1 || 0;
-        const p2 = p.p2 || p1;
-        const p3 = p.p3 || p1;
-        const margenUnitario = p1 - costo;
+        const totalNetworkUnits = LunarEngine.obtenerUnidadesAcumuladasProducto(p.id);
+        const escala = LunarEngine.obtenerEscalaColectiva(p, totalNetworkUnits, p.id);
+        const costo = escala.costoBase;
+        const p1 = escala.precioVenta;
+        const margenUnitario = Math.max(0, p1 - costo);
         const laborVrdedor = Math.round(margenUnitario * 0.333333);
 
         detailHtml += `
@@ -2118,24 +2118,32 @@
             <div style="text-align: center;">
               <img src="${p.img}" alt="${p.nombre}" style="width: 100%; height: 110px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 8px;">
               <span style="font-size: 11px; font-weight: 700; background: #F1F5F9; padding: 3px 8px; border-radius: 10px; color: #475569;">${p.unidad}</span>
+              <div style="margin-top: 8px; font-size: 11px; font-weight: 800; color: #166534; background: #DCFCE7; padding: 3px 6px; border-radius: 8px;">
+                ${totalNetworkUnits} ${p.unidad} en red
+              </div>
             </div>
 
-            <!-- Columna 2: Ficha Técnica y Costos Detallados -->
+            <!-- Columna 2: Ficha Técnica y Costos Detallados con Escalas -->
             <div>
-              <h4 style="margin: 0 0 4px; font-size: 16px; color: #0F172A;">${p.nombre}</h4>
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <h4 style="margin: 0 0 4px; font-size: 16px; color: #0F172A;">${p.nombre}</h4>
+                <span style="font-size: 11px; font-weight: 800; background: ${escala.tier >= 2 ? '#DCFCE7' : '#FEF3C7'}; color: ${escala.tier >= 2 ? '#15803D' : '#B45309'}; padding: 2px 8px; border-radius: 10px;">
+                  Nivel ${escala.tier}/3 Activo
+                </span>
+              </div>
               <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
-                <strong>📍 Origen:</strong> ${p.origen} • <em>${p.variedad}</em>
+                <strong>📍  Origen:</strong> ${p.origen} • <em>${p.variedad}</em>
               </div>
 
-              <!-- Costo Base vs Precio Venta -->
-              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <!-- Costo Base vs Precio Venta según escala activa -->
+              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
                 <div>
-                  <span style="color: #991B1B; font-weight: 700; display: block;">🌱 Costo Base Productor:</span>
-                  <strong style="font-size: 14px; color: #DC2626;">$${costo.toLocaleString('es-AR')}</strong>
+                  <span style="color: #991B1B; font-weight: 700; display: block;">🌱 Costo Base Desbloqueado:</span>
+                  <strong style="font-size: 15px; color: #DC2626;">$${costo.toLocaleString('es-AR')}</strong>
                 </div>
                 <div>
-                  <span style="color: #1E40AF; font-weight: 700; display: block;">🌱ï¸ Venta Minorista:</span>
-                  <strong style="font-size: 14px; color: #2563EB;">$${p1.toLocaleString('es-AR')}</strong>
+                  <span style="color: #1E40AF; font-weight: 700; display: block;">🛒 Venta Minorista:</span>
+                  <strong style="font-size: 15px; color: #2563EB;">$${p1.toLocaleString('es-AR')}</strong>
                 </div>
                 <div>
                   <span style="color: var(--text-muted); display: block;">Margen Bruto Unitario:</span>
@@ -2146,15 +2154,22 @@
                   <strong style="color: var(--primary); font-size: 13px;">$${laborVrdedor.toLocaleString('es-AR')} / un.</strong>
                 </div>
               </div>
+
+              <!-- Escalas de volumen y metas -->
+              <div style="background: #F1F5F9; border-radius: 8px; padding: 6px 10px; font-size: 11px; color: #334155; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+                <span><strong>Meta 1 (${escala.m1} un):</strong> Costo $${escala.c1.toLocaleString('es-AR')}</span>
+                <span><strong>Meta 2 (${escala.m2} un):</strong> Costo $${escala.c2.toLocaleString('es-AR')}</span>
+                <span><strong>Meta 3 (${escala.m3} un):</strong> Costo $${escala.c3.toLocaleString('es-AR')}</span>
+              </div>
             </div>
 
             <!-- Columna 3: Tips para el Vrdedor y Botón de Venta -->
-            <div style="background: rgba(16,163,82,0.03); border: 1pdashed rgba(16,163,82,0.3); border-radius: var(--radius-sm); padding: 12px 14px;">
+            <div style="background: rgba(16,163,82,0.03); border: 1px dashed rgba(16,163,82,0.3); border-radius: var(--radius-sm); padding: 12px 14px;">
               <div style="font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                <i class="fas fa-lightbulb"></i> Tips de Venta para el Vrdedor:
+                <i class="fas fa-lightbulb"></i> Tips de Venta & Metas Colectivas:
               </div>
               <p style="font-size: 12px; color: #334155; line-height: 1.4; margin: 0 0 10px;">
-                ${p.tipsVrdedor || p.titulo || 'Alimento agroecológico fresco, sin intermediarios especulativos directo de cooperativas y familias productoras.'}
+                ${p.tipsVrdedor || p.titulo || 'Alimento agroecológico directo de cooperativas. ¡A más pedidos acumulados en la red, más baja el costo para todos!'}
               </p>
               <button class="btn-checkout-cta" style="width: 100%; padding: 8px 12px; font-size: 12px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="copyProductSalesPitch('${p.id}')">
                 <i class="fab fa-whatsapp"></i> Copiar Mensaje de Venta para WhatsApp
@@ -2183,13 +2198,25 @@
       const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       if (!p) return;
 
+      const totalNetworkUnits = LunarEngine.obtenerUnidadesAcumuladasProducto(p.id);
+      const escala = LunarEngine.obtenerEscalaColectiva(p, totalNetworkUnits, p.id);
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       
       let text = `🌱 *${p.nombre}* • Compra Colectiva Lunar\n`;
       text += `📍  *Origen:* ${p.origen} (${p.variedad})\n`;
-      text += `💰 *Precio Minorista:* $${(p.p1 || 0).toLocaleString('es-AR')}\n`;
-      if (p.p2) text += `📍¦ *Precio Mayorista (+${p.m2} un):* $${(p.p2 || 0).toLocaleString('es-AR')}\n`;
-      text += `\n✨ *¿Por qué elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo del campo sin agrotóxicos.'}\n\n`;
+      text += `🎯 *Meta Colectiva:* Llevamos acumulados ${totalNetworkUnits} ${p.unidad} en la red.\n`;
+      text += `💰 *Precio Venta Actual:* $${escala.precioVenta.toLocaleString('es-AR')}\n`;
+      if (escala.unidadesFaltantes > 0) {
+        text += `🚀 *¡Faltan solo ${escala.unidadesFaltantes} ${p.unidad}* para desbloquear el costo más bajo de la red!\n`;
+      }
+      text += `\n✨ *¿Por qué elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo de productores sin intermediarios.'}\n\n`;
+      text += `🚚 *Entrega:* ${nodoData.diaEntrega} en ${nodoData.direccion}\n`;
+      text += `🛒 *Sumate al pedido:* ${storeUrl}`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`¡Ficha de venta de "${p.nombre}" copiada al portapapeles! Lista para pegar en WhatsApp.`);
+      });
+    }o?*\n${p.tipsVrdedor || p.subtitulo || 'Directo del campo sin agrotóxicos.'}\n\n`;
       text += `🚚 *Entrega:* ${nodoData.diaEntrega} en ${nodoData.direccion}\n`;
       text += `🛒 *Pedí acá:* ${storeUrl}`;
 

@@ -2683,11 +2683,16 @@
       const vId = v?.id || ('v_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
       const vLabel = v?.label || `Formato ${count}`;
       const vUnidad = v?.unidad || 'unidad';
+      const vM1 = v?.m1 !== undefined && v?.m1 !== null ? v.m1 : 10;
       const vCosto = v?.costo !== undefined && v?.costo !== null ? v.costo : '';
       const vP1 = v?.p1 !== undefined && v?.p1 !== null ? v.p1 : '';
-      const vM2 = v?.m2 !== undefined && v?.m2 !== null ? v.m2 : '';
+
+      const vM2 = v?.m2 !== undefined && v?.m2 !== null ? v.m2 : 20;
+      const vCosto2 = (v?.costo2 !== undefined && v?.costo2 !== null && v?.costo2 !== 0) ? v.costo2 : '';
       const vP2 = (v?.p2 !== undefined && v?.p2 !== null && v?.p2 !== 0) ? v.p2 : '';
-      const vM3 = v?.m3 !== undefined && v?.m3 !== null ? v.m3 : '';
+
+      const vM3 = v?.m3 !== undefined && v?.m3 !== null ? v.m3 : 40;
+      const vCosto3 = (v?.costo3 !== undefined && v?.costo3 !== null && v?.costo3 !== 0) ? v.costo3 : '';
       const vP3 = (v?.p3 !== undefined && v?.p3 !== null && v?.p3 !== 0) ? v.p3 : '';
       const vImg = v?.img || '';
 
@@ -2712,34 +2717,55 @@
             <input type="text" class="v-input-unidad input-field" value="${vUnidad}" placeholder="Ej: barra, kg, paquete" style="font-size: 12px; padding: 6px 8px;" required>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+
+        <!-- Nivel 1: Base / Inicial -->
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; display: grid; grid-template-columns: 0.8fr 1fr 1fr; gap: 6px; align-items: center;">
           <div>
-            <label style="font-size: 11px; font-weight: 700; color: #DC2626;">Costo Base ($ Productor) *</label>
-            <input type="number" class="v-input-costo input-field" value="${vCosto}" placeholder="$ Costo" style="font-size: 12px; padding: 6px 8px; border-color: #FECACA;" required>
+            <label style="font-size: 10px; font-weight: 700; color: #475569;">Meta 1 (un)</label>
+            <input type="number" class="v-input-m1 input-field" value="${vM1}" placeholder="10" style="font-size: 11px; padding: 4px 6px;">
           </div>
           <div>
-            <label style="font-size: 11px; font-weight: 700; color: var(--primary);">Precio Minorista Base ($) *</label>
-            <input type="number" class="v-input-p1 input-field" value="${vP1}" placeholder="$ Minorista" style="font-size: 12px; padding: 6px 8px; font-weight: 700;" required>
+            <label style="font-size: 10px; font-weight: 700; color: #DC2626;">Costo 1 ($ Base) *</label>
+            <input type="number" class="v-input-costo input-field" value="${vCosto}" placeholder="$ Costo 1" style="font-size: 11px; padding: 4px 6px;" required>
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: var(--primary);">Venta 1 ($)</label>
+            <input type="number" class="v-input-p1 input-field" value="${vP1}" placeholder="$ Venta 1" style="font-size: 11px; padding: 4px 6px; font-weight: 700;" required>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1.2fr 1fr 1.2fr; gap: 6px; margin-bottom: 8px;">
+
+        <!-- Nivel 2: Intermedio -->
+        <div style="background: #FEF9C3; border: 1px solid #FEF08A; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; display: grid; grid-template-columns: 0.8fr 1fr 1fr; gap: 6px; align-items: center;">
           <div>
-            <label style="font-size: 10px; font-weight: 700; color: #64748B;">Mín. Mayor.</label>
+            <label style="font-size: 10px; font-weight: 700; color: #854D0E;">Meta 2 (un)</label>
             <input type="number" class="v-input-m2 input-field" value="${vM2}" placeholder="20" style="font-size: 11px; padding: 4px 6px;">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: 700; color: #64748B;">$ Mayorista</label>
-            <input type="number" class="v-input-p2 input-field" value="${vP2}" placeholder="Opcional ($)" style="font-size: 11px; padding: 4px 6px;">
+            <label style="font-size: 10px; font-weight: 700; color: #B45309;">Costo 2 ($)</label>
+            <input type="number" class="v-input-costo2 input-field" value="${vCosto2}" placeholder="$ Costo 2" style="font-size: 11px; padding: 4px 6px;">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: 700; color: #64748B;">Mín. Distrib.</label>
-            <input type="number" class="v-input-m3 input-field" value="${vM3}" placeholder="50" style="font-size: 11px; padding: 4px 6px;">
-          </div>
-          <div>
-            <label style="font-size: 10px; font-weight: 700; color: #64748B;">$ Distribuidora</label>
-            <input type="number" class="v-input-p3 input-field" value="${vP3}" placeholder="Opcional ($)" style="font-size: 11px; padding: 4px 6px;">
+            <label style="font-size: 10px; font-weight: 700; color: #854D0E;">Venta 2 ($)</label>
+            <input type="number" class="v-input-p2 input-field" value="${vP2}" placeholder="$ Venta 2" style="font-size: 11px; padding: 4px 6px;">
           </div>
         </div>
+
+        <!-- Nivel 3: Máximo Volumen -->
+        <div style="background: #DCFCE7; border: 1px solid #BBF7D0; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; display: grid; grid-template-columns: 0.8fr 1fr 1fr; gap: 6px; align-items: center;">
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: #166534;">Meta 3 (un)</label>
+            <input type="number" class="v-input-m3 input-field" value="${vM3}" placeholder="40" style="font-size: 11px; padding: 4px 6px;">
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: #15803D;">Costo 3 ($)</label>
+            <input type="number" class="v-input-costo3 input-field" value="${vCosto3}" placeholder="$ Costo 3" style="font-size: 11px; padding: 4px 6px;">
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 700; color: #166534;">Venta 3 ($)</label>
+            <input type="number" class="v-input-p3 input-field" value="${vP3}" placeholder="$ Venta 3" style="font-size: 11px; padding: 4px 6px;">
+          </div>
+        </div>
+
         <div>
           <label style="font-size: 10px; color: #64748B;">Foto específica del formato (opcional, URL o ruta):</label>
           <input type="text" class="v-input-img input-field" value="${vImg}" placeholder="Ej: assets/cacao_bolivia.jpg" style="font-size: 11px; padding: 4px 8px;">
@@ -3079,18 +3105,26 @@
         const vId = card.dataset.vid || ('v_' + (i + 1));
         const label = (card.querySelector('.v-input-label')?.value || '').trim();
         const unidad = (card.querySelector('.v-input-unidad')?.value || '').trim() || 'unidad';
+        const rawM1 = (card.querySelector('.v-input-m1')?.value || '').trim();
+        const m1 = parseInt(rawM1) || 10;
         const costo = parseFloat(card.querySelector('.v-input-costo')?.value) || 0;
         const p1 = parseFloat(card.querySelector('.v-input-p1')?.value) || 0;
+
         const rawM2 = (card.querySelector('.v-input-m2')?.value || '').trim();
+        const rawCosto2 = (card.querySelector('.v-input-costo2')?.value || '').trim();
         const rawP2 = (card.querySelector('.v-input-p2')?.value || '').trim();
+
         const rawM3 = (card.querySelector('.v-input-m3')?.value || '').trim();
+        const rawCosto3 = (card.querySelector('.v-input-costo3')?.value || '').trim();
         const rawP3 = (card.querySelector('.v-input-p3')?.value || '').trim();
 
+        const m2 = rawM2 !== '' ? (parseInt(rawM2) || 20) : 20;
+        const costo2 = rawCosto2 !== '' ? (parseFloat(rawCosto2) || null) : null;
         const p2 = rawP2 !== '' ? (parseFloat(rawP2) || null) : null;
-        const m2 = p2 ? (parseInt(rawM2) || 20) : null;
 
+        const m3 = rawM3 !== '' ? (parseInt(rawM3) || 40) : 40;
+        const costo3 = rawCosto3 !== '' ? (parseFloat(rawCosto3) || null) : null;
         const p3 = rawP3 !== '' ? (parseFloat(rawP3) || null) : null;
-        const m3 = p3 ? (parseInt(rawM3) || 50) : null;
         const vImg = (card.querySelector('.v-input-img')?.value || '').trim();
 
         if (!label || !p1) {
@@ -3109,8 +3143,10 @@
           label: label,
           unidad: unidad,
           costo: costo,
+          costo2: costo2,
+          costo3: costo3,
           p1: p1,
-          m1: 1,
+          m1: m1,
           m2: m2,
           p2: p2,
           m3: m3,
@@ -3146,8 +3182,10 @@
         img: img,
         subtitulo: subtitulo,
         costo: primerCosto,
+        costo2: variantes[0].costo2,
+        costo3: variantes[0].costo3,
         p1: primerP1,
-        m1: 1,
+        m1: variantes[0].m1,
         m2: variantes[0].m2,
         p2: variantes[0].p2,
         m3: variantes[0].m3,

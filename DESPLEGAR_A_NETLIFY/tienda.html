@@ -1231,17 +1231,21 @@
       const cartKey = `${p.id}_${currentV.id || currentV.label}`;
       const currentQty = CART_ITEMS[cartKey]?.qty || 0;
 
+      // Calcular unidades pedidas en la red y escala colectiva activa
+      const totalRealUnits = LunarEngine.obtenerUnidadesAcumuladasProducto(p.id);
+      const escala = LunarEngine.obtenerEscalaColectiva(currentV, totalRealUnits, p.id);
+
       // Calcular escalas activas para la variante seleccionada
-      const m1 = currentV.m1 || 1;
+      const m1 = currentV.m1 || 10;
       const m2 = currentV.m2 || 20;
-      const m3 = currentV.m3 || 50;
+      const m3 = currentV.m3 || 40;
       const p1 = currentV.p1;
       const p2 = (currentV.p2 && currentV.p2 > 0) ? currentV.p2 : null;
       const p3 = (currentV.p3 && currentV.p3 > 0) ? currentV.p3 : null;
 
-      const isTier1 = (!p2 && !p3) || (currentQty >= m1 && (!p2 || currentQty < m2));
-      const isTier2 = p2 && currentQty >= m2 && (!p3 || currentQty < m3);
-      const isTier3 = p3 && currentQty >= m3;
+      const isTier1 = (!p2 && !p3) || (escala.tier === 1 && currentQty < m2);
+      const isTier2 = (p2 && escala.tier === 2) || (p2 && currentQty >= m2 && (!p3 || currentQty < m3));
+      const isTier3 = (p3 && escala.tier === 3) || (p3 && currentQty >= m3);
 
       // Generar Botones de Presentación para Columna Izquierda con badge de cantidad en carrito
       let presChipsHtml = '';
@@ -1264,18 +1268,8 @@
         `;
       });
 
-      // Calcular unidades pedidas en la red para el badge de impacto
-      let totalRealUnits = 0;
-      LunarEngine.obtenerPedidos(null).forEach(o => {
-        if (o.items) {
-          o.items.forEach(it => {
-            if (it.prodId === p.id) totalRealUnits += (Number(it.cant) || 0);
-          });
-        }
-      });
-
       // Subtotal y precio unitario para el formato activo
-      const activeUnitPrice = getProductPrice(currentV, currentQty || 1);
+      const activeUnitPrice = getProductPrice(currentV, currentQty || 1, p.id);
       const activeFormatSubtotal = currentQty * activeUnitPrice;
 
       // Resumen de otros formatos de este mismo producto en el carrito
@@ -1289,7 +1283,7 @@
             </div>
             ${otherInCart.map(ov => {
               const oQty = CART_ITEMS[`${p.id}_${ov.id || ov.label}`].qty;
-              const oPrice = getProductPrice(ov, oQty);
+              const oPrice = getProductPrice(ov, oQty, p.id);
               return `<div style="display: flex; justify-content: space-between; margin-top: 2px;"><span>• ${oQty}x ${ov.label}</span><strong>$${(oQty * oPrice).toLocaleString('es-AR')}</strong></div>`;
             }).join('')}
           </div>
@@ -1320,13 +1314,32 @@
             </div>
           </div>
 
-          <!-- IMPACTO EN LA RED LUNAR -->
-          <div class="impact-badge-box">
-            <div class="card-section-title" style="color: var(--primary); margin-bottom: 2px;">IMPACTO EN LA RED LUNAR</div>
-            <div class="impact-badge-num">${totalRealUnits}</div>
-            <div class="impact-badge-desc">unidades pedidas entre todos los nodos en este ciclo lunar.</div>
-            <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px; border-top: 1px dashed rgba(16,163,82,0.2); padding-top: 4px;">
-              Meta colectiva: ${p.meta || 100} ${currentV.unidad || p.unidad}
+          <!-- IMPACTO EN LA RED LUNAR Y META COLECTIVA -->
+          <div class="impact-badge-box" style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 12px 14px; margin-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="card-section-title" style="color: #166534; margin: 0; font-size: 11.5px; font-weight: 800;">
+                <i class="fas fa-bullhorn"></i> META COLECTIVA LUNAR
+              </div>
+              <span style="font-size: 10.5px; font-weight: 800; background: ${escala.tier >= 2 ? '#DCFCE7' : '#FEF3C7'}; color: ${escala.tier >= 2 ? '#15803D' : '#B45309'}; padding: 2px 8px; border-radius: 10px;">
+                Nivel ${escala.tier}/3
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: baseline; gap: 6px; margin: 8px 0 4px;">
+              <span class="impact-badge-num" style="font-size: 26px; font-weight: 900; color: #10A352;">${totalRealUnits}</span>
+              <span style="font-size: 12px; color: #475569; font-weight: 600;">${currentV.unidad || p.unidad} acumulados en la red</span>
+            </div>
+
+            <!-- Barra de Progreso de Meta -->
+            <div style="background: #E2E8F0; border-radius: 6px; height: 7px; overflow: hidden; margin: 6px 0;">
+              <div style="background: #10A352; height: 100%; width: ${escala.porcentajeMeta}%; border-radius: 6px; transition: width 0.4s ease;"></div>
+            </div>
+
+            <div style="font-size: 11px; color: #166534; line-height: 1.4; margin-top: 6px;">
+              ${escala.unidadesFaltantes > 0 
+                ? `🚀 <strong>¡Faltan solo ${escala.unidadesFaltantes} ${currentV.unidad || p.unidad}</strong> para desbloquear el siguiente costo base de <strong>$${(currentV.costo3 || currentV.costo2 || escala.costoBase).toLocaleString('es-AR')}</strong>!`
+                : `🎉 <strong>¡Meta comunitaria superada!</strong> Se alcanzó el costo más bajo para toda la red comunitaria.`
+              }
             </div>
           </div>
         </div>
@@ -1357,21 +1370,21 @@
               Para: <strong style="color: #0F172A;">${currentV.label}</strong>
             </div>
 
-            <!-- Escala 1: Minorista -->
+            <!-- Escala 1: Minorista / Base -->
             <div class="scale-tier-card ${isTier1 ? 'active' : ''}" onclick="applyTierDirectly(1)">
               <div class="scale-tier-info">
-                <div class="st-title">Minorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(${p2 ? `1 a ${m2 - 1} un.` : 'Precio Estándar'})</span></div>
-                <div class="st-sub">Precio Base</div>
+                <div class="st-title">Nivel Base <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(Meta ${m1} ${currentV.unidad || p.unidad})</span></div>
+                <div class="st-sub">${currentV.costo ? `Costo Productor: $${currentV.costo.toLocaleString('es-AR')}` : 'Precio Estándar'}</div>
               </div>
               <div class="scale-tier-price">$${p1.toLocaleString('es-AR')}</div>
             </div>
 
             ${p2 ? `
-            <!-- Escala 2: Mayorista -->
+            <!-- Escala 2: Mayorista / Intermedio -->
             <div class="scale-tier-card ${isTier2 ? 'active' : ''}" onclick="applyTierDirectly(2)">
               <div class="scale-tier-info">
-                <div class="st-title">Mayorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(${m2} ${p3 ? `a ${m3 - 1}` : '+'} un.)</span></div>
-                <div class="st-sub">Descuento +${m2} un.</div>
+                <div class="st-title">Nivel 2 Intermedio <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(Meta ${m2} ${currentV.unidad || p.unidad})</span></div>
+                <div class="st-sub">${currentV.costo2 ? `Costo Productor: $${currentV.costo2.toLocaleString('es-AR')}` : `Descuento +${m2} un.`} ${totalRealUnits >= m2 ? '• 🎯 Desbloqueado' : ''}</div>
               </div>
               <div class="scale-tier-price">$${p2.toLocaleString('es-AR')}</div>
             </div>
@@ -1381,8 +1394,8 @@
             <!-- Escala 3: Distribuidora / Gran Volumen -->
             <div class="scale-tier-card ${isTier3 ? 'active' : ''}" onclick="applyTierDirectly(3)">
               <div class="scale-tier-info">
-                <div class="st-title">Distribuidora <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(+${m3} un.)</span></div>
-                <div class="st-sub">Gran Volumen +${m3} un.</div>
+                <div class="st-title">Nivel 3 Máximo <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(Meta ${m3} ${currentV.unidad || p.unidad})</span></div>
+                <div class="st-sub">${currentV.costo3 ? `Costo Productor: $${currentV.costo3.toLocaleString('es-AR')}` : `Gran Volumen +${m3} un.`} ${totalRealUnits >= m3 ? '• 🎯 Desbloqueado' : ''}</div>
               </div>
               <div class="scale-tier-price">$${p3.toLocaleString('es-AR')}</div>
             </div>
@@ -1566,9 +1579,15 @@
     // ==========================================
     // CARRITO Y MODAL CHECKOUT
     // ==========================================
-    function getProductPrice(variant, qty) {
-      if (variant.p3 && variant.p3 > 0 && qty >= (variant.m3 || 50)) return variant.p3;
-      if (variant.p2 && variant.p2 > 0 && qty >= (variant.m2 || 20)) return variant.p2;
+    function getProductPrice(variant, qty, prodId = null) {
+      const netUnits = prodId ? LunarEngine.obtenerUnidadesAcumuladasProducto(prodId) : 0;
+      const totalUnits = Math.max(qty, netUnits + qty);
+
+      const m3 = variant.m3 || 40;
+      const m2 = variant.m2 || 20;
+
+      if (variant.p3 && variant.p3 > 0 && totalUnits >= m3) return variant.p3;
+      if (variant.p2 && variant.p2 > 0 && totalUnits >= m2) return variant.p2;
       return variant.p1;
     }
 
@@ -1578,7 +1597,7 @@
 
       Object.keys(CART_ITEMS).forEach(k => {
         const item = CART_ITEMS[k];
-        const price = getProductPrice(item.variant, item.qty);
+        const price = getProductPrice(item.variant, item.qty, item.prod?.id);
         total += item.qty * price;
         totalUnits += item.qty;
       });
@@ -1593,7 +1612,7 @@
 
       Object.keys(CART_ITEMS).forEach(k => {
         const item = CART_ITEMS[k];
-        const price = getProductPrice(item.variant, item.qty);
+        const price = getProductPrice(item.variant, item.qty, item.prod?.id);
         const lineTotal = item.qty * price;
         subtotal += lineTotal;
 

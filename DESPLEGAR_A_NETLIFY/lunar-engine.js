@@ -451,13 +451,15 @@ const LUNAR_CONFIG = {
       subtitulo: 'Semillas fermentadas y suavemente tostadas • Sabor profundo',
       origen: 'Comunidades Recolectoras de Rurrenabaque (Beni, Bolivia 🇧🇴)',
       variedad: 'Cacao Criollo Silvestre Amazónico',
-      meta: 50,
+      meta: 40,
       unidad: 'barra 1kg',
-      costo: 42000,
-      p1: 60000, m1: 1,
-      p2: 57000, m2: 3,
-      p3: 55000, m3: 5,
-      tipsVrdedor: 'Cacao silvestre puro sin azúcar ni aditivos. Cierre 25-08-2026. Llega entre el 28 y 30 de agosto.',
+      costo: 49000,
+      costo2: 45000,
+      costo3: 40000,
+      p1: 60000, m1: 10,
+      p2: 57000, m2: 20,
+      p3: 55000, m3: 40,
+      tipsVrdedor: 'Cacao silvestre puro sin azúcar ni aditivos. Costos según volumen acumulado: $49.000 (10kg), $45.000 (20kg) y $40.000 (40kg). ¡A más pedidos en la red, más barato para todos!',
       productorInfo: {
         productor: 'Familias Recolectoras de Rurrenabaque',
         historia: 'Cacao criollo silvestre recolectado manualmente en canoas en islas vírgenes del río Beni (Madidi). Fermentado tradicional y suavemente tostado.',
@@ -465,9 +467,9 @@ const LUNAR_CONFIG = {
         loc: '📍 Rurrenabaque, Beni, Bolivia'
       },
       variantes: [
-        { id: '1kg', label: 'Barra 1 kg', unidad: 'barra 1kg', costo: 42000, p1: 60000, p2: 57000, p3: 55000, m1: 1, m2: 3, m3: 5, tiers: 'Mayorista (+3kg): $57.000 • Dist (+5kg): $55.000 • +10kg: $50.000' },
-        { id: '500g', label: 'Barra 500g (1/2 kg)', unidad: 'barra 500g', costo: 22000, p1: 32500, p2: 28500, p3: 27500, m1: 1, m2: 6, m3: 10, tiers: 'Mayorista (+6u): $28.500 • Dist (+10u): $27.500 • +20u: $25.000' },
-        { id: '100g', label: 'Barra 100g', unidad: 'barra 100g', costo: 4800, p1: 7500, p2: 6800, p3: 6200, m1: 1, m2: 10, m3: 20, tiers: 'Mayorista (+10u): $6.800 • Dist (+20u): $6.200' }
+        { id: '1kg', label: 'Barra 1 kg', unidad: 'barra 1kg', costo: 49000, costo2: 45000, costo3: 40000, p1: 60000, p2: 57000, p3: 55000, m1: 10, m2: 20, m3: 40, tiers: '10kg: $49.000 costo ($60k venta) • 20kg: $45.000 costo ($57k venta) • 40kg: $40.000 costo ($55k venta)' },
+        { id: '500g', label: 'Barra 500g (1/2 kg)', unidad: 'barra 500g', costo: 26000, costo2: 24000, costo3: 21500, p1: 32500, p2: 28500, p3: 27500, m1: 10, m2: 20, m3: 40, tiers: '10kg: $26.000 costo • 20kg: $24.000 costo • 40kg: $21.500 costo' },
+        { id: '100g', label: 'Barra 100g', unidad: 'barra 100g', costo: 5500, costo2: 5000, costo3: 4500, p1: 7500, p2: 6800, p3: 6200, m1: 10, m2: 20, m3: 40, tiers: '10kg: $5.500 costo • 20kg: $5.000 costo • 40kg: $4.500 costo' }
       ],
       activo: true,
       nodos: ['TODOS']
@@ -654,7 +656,7 @@ class LunarEngine {
             prods.forEach(p => {
               const def = LUNAR_CONFIG.productos.find(x => x.id === p.id);
               if (def) {
-                if (p.id === 'P2' && (p.origen && p.origen.includes('Traslasierra'))) {
+                if (p.id === 'P11' || (p.id === 'P2' && (p.origen && p.origen.includes('Traslasierra')))) {
                   p.nombre = def.nombre;
                   p.titulo = def.titulo;
                   p.subtitulo = def.subtitulo;
@@ -665,8 +667,21 @@ class LunarEngine {
                   p.p1 = def.p1;
                   p.p2 = def.p2;
                   p.p3 = def.p3;
+                  p.m1 = def.m1;
+                  p.m2 = def.m2;
+                  p.m3 = def.m3;
                   p.costo = def.costo;
+                  p.costo2 = def.costo2;
+                  p.costo3 = def.costo3;
+                  p.meta = def.meta;
                   p.variantes = def.variantes;
+                }
+                if (def && (!p.costo2 || !p.costo3)) {
+                  p.costo2 = def.costo2;
+                  p.costo3 = def.costo3;
+                  p.m1 = def.m1;
+                  p.m2 = def.m2;
+                  p.m3 = def.m3;
                 }
                 if (!p.variantes || p.variantes.length === 0) {
                   p.variantes = def.variantes;
@@ -1437,8 +1452,16 @@ class LunarEngine {
           const p = prodsMap[it.prodId] || {};
           const cant = it.cant || 0;
           orderUnits += cant;
-          const costoUnit = p.costo || Math.round((p.p1 || 10000) * 0.65);
-          const saleUnit = p.p1 || 10000;
+
+          // Buscar variante si existe
+          const variant = (p.variantes && it.variantId) 
+            ? (p.variantes.find(v => v.id === it.variantId || v.label === it.variantId) || p.variantes[0]) 
+            : (p.variantes ? p.variantes[0] : p);
+
+          const targetObj = variant || p;
+          const escala = LunarEngine.obtenerEscalaColectiva(targetObj, null, p.id);
+          const costoUnit = escala.costoBase || targetObj.costo || Math.round((targetObj.p1 || 10000) * 0.65);
+          const saleUnit = it.precioUnitario || escala.precioVenta || targetObj.p1 || 10000;
           
           orderCosto += (costoUnit * cant);
           orderVentas += (saleUnit * cant);
@@ -2196,16 +2219,98 @@ class LunarEngine {
   }
 
   /**
+   * Obtiene la cantidad total acumulada pedida en toda la red para un producto en el ciclo lunar actual
+   */
+  static obtenerUnidadesAcumuladasProducto(prodId, cicloId = null) {
+    const pedidos = this.obtenerPedidos(null, cicloId || 'VIGENTE');
+    let totalUnits = 0;
+    pedidos.forEach(o => {
+      if (o.items && Array.isArray(o.items)) {
+        o.items.forEach(it => {
+          if (it.prodId === prodId) {
+            totalUnits += (Number(it.cant) || Number(it.unidades) || 0);
+          }
+        });
+      }
+    });
+    return totalUnits;
+  }
+
+  /**
+   * Obtiene el costo base y precio activo de un producto/variante según las unidades acumuladas en la red
+   */
+  static obtenerEscalaColectiva(itemOrVariant, unidadesAcumuladas = null, prodId = null) {
+    const total = (unidadesAcumuladas !== null && unidadesAcumuladas !== undefined) 
+      ? Number(unidadesAcumuladas) 
+      : (prodId ? this.obtenerUnidadesAcumuladasProducto(prodId) : 0);
+
+    const m1 = Number(itemOrVariant.m1 || 10);
+    const m2 = Number(itemOrVariant.m2 || 20);
+    const m3 = Number(itemOrVariant.m3 || 40);
+
+    const c1 = Number(itemOrVariant.costo || itemOrVariant.costo1 || 0);
+    const c2 = Number(itemOrVariant.costo2 || (c1 ? Math.round(c1 * 0.92) : 0));
+    const c3 = Number(itemOrVariant.costo3 || (c1 ? Math.round(c1 * 0.82) : 0));
+
+    const p1 = Number(itemOrVariant.p1 || 0);
+    const p2 = Number(itemOrVariant.p2 || (p1 ? Math.round(p1 * 0.95) : 0));
+    const p3 = Number(itemOrVariant.p3 || (p1 ? Math.round(p1 * 0.90) : 0));
+
+    if (m3 > 0 && total >= m3) {
+      return {
+        tier: 3,
+        tierName: 'Meta Cumplida (Máximo Descuento)',
+        costoBase: c3,
+        precioVenta: p3,
+        unidadesActuales: total,
+        metaActual: m3,
+        metaSiguiente: null,
+        unidadesFaltantes: 0,
+        porcentajeMeta: 100,
+        m1, m2, m3, c1, c2, c3, p1, p2, p3
+      };
+    } else if (m2 > 0 && total >= m2) {
+      return {
+        tier: 2,
+        tierName: 'Meta Intermedia',
+        costoBase: c2,
+        precioVenta: p2,
+        unidadesActuales: total,
+        metaActual: m2,
+        metaSiguiente: m3,
+        unidadesFaltantes: Math.max(0, m3 - total),
+        porcentajeMeta: Math.min(100, Math.round((total / m3) * 100)),
+        m1, m2, m3, c1, c2, c3, p1, p2, p3
+      };
+    } else {
+      return {
+        tier: 1,
+        tierName: 'Nivel Inicial',
+        costoBase: c1,
+        precioVenta: p1,
+        unidadesActuales: total,
+        metaActual: m1,
+        metaSiguiente: m2,
+        unidadesFaltantes: Math.max(0, m2 - total),
+        porcentajeMeta: Math.min(100, Math.round((total / (m2 || 20)) * 100)),
+        m1, m2, m3, c1, c2, c3, p1, p2, p3
+      };
+    }
+  }
+
+  /**
    * Calcula el precio de un producto según las unidades acumuladas en la red
    */
   static calcularPrecio(prod, unidadesTotales) {
-    if (prod.p3 > 0 && prod.m3 > 0 && unidadesTotales >= prod.m3) {
-      return { precio: prod.p3, tier: 3, tierName: 'Distribuidora', metaSiguiente: null };
-    }
-    if (prod.p2 > 0 && prod.m2 > 0 && unidadesTotales >= prod.m2) {
-      return { precio: prod.p2, tier: 2, tierName: 'Mayorista', metaSiguiente: prod.m3 };
-    }
-    return { precio: prod.p1, tier: 1, tierName: 'Minorista', metaSiguiente: prod.m2 };
+    const escala = this.obtenerEscalaColectiva(prod, unidadesTotales);
+    return {
+      precio: escala.precioVenta,
+      costo: escala.costoBase,
+      tier: escala.tier,
+      tierName: escala.tierName,
+      metaSiguiente: escala.metaSiguiente,
+      unidadesFaltantes: escala.unidadesFaltantes
+    };
   }
 
   /**
