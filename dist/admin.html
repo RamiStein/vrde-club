@@ -649,6 +649,9 @@
       <h2 style="font-size: 22px; color: #0F172A; margin-bottom: 4px;" id="admin-login-name">Panel Gestor de Nodo</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 18px;">Ingresa el PIN de 4 dígitos de tu almacén</p>
       
+      <!-- Aviso de estado de nodo en login -->
+      <div id="login-node-notice" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; line-height: 1.4; text-align: left; margin-bottom: 14px;"></div>
+
       <!-- Selector de nodo en login -->
       <div style="margin-bottom: 12px; text-align: left;">
         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Nodo a Gestionar</label>
@@ -1549,13 +1552,47 @@
     let ORDERS_DATA = [];
 
     document.addEventListener('DOMContentLoaded', () => {
-      const allNodos = LunarEngine.obtenerNodos();
+      const allNodos = LunarEngine.obtenerNodos(false);
+      const archivados = LunarEngine.obtenerNodosArchivados();
       const nodeKeys = Object.keys(allNodos);
       const urlParams = new URLSearchParams(window.location.search);
-      const refParam = urlParams.get('ref');
+      const refParam = urlParams.get('ref') ? urlParams.get('ref').toLowerCase() : null;
       
-      if (refParam && allNodos[refParam.toLowerCase()]) {
-        CURRENT_REF = refParam.toLowerCase();
+      const noticeBox = document.getElementById('login-node-notice');
+
+      if (refParam) {
+        if (allNodos[refParam]) {
+          CURRENT_REF = refParam;
+          const n = allNodos[refParam];
+          if (n.activo === false || n.pausado) {
+            if (noticeBox) {
+              noticeBox.style.display = 'block';
+              noticeBox.style.background = '#FEF3C7';
+              noticeBox.style.color = '#92400E';
+              noticeBox.style.border = '1px solid #FCD34D';
+              noticeBox.innerHTML = `⏳ <strong>${n.nombre}</strong> se encuentra en <strong>reposo temporal</strong>. Puedes ingresar con tu PIN para reactivarlo o consultar registros.`;
+            }
+          }
+        } else {
+          // El nodo solicitado fue eliminado o no existe
+          const arch = archivados.find(a => a.id === refParam);
+          const nombreArch = arch ? arch.nombre : `Nodo "${refParam}"`;
+          
+          CURRENT_REF = nodeKeys.length > 0 ? nodeKeys[0] : 'vicente_lopez';
+          
+          // Actualizar URL limpia
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, '', `admin.html?ref=${CURRENT_REF}`);
+          }
+
+          if (noticeBox) {
+            noticeBox.style.display = 'block';
+            noticeBox.style.background = '#FEE2E2';
+            noticeBox.style.color = '#991B1B';
+            noticeBox.style.border = '1px solid #FECACA';
+            noticeBox.innerHTML = `⚠️ <strong>${nombreArch}</strong> ya no se encuentra disponible o fue dado de baja. Selecciona un nodo disponible a continuación para ingresar.`;
+          }
+        }
       } else if (nodeKeys.length > 0) {
         CURRENT_REF = nodeKeys[0];
       } else {
@@ -1594,10 +1631,26 @@
 
     function changeLoginNode(nodeId) {
       CURRENT_REF = nodeId;
-      const allNodos = LunarEngine.obtenerNodos();
+      const allNodos = LunarEngine.obtenerNodos(false);
       const loginName = document.getElementById('admin-login-name');
       if (loginName && allNodos[CURRENT_REF]) {
         loginName.innerText = `Panel Gestor • ${allNodos[CURRENT_REF].nombre}`;
+      }
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, '', `admin.html?ref=${CURRENT_REF}`);
+      }
+      const noticeBox = document.getElementById('login-node-notice');
+      if (noticeBox) {
+        const n = allNodos[CURRENT_REF];
+        if (n && (n.activo === false || n.pausado)) {
+          noticeBox.style.display = 'block';
+          noticeBox.style.background = '#FEF3C7';
+          noticeBox.style.color = '#92400E';
+          noticeBox.style.border = '1px solid #FCD34D';
+          noticeBox.innerHTML = `⏳ <strong>${n.nombre}</strong> se encuentra en <strong>reposo temporal</strong>. Puedes ingresar con tu PIN para reactivarlo o consultar registros.`;
+        } else {
+          noticeBox.style.display = 'none';
+        }
       }
     }
 
@@ -1671,7 +1724,7 @@
 
     function loadDashboard() {
       CICLO_LUNAR = LunarEngine.obtenerCicloPorId(CURRENT_CICLO_ID);
-      const nodosObj = LunarEngine.obtenerNodos();
+      const nodosObj = LunarEngine.obtenerNodos(false);
       const nodeKeys = Object.keys(nodosObj);
       if (!CURRENT_REF || !nodosObj[CURRENT_REF]) {
         CURRENT_REF = nodeKeys.length > 0 ? nodeKeys[0] : 'vicente_lopez';
@@ -1682,6 +1735,29 @@
       const safeDashLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
       document.getElementById('dash-logo').innerText = safeDashLogo;
       document.getElementById('btn-view-shop').href = `tienda.html?ref=${CURRENT_REF}`;
+
+      // Si el nodo está en reposo, mostrar aviso con botón de reactivar
+      const existingWarning = document.getElementById('admin-paused-node-banner');
+      if (existingWarning) existingWarning.remove();
+
+      if (nodoData.activo === false || nodoData.pausado) {
+        const pausedBanner = document.createElement('div');
+        pausedBanner.id = 'admin-paused-node-banner';
+        pausedBanner.style = "background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;";
+        pausedBanner.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px; color: #92400E; font-size: 13.5px;">
+            <span style="font-size: 24px;">⏳</span>
+            <div>
+              <strong>Nodo en Reposo Temporal:</strong> Los compradores que ingresen a la tienda ven la landing de "Nodo Cerrado".
+            </div>
+          </div>
+          <button onclick="reactivarNodoDesdeAdmin()" style="background: #10A352; color: white; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-play"></i> Reactivar Nodo Ahora
+          </button>
+        `;
+        const mainView = document.querySelector('.admin-main-view');
+        if (mainView) mainView.prepend(pausedBanner);
+      }
 
       // Banner Lunar
       document.getElementById('ad-lunar-title').innerText = CICLO_LUNAR.nombre;
@@ -2711,6 +2787,17 @@
       navigator.clipboard.writeText(input.value).then(() => {
         alert("¡Copiado al portapapeles!");
       });
+    }
+
+    function reactivarNodoDesdeAdmin() {
+      const allNodos = LunarEngine.obtenerNodos(false);
+      if (allNodos[CURRENT_REF]) {
+        allNodos[CURRENT_REF].activo = true;
+        allNodos[CURRENT_REF].pausado = false;
+        LunarEngine.guardarNodo(allNodos[CURRENT_REF]);
+        alert(`✅ ¡${allNodos[CURRENT_REF].nombre} ha sido reactivado con éxito y ya recibe pedidos en la tienda!`);
+        location.reload();
+      }
     }
 
     function openModal(id) {
