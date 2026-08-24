@@ -558,8 +558,9 @@ const LUNAR_CONFIG = {
 class LunarEngine {
   /**
    * Obtiene todas las categorías (activas o todas con orden y persistencia)
+   * Si soloConProductos es true, pausa y oculta automáticamente las categorías sin productos asignados
    */
-  static obtenerCategorias(soloActivas = true) {
+  static obtenerCategorias(soloActivas = true, soloConProductos = false, refNodo = null) {
     let cats = LUNAR_CONFIG.categorias;
     if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
       const stored = localStorage.getItem('VRDE_CATEGORIAS');
@@ -581,6 +582,13 @@ class LunarEngine {
     }
     if (soloActivas) {
       cats = cats.filter(c => c.activa !== false);
+    }
+    if (soloConProductos) {
+      const productos = this.obtenerProductos(refNodo, true);
+      const catIdsConProductos = new Set(
+        productos.map(p => String(p.categoria || '').trim().toLowerCase())
+      );
+      cats = cats.filter(c => catIdsConProductos.has(String(c.id || '').trim().toLowerCase()));
     }
     return cats.sort((a, b) => (a.orden || 99) - (b.orden || 99));
   }

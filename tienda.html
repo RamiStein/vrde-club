@@ -1010,7 +1010,14 @@
     function renderSpotifyCategories() {
       const container = document.getElementById('spotify-categories-container');
       if (!container) return;
-      const cats = LunarEngine.obtenerCategorias(true);
+      
+      // Obtener únicamente categorías activas que tengan productos asignados en este nodo
+      const cats = LunarEngine.obtenerCategorias(true, true, CURRENT_REF);
+
+      // Si la categoría actualmente seleccionada ya no tiene productos, volver a "TODOS"
+      if (CURRENT_CATEGORY !== 'TODOS' && !cats.some(c => c.id === CURRENT_CATEGORY)) {
+        CURRENT_CATEGORY = 'TODOS';
+      }
 
       let html = `
         <div class="spotify-cat-card scat-all ${CURRENT_CATEGORY === 'TODOS' ? 'active' : ''}" onclick="filterByStoreCategory('TODOS', this)">
