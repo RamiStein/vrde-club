@@ -1465,7 +1465,20 @@
 
       <div class="input-field-group">
         <label>URL o Ruta de Imagen del Producto</label>
-        <input type="text" id="edit-prod-img" class="input-field" placeholder="Ej: assets/cacao_bolivia.jpg o URL web">
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="edit-prod-img" class="input-field" placeholder="Ej: assets/cacao_bolivia.jpg o URL web" oninput="previewProdModalImg()">
+          <label style="background: #F1F5F9; border: 1px solid var(--border-color); padding: 0 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; color: #475569; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+            <i class="fas fa-upload" style="color: var(--primary);"></i> Subir Foto
+            <input type="file" id="edit-prod-file-input" accept="image/*" style="display: none;" onchange="handleProdImgUpload(this)">
+          </label>
+        </div>
+        <div id="edit-prod-img-preview-box" style="margin-top: 8px; display: none; align-items: center; gap: 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 12px;">
+          <img id="edit-prod-img-preview" src="" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #E2E8F0;" onerror="this.onerror=null; this.src='assets/hero_bg.png';">
+          <div style="font-size: 11.5px; color: var(--text-muted);">
+            <span style="font-weight: 700; color: #0F172A;">Vista Previa de la Foto</span><br>
+            Se mostrará en la tienda pública y en los pedidos.
+          </div>
+        </div>
       </div>
 
       <div class="input-field-group">
@@ -2805,6 +2818,7 @@
       });
 
       renderNodeCheckboxes(['TODOS']);
+      previewProdModalImg();
       openModal('modal-product-editor');
     }
 
@@ -2847,7 +2861,31 @@
       }
 
       renderNodeCheckboxes(p.nodos || ['TODOS']);
+      previewProdModalImg();
       openModal('modal-product-editor');
+    }
+
+    function handleProdImgUpload(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('edit-prod-img').value = e.target.result;
+        previewProdModalImg();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewProdModalImg() {
+      const url = (document.getElementById('edit-prod-img')?.value || '').trim();
+      const prevBox = document.getElementById('edit-prod-img-preview-box');
+      const imgEl = document.getElementById('edit-prod-img-preview');
+      if (url && (url.startsWith('http') || url.startsWith('assets/') || url.startsWith('data:image'))) {
+        if (imgEl) imgEl.src = url;
+        if (prevBox) prevBox.style.display = 'flex';
+      } else {
+        if (prevBox) prevBox.style.display = 'none';
+      }
     }
 
     function renderNodeCheckboxes(selectedNodes) {
