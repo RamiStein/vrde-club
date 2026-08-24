@@ -341,7 +341,106 @@
     @media (max-width: 900px) {
       .product-detail-sheet {
         grid-template-columns: 1fr;
-      }
+    /* Estilos Sincronario Lunar y Calendario */
+    .lunar-calendar-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .lunar-cal-scroll-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
+    }
+    .lunar-cal-table-min {
+      min-width: 600px;
+      width: 100%;
+    }
+    .lunar-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .lunar-cal-header-day {
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748B;
+      padding: 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .lunar-cal-day {
+      background: white;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      min-height: 82px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+      min-width: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .lunar-cal-day:hover {
+      border-color: #94A3B8;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      transform: translateY(-1px);
+    }
+    .lunar-cal-day.other-month {
+      background: #F8FAFC;
+      opacity: 0.4;
+    }
+    .lunar-cal-day.is-today {
+      border: 2px solid var(--primary);
+      background: #F0FDF4;
+    }
+    .lunar-cal-day.has-event {
+      border-color: #CBD5E1;
+    }
+    .lunar-phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 6px;
+      margin-top: 2px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+    }
+    .lunar-phase-nueva { background: #0F172A; color: white; }
+    .lunar-phase-creciente { background: #E0F2FE; color: #0369A1; }
+    .lunar-phase-llena { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+    .lunar-phase-menguante { background: #EDE9FE; color: #6D28D9; }
+    .lunar-event-pill {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 6px;
+      line-height: 1.2;
+      margin-top: 2px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -452,6 +551,11 @@
         <button class="sidebar-btn" id="sbtn-broadcast" onclick="switchNodeSection('broadcast')">
           <i class="fas fa-bullhorn" style="color: #EC4899;"></i>
           <span>Difusión y Redes</span>
+        </button>
+
+        <button class="sidebar-btn" id="sbtn-cycle" onclick="switchNodeSection('cycle')">
+          <i class="fas fa-moon" style="color: #6366F1;"></i>
+          <span>Sincronario Lunar</span>
         </button>
 
         <button class="sidebar-btn" id="sbtn-profile" onclick="switchNodeSection('profile')">
@@ -870,6 +974,163 @@
         </div>
 
         <!-- =======================================================
+             SECCIÓN: SINCRONARIO LUNAR & LOGÍSTICA DEL NODO
+             ======================================================= -->
+        <div id="sec-cycle-wrap" class="hidden">
+          
+          <!-- Tarjeta de Fase Lunar en Vivo y Estado del Ciclo General (Solo Lectura) -->
+          <div style="background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%); color: white; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 18px;">
+                <div id="node-live-moon-emoji" style="font-size: 54px; filter: drop-shadow(0 0 16px rgba(255,255,255,0.4));">🌑</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                    <span id="node-live-moon-phase-name" style="font-size: 22px; font-weight: 700; color: #F8FAFC;">Luna en tránsito</span>
+                    <span id="node-live-moon-zodiac" style="font-size: 13px; background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 12px; font-weight: 600; color: #E2E8F0;">Piscis ♓</span>
+                  </div>
+                  <div style="font-size: 13.5px; color: #94A3B8;">
+                    Iluminación: <strong id="node-live-moon-illum" style="color: #FCD34D;">--%</strong> • Fase: <strong id="node-live-moon-days">--</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estado Tienda y Ciclo Vigente -->
+              <div style="text-align: right; background: rgba(255,255,255,0.06); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-bottom: 4px;">
+                  <span style="font-size: 10.5px; text-transform: uppercase; background: rgba(16,185,129,0.2); color: #34D399; padding: 3px 9px; border-radius: 10px; font-weight: 800; letter-spacing: 0.3px;">🔒 Logística General Vrde</span>
+                </div>
+                <div id="node-cycle-name" style="font-size: 18px; font-weight: 800; color: #D4F1A0; margin: 2px 0;">🌑 Luna Llena en Piscis</div>
+                <div id="node-cycle-details" style="font-size: 12.5px; color: #E2E8F0;">Apertura activa • Cierra en 6 días</div>
+              </div>
+            </div>
+
+            <!-- Barra de Progreso del Ciclo Actual -->
+            <div style="margin-top: 18px; background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; overflow: hidden;">
+              <div id="node-cycle-progress-bar" style="background: linear-gradient(90deg, #10A352, #F59E0B); height: 100%; width: 45%; border-radius: 10px; transition: width 0.4s ease;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #94A3B8; margin-top: 6px; flex-wrap: wrap; gap: 6px;">
+              <span id="node-cycle-start-label">🟢 Apertura Tienda: --</span>
+              <span id="node-cycle-close-label">🟡 Cierre Compras (Luna Llena): --</span>
+              <span id="node-cycle-delivery-label">📦 Entrega de Vrde al Nodo: --</span>
+            </div>
+          </div>
+
+          <!-- CALENDARIO LUNAR MES A MES (CONSULTA Y ORGANIZACIÓN) -->
+          <div class="lunar-calendar-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" class="btn-action-icon" style="width: 36px; height: 36px;" onclick="navigateNodeLunarMonth(-1)" title="Mes Anterior">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3 id="node-cal-current-month-label" style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0; min-width: 160px; text-align: center;">Agosto 2026</h3>
+                <button type="button" class="btn-action-icon" style="width: 36px; height: 36px;" onclick="navigateNodeLunarMonth(1)" title="Mes Siguiente">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+
+              <div style="display: flex; gap: 8px;">
+                <button type="button" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 12.5px; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer;" onclick="goCurrentNodeLunarMonth()">
+                  📍 Mes Actual
+                </button>
+              </div>
+            </div>
+
+            <!-- Grilla del Calendario -->
+            <div class="lunar-cal-scroll-wrapper">
+              <div class="lunar-cal-table-min">
+                <div class="lunar-cal-grid" style="margin-bottom: 6px;">
+                  <div class="lunar-cal-header-day">Lun</div>
+                  <div class="lunar-cal-header-day">Mar</div>
+                  <div class="lunar-cal-header-day">Mié</div>
+                  <div class="lunar-cal-header-day">Jue</div>
+                  <div class="lunar-cal-header-day">Vie</div>
+                  <div class="lunar-cal-header-day">Sáb</div>
+                  <div class="lunar-cal-header-day">Dom</div>
+                </div>
+                <div class="lunar-cal-grid" id="node-lunar-calendar-days-container">
+                  <!-- Inyectado por JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Leyenda Explicativa -->
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #F1F5F9; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 12px; color: #64748B;">
+              <div>🌑 <strong>Luna Nueva:</strong> Apertura de tienda comunitaria</div>
+              <div>🌓 <strong>Cuarto Creciente:</strong> Crecimiento del acopio</div>
+              <div>🌕 <strong>Luna Llena:</strong> Cierre de compras y consolidación</div>
+              <div>🌗 <strong>Cuarto Menguante:</strong> Despacho y entrega en nodos</div>
+            </div>
+          </div>
+
+          <!-- MÓDULO DE LOGÍSTICA Y ENTREGA LOCAL DEL NODO (CONFIGURABLE POR EL NODO) -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 30px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid #F1F5F9; padding-bottom: 14px;">
+              <div>
+                <h4 style="font-size: 18px; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+                  <i class="fas fa-truck-loading" style="color: #10A352;"></i> Logística y Entrega Local de tu Nodo
+                </h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px; margin-bottom: 0;">
+                  Definí los días, horarios y pautas para que los miembros de tu nodo retiren sus pedidos una vez que Vrde entrega en tu espacio.
+                </p>
+              </div>
+              <div style="background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-check-circle"></i> Configurable por tu Nodo
+              </div>
+            </div>
+
+            <!-- Banner comparativo de logística: Central vs Local -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: var(--radius-md); padding: 16px;">
+                <div style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">1. Entrega de Vrde a tu Nodo (Central)</div>
+                <div style="font-size: 15px; font-weight: 700; color: #0F172A; margin-top: 6px;" id="node-box-vrde-delivery">📦 Fecha de Entrega: --</div>
+                <div style="font-size: 12px; color: #64748B; margin-top: 4px;">Fijada por la logística general de Vrde Club para abastecer a todos los nodos.</div>
+              </div>
+
+              <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-md); padding: 16px;">
+                <div style="font-size: 11px; font-weight: 800; color: #065F46; text-transform: uppercase; letter-spacing: 0.5px;">2. Tu Entrega Local a Miembros (Tu Nodo)</div>
+                <div style="font-size: 15px; font-weight: 700; color: #047857; margin-top: 6px;" id="node-box-local-delivery-preview">🌱 Días y Horarios: --</div>
+                <div style="font-size: 12px; color: #065F46; margin-top: 4px;">Información comunicada a tus vecinos y socios que eligen este nodo de retiro.</div>
+              </div>
+            </div>
+
+            <!-- Formulario de Configuración de Entrega Local -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+              <div class="input-field-group">
+                <label><i class="fas fa-calendar-check" style="color: #10A352; margin-right: 4px;"></i> Días y Horarios de Retiro / Entrega en tu Nodo</label>
+                <input type="text" id="nodo-cycle-entrega-dia" class="input-field" placeholder="Ej: Miércoles 17/04 de 16 a 20hs y Jueves 18/04 de 10 a 14hs" oninput="updateNodeDeliveryPreview()">
+              </div>
+
+              <div class="input-field-group">
+                <label><i class="fas fa-map-marker-alt" style="color: #2563EB; margin-right: 4px;"></i> Dirección / Punto de Retiro Específico</label>
+                <input type="text" id="nodo-cycle-entrega-dir" class="input-field" placeholder="Ej: Calle Las Lilas 450, Almacén Escobar" oninput="updateNodeDeliveryPreview()">
+              </div>
+            </div>
+
+            <div class="input-field-group" style="margin-top: 8px;">
+              <label><i class="fas fa-info-circle" style="color: #8B5CF6; margin-right: 4px;"></i> Indicaciones y Pautas para los Miembros del Nodo</label>
+              <textarea id="nodo-cycle-entrega-instrucciones" class="input-field" rows="2" placeholder="Ej: Por favor traer bolsas o canastas propias. Si retira un comisionista o amigo, avisar con anticipación por WhatsApp." oninput="updateNodeDeliveryPreview()"></textarea>
+            </div>
+
+            <div class="input-field-group">
+              <label><i class="fab fa-whatsapp" style="color: #25D366; margin-right: 4px;"></i> WhatsApp de Coordinación de Entrega</label>
+              <input type="text" id="nodo-cycle-entrega-wsp" class="input-field" placeholder="Ej: 11 3456-7890">
+            </div>
+
+            <!-- Botones de Acción -->
+            <div style="display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+              <button type="button" class="btn-checkout-cta" style="flex: 1; min-width: 240px; padding: 13px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="saveNodeDeliveryConfig()">
+                <i class="fas fa-save"></i> Guardar Logística de Entrega del Nodo
+              </button>
+              <button type="button" class="btn-outline-action" style="flex: 1; min-width: 240px; padding: 13px; font-size: 14px; background: #25D366; color: white; border-color: #25D366; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="copyNodeDeliveryBroadcast()">
+                <i class="fab fa-whatsapp"></i> Copiar Mensaje de Entrega para WhatsApp
+              </button>
+            </div>
+            <div id="nodo-cycle-save-msg" style="font-size: 13px; font-weight: 700; color: var(--primary); text-align: center; margin-top: 10px; min-height: 20px;"></div>
+          </div>
+
+        </div>
+
+        <!-- =======================================================
              SECCIÓN 6: PERFIL Y CONFIGURACIÓN DEL NODO
              ======================================================= -->
         <div id="sec-profile-wrap" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 40px; box-shadow: var(--shadow-sm);">
@@ -1116,6 +1377,7 @@
       renderEconomySection();
       renderOrdersList();
       renderCrmSection();
+      renderNodeCycleSection();
 
       // Sidebar title
       document.getElementById('sidebar-nodo-title').innerText = nodoData.nombre;
@@ -1159,7 +1421,7 @@
       const activeBtn = document.getElementById(`sbtn-${secId}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const allWraps = ['compiled', 'vrdedores', 'economy', 'orders', 'crm', 'broadcast', 'profile'];
+      const allWraps = ['compiled', 'vrdedores', 'economy', 'orders', 'crm', 'broadcast', 'cycle', 'profile'];
       
       if (secId === 'all') {
         document.getElementById('node-metrics-top').classList.remove('hidden');
@@ -1174,6 +1436,10 @@
             el.classList.toggle('hidden', w !== secId);
           }
         });
+      }
+
+      if (secId === 'cycle' || secId === 'all') {
+        renderNodeCycleSection();
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2082,6 +2348,207 @@
     function closeModal(id) {
       const el = document.getElementById(id);
       if (el) el.classList.remove('active');
+    }
+
+    // =================================================================
+    // SINCRONARIO LUNAR & LOGÍSTICA DEL NODO (CONSULTA + CONFIG LOCAL)
+    // =================================================================
+    let NODE_CAL_YEAR = 2026;
+    let NODE_CAL_MONTH = 7; // Agosto (base 0)
+
+    function renderNodeCycleSection() {
+      const livePhase = LunarEngine.obtenerFaseLunar(new Date());
+      const cicloActivo = LunarEngine.obtenerCicloActual();
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'] || {};
+
+      // Actualizar tarjeta en vivo
+      const emojiEl = document.getElementById('node-live-moon-emoji');
+      if (emojiEl) emojiEl.innerText = livePhase.emoji;
+
+      const phaseNameEl = document.getElementById('node-live-moon-phase-name');
+      if (phaseNameEl) phaseNameEl.innerText = livePhase.phaseName;
+
+      const zodiacEl = document.getElementById('node-live-moon-zodiac');
+      if (zodiacEl) zodiacEl.innerText = livePhase.zodiacSign;
+
+      const illumEl = document.getElementById('node-live-moon-illum');
+      if (illumEl) illumEl.innerText = `${livePhase.illumination}%`;
+
+      const daysEl = document.getElementById('node-live-moon-days');
+      if (daysEl) daysEl.innerText = `${livePhase.phaseDays} días`;
+
+      // Header ciclo vigente
+      const nameEl = document.getElementById('node-cycle-name');
+      if (nameEl) nameEl.innerText = cicloActivo.nombre;
+
+      const detEl = document.getElementById('node-cycle-details');
+      if (detEl) {
+        detEl.innerText = `${cicloActivo.abierta ? '🟢 Apertura activa' : '🔴 Tienda en pausa'} • Cierra en ${cicloActivo.diasRestantes} días (${cicloActivo.llenaFechaStr})`;
+      }
+
+      const progBar = document.getElementById('node-cycle-progress-bar');
+      if (progBar) progBar.style.width = `${cicloActivo.porcentajeCiclo || 45}%`;
+
+      const startLbl = document.getElementById('node-cycle-start-label');
+      if (startLbl) startLbl.innerText = `🟢 Apertura: ${cicloActivo.nuevaFechaStr}`;
+
+      const closeLbl = document.getElementById('node-cycle-close-label');
+      if (closeLbl) closeLbl.innerText = `🟡 Cierre Luna Llena: ${cicloActivo.llenaFechaStr}`;
+
+      const delLbl = document.getElementById('node-cycle-delivery-label');
+      if (delLbl) delLbl.innerText = `📦 Entrega Vrde al Nodo: ${cicloActivo.entregaFechaStr || 'A convenir'}`;
+
+      // Banner comparativo de entrega
+      const vrdeBox = document.getElementById('node-box-vrde-delivery');
+      if (vrdeBox) {
+        vrdeBox.innerText = `📦 Entrega Vrde: ${cicloActivo.entregaFechaStr || 'A coordinar por central'}`;
+      }
+
+      // Cargar configuración local de entrega del nodo
+      const diaEnt = nodoData.diaEntrega || '';
+      const dirEnt = nodoData.direccion || '';
+      const instEnt = nodoData.instruccionesEntrega || '';
+      const wspEnt = nodoData.contactoEntrega || nodoData.contacto || '';
+
+      const inpDia = document.getElementById('nodo-cycle-entrega-dia');
+      const inpDir = document.getElementById('nodo-cycle-entrega-dir');
+      const inpInst = document.getElementById('nodo-cycle-entrega-instrucciones');
+      const inpWsp = document.getElementById('nodo-cycle-entrega-wsp');
+
+      if (inpDia) inpDia.value = diaEnt;
+      if (inpDir) inpDir.value = dirEnt;
+      if (inpInst) inpInst.value = instEnt;
+      if (inpWsp) inpWsp.value = wspEnt;
+
+      updateNodeDeliveryPreview();
+      renderNodeLunarCalendarMonth();
+    }
+
+    function updateNodeDeliveryPreview() {
+      const dia = (document.getElementById('nodo-cycle-entrega-dia')?.value || '').trim();
+      const prevEl = document.getElementById('node-box-local-delivery-preview');
+      if (prevEl) {
+        prevEl.innerText = dia ? `🌱 ${dia}` : '🌱 Sin horarios fijados aún';
+      }
+    }
+
+    function saveNodeDeliveryConfig() {
+      const diaEntrega = (document.getElementById('nodo-cycle-entrega-dia')?.value || '').trim();
+      const direccion = (document.getElementById('nodo-cycle-entrega-dir')?.value || '').trim();
+      const instruccionesEntrega = (document.getElementById('nodo-cycle-entrega-instrucciones')?.value || '').trim();
+      const contactoEntrega = (document.getElementById('nodo-cycle-entrega-wsp')?.value || '').trim();
+
+      const existingNodos = LunarEngine.obtenerNodos();
+      const currentData = existingNodos[CURRENT_REF] || {};
+
+      LunarEngine.actualizarPerfilNodo(CURRENT_REF, {
+        ...currentData,
+        diaEntrega: diaEntrega || currentData.diaEntrega,
+        direccion: direccion || currentData.direccion,
+        instruccionesEntrega: instruccionesEntrega,
+        contactoEntrega: contactoEntrega
+      });
+
+      // Sincronizar campos en pestaña de perfil
+      const editDia = document.getElementById('editDia');
+      if (editDia) editDia.value = diaEntrega;
+      const editDir = document.getElementById('editDireccion');
+      if (editDir) editDir.value = direccion;
+
+      const saveMsg = document.getElementById('nodo-cycle-save-msg');
+      if (saveMsg) {
+        saveMsg.innerText = "✓ ¡Logística y entrega local del nodo guardadas con éxito!";
+        setTimeout(() => { saveMsg.innerText = ""; }, 4000);
+      }
+      updateNodeDeliveryPreview();
+      alert("✅ ¡Pautas y horarios de entrega local guardados correctamente para tu nodo!");
+    }
+
+    function copyNodeDeliveryBroadcast() {
+      const ciclo = LunarEngine.obtenerCicloActual();
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'] || {};
+
+      const dia = (document.getElementById('nodo-cycle-entrega-dia')?.value || nodoData.diaEntrega || '').trim();
+      const dir = (document.getElementById('nodo-cycle-entrega-dir')?.value || nodoData.direccion || '').trim();
+      const inst = (document.getElementById('nodo-cycle-entrega-instrucciones')?.value || nodoData.instruccionesEntrega || '').trim();
+      const wsp = (document.getElementById('nodo-cycle-entrega-wsp')?.value || nodoData.contactoEntrega || nodoData.contacto || '').trim();
+
+      let msg = `📦 *INFORMACIÓN DE ENTREGA Y RETIRO • ${nodoData.nombre.toUpperCase()}*\n`;
+      msg += `🌕 *Ciclo:* ${ciclo.nombre}\n\n`;
+      msg += `🗓️ *Días y Horarios de Retiro:* ${dia || 'A coordinar'}\n`;
+      msg += `📍 *Punto de Retiro:* ${dir || 'Consultar dirección'}\n`;
+      if (inst) msg += `💡 *Pautas:* ${inst}\n`;
+      if (wsp) msg += `📲 *Contacto de retiro:* ${wsp}\n`;
+      msg += `\n✨ ¡Gracias por ser parte del consumo consciente en red!`;
+
+      navigator.clipboard.writeText(msg).then(() => {
+        alert("✅ ¡Mensaje de entrega copiado al portapapeles! Listo para enviar a tu grupo de WhatsApp.");
+      });
+    }
+
+    function renderNodeLunarCalendarMonth() {
+      const calData = LunarEngine.obtenerCalendarioMes(NODE_CAL_YEAR, NODE_CAL_MONTH);
+      const container = document.getElementById('node-lunar-calendar-days-container');
+      const label = document.getElementById('node-cal-current-month-label');
+
+      if (label) label.innerText = `${calData.monthName} ${calData.year}`;
+      if (!container) return;
+
+      let html = '';
+      calData.dias.forEach(d => {
+        const otherClass = d.isCurrentMonth ? '' : 'other-month';
+        const todayClass = d.isToday ? 'is-today' : '';
+        const eventClass = d.eventoCiclo ? 'has-event' : '';
+
+        let badgeHtml = '';
+        if (d.phase.isPrincipal && d.phase.principalType) {
+          const pClass = `lunar-phase-${(d.phase.principalType || '').toLowerCase()}`;
+          const pEmoji = d.phase.principalEmoji || d.phase.emoji;
+          const pName = d.phase.principalName || d.phase.phaseName;
+          badgeHtml = `<div class="lunar-phase-badge ${pClass}">${pEmoji} ${pName}</div>`;
+        }
+
+        let eventHtml = '';
+        if (d.eventoCiclo) {
+          eventHtml = `<div class="lunar-event-pill" style="background: ${d.eventoCiclo.color}; color: white;" title="${d.eventoCiclo.label}">${d.eventoCiclo.label}</div>`;
+        }
+
+        html += `
+          <div class="lunar-cal-day ${otherClass} ${todayClass} ${eventClass}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span style="font-size: 13px; font-weight: 800; color: ${d.isToday ? 'var(--primary)' : (d.isCurrentMonth ? '#0F172A' : '#94A3B8')};">${d.num}</span>
+              <span style="font-size: 16px; line-height: 1;" title="${d.phase.phaseName} (${d.phase.illumination}% - ${d.phase.zodiacSign})">${d.phase.emoji}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; overflow: hidden;">
+              ${badgeHtml}
+              ${eventHtml}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function navigateNodeLunarMonth(direction) {
+      NODE_CAL_MONTH += direction;
+      if (NODE_CAL_MONTH > 11) {
+        NODE_CAL_MONTH = 0;
+        NODE_CAL_YEAR += 1;
+      } else if (NODE_CAL_MONTH < 0) {
+        NODE_CAL_MONTH = 11;
+        NODE_CAL_YEAR -= 1;
+      }
+      renderNodeLunarCalendarMonth();
+    }
+
+    function goCurrentNodeLunarMonth() {
+      const now = new Date();
+      NODE_CAL_YEAR = now.getFullYear();
+      NODE_CAL_MONTH = now.getMonth();
+      renderNodeLunarCalendarMonth();
     }
 
     // Cerrar modales al hacer clic fuera de la tarjeta (backdrop)
