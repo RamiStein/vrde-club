@@ -741,9 +741,9 @@
           </button>
         </div>
 
-        <button class="sidebar-btn active" id="sbtn-all" onclick="switchNodeSection('all')">
-          <i class="fas fa-th-large" style="color: var(--primary);"></i>
-          <span>Vista General (Todo)</span>
+        <button class="sidebar-btn active" id="sbtn-info" onclick="switchNodeSection('info')">
+          <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+          <span>Información General</span>
         </button>
 
         <button class="sidebar-btn" id="sbtn-compiled" onclick="switchNodeSection('compiled')">
@@ -814,41 +814,83 @@
           </div>
         </div>
 
-        <!-- Banner Estado Lunar -->
-        <div class="lunar-banner-card" style="margin: 0 0 20px 0;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
+        <!-- =======================================================
+             SECCIÓN 0: INFORMACIÓN GENERAL Y MÉTRICAS CLAVE
+             ======================================================= -->
+        <div id="sec-info-wrap" class="compiled-section">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
             <div>
-              <h3 style="color: var(--accent); margin-bottom: 4px; font-size: 20px;" id="ad-lunar-title">🌕 Luna Llena en Piscis</h3>
-              <p style="font-size: 13px; margin: 0; color: #CBD5E1;" id="ad-lunar-status">Cargando fechas de acopio...</p>
+              <h3 style="margin: 0; font-size: 19px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+                INFORMACIÓN GENERAL DEL NODO
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Resumen ejecutivo del ciclo activo, métricas de acopio y balance de pedidos.
+              </p>
             </div>
-            <div style="font-size: 30px;" id="ad-lunar-emoji">🌕</div>
           </div>
-        </div>
 
-        <!-- Métricas Resumen -->
-        <div class="admin-metrics-grid" id="node-metrics-top">
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-pedidos" style="color: var(--primary);">0</div>
-            <div class="metric-desc">Pedidos en Ciclo</div>
+          <!-- Banner Estado Lunar -->
+          <div class="lunar-banner-card" style="margin: 0 0 20px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h3 style="color: var(--accent); margin-bottom: 4px; font-size: 20px;" id="ad-lunar-title">🌕 Luna Llena en Piscis</h3>
+                <p style="font-size: 13px; margin: 0; color: #CBD5E1;" id="ad-lunar-status">Cargando fechas de acopio...</p>
+              </div>
+              <div style="font-size: 30px;" id="ad-lunar-emoji">🌕</div>
+            </div>
           </div>
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-socios" style="color: #2563EB;">0</div>
-            <div class="metric-desc">Socios Activos</div>
+
+          <!-- Métricas Resumen -->
+          <div class="admin-metrics-grid" id="node-metrics-top" style="margin-bottom: 24px;">
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-pedidos" style="color: var(--primary);">0</div>
+              <div class="metric-desc">Pedidos en Ciclo</div>
+            </div>
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-socios" style="color: #2563EB;">0</div>
+              <div class="metric-desc">Socios Activos</div>
+            </div>
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-recaudado" style="color: #059669;">$0</div>
+              <div class="metric-desc">Total Recaudado</div>
+            </div>
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-unidades" style="color: #D97706;">0</div>
+              <div class="metric-desc">Unidades Pedidas</div>
+            </div>
           </div>
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-recaudado" style="color: #059669;">$0</div>
-            <div class="metric-desc">Total Recaudado</div>
-          </div>
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-unidades" style="color: #D97706;">0</div>
-            <div class="metric-desc">Unidades Pedidas</div>
+
+          <!-- Accesos Rápidos a Módulos del Nodo -->
+          <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #0F172A; font-weight: 700;">Acceso Rápido a Módulos de Trabajo:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+              <button type="button" onclick="switchNodeSection('compiled')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-boxes" style="color: #2563EB;"></i> <span>Compilado y Fichas</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('vrdedores')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-users" style="color: #10A352;"></i> <span>Equipo Vrdedores</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('economy')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-chart-pie" style="color: #059669;"></i> <span>Balance & Ganancias</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('orders')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-clipboard-list" style="color: #D97706;"></i> <span>Pedidos y Delivery</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('crm')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-address-book" style="color: #8B5CF6;"></i> <span>Base de Socios</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('broadcast')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-bullhorn" style="color: #EC4899;"></i> <span>Difusión y Redes</span>
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- =======================================================
              SECCIÓN 1: COMPILADO DE ACOPIO Y FICHAS DE PRODUCTO
              ======================================================= -->
-        <div id="sec-compiled-wrap" class="compiled-section">
+        <div id="sec-compiled-wrap" class="compiled-section hidden">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
             <div>
               <h3 style="margin: 0; font-size: 19px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
@@ -1731,9 +1773,12 @@
     function switchNodeSection(secId) {
       toggleMobileSidebar(false); // Cierra automáticamente el drawer en celular
 
+      // Compatibilidad con invocaciones antiguas de 'all'
+      if (secId === 'all') secId = 'info';
+
       // Actualizar badge en la barra móvil
       const moduleNames = {
-        all: '⊞ Vista General (Todo)',
+        info: '📊 Información General',
         compiled: '📦 Compilado y Fichas',
         vrdedores: '👥 Equipo de Vrdedores',
         economy: '📊 Balance & Ganancias',
@@ -1752,24 +1797,16 @@
       const activeBtn = document.getElementById(`sbtn-${secId}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const allWraps = ['compiled', 'vrdedores', 'economy', 'orders', 'crm', 'broadcast', 'cycle', 'profile'];
+      const allWraps = ['info', 'compiled', 'vrdedores', 'economy', 'orders', 'crm', 'broadcast', 'cycle', 'profile'];
       
-      if (secId === 'all') {
-        document.getElementById('node-metrics-top').classList.remove('hidden');
-        allWraps.forEach(w => {
-          const el = document.getElementById(`sec-${w}-wrap`);
-          if (el) el.classList.remove('hidden');
-        });
-      } else {
-        allWraps.forEach(w => {
-          const el = document.getElementById(`sec-${w}-wrap`);
-          if (el) {
-            el.classList.toggle('hidden', w !== secId);
-          }
-        });
-      }
+      allWraps.forEach(w => {
+        const el = document.getElementById(`sec-${w}-wrap`);
+        if (el) {
+          el.classList.toggle('hidden', w !== secId);
+        }
+      });
 
-      if (secId === 'cycle' || secId === 'all') {
+      if (secId === 'cycle') {
         renderNodeCycleSection();
       }
 
