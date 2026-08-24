@@ -563,21 +563,20 @@ class LunarEngine {
    */
   static obtenerProductos(nodoId = null, soloActivos = false) {
     let prods = LUNAR_CONFIG.productos;
+    let eliminados = [];
+
     if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
       try {
+        const elStored = localStorage.getItem('VRDE_PRODUCTOS_ELIMINADOS');
+        if (elStored) {
+          eliminados = JSON.parse(elStored) || [];
+        }
+
         const stored = localStorage.getItem('VRDE_PRODUCTOS');
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
+          if (Array.isArray(parsed)) {
             prods = parsed;
-
-            // Asegurar que productos base por defecto se incorporen si no existen aún
-            LUNAR_CONFIG.productos.forEach(def => {
-              const exists = prods.some(p => p.id === def.id);
-              if (!exists) {
-                prods.push(def);
-              }
-            });
 
             // Sincronizar campos estructurales y actualizar datos semilla desactualizados
             prods.forEach(p => {
@@ -620,6 +619,11 @@ class LunarEngine {
       }
     }
 
+    // Filtrar estrictamente productos eliminados
+    if (eliminados.length > 0) {
+      prods = prods.filter(p => !eliminados.includes(p.id));
+    }
+
     if (soloActivos) {
       const activos = prods.filter(p => p.activo !== false);
       if (activos.length > 0) prods = activos;
@@ -633,10 +637,6 @@ class LunarEngine {
         return false;
       });
       if (porNodo.length > 0) prods = porNodo;
-    }
-
-    if (!prods || prods.length === 0) {
-      prods = LUNAR_CONFIG.productos;
     }
 
     return prods;
@@ -655,9 +655,20 @@ class LunarEngine {
       prods.push(prodData);
     }
 
-    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+    if (typeof localStorage !== 'undefined') {
       try {
-        localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+        // Si estaba en la lista de eliminados, removerlo
+        const elStored = localStorage.getItem('VRDE_PRODUCTOS_ELIMINADOS');
+        if (elStored) {
+          let eliminados = JSON.parse(elStored) || [];
+          if (eliminados.includes(prodData.id)) {
+            eliminados = eliminados.filter(id => id !== prodData.id);
+            localStorage.setItem('VRDE_PRODUCTOS_ELIMINADOS', JSON.stringify(eliminados));
+          }
+        }
+        if (typeof localStorage.setItem === 'function') {
+          localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+        }
       } catch(e) {}
     }
     LUNAR_CONFIG.productos = prods;
@@ -665,14 +676,26 @@ class LunarEngine {
   }
 
   /**
-   * Elimina un producto del catálogo
+   * Elimina un producto del catálogo de forma permanente
    */
   static eliminarProducto(prodId) {
     let prods = this.obtenerProductos(null, false);
     prods = prods.filter(p => p.id !== prodId);
-    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+
+    if (typeof localStorage !== 'undefined') {
       try {
-        localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+        let eliminados = [];
+        const elStored = localStorage.getItem('VRDE_PRODUCTOS_ELIMINADOS');
+        if (elStored) {
+          eliminados = JSON.parse(elStored) || [];
+        }
+        if (!eliminados.includes(prodId)) {
+          eliminados.push(prodId);
+        }
+        localStorage.setItem('VRDE_PRODUCTOS_ELIMINADOS', JSON.stringify(eliminados));
+        if (typeof localStorage.setItem === 'function') {
+          localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
+        }
       } catch(e) {}
     }
     LUNAR_CONFIG.productos = prods;
