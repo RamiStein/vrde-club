@@ -451,15 +451,18 @@ const LUNAR_CONFIG = {
       subtitulo: 'Semillas fermentadas y suavemente tostadas • Sabor profundo',
       origen: 'Comunidades Recolectoras de Rurrenabaque (Beni, Bolivia 🇧🇴)',
       variedad: 'Cacao Criollo Silvestre Amazónico',
+      unidadGlobal: 'kg',
       meta: 40,
-      unidad: 'barra 1kg',
       costo: 49000,
       costo2: 45000,
       costo3: 40000,
-      p1: 60000, m1: 10,
-      p2: 57000, m2: 20,
-      p3: 55000, m3: 40,
-      tipsVrdedor: 'Cacao silvestre puro sin azúcar ni aditivos. Costos según volumen acumulado: $49.000 (10kg), $45.000 (20kg) y $40.000 (40kg). ¡A más pedidos en la red, más barato para todos!',
+      m1: 10,
+      m2: 20,
+      m3: 40,
+      p1: 60000,
+      p2: 57000,
+      p3: 55000,
+      tipsVrdedor: 'Cacao silvestre puro sin azúcar ni aditivos. Escala de costo del productor en la red: $49.000 (10kg), $45.000 (20kg) y $40.000 (40kg acumulados en total).',
       productorInfo: {
         productor: 'Familias Recolectoras de Rurrenabaque',
         historia: 'Cacao criollo silvestre recolectado manualmente en canoas en islas vírgenes del río Beni (Madidi). Fermentado tradicional y suavemente tostado.',
@@ -467,9 +470,9 @@ const LUNAR_CONFIG = {
         loc: '📍 Rurrenabaque, Beni, Bolivia'
       },
       variantes: [
-        { id: '1kg', label: 'Barra 1 kg', unidad: 'barra 1kg', costo: 49000, costo2: 45000, costo3: 40000, p1: 60000, p2: 57000, p3: 55000, m1: 10, m2: 20, m3: 40, tiers: '10kg: $49.000 costo ($60k venta) • 20kg: $45.000 costo ($57k venta) • 40kg: $40.000 costo ($55k venta)' },
-        { id: '500g', label: 'Barra 500g (1/2 kg)', unidad: 'barra 500g', costo: 26000, costo2: 24000, costo3: 21500, p1: 32500, p2: 28500, p3: 27500, m1: 10, m2: 20, m3: 40, tiers: '10kg: $26.000 costo • 20kg: $24.000 costo • 40kg: $21.500 costo' },
-        { id: '100g', label: 'Barra 100g', unidad: 'barra 100g', costo: 5500, costo2: 5000, costo3: 4500, p1: 7500, p2: 6800, p3: 6200, m1: 10, m2: 20, m3: 40, tiers: '10kg: $5.500 costo • 20kg: $5.000 costo • 40kg: $4.500 costo' }
+        { id: '1kg', label: 'Barra 1 kg', unidad: 'barra 1kg', pesoFactor: 1.0, p1: 60000, m2: 3, p2: 57000, m3: 5, p3: 55000, tiers: 'Mayorista (+3u): $57.000 • Distribuidor (+5u): $55.000' },
+        { id: '500g', label: 'Barra 500g (1/2 kg)', unidad: 'barra 500g', pesoFactor: 0.5, p1: 32500, m2: 6, p2: 28500, m3: 10, p3: 27500, tiers: 'Mayorista (+6u): $28.500 • Distribuidor (+10u): $27.500' },
+        { id: '100g', label: 'Barra 100g', unidad: 'barra 100g', pesoFactor: 0.1, p1: 7500, m2: 10, p2: 6800, m3: 20, p3: 6200, tiers: 'Mayorista (+10u): $6.800 • Distribuidor (+20u): $6.200' }
       ],
       activo: true,
       nodos: ['TODOS']
@@ -1459,9 +1462,8 @@ class LunarEngine {
             : (p.variantes ? p.variantes[0] : p);
 
           const targetObj = variant || p;
-          const escala = LunarEngine.obtenerEscalaColectiva(targetObj, null, p.id);
-          const costoUnit = escala.costoBase || targetObj.costo || Math.round((targetObj.p1 || 10000) * 0.65);
-          const saleUnit = it.precioUnitario || escala.precioVenta || targetObj.p1 || 10000;
+          const costoUnit = LunarEngine.obtenerCostoUnitarioPresentacion(p, variant);
+          const saleUnit = it.precioUnitario || variant.p1 || targetObj.p1 || 10000;
           
           orderCosto += (costoUnit * cant);
           orderVentas += (saleUnit * cant);
@@ -2106,9 +2108,10 @@ class LunarEngine {
 
     // Filtro por Ciclo Lunar
     if (cicloId && cicloId !== 'ALL') {
+      const targetCicloId = (cicloId === 'VIGENTE') ? this.obtenerIdCicloActivo() : cicloId;
       pedidos = pedidos.filter(p => {
-        if (p.cicloId === cicloId) return true;
-        if (p.ciclo && (p.ciclo.includes(cicloId) || cicloId.includes(p.ciclo))) return true;
+        if (!p.cicloId || p.cicloId === targetCicloId || p.cicloId === cicloId || p.cicloId === 'VIGENTE') return true;
+        if (p.ciclo && (p.ciclo.includes(targetCicloId) || targetCicloId.includes(p.ciclo))) return true;
         return false;
       });
     }
@@ -2219,83 +2222,133 @@ class LunarEngine {
   }
 
   /**
-   * Obtiene la cantidad total acumulada pedida en toda la red para un producto en el ciclo lunar actual
+   * Obtiene el volumen/peso total acumulado pedido en toda la red para un producto en el ciclo lunar actual
+   * Suma todas las presentaciones convirtiéndolas a su unidad global (ej: kg, litros)
    */
-  static obtenerUnidadesAcumuladasProducto(prodId, cicloId = null) {
+  static obtenerVolumenAcumuladoProducto(prodId, cicloId = null) {
     const pedidos = this.obtenerPedidos(null, cicloId || 'VIGENTE');
-    let totalUnits = 0;
+    const prods = this.obtenerProductos(null, false);
+    const prod = prods.find(p => p.id === prodId);
+    if (!prod) return 0;
+
+    let totalVolumen = 0;
     pedidos.forEach(o => {
       if (o.items && Array.isArray(o.items)) {
         o.items.forEach(it => {
           if (it.prodId === prodId) {
-            totalUnits += (Number(it.cant) || Number(it.unidades) || 0);
+            const cant = Number(it.cant) || Number(it.unidades) || 0;
+            let factor = 1;
+            if (prod.variantes && it.variantId) {
+              const v = prod.variantes.find(vr => vr.id === it.variantId || vr.label === it.variantId);
+              if (v && v.pesoFactor !== undefined && v.pesoFactor !== null) {
+                factor = Number(v.pesoFactor);
+              } else if (v) {
+                const uStr = (v.unidad || v.label || '').toLowerCase();
+                if (uStr.includes('500g') || uStr.includes('1/2')) factor = 0.5;
+                else if (uStr.includes('100g')) factor = 0.1;
+                else if (uStr.includes('250g') || uStr.includes('1/4')) factor = 0.25;
+                else if (uStr.includes('2l') || uStr.includes('2 litros') || uStr.includes('2 lt')) factor = 2;
+                else if (uStr.includes('5l') || uStr.includes('5 litros') || uStr.includes('5 lt')) factor = 5;
+                else if (uStr.includes('25kg') || uStr.includes('25 kg')) factor = 25;
+                else if (uStr.includes('5kg') || uStr.includes('5 kg')) factor = 5;
+              }
+            }
+            totalVolumen += (cant * factor);
           }
         });
       }
     });
-    return totalUnits;
+    return Math.round(totalVolumen * 100) / 100;
   }
 
   /**
-   * Obtiene el costo base y precio activo de un producto/variante según las unidades acumuladas en la red
+   * Obtiene la escala de costo global del productor según el volumen total acumulado en toda la red
    */
-  static obtenerEscalaColectiva(itemOrVariant, unidadesAcumuladas = null, prodId = null) {
-    const total = (unidadesAcumuladas !== null && unidadesAcumuladas !== undefined) 
-      ? Number(unidadesAcumuladas) 
-      : (prodId ? this.obtenerUnidadesAcumuladasProducto(prodId) : 0);
+  static obtenerCostoGlobalProductor(prodOrId, volumenParam = null) {
+    const prod = typeof prodOrId === 'string' 
+      ? this.obtenerProductos(null, false).find(p => p.id === prodOrId) 
+      : prodOrId;
+    if (!prod) return { costoBase: 0, tier: 1, volumenActual: 0, metaActual: 10, metaSiguiente: 20, faltante: 0, unidadGlobal: 'kg' };
 
-    const m1 = Number(itemOrVariant.m1 || 10);
-    const m2 = Number(itemOrVariant.m2 || 20);
-    const m3 = Number(itemOrVariant.m3 || 40);
+    const volumen = (volumenParam !== null && volumenParam !== undefined) 
+      ? Number(volumenParam) 
+      : this.obtenerVolumenAcumuladoProducto(prod.id);
 
-    const c1 = Number(itemOrVariant.costo || itemOrVariant.costo1 || 0);
-    const c2 = Number(itemOrVariant.costo2 || (c1 ? Math.round(c1 * 0.92) : 0));
-    const c3 = Number(itemOrVariant.costo3 || (c1 ? Math.round(c1 * 0.82) : 0));
+    const unidadGlobal = prod.unidadGlobal || prod.unidad || 'kg';
+    const m1 = Number(prod.m1 || 10);
+    const m2 = Number(prod.m2 || 20);
+    const m3 = Number(prod.m3 || 40);
 
-    const p1 = Number(itemOrVariant.p1 || 0);
-    const p2 = Number(itemOrVariant.p2 || (p1 ? Math.round(p1 * 0.95) : 0));
-    const p3 = Number(itemOrVariant.p3 || (p1 ? Math.round(p1 * 0.90) : 0));
+    const c1 = Number(prod.costo || 0);
+    const c2 = Number(prod.costo2 || (c1 ? Math.round(c1 * 0.92) : 0));
+    const c3 = Number(prod.costo3 || (c1 ? Math.round(c1 * 0.82) : 0));
 
-    if (m3 > 0 && total >= m3) {
+    if (m3 > 0 && volumen >= m3) {
       return {
         tier: 3,
         tierName: 'Meta Cumplida (Máximo Descuento)',
         costoBase: c3,
-        precioVenta: p3,
-        unidadesActuales: total,
+        volumenActual: volumen,
+        unidadGlobal,
         metaActual: m3,
         metaSiguiente: null,
-        unidadesFaltantes: 0,
+        faltante: 0,
         porcentajeMeta: 100,
-        m1, m2, m3, c1, c2, c3, p1, p2, p3
+        m1, m2, m3, c1, c2, c3
       };
-    } else if (m2 > 0 && total >= m2) {
+    } else if (m2 > 0 && volumen >= m2) {
       return {
         tier: 2,
         tierName: 'Meta Intermedia',
         costoBase: c2,
-        precioVenta: p2,
-        unidadesActuales: total,
+        volumenActual: volumen,
+        unidadGlobal,
         metaActual: m2,
         metaSiguiente: m3,
-        unidadesFaltantes: Math.max(0, m3 - total),
-        porcentajeMeta: Math.min(100, Math.round((total / m3) * 100)),
-        m1, m2, m3, c1, c2, c3, p1, p2, p3
+        faltante: Math.max(0, m3 - volumen),
+        porcentajeMeta: Math.min(100, Math.round((volumen / m3) * 100)),
+        m1, m2, m3, c1, c2, c3
       };
     } else {
       return {
         tier: 1,
-        tierName: 'Nivel Inicial',
+        tierName: 'Nivel Base Inicial',
         costoBase: c1,
-        precioVenta: p1,
-        unidadesActuales: total,
+        volumenActual: volumen,
+        unidadGlobal,
         metaActual: m1,
         metaSiguiente: m2,
-        unidadesFaltantes: Math.max(0, m2 - total),
-        porcentajeMeta: Math.min(100, Math.round((total / (m2 || 20)) * 100)),
-        m1, m2, m3, c1, c2, c3, p1, p2, p3
+        faltante: Math.max(0, m2 - volumen),
+        porcentajeMeta: Math.min(100, Math.round((volumen / (m2 || 20)) * 100)),
+        m1, m2, m3, c1, c2, c3
       };
     }
+  }
+
+  /**
+   * Obtiene el costo de una presentación particular en base al costo global del productor alcanzado por la red
+   */
+  static obtenerCostoUnitarioPresentacion(prod, variant, volumenGlobal = null) {
+    const escalaGlobal = this.obtenerCostoGlobalProductor(prod, volumenGlobal);
+    const factor = (variant && variant.pesoFactor !== undefined && variant.pesoFactor !== null) 
+      ? Number(variant.pesoFactor) 
+      : 1.0;
+    
+    return Math.round(escalaGlobal.costoBase * factor);
+  }
+
+  /**
+   * Obtiene el costo base y precio activo de un producto/variante según las unidades acumuladas en la red (compatibilidad)
+   */
+  static obtenerEscalaColectiva(itemOrVariant, unidadesAcumuladas = null, prodId = null) {
+    return this.obtenerCostoGlobalProductor(prodId || itemOrVariant, unidadesAcumuladas);
+  }
+
+  /**
+   * Obtiene las unidades totales acumuladas
+   */
+  static obtenerUnidadesAcumuladasProducto(prodId, cicloId = null) {
+    return this.obtenerVolumenAcumuladoProducto(prodId, cicloId);
   }
 
   /**
