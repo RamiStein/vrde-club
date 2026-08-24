@@ -569,6 +569,11 @@
           <span>Sincronario Lunar</span>
         </button>
 
+        <button class="sidebar-btn" id="sp-sbtn-media" onclick="switchSuperTab('media')">
+          <i class="fas fa-photo-video" style="color: #EC4899;"></i>
+          <span>Mediateca & Drive</span>
+        </button>
+
         <button class="sidebar-btn" id="sp-sbtn-security" onclick="switchSuperTab('security')">
           <i class="fas fa-key" style="color: #F59E0B;"></i>
           <span>Seguridad & PINs</span>
@@ -1328,6 +1333,73 @@
         </div>
       </div>
 
+      <!-- =========================================================
+           SECCIÓN 10: MEDIATECA & RECURSOS DE DIFUSIÓN (DRIVE VRDE)
+           ========================================================= -->
+      <div id="super-section-media" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 20px; color: #0F172A; margin: 0;">📢 Mediateca y Recursos de Difusión (Drive Vrde)</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+              Banco multimedia centralizado. Todo el material subido acá queda disponible de inmediato para todos los nodos almacén.
+            </p>
+          </div>
+          <button class="btn-checkout-cta" style="padding: 10px 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; background: #EC4899;" onclick="openCreateMediaModal()">
+            <i class="fas fa-cloud-upload-alt"></i> + Subir Nuevo Material / Enlace
+          </button>
+        </div>
+
+        <!-- KPIs / Métricas Rápidas de Mediateca -->
+        <div class="admin-metrics-grid" style="margin-bottom: 20px;">
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-media-total" style="color: #EC4899;">0</div>
+            <div class="metric-desc">Total Recursos en Drive</div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-media-img" style="color: #2563EB;">0</div>
+            <div class="metric-desc">Flyers & Imágenes</div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-media-txt" style="color: #10A352;">0</div>
+            <div class="metric-desc">Textos & Copies WhatsApp</div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-media-doc" style="color: #F59E0B;">0</div>
+            <div class="metric-desc">Documentos, PDFs & Drive</div>
+          </div>
+        </div>
+
+        <!-- Barra de Búsqueda y Filtros de Mediateca -->
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="media-filter-tabs">
+            <button type="button" class="prod-filter-tab active" id="mftab-ALL" onclick="filterMediaTab('ALL')">
+              <i class="fas fa-th"></i> Todos (<span id="mcount-ALL">0</span>)
+            </button>
+            <button type="button" class="prod-filter-tab" id="mftab-imagen" onclick="filterMediaTab('imagen')">
+              <i class="fas fa-image" style="color: #2563EB;"></i> Flyers & Fotos (<span id="mcount-imagen">0</span>)
+            </button>
+            <button type="button" class="prod-filter-tab" id="mftab-texto" onclick="filterMediaTab('texto')">
+              <i class="fas fa-comment-alt" style="color: #10A352;"></i> Textos & Copies (<span id="mcount-texto">0</span>)
+            </button>
+            <button type="button" class="prod-filter-tab" id="mftab-documento" onclick="filterMediaTab('documento')">
+              <i class="fas fa-file-pdf" style="color: #EF4444;"></i> Catálogos & PDFs (<span id="mcount-documento">0</span>)
+            </button>
+            <button type="button" class="prod-filter-tab" id="mftab-enlace" onclick="filterMediaTab('enlace')">
+              <i class="fab fa-google-drive" style="color: #F59E0B;"></i> Google Drive (<span id="mcount-enlace">0</span>)
+            </button>
+          </div>
+
+          <div style="min-width: 240px; flex: 1; max-width: 320px;">
+            <input type="text" id="media-search-input" class="input-field" placeholder="🔍 Buscar por título o tema..." oninput="filterMediaBySearch(this.value)">
+          </div>
+        </div>
+
+        <!-- Grilla de Archivos Tipo Google Drive -->
+        <div id="super-media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+
       <div style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 40px; padding-bottom: 30px;">
         Vrde Club • Panel de Control Maestro Central 🥕
       </div>
@@ -1845,6 +1917,86 @@
     </div>
   </div>
 
+  <!-- MODAL: EDITOR DE RECURSOS DE MEDIATECA -->
+  <div id="modal-media-editor" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+        <h3 style="font-size: 18px; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-photo-video" style="color: #EC4899;"></i> <span id="media-editor-title">Nuevo Material de Difusión</span>
+        </h3>
+        <button type="button" class="btn-action-icon" onclick="closeModal('modal-media-editor')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="edit-media-id">
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Título del Material / Nombre de Archivo *</label>
+          <input type="text" id="edit-media-titulo" class="input-field" placeholder="Ej: Flyer Aceite Lorenzo Cabrera - Historias">
+        </div>
+
+        <div class="input-field-group">
+          <label>Tipo de Recurso *</label>
+          <select id="edit-media-tipo" class="input-field" onchange="updateMediaTypeFields()">
+            <option value="imagen">🖼️ Imagen / Flyer / Foto</option>
+            <option value="texto">📝 Texto / Copy WhatsApp / Mensaje</option>
+            <option value="documento">📄 Documento / Catálogo PDF</option>
+            <option value="enlace">📁 Enlace a Carpeta Google Drive / Canva</option>
+          </select>
+        </div>
+
+        <div class="input-field-group">
+          <label>Categoría / Ubicación</label>
+          <select id="edit-media-categoria" class="input-field">
+            <option value="Flyers & Gráficas">Flyers & Gráficas</option>
+            <option value="Textos & Copies">Textos & Copies WhatsApp</option>
+            <option value="Catálogos & Listas">Catálogos & Listas</option>
+            <option value="Drive Central">Drive Central & Banco</option>
+            <option value="Reels & Videos">Reels & Videos</option>
+          </select>
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;" id="media-url-container">
+          <label id="lbl-media-url">URL del Archivo / Enlace de Google Drive / Canva</label>
+          <input type="text" id="edit-media-url" class="input-field" placeholder="https://drive.google.com/... o assets/flyer.jpg" oninput="previewMediaModalUrl()">
+          <div style="margin-top: 6px; display: flex; align-items: center; gap: 8px;">
+            <label style="font-size: 11.5px; color: var(--primary); font-weight: 700; cursor: pointer;">
+              <i class="fas fa-upload"></i> Subir imagen local
+              <input type="file" id="edit-media-file-input" accept="image/*" style="display: none;" onchange="handleMediaFileUpload(this)">
+            </label>
+            <span style="font-size: 11px; color: var(--text-muted);" id="media-file-status">o pegar URL arriba</span>
+          </div>
+        </div>
+
+        <div id="media-modal-preview-box" style="grid-column: 1 / -1; display: none; text-align: center; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
+          <img id="media-modal-img-preview" src="" style="max-height: 140px; border-radius: 6px; object-fit: contain;">
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Texto / Copy de Difusión Acompañante (Opcional)</label>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Usa <code>{LINK_TIENDA}</code> para que el nodo inserte automáticamente el link de su tienda.</p>
+          <textarea id="edit-media-copy" class="input-field" rows="4" placeholder="Ej: 🫒 Nuevo Aceite de Oliva Lorenzo Cabrera...\nPedilo acá: {LINK_TIENDA}"></textarea>
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Descripción / Instrucciones de uso</label>
+          <input type="text" id="edit-media-desc" class="input-field" placeholder="Ej: Ideal para publicar en estados de WhatsApp o historias de Instagram">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+        <button type="button" class="btn-action-icon" style="width: auto; padding: 0 16px; border-radius: 6px; background: #F1F5F9; color: #475569;" onclick="closeModal('modal-media-editor')">
+          Cancelar
+        </button>
+        <button type="button" class="btn-checkout-cta" style="padding: 10px 24px; font-size: 13px; background: #EC4899;" onclick="saveMediaFromModal()">
+          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Recurso
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="lunar-engine.js?v=6"></script>
   <script>
@@ -1906,6 +2058,7 @@
       renderFinancesSection();
       renderLunarSynchronary();
       renderSecuritySection();
+      renderMediaSection();
     }
 
     function switchSuperTab(tabId) {
@@ -1922,6 +2075,7 @@
       document.getElementById('super-section-finances').classList.toggle('hidden', tabId !== 'finances');
       document.getElementById('super-section-cycle').classList.toggle('hidden', tabId !== 'cycle');
       document.getElementById('super-section-security').classList.toggle('hidden', tabId !== 'security');
+      document.getElementById('super-section-media').classList.toggle('hidden', tabId !== 'media');
 
       if (tabId === 'categories') renderCategoriesSection();
       if (tabId === 'teams') renderTeamsSection();
@@ -1929,6 +2083,7 @@
       if (tabId === 'finances') renderFinancesSection();
       if (tabId === 'cycle') renderLunarSynchronary();
       if (tabId === 'security') renderSecuritySection();
+      if (tabId === 'media') renderMediaSection();
     }
 
     // =================================================================
@@ -4003,6 +4158,312 @@
       LunarEngine.guardarNodoPin(nodoId, newPin);
       alert(`✅ PIN del nodo ${nodoId} actualizado a "${newPin}".`);
       renderSecuritySection();
+    }
+
+    // =================================================================
+    // MEDIATECA Y RECURSOS DE DIFUSIÓN (DRIVE VRDE - SUPER ADMIN)
+    // =================================================================
+    let ACTIVE_MEDIA_FILTER = 'ALL';
+    let MEDIA_SEARCH_QUERY = '';
+
+    function filterMediaTab(tipo) {
+      ACTIVE_MEDIA_FILTER = tipo;
+      document.querySelectorAll('#media-filter-tabs .prod-filter-tab').forEach(b => {
+        b.classList.toggle('active', b.id === `mftab-${tipo}`);
+      });
+      renderMediaSection();
+    }
+
+    function filterMediaBySearch(q) {
+      MEDIA_SEARCH_QUERY = (q || '').trim().toLowerCase();
+      renderMediaSection();
+    }
+
+    function renderMediaSection() {
+      const allRecursos = LunarEngine.obtenerRecursosMediateca();
+
+      // Contadores
+      let countImg = 0, countTxt = 0, countDoc = 0, countEnlace = 0;
+      allRecursos.forEach(r => {
+        if (r.tipo === 'imagen') countImg++;
+        else if (r.tipo === 'texto') countTxt++;
+        else if (r.tipo === 'documento') countDoc++;
+        else if (r.tipo === 'enlace') countEnlace++;
+      });
+
+      const elTot = document.getElementById('sp-media-total');
+      if (elTot) elTot.innerText = allRecursos.length;
+      const elImg = document.getElementById('sp-media-img');
+      if (elImg) elImg.innerText = countImg;
+      const elTxt = document.getElementById('sp-media-txt');
+      if (elTxt) elTxt.innerText = countTxt;
+      const elDoc = document.getElementById('sp-media-doc');
+      if (elDoc) elDoc.innerText = countDoc + countEnlace;
+
+      // Actualizar conteos en tabs
+      const cAll = document.getElementById('mcount-ALL');
+      if (cAll) cAll.innerText = allRecursos.length;
+      const cImg = document.getElementById('mcount-imagen');
+      if (cImg) cImg.innerText = countImg;
+      const cTxt = document.getElementById('mcount-texto');
+      if (cTxt) cTxt.innerText = countTxt;
+      const cDoc = document.getElementById('mcount-documento');
+      if (cDoc) cDoc.innerText = countDoc;
+      const cEnl = document.getElementById('mcount-enlace');
+      if (cEnl) cEnl.innerText = countEnlace;
+
+      // Filtrado
+      let filtered = allRecursos;
+      if (ACTIVE_MEDIA_FILTER !== 'ALL') {
+        filtered = filtered.filter(r => r.tipo === ACTIVE_MEDIA_FILTER);
+      }
+      if (MEDIA_SEARCH_QUERY) {
+        filtered = filtered.filter(r => 
+          (r.titulo && r.titulo.toLowerCase().includes(MEDIA_SEARCH_QUERY)) ||
+          (r.descripcion && r.descripcion.toLowerCase().includes(MEDIA_SEARCH_QUERY)) ||
+          (r.categoria && r.categoria.toLowerCase().includes(MEDIA_SEARCH_QUERY))
+        );
+      }
+
+      let html = '';
+      if (filtered.length === 0) {
+        html = `
+          <div style="grid-column: 1 / -1; background: white; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 50px 20px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 40px; margin-bottom: 8px;">📁</div>
+            <h4 style="font-size: 16px; color: #0F172A; margin-bottom: 4px;">No hay archivos en esta categoría</h4>
+            <p style="font-size: 13px; margin: 0 0 16px;">Hacé clic en "+ Subir Nuevo Material" para agregar imágenes, textos o links de Drive.</p>
+            <button class="btn-checkout-cta" style="padding: 8px 18px; font-size: 12px; background: #EC4899;" onclick="openCreateMediaModal()">
+              + Subir Material
+            </button>
+          </div>
+        `;
+      } else {
+        filtered.forEach(r => {
+          let badgeBg = '#F1F5F9', badgeColor = '#475569', badgeText = 'ARCHIVO';
+          let previewHtml = '';
+
+          if (r.tipo === 'imagen') {
+            badgeBg = '#EFF6FF'; badgeColor = '#1D4ED8'; badgeText = 'IMAGEN / FLYER';
+            previewHtml = `
+              <div style="height: 140px; background: #F8FAFC; border-bottom: 1px solid var(--border-color); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img src="${r.url}" alt="${r.titulo}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='assets/hero_bg.png';">
+                <a href="${r.url}" target="_blank" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.65); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; text-decoration: none;" title="Ver imagen completa">
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
+            `;
+          } else if (r.tipo === 'video') {
+            badgeBg = '#F5F3FF'; badgeColor = '#6D28D9'; badgeText = 'VIDEO / REEL';
+            previewHtml = `
+              <div style="height: 140px; background: #1E1B4B; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;">
+                <i class="fas fa-play-circle" style="font-size: 40px; color: #A78BFA;"></i>
+                <span style="font-size: 11px; margin-top: 6px; opacity: 0.8;">Video / Reel</span>
+              </div>
+            `;
+          } else if (r.tipo === 'texto') {
+            badgeBg = '#F0FDF4'; badgeColor = '#15803D'; badgeText = 'COPY WHATSAPP';
+            previewHtml = `
+              <div style="height: 140px; background: #F0FDF4; border-bottom: 1px solid #BBF7D0; padding: 14px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+                <p style="font-size: 11.5px; color: #166534; line-height: 1.35; margin: 0; font-family: monospace; white-space: pre-line; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+                  ${r.copyTexto || r.descripcion}
+                </p>
+                <span style="font-size: 10.5px; color: #15803D; font-weight: 700;">💬 Mensaje listo para WhatsApp</span>
+              </div>
+            `;
+          } else if (r.tipo === 'documento') {
+            badgeBg = '#FEF2F2'; badgeColor = '#B91C1C'; badgeText = 'DOCUMENTO / PDF';
+            previewHtml = `
+              <div style="height: 140px; background: #FEF2F2; border-bottom: 1px solid #FECACA; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #B91C1C;">
+                <i class="fas fa-file-pdf" style="font-size: 42px;"></i>
+                <span style="font-size: 11px; margin-top: 6px; font-weight: 600;">Catálogo / Guía</span>
+              </div>
+            `;
+          } else if (r.tipo === 'enlace') {
+            badgeBg = '#FFFBEB'; badgeColor = '#B45309'; badgeText = 'GOOGLE DRIVE';
+            previewHtml = `
+              <div style="height: 140px; background: #FFFBEB; border-bottom: 1px solid #FDE68A; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #B45309;">
+                <i class="fab fa-google-drive" style="font-size: 42px;"></i>
+                <span style="font-size: 11px; margin-top: 6px; font-weight: 700;">Carpeta Drive Compartida</span>
+              </div>
+            `;
+          }
+
+          html += `
+            <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+              <div>
+                ${previewHtml}
+                <div style="padding: 16px;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                    <span style="font-size: 10px; font-weight: 800; background: ${badgeBg}; color: ${badgeColor}; padding: 2px 7px; border-radius: 6px;">
+                      ${badgeText}
+                    </span>
+                    <span style="font-size: 11px; color: var(--text-muted);">${r.categoria || ''}</span>
+                  </div>
+
+                  <h4 style="font-size: 14.5px; font-weight: 700; color: #0F172A; margin: 0 0 6px; line-height: 1.3;">
+                    ${r.titulo}
+                  </h4>
+                  
+                  <p style="font-size: 12px; color: var(--text-muted); line-height: 1.35; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    ${r.descripcion || 'Material de difusión comunitario para la red.'}
+                  </p>
+
+                  ${r.copyTexto ? `
+                    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 6px 10px; margin-bottom: 10px; font-size: 11px; color: #475569; display: flex; justify-content: space-between; align-items: center;">
+                      <span>📝 Incluye Copy WhatsApp</span>
+                      <button type="button" onclick="copyRawText('${encodeURIComponent(r.copyTexto)}')" style="background: none; border: none; color: var(--primary); font-weight: 700; font-size: 11px; cursor: pointer;">
+                        Copiar
+                      </button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+
+              <div style="padding: 10px 16px; background: #F8FAFC; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 8px;">
+                  ${r.url ? `
+                    <a href="${r.url}" target="_blank" class="btn-action-icon" style="color: #2563EB; width: 28px; height: 28px;" title="Abrir archivo original">
+                      <i class="fas fa-external-link-alt"></i>
+                    </a>
+                  ` : ''}
+                  <button type="button" class="btn-action-icon" style="color: #64748B; width: 28px; height: 28px;" title="Editar recurso" onclick="openEditMediaModal('${r.id}')">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
+                <button type="button" class="btn-action-icon" style="color: #EF4444; width: 28px; height: 28px;" title="Eliminar de Mediateca" onclick="deleteMediaConfirm('${r.id}')">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      document.getElementById('super-media-grid').innerHTML = html;
+    }
+
+    function openCreateMediaModal() {
+      document.getElementById('media-editor-title').innerText = 'Nuevo Material de Difusión';
+      document.getElementById('edit-media-id').value = '';
+      document.getElementById('edit-media-titulo').value = '';
+      document.getElementById('edit-media-tipo').value = 'imagen';
+      document.getElementById('edit-media-categoria').value = 'Flyers & Gráficas';
+      document.getElementById('edit-media-url').value = '';
+      document.getElementById('edit-media-copy').value = '';
+      document.getElementById('edit-media-desc').value = '';
+      document.getElementById('media-file-status').innerText = 'o pegar URL arriba';
+      document.getElementById('media-modal-preview-box').style.display = 'none';
+      updateMediaTypeFields();
+      openModal('modal-media-editor');
+    }
+
+    function openEditMediaModal(id) {
+      const recursos = LunarEngine.obtenerRecursosMediateca();
+      const r = recursos.find(x => x.id === id);
+      if (!r) return;
+
+      document.getElementById('media-editor-title').innerText = `Editar ${r.titulo}`;
+      document.getElementById('edit-media-id').value = r.id;
+      document.getElementById('edit-media-titulo').value = r.titulo || '';
+      document.getElementById('edit-media-tipo').value = r.tipo || 'imagen';
+      document.getElementById('edit-media-categoria').value = r.categoria || 'Flyers & Gráficas';
+      document.getElementById('edit-media-url').value = r.url || '';
+      document.getElementById('edit-media-copy').value = r.copyTexto || '';
+      document.getElementById('edit-media-desc').value = r.descripcion || '';
+      document.getElementById('media-file-status').innerText = 'o pegar URL arriba';
+      updateMediaTypeFields();
+      previewMediaModalUrl();
+      openModal('modal-media-editor');
+    }
+
+    function updateMediaTypeFields() {
+      const tipo = document.getElementById('edit-media-tipo').value;
+      const lbl = document.getElementById('lbl-media-url');
+
+      if (tipo === 'texto') {
+        lbl.innerText = 'Enlace Opcional de Referencia';
+      } else if (tipo === 'enlace') {
+        lbl.innerText = 'Enlace a Google Drive / Canva / Web *';
+      } else if (tipo === 'documento') {
+        lbl.innerText = 'Enlace o URL del PDF / Documento *';
+      } else {
+        lbl.innerText = 'URL del Archivo / Imagen *';
+      }
+    }
+
+    function previewMediaModalUrl() {
+      const url = document.getElementById('edit-media-url').value.trim();
+      const previewBox = document.getElementById('media-modal-preview-box');
+      const imgEl = document.getElementById('media-modal-img-preview');
+      const tipo = document.getElementById('edit-media-tipo').value;
+
+      if (tipo === 'imagen' && (url.startsWith('http') || url.startsWith('assets/') || url.startsWith('data:image'))) {
+        imgEl.src = url;
+        previewBox.style.display = 'block';
+      } else {
+        previewBox.style.display = 'none';
+      }
+    }
+
+    function handleMediaFileUpload(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('edit-media-url').value = e.target.result;
+        document.getElementById('media-file-status').innerText = `✅ ${file.name} cargado`;
+        previewMediaModalUrl();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveMediaFromModal() {
+      const id = document.getElementById('edit-media-id').value;
+      const titulo = document.getElementById('edit-media-titulo').value.trim();
+      const tipo = document.getElementById('edit-media-tipo').value;
+      const categoria = document.getElementById('edit-media-categoria').value;
+      const url = document.getElementById('edit-media-url').value.trim();
+      const copyTexto = document.getElementById('edit-media-copy').value.trim();
+      const desc = document.getElementById('edit-media-desc').value.trim();
+
+      if (!titulo) {
+        alert("Por favor ingresa un título para el material de difusión.");
+        return;
+      }
+
+      const mediaData = {
+        id: id || undefined,
+        titulo: titulo,
+        tipo: tipo,
+        categoria: categoria,
+        url: url,
+        copyTexto: copyTexto,
+        descripcion: desc
+      };
+
+      LunarEngine.guardarRecursoMediateca(mediaData);
+      closeModal('modal-media-editor');
+      renderMediaSection();
+      alert(`✅ Material "${titulo}" guardado en la Mediateca de la red.`);
+    }
+
+    function deleteMediaConfirm(id) {
+      if (confirm("¿Estás seguro de que deseas eliminar este material de la Mediateca?")) {
+        LunarEngine.eliminarRecursoMediateca(id);
+        renderMediaSection();
+        alert("🗑️ Recurso eliminado correctamente.");
+      }
+    }
+
+    function copyRawText(encodedText) {
+      const text = decodeURIComponent(encodedText);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("📋 ¡Texto copiado al portapapeles listo para WhatsApp!");
+        });
+      } else {
+        alert("Texto: \n\n" + text);
+      }
     }
 
     function logoutMaster() {

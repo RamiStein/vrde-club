@@ -982,6 +982,48 @@
             </div>
           </div>
 
+          <!-- MEDIATECA Y RECURSOS DE DIFUSIÓN (TIPO GOOGLE DRIVE) -->
+          <div style="grid-column: 1 / -1; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
+              <div>
+                <h4 style="margin: 0; font-size: 17px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+                  <i class="fab fa-google-drive" style="color: #F59E0B;"></i> Mediateca & Recursos de Difusión (Drive Vrde)
+                </h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 2px 0 0;">
+                  Flyers, videos, mensajes de WhatsApp y catálogos provistos por Vrde Central listos para usar en tus canales y estados barriales.
+                </p>
+              </div>
+              
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="node-media-search-input" class="input-field" placeholder="🔍 Buscar material..." style="padding: 7px 12px; font-size: 13px; width: 200px;" oninput="filterNodeMediaBySearch(this.value)">
+              </div>
+            </div>
+
+            <!-- Filtros de Mediateca del Nodo -->
+            <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;" id="node-media-filter-tabs">
+              <button type="button" class="prod-filter-tab active" id="nmftab-ALL" onclick="filterNodeMediaTab('ALL')">
+                <i class="fas fa-th"></i> Todos (<span id="nmcount-ALL">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-imagen" onclick="filterNodeMediaTab('imagen')">
+                <i class="fas fa-image" style="color: #2563EB;"></i> Flyers & Fotos (<span id="nmcount-imagen">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-texto" onclick="filterNodeMediaTab('texto')">
+                <i class="fas fa-comment-alt" style="color: #10A352;"></i> Textos & Copies (<span id="nmcount-texto">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-documento" onclick="filterNodeMediaTab('documento')">
+                <i class="fas fa-file-pdf" style="color: #EF4444;"></i> Catálogos & PDFs (<span id="nmcount-documento">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-enlace" onclick="filterNodeMediaTab('enlace')">
+                <i class="fab fa-google-drive" style="color: #F59E0B;"></i> Google Drive (<span id="nmcount-enlace">0</span>)
+              </button>
+            </div>
+
+            <!-- Grilla de Mediateca en Panel de Nodo -->
+            <div id="node-media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+              <!-- Inyectado por JS -->
+            </div>
+          </div>
+
         </div>
 
         <!-- =======================================================
@@ -1421,6 +1463,7 @@
       renderOrdersList();
       renderCrmSection();
       renderNodeCycleSection();
+      renderNodeMediaSection();
 
       // Sidebar title
       document.getElementById('sidebar-nodo-title').innerText = nodoData.nombre;
@@ -2601,6 +2644,188 @@
       NODE_CAL_YEAR = now.getFullYear();
       NODE_CAL_MONTH = now.getMonth();
       renderNodeLunarCalendarMonth();
+    }
+
+    // =================================================================
+    // BANCO DE RECURSOS Y MEDIATECA DE DIFUSIÓN (DRIVE VRDE - NODO)
+    // =================================================================
+    let ACTIVE_NODE_MEDIA_FILTER = 'ALL';
+    let NODE_MEDIA_SEARCH_QUERY = '';
+
+    function filterNodeMediaTab(tipo) {
+      ACTIVE_NODE_MEDIA_FILTER = tipo;
+      document.querySelectorAll('#node-media-filter-tabs .prod-filter-tab').forEach(b => {
+        b.classList.toggle('active', b.id === `nmftab-${tipo}`);
+      });
+      renderNodeMediaSection();
+    }
+
+    function filterNodeMediaBySearch(q) {
+      NODE_MEDIA_SEARCH_QUERY = (q || '').trim().toLowerCase();
+      renderNodeMediaSection();
+    }
+
+    function renderNodeMediaSection() {
+      const allRecursos = LunarEngine.obtenerRecursosMediateca();
+      const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
+
+      // Contadores
+      let countImg = 0, countTxt = 0, countDoc = 0, countEnlace = 0;
+      allRecursos.forEach(r => {
+        if (r.tipo === 'imagen') countImg++;
+        else if (r.tipo === 'texto') countTxt++;
+        else if (r.tipo === 'documento') countDoc++;
+        else if (r.tipo === 'enlace') countEnlace++;
+      });
+
+      const cAll = document.getElementById('nmcount-ALL');
+      if (cAll) cAll.innerText = allRecursos.length;
+      const cImg = document.getElementById('nmcount-imagen');
+      if (cImg) cImg.innerText = countImg;
+      const cTxt = document.getElementById('nmcount-texto');
+      if (cTxt) cTxt.innerText = countTxt;
+      const cDoc = document.getElementById('nmcount-documento');
+      if (cDoc) cDoc.innerText = countDoc;
+      const cEnl = document.getElementById('nmcount-enlace');
+      if (cEnl) cEnl.innerText = countEnlace;
+
+      // Filtrado
+      let filtered = allRecursos;
+      if (ACTIVE_NODE_MEDIA_FILTER !== 'ALL') {
+        filtered = filtered.filter(r => r.tipo === ACTIVE_NODE_MEDIA_FILTER);
+      }
+      if (NODE_MEDIA_SEARCH_QUERY) {
+        filtered = filtered.filter(r => 
+          (r.titulo && r.titulo.toLowerCase().includes(NODE_MEDIA_SEARCH_QUERY)) ||
+          (r.descripcion && r.descripcion.toLowerCase().includes(NODE_MEDIA_SEARCH_QUERY)) ||
+          (r.categoria && r.categoria.toLowerCase().includes(NODE_MEDIA_SEARCH_QUERY))
+        );
+      }
+
+      const gridEl = document.getElementById('node-media-grid');
+      if (!gridEl) return;
+
+      let html = '';
+      if (filtered.length === 0) {
+        html = `
+          <div style="grid-column: 1 / -1; background: #F8FAFC; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 36px; margin-bottom: 8px;">📁</div>
+            <h4 style="font-size: 15px; color: #0F172A; margin-bottom: 4px;">No hay archivos en esta categoría</h4>
+            <p style="font-size: 12.5px; margin: 0;">Vrde Central cargará nuevos materiales para el próximo ciclo lunar.</p>
+          </div>
+        `;
+      } else {
+        filtered.forEach(r => {
+          let badgeBg = '#F1F5F9', badgeColor = '#475569', badgeText = 'ARCHIVO';
+          let previewHtml = '';
+
+          if (r.tipo === 'imagen') {
+            badgeBg = '#EFF6FF'; badgeColor = '#1D4ED8'; badgeText = 'IMAGEN / FLYER';
+            previewHtml = `
+              <div style="height: 130px; background: #F8FAFC; border-bottom: 1px solid var(--border-color); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img src="${r.url}" alt="${r.titulo}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='assets/hero_bg.png';">
+                <a href="${r.url}" target="_blank" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.65); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; text-decoration: none;" title="Ver imagen completa">
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
+            `;
+          } else if (r.tipo === 'video') {
+            badgeBg = '#F5F3FF'; badgeColor = '#6D28D9'; badgeText = 'VIDEO / REEL';
+            previewHtml = `
+              <div style="height: 130px; background: #1E1B4B; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;">
+                <i class="fas fa-play-circle" style="font-size: 38px; color: #A78BFA;"></i>
+                <span style="font-size: 11px; margin-top: 6px; opacity: 0.8;">Video / Reel</span>
+              </div>
+            `;
+          } else if (r.tipo === 'texto') {
+            badgeBg = '#F0FDF4'; badgeColor = '#15803D'; badgeText = 'COPY WHATSAPP';
+            previewHtml = `
+              <div style="height: 130px; background: #F0FDF4; border-bottom: 1px solid #BBF7D0; padding: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+                <p style="font-size: 11px; color: #166534; line-height: 1.35; margin: 0; font-family: monospace; white-space: pre-line; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+                  ${r.copyTexto ? r.copyTexto.replace('{LINK_TIENDA}', storeUrl) : r.descripcion}
+                </p>
+                <span style="font-size: 10px; color: #15803D; font-weight: 700;">💬 Mensaje para tus grupos</span>
+              </div>
+            `;
+          } else if (r.tipo === 'documento') {
+            badgeBg = '#FEF2F2'; badgeColor = '#B91C1C'; badgeText = 'DOCUMENTO / PDF';
+            previewHtml = `
+              <div style="height: 130px; background: #FEF2F2; border-bottom: 1px solid #FECACA; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #B91C1C;">
+                <i class="fas fa-file-pdf" style="font-size: 38px;"></i>
+                <span style="font-size: 11px; margin-top: 6px; font-weight: 600;">Catálogo / Guía</span>
+              </div>
+            `;
+          } else if (r.tipo === 'enlace') {
+            badgeBg = '#FFFBEB'; badgeColor = '#B45309'; badgeText = 'GOOGLE DRIVE';
+            previewHtml = `
+              <div style="height: 130px; background: #FFFBEB; border-bottom: 1px solid #FDE68A; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #B45309;">
+                <i class="fab fa-google-drive" style="font-size: 38px;"></i>
+                <span style="font-size: 11px; margin-top: 6px; font-weight: 700;">Carpeta Drive Compartida</span>
+              </div>
+            `;
+          }
+
+          const resolvedCopy = (r.copyTexto || '').replace('{LINK_TIENDA}', storeUrl);
+
+          html += `
+            <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+              <div>
+                ${previewHtml}
+                <div style="padding: 14px;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; margin-bottom: 6px;">
+                    <span style="font-size: 9.5px; font-weight: 800; background: ${badgeBg}; color: ${badgeColor}; padding: 2px 6px; border-radius: 6px;">
+                      ${badgeText}
+                    </span>
+                    <span style="font-size: 10.5px; color: var(--text-muted);">${r.categoria || ''}</span>
+                  </div>
+
+                  <h5 style="font-size: 13.5px; font-weight: 700; color: #0F172A; margin: 0 0 6px; line-height: 1.3;">
+                    ${r.titulo}
+                  </h5>
+                  
+                  <p style="font-size: 11.5px; color: var(--text-muted); line-height: 1.35; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    ${r.descripcion || 'Material de difusión de Vrde Club.'}
+                  </p>
+                </div>
+              </div>
+
+              <div style="padding: 10px 14px; background: #F8FAFC; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px;">
+                ${resolvedCopy ? `
+                  <button type="button" class="btn-checkout-cta" style="width: 100%; border-radius: 6px; padding: 8px 10px; font-size: 12px; background: #10A352; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="copyNodeMediaCopy('${encodeURIComponent(resolvedCopy)}')">
+                    <i class="fas fa-copy"></i> Copiar Texto + Link de mi Nodo
+                  </button>
+                ` : ''}
+
+                <div style="display: flex; gap: 6px;">
+                  ${r.url ? `
+                    <a href="${r.url}" target="_blank" style="flex: 1; text-align: center; font-size: 11.5px; font-weight: 700; color: #2563EB; background: white; border: 1px solid #BFDBFE; padding: 6px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                      <i class="fas fa-external-link-alt"></i> ${r.tipo === 'enlace' ? 'Abrir Drive' : (r.tipo === 'imagen' ? 'Ver Flyer' : 'Abrir Archivo')}
+                    </a>
+                    ${r.tipo === 'imagen' ? `
+                      <a href="${r.url}" download="${r.titulo.replace(/[^a-zA-Z0-9]/g, '_')}.jpg" target="_blank" style="font-size: 11.5px; font-weight: 700; color: #475569; background: white; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; text-decoration: none;" title="Descargar Imagen">
+                        <i class="fas fa-download"></i>
+                      </a>
+                    ` : ''}
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      gridEl.innerHTML = html;
+    }
+
+    function copyNodeMediaCopy(encodedText) {
+      const text = decodeURIComponent(encodedText);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("📋 ¡Texto copiado con el link de tu nodo listo para enviar a WhatsApp!");
+        });
+      } else {
+        alert("Texto: \n\n" + text);
+      }
     }
 
     // Cerrar modales al hacer clic fuera de la tarjeta (backdrop)

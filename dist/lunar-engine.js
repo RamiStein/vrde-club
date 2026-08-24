@@ -484,6 +484,70 @@ const LUNAR_CONFIG = {
     { id: 'huerta', nombre: 'Huerta & Frescos', emoji: '🥬', colorBg: '#16A34A', colorText: '#FFFFFF', orden: 6, activa: true },
     { id: 'granja', nombre: 'Granja & Mieles', emoji: '🥚', colorBg: '#D97706', colorText: '#FFFFFF', orden: 7, activa: true },
     { id: 'panificados', nombre: 'Panadería & Masa Madre', emoji: '🍞', colorBg: '#C2410C', colorText: '#FFFFFF', orden: 8, activa: true }
+  ],
+
+  // Banco de Recursos y Mediateca de Difusión (Tipo Google Drive)
+  recursosMediateca: [
+    {
+      id: 'REC-001',
+      titulo: 'Flyer Oficial • Aceite de Oliva Lorenzo Cabrera',
+      tipo: 'imagen',
+      categoria: 'Flyers & Gráficas',
+      cicloId: 'TODOS',
+      url: 'assets/aceite_lorenzo_cabrera.jpg',
+      formato: 'JPG / Vertical',
+      descripcion: 'Flyer promocional de Aceite de Oliva Virgen Extra 1° prensada de Villa Mazán, La Rioja.',
+      copyTexto: '🫒 *ACEITE DE OLIVA EXTRA VIRGEN LORENZO CABRERA*\nDirecto de olivares centenarios en Villa Mazán, La Rioja 🌿\n\n✨ 1° prensada en frío, acidez menor a 0.5%, sin aditivos ni mezclas.\n🏷️ Formatos disponibles: 500cc, 2 Litros y 5 Litros.\n\nPedilo para este ciclo lunar en nuestro nodo:\n{LINK_TIENDA}',
+      fechaCreacion: '2026-08-20'
+    },
+    {
+      id: 'REC-002',
+      titulo: 'Carpeta Google Drive Central de Materiales Vrde',
+      tipo: 'enlace',
+      categoria: 'Drive Central',
+      cicloId: 'TODOS',
+      url: 'https://drive.google.com',
+      formato: 'Google Drive',
+      descripcion: 'Carpeta compartida con fotos de productores en alta resolución, videos de cosechas y manual de marca.',
+      copyTexto: 'Accedé a todo el material audiovisual en alta resolución de Vrde Club.',
+      fechaCreacion: '2026-08-20'
+    },
+    {
+      id: 'REC-003',
+      titulo: 'Mensaje de Difusión • Apertura Luna Nueva',
+      tipo: 'texto',
+      categoria: 'Textos & Copies',
+      cicloId: 'TODOS',
+      url: '',
+      formato: 'Texto WhatsApp',
+      descripcion: 'Texto listo para enviar a grupos de WhatsApp de la comunidad al inicio de la compra colectiva.',
+      copyTexto: '🌑 *¡ABRIMOS LA COMPRA LUNAR EN NUESTRO NODO!*\n\nFamilias, arranca un nuevo ciclo de compra comunitaria directa de la huerta a tu mesa 🥕🌿\n\n🛒 *¿Cómo funciona?*\nCuanto más volumen sumamos como comunidad, mejores precios por escala desbloqueamos para todos.\n\n📲 Hacé tu pedido ingresando acá:\n{LINK_TIENDA}',
+      fechaCreacion: '2026-08-21'
+    },
+    {
+      id: 'REC-004',
+      titulo: 'Mensaje de Cierre y Recordatorio • Luna Llena',
+      tipo: 'texto',
+      categoria: 'Textos & Copies',
+      cicloId: 'TODOS',
+      url: '',
+      formato: 'Texto WhatsApp',
+      descripcion: 'Mensaje recordatorio para avisar el cierre del ciclo de pedidos a los socios de la comunidad.',
+      copyTexto: '🌕 *¡ÚLTIMAS HORAS PARA PEDIR! • Cierre Luna Llena*\n\nHoy consolidamos la compra comunitaria de nuestro nodo para enviar a las quintas productoras 🌱\n\nSi todavía no hiciste tu pedido o querés sumar algo más, aprovechá ahora antes de que cierre la tienda:\n{LINK_TIENDA}',
+      fechaCreacion: '2026-08-22'
+    },
+    {
+      id: 'REC-005',
+      titulo: 'Catálogo de Productos y Fichas de Origen (PDF / Info)',
+      tipo: 'documento',
+      categoria: 'Catálogos & Listas',
+      cicloId: 'TODOS',
+      url: 'assets/hero_bg.png',
+      formato: 'Documento / PDF',
+      descripcion: 'Guía informativa con el origen de cada alimento, historias de los productores y beneficios de la agroecología.',
+      copyTexto: '📖 Descargá el catálogo completo de alimentos agroecológicos de Vrde Club.',
+      fechaCreacion: '2026-08-22'
+    }
   ]
 };
 
@@ -1051,6 +1115,77 @@ class LunarEngine {
         }
       } catch(e){}
     }
+    return true;
+  }
+
+  // =================================================================
+  // BANCO DE RECURSOS Y MEDIATECA DE DIFUSIÓN (DRIVE VRDE)
+  // =================================================================
+
+  /**
+   * Obtiene todos los recursos de la Mediateca de difusión
+   */
+  static obtenerRecursosMediateca(filtroCiclo = null) {
+    let recursos = LUNAR_CONFIG.recursosMediateca || [];
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const stored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_RECURSOS_MEDIATECA') : null;
+        if (stored) {
+          recursos = JSON.parse(stored);
+        }
+      } catch(e){}
+    }
+
+    if (filtroCiclo && filtroCiclo !== 'TODOS') {
+      return recursos.filter(r => !r.cicloId || r.cicloId === 'TODOS' || r.cicloId === filtroCiclo);
+    }
+    return recursos;
+  }
+
+  /**
+   * Guarda o actualiza un recurso en la Mediateca
+   */
+  static guardarRecursoMediateca(recursoData) {
+    const recursos = this.obtenerRecursosMediateca();
+    const id = recursoData.id || ('REC-' + Date.now().toString(36).toUpperCase());
+    
+    const existingIndex = recursos.findIndex(r => r.id === id);
+    const item = {
+      id: id,
+      titulo: (recursoData.titulo || 'Sin título').trim(),
+      tipo: recursoData.tipo || 'imagen', // imagen, video, texto, documento, enlace
+      categoria: recursoData.categoria || 'Flyers & Gráficas',
+      cicloId: recursoData.cicloId || 'TODOS',
+      url: (recursoData.url || '').trim(),
+      formato: recursoData.formato || 'JPG / Imagen',
+      descripcion: (recursoData.descripcion || '').trim(),
+      copyTexto: (recursoData.copyTexto || '').trim(),
+      fechaCreacion: recursoData.fechaCreacion || new Date().toISOString().split('T')[0]
+    };
+
+    if (existingIndex >= 0) {
+      recursos[existingIndex] = item;
+    } else {
+      recursos.unshift(item);
+    }
+
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_RECURSOS_MEDIATECA', JSON.stringify(recursos));
+    }
+    LUNAR_CONFIG.recursosMediateca = recursos;
+    return item;
+  }
+
+  /**
+   * Elimina un recurso de la Mediateca
+   */
+  static eliminarRecursoMediateca(recursoId) {
+    let recursos = this.obtenerRecursosMediateca();
+    recursos = recursos.filter(r => r.id !== recursoId);
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      localStorage.setItem('VRDE_RECURSOS_MEDIATECA', JSON.stringify(recursos));
+    }
+    LUNAR_CONFIG.recursosMediateca = recursos;
     return true;
   }
 
