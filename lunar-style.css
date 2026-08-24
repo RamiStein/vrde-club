@@ -372,13 +372,15 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 12px 20px;
   }
   .product-showcase .showcase-center {
-    order: 1;
+    order: 1 !important;
   }
-  .product-showcase .showcase-card:last-child {
-    order: 2;
-  }
+  .product-showcase .showcase-left,
   .product-showcase .showcase-card:first-child {
-    order: 3;
+    order: 2 !important;
+  }
+  .product-showcase .showcase-right,
+  .product-showcase .showcase-card:last-child {
+    order: 3 !important;
   }
 }
 
