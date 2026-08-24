@@ -241,10 +241,22 @@
     });
 
     function renderNodesGrid() {
-      const nodosObj = LunarEngine.obtenerNodos();
+      const nodosObj = LunarEngine.obtenerNodos(true);
       let html = '';
+      const nodosActivos = Object.values(nodosObj);
 
-      Object.values(nodosObj).forEach(n => {
+      if (nodosActivos.length === 0) {
+        document.getElementById('nodes-grid-container').innerHTML = `
+          <div style="grid-column: 1 / -1; background: white; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 36px; margin-bottom: 8px;">🌱</div>
+            <h3 style="font-size: 18px; color: #0F172A; margin-bottom: 6px;">No hay nodos activos en este momento</h3>
+            <p style="font-size: 14px; margin: 0;">Pronto se abrirán nuevos puntos comunitarios de distribución.</p>
+          </div>
+        `;
+        return;
+      }
+
+      nodosActivos.forEach(n => {
         const safeLogo = (n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌑';
         html += `
           <div class="node-portal-card">

@@ -821,9 +821,9 @@ class LunarEngine {
   }
 
   /**
-   * Obtiene todos los nodos configurados (activos y en reposo)
+   * Obtiene todos los nodos configurados (activos y opcionalmente en reposo)
    */
-  static obtenerNodos() {
+  static obtenerNodos(soloActivos = false) {
     let nodos = LUNAR_CONFIG.nodos;
     if (typeof localStorage !== 'undefined') {
       try {
@@ -861,6 +861,16 @@ class LunarEngine {
 
     if (needsResave && typeof localStorage !== 'undefined') {
       try { localStorage.setItem('VRDE_NODOS', JSON.stringify(nodos)); } catch(e){}
+    }
+
+    if (soloActivos) {
+      const activeNodos = {};
+      Object.keys(nodos).forEach(k => {
+        if (nodos[k].activo !== false && !nodos[k].pausado) {
+          activeNodos[k] = nodos[k];
+        }
+      });
+      return activeNodos;
     }
 
     return nodos;

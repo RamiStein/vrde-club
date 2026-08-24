@@ -1274,7 +1274,8 @@
       nodeKeys.forEach(k => {
         const n = allNodos[k];
         const sel = (k === CURRENT_REF) ? 'selected' : '';
-        nodeSelectHtml += `<option value="${k}" ${sel}>${n.nombre}</option>`;
+        const pausedTag = (n.activo === false || n.pausado) ? ' ⏳ (En Reposo)' : '';
+        nodeSelectHtml += `<option value="${k}" ${sel}>${n.nombre}${pausedTag}</option>`;
       });
       const loginNodoSel = document.getElementById('loginNodoSelect');
       if (loginNodoSel) loginNodoSel.innerHTML = nodeSelectHtml;

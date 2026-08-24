@@ -939,6 +939,18 @@
 
       const nodoData = nodosObj[CURRENT_REF] || nodosObj[defaultKey] || {};
 
+      // Si el nodo está en reposo, mostrar aviso visible
+      if (nodoData.activo === false) {
+        const existingNotice = document.getElementById('node-paused-warning');
+        if (!existingNotice) {
+          const pauseNotice = document.createElement('div');
+          pauseNotice.id = 'node-paused-warning';
+          pauseNotice.style = "background: #FEF3C7; border-bottom: 2px solid #F59E0B; padding: 12px 20px; text-align: center; font-size: 13.5px; font-weight: 700; color: #92400E; position: sticky; top: 0; z-index: 9999;";
+          pauseNotice.innerHTML = `⏳ <strong>${nodoData.nombre}</strong> se encuentra en reposo durante este ciclo lunar y no está recibiendo pedidos. <a href="lunar.html" style="color: #10A352; text-decoration: underline; margin-left: 8px;">Elegir otro Nodo Activo &rarr;</a>`;
+          document.body.prepend(pauseNotice);
+        }
+      }
+
       // Cargar Header del Nodo
       document.getElementById('shop-name').innerText = nodoData.nombre || 'Vrde Club';
       document.getElementById('shop-logo').innerText = nodoData.logo || '🌱';
