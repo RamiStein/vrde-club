@@ -925,16 +925,24 @@
 
     function initStore() {
       const urlParams = new URLSearchParams(window.location.search);
-      CURRENT_REF = urlParams.get('ref') || 'escobar';
+      const refParam = urlParams.get('ref');
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodeKeys = Object.keys(nodosObj);
+      const defaultKey = nodeKeys.length > 0 ? nodeKeys[0] : 'vicente_lopez';
+
+      if (refParam && nodosObj[refParam.toLowerCase()]) {
+        CURRENT_REF = refParam.toLowerCase();
+      } else {
+        CURRENT_REF = defaultKey;
+      }
       CICLO_LUNAR = LunarEngine.obtenerCicloVigente();
 
-      const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      const nodoData = nodosObj[CURRENT_REF] || nodosObj[defaultKey] || {};
 
       // Cargar Header del Nodo
-      document.getElementById('shop-name').innerText = nodoData.nombre;
+      document.getElementById('shop-name').innerText = nodoData.nombre || 'Vrde Club';
       document.getElementById('shop-logo').innerText = nodoData.logo || '🌱';
-      document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
+      document.getElementById('shop-nodo-label').innerText = nodoData.nombre || 'Almacén Agroecológico';
       document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
       // Cargar Banner Lunar
@@ -1610,7 +1618,8 @@
       });
 
       const orderId = 'G-' + Math.floor(Math.random() * 900000 + 100000);
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LunarEngine.obtenerNodos()['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       const totalUnidadesPedido = orderItems.reduce((s, it) => s + (Number(it.cant) || 0), 0);
 
       ORDER_SUCCESS_DATA = {

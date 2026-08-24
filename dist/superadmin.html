@@ -788,6 +788,22 @@
             <i class="fas fa-plus-circle"></i> Nuevo Nodo Almacén
           </button>
         </div>
+        <!-- Filtros Rápidos de Nodos (Todos / Activos / En Reposo / Papelera) -->
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;" id="node-filter-tabs">
+          <button type="button" class="prod-filter-tab active" id="nftab-ALL" onclick="filterNodeTab('ALL')">
+            <i class="fas fa-th-large"></i> Todos los Nodos <span id="ncount-ALL" style="opacity:0.8; font-weight:700;">(0)</span>
+          </button>
+          <button type="button" class="prod-filter-tab" id="nftab-ACTIVE" onclick="filterNodeTab('ACTIVE')">
+            <i class="fas fa-check-circle" style="color: #10A352;"></i> Activos en Red <span id="ncount-ACTIVE" style="opacity:0.8; font-weight:700;">(0)</span>
+          </button>
+          <button type="button" class="prod-filter-tab" id="nftab-PAUSED" onclick="filterNodeTab('PAUSED')">
+            <i class="fas fa-pause-circle" style="color: #F59E0B;"></i> En Reposo / Pausados <span id="ncount-PAUSED" style="opacity:0.8; font-weight:700;">(0)</span>
+          </button>
+          <button type="button" class="prod-filter-tab" id="nftab-TRASH" onclick="filterNodeTab('TRASH')">
+            <i class="fas fa-trash-alt" style="color: #EF4444;"></i> Papelera / Archivados <span id="ncount-TRASH" style="opacity:0.8; font-weight:700;">(0)</span>
+          </button>
+        </div>
+
         <div id="super-nodes-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
           <!-- Inyectado por JS -->
         </div>
@@ -2948,75 +2964,207 @@
     // GESTIÓN DE NODOS Y REDES SOCIALES
     // =================================================================
 
+    // =================================================================
+    // GESTIÓN DE NODOS Y REDES SOCIALES (CON PAPELERA Y REPOSO)
+    // =================================================================
+    let ACTIVE_NODE_TAB = 'ALL';
+
+    function filterNodeTab(tabKey) {
+      ACTIVE_NODE_TAB = tabKey;
+      document.querySelectorAll('#node-filter-tabs .prod-filter-tab').forEach(b => {
+        b.classList.toggle('active', b.id === `nftab-${tabKey}`);
+      });
+      renderNodesSection();
+    }
+
     function renderNodesSection() {
-      const nodos = LunarEngine.obtenerNodos();
-      let html = '';
+      const allNodos = LunarEngine.obtenerNodos();
+      const archivados = LunarEngine.obtenerNodosArchivados() || [];
 
-      Object.keys(nodos).forEach(k => {
-        const n = nodos[k];
-        const redes = n.redes || {};
-        
-        let redesHtml = '';
-        if (redes.instagram) {
-          redesHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="color: #E1306C; font-size: 14px;" title="Instagram @${redes.instagram}"><i class="fab fa-instagram"></i></a>`;
+      // Conteo de estados
+      let countActive = 0;
+      let countPaused = 0;
+      const countTrash = archivados.length;
+
+      const activeList = [];
+      const pausedList = [];
+
+      Object.keys(allNodos).forEach(k => {
+        const n = allNodos[k];
+        if (n.activo === false) {
+          countPaused++;
+          pausedList.push({ ...n, _idKey: k, _status: 'PAUSED' });
+        } else {
+          countActive++;
+          activeList.push({ ...n, _idKey: k, _status: 'ACTIVE' });
         }
-        if (redes.wspComunidad || redes.wspGrupo) {
-          redesHtml += `<a href="${redes.wspComunidad || redes.wspGrupo}" target="_blank" style="color: #25D366; font-size: 14px;" title="Comunidad WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
-        }
-
-        html += `
-          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              ${n.imagen ? `
-                <div style="height: 110px; position: relative;">
-                  <img src="${n.imagen}" alt="${n.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
-                  <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700;">PIN: ${n.pin || '1234'}</div>
-                </div>
-              ` : ''}
-              
-              <div style="padding: 18px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                  <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 26px;">${(n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌱'}</span>
-                    <div>
-                      <h4 style="margin: 0; font-size: 16px; color: #0F172A; font-weight: 800;">${n.nombre}</h4>
-                      <span style="font-size: 11.5px; color: var(--text-muted);">${n.contacto || 'Sin coordinador'}</span>
-                    </div>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: 6px;">
-                    ${redesHtml}
-                    <button class="btn-action-icon" style="color: #2563EB; width: 30px; height: 30px;" title="Editar Nodo" onclick="openEditNodeModal('${k}')">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn-action-icon" style="color: #EF4444; width: 30px; height: 30px;" title="Eliminar Nodo" onclick="deleteNodeConfirm('${k}')">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
-                  </div>
-                </div>
-
-                <p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>📍 Dirección:</strong> ${n.direccion || 'Sin dirección'}</p>
-                <p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>🌱 Entrega:</strong> ${n.diaEntrega || 'A coordinar'}</p>
-                ${n.telefono ? `<p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>📱 WhatsApp:</strong> ${n.telefono}</p>` : ''}
-                ${!n.imagen ? `<div style="font-size: 12px; color: #64748B; margin-bottom: 6px; background: #F8FAFC; padding: 4px 8px; border-radius: 6px; display: inline-block;">🔑 PIN Acceso: <strong>${n.pin || '1234'}</strong></div>` : ''}
-              </div>
-            </div>
-
-            <div style="padding: 12px 18px; background: #F8FAFC; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-size: 12px; color: var(--text-muted);">Meta: <strong>${n.metaPropia || 100} un.</strong></span>
-              <div style="display: flex; gap: 12px;">
-                <a href="admin.html?ref=${k}" target="_blank" style="font-size: 12px; color: #2563EB; font-weight: 700; text-decoration: none;" title="Ingresar al panel de gestión de este nodo">
-                  Panel Nodo &rarr;
-                </a>
-                <a href="tienda.html?ref=${k}" target="_blank" style="font-size: 12px; color: var(--primary); font-weight: 700; text-decoration: none;" title="Abrir tienda personalizada para este nodo">
-                  Tienda &rarr;
-                </a>
-              </div>
-            </div>
-          </div>
-        `;
       });
 
+      const countAll = countActive + countPaused;
+
+      // Actualizar contadores
+      const cAllEl = document.getElementById('ncount-ALL');
+      if (cAllEl) cAllEl.innerText = `(${countAll})`;
+      const cActEl = document.getElementById('ncount-ACTIVE');
+      if (cActEl) cActEl.innerText = `(${countActive})`;
+      const cPauEl = document.getElementById('ncount-PAUSED');
+      if (cPauEl) cPauEl.innerText = `(${countPaused})`;
+      const cTraEl = document.getElementById('ncount-TRASH');
+      if (cTraEl) cTraEl.innerText = `(${countTrash})`;
+
+      // Filtrar según pestaña seleccionada
+      let nodesToDisplay = [];
+      if (ACTIVE_NODE_TAB === 'ALL') {
+        nodesToDisplay = [...activeList, ...pausedList];
+      } else if (ACTIVE_NODE_TAB === 'ACTIVE') {
+        nodesToDisplay = activeList;
+      } else if (ACTIVE_NODE_TAB === 'PAUSED') {
+        nodesToDisplay = pausedList;
+      } else if (ACTIVE_NODE_TAB === 'TRASH') {
+        nodesToDisplay = archivados.map(a => ({ ...a, _idKey: a.id, _status: 'TRASH' }));
+      }
+
+      let html = '';
+
+      if (nodesToDisplay.length === 0) {
+        let emptyMsg = "No hay nodos registrados en esta vista.";
+        if (ACTIVE_NODE_TAB === 'PAUSED') emptyMsg = "No hay nodos en reposo o pausados actualmente.";
+        if (ACTIVE_NODE_TAB === 'TRASH') emptyMsg = "La papelera de nodos está vacía. Todos los nodos activos están disponibles.";
+        html = `
+          <div style="grid-column: 1 / -1; background: white; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 36px; margin-bottom: 8px;">🌱</div>
+            <h4 style="font-size: 16px; color: #0F172A; margin-bottom: 4px;">${emptyMsg}</h4>
+            <p style="font-size: 13px; margin: 0;">Podés agregar nuevos nodos o restaurar los archivados.</p>
+          </div>
+        `;
+      } else {
+        nodesToDisplay.forEach(n => {
+          const k = n._idKey || n.id;
+          const redes = n.redes || {};
+          const isTrash = (n._status === 'TRASH');
+          const isPaused = (n._status === 'PAUSED');
+
+          let redesHtml = '';
+          if (redes.instagram) {
+            redesHtml += `<a href="https://instagram.com/${redes.instagram.replace('@','')}" target="_blank" style="color: #E1306C; font-size: 14px;" title="Instagram @${redes.instagram}"><i class="fab fa-instagram"></i></a>`;
+          }
+          if (redes.wspComunidad || redes.wspGrupo) {
+            redesHtml += `<a href="${redes.wspComunidad || redes.wspGrupo}" target="_blank" style="color: #25D366; font-size: 14px;" title="Comunidad WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
+          }
+
+          let cardBorder = 'border: 1px solid var(--border-color);';
+          let cardBg = 'background: white;';
+          let statusBadge = `<span style="font-size: 10px; font-weight: 800; background: #F0FDF4; color: #166534; padding: 2px 7px; border-radius: 10px; border: 1px solid #BBF7D0;">🟢 ACTIVO</span>`;
+
+          if (isPaused) {
+            cardBorder = 'border: 1px dashed #F59E0B;';
+            cardBg = 'background: #FFFBEB;';
+            statusBadge = `<span style="font-size: 10px; font-weight: 800; background: #FEF3C7; color: #B45309; padding: 2px 7px; border-radius: 10px; border: 1px solid #FDE68A;">⏳ EN REPOSO</span>`;
+          } else if (isTrash) {
+            cardBorder = 'border: 1px dashed #FECACA;';
+            cardBg = 'background: #FEF2F2; opacity: 0.9;';
+            statusBadge = `<span style="font-size: 10px; font-weight: 800; background: #FEE2E2; color: #DC2626; padding: 2px 7px; border-radius: 10px; border: 1px solid #FECACA;">🗑️ EN PAPELERA</span>`;
+          }
+
+          html += `
+            <div style="${cardBg} ${cardBorder} border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+              <div>
+                ${n.imagen ? `
+                  <div style="height: 110px; position: relative;">
+                    <img src="${n.imagen}" alt="${n.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700;">PIN: ${n.pin || '1234'}</div>
+                  </div>
+                ` : ''}
+                
+                <div style="padding: 18px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                      <span style="font-size: 26px;">${(n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌱'}</span>
+                      <div style="min-width: 0;">
+                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                          <h4 style="margin: 0; font-size: 16px; color: #0F172A; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${n.nombre}</h4>
+                          ${statusBadge}
+                        </div>
+                        <span style="font-size: 11.5px; color: var(--text-muted);">${n.contacto || 'Sin coordinador'}</span>
+                      </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      ${redesHtml}
+                      ${!isTrash ? `
+                        <button class="btn-action-icon" style="color: ${isPaused ? '#10A352' : '#F59E0B'}; width: 30px; height: 30px;" title="${isPaused ? 'Activar Nodo' : 'Poner Nodo en Reposo'}" onclick="togglePauseNode('${k}')">
+                          <i class="fas ${isPaused ? 'fa-play' : 'fa-pause'}"></i>
+                        </button>
+                        <button class="btn-action-icon" style="color: #2563EB; width: 30px; height: 30px;" title="Editar Nodo" onclick="openEditNodeModal('${k}')">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-action-icon" style="color: #EF4444; width: 30px; height: 30px;" title="Enviar a Papelera" onclick="deleteNodeConfirm('${k}')">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      ` : `
+                        <button class="btn-action-icon" style="color: #10A352; background: #DCFCE7; border: 1px solid #BBF7D0; width: 32px; height: 32px;" title="Restaurar Nodo y Activar" onclick="restoreNode('${k}')">
+                          <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="btn-action-icon" style="color: #EF4444; background: #FEE2E2; border: 1px solid #FECACA; width: 32px; height: 32px;" title="Eliminar Definitivamente" onclick="deletePermanentNode('${k}')">
+                          <i class="fas fa-times-circle"></i>
+                        </button>
+                      `}
+                    </div>
+                  </div>
+
+                  <p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>📍 Dirección:</strong> ${n.direccion || 'Sin dirección'}</p>
+                  <p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>🌱 Entrega:</strong> ${n.diaEntrega || 'A coordinar'}</p>
+                  ${n.telefono ? `<p style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><strong>📱 WhatsApp:</strong> ${n.telefono}</p>` : ''}
+                  ${!n.imagen ? `<div style="font-size: 12px; color: #64748B; margin-bottom: 6px; background: rgba(0,0,0,0.03); padding: 4px 8px; border-radius: 6px; display: inline-block;">🔑 PIN Acceso: <strong>${n.pin || '1234'}</strong></div>` : ''}
+                </div>
+              </div>
+
+              <div style="padding: 12px 18px; background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: var(--text-muted);">Meta: <strong>${n.metaPropia || 100} un.</strong></span>
+                <div style="display: flex; gap: 12px;">
+                  ${!isTrash ? `
+                    <a href="admin.html?ref=${k}" target="_blank" style="font-size: 12px; color: #2563EB; font-weight: 700; text-decoration: none;" title="Ingresar al panel de gestión de este nodo">
+                      Panel Nodo &rarr;
+                    </a>
+                    <a href="tienda.html?ref=${k}" target="_blank" style="font-size: 12px; color: var(--primary); font-weight: 700; text-decoration: none;" title="Abrir tienda personalizada para este nodo">
+                      Tienda &rarr;
+                    </a>
+                  ` : `
+                    <button type="button" onclick="restoreNode('${k}')" style="background: transparent; border: none; font-size: 12px; color: #10A352; font-weight: 700; cursor: pointer;">
+                      ♻️ Restaurar Nodo
+                    </button>
+                  `}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
       document.getElementById('super-nodes-grid').innerHTML = html;
+    }
+
+    function togglePauseNode(nodeId) {
+      const res = LunarEngine.togglePausarNodo(nodeId);
+      if (res) {
+        renderNodesSection();
+        alert(res.activo ? `▶️ Nodo "${res.nombre}" reactivado en la red.` : `⏸️ Nodo "${res.nombre}" puesto en reposo.`);
+      }
+    }
+
+    function restoreNode(nodeId) {
+      const res = LunarEngine.restaurarNodo(nodeId);
+      renderNodesSection();
+      renderSecuritySection();
+      alert(`♻️ Nodo "${res ? res.nombre : nodeId}" restaurado y dado de alta nuevamente con toda su información intacta.`);
+    }
+
+    function deletePermanentNode(nodeId) {
+      if (confirm(`¿Eliminar definitivamente el nodo "${nodeId}" de la papelera? Esta acción no se puede deshacer.`)) {
+        LunarEngine.eliminarNodoPermanente(nodeId);
+        renderNodesSection();
+        alert(`💥 Nodo eliminado de forma permanente.`);
+      }
     }
 
     // =================================================================
@@ -3103,11 +3251,11 @@
       const n = nodos[nodeId];
       if (!n) return;
 
-      if (confirm(`¿Estás seguro de que deseas eliminar el nodo "${n.nombre}" (${nodeId}) de la red?`)) {
+      if (confirm(`¿Mover el nodo "${n.nombre}" (${nodeId}) a la papelera? Podrás restaurarlo en cualquier momento desde la pestaña Papelera.`)) {
         LunarEngine.eliminarNodo(nodeId);
         renderNodesSection();
         renderSecuritySection();
-        alert(`🗑️ Nodo "${n.nombre}" eliminado correctamente.`);
+        alert(`🗑️ Nodo "${n.nombre}" movido a la papelera.`);
       }
     }
 

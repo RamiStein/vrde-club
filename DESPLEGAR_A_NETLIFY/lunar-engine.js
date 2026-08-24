@@ -821,7 +821,7 @@ class LunarEngine {
   }
 
   /**
-   * Obtiene todos los nodos configurados
+   * Obtiene todos los nodos configurados (activos y en reposo)
    */
   static obtenerNodos() {
     let nodos = LUNAR_CONFIG.nodos;
@@ -830,6 +830,14 @@ class LunarEngine {
         const stored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS') : null;
         if (stored) {
           nodos = JSON.parse(stored);
+        }
+        // Filtrar nodos eliminados/archivados
+        const elStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS_ELIMINADOS') : null;
+        if (elStored) {
+          const elList = JSON.parse(elStored) || [];
+          elList.forEach(deletedId => {
+            if (nodos[deletedId]) delete nodos[deletedId];
+          });
         }
       } catch(e){}
     }
@@ -856,6 +864,22 @@ class LunarEngine {
     }
 
     return nodos;
+  }
+
+  /**
+   * Obtiene nodos archivados en papelera
+   */
+  static obtenerNodosArchivados() {
+    let archivados = LUNAR_CONFIG._nodosArchivados || [];
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const stored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS_ARCHIVADOS') : null;
+        if (stored) {
+          archivados = JSON.parse(stored);
+        }
+      } catch(e){}
+    }
+    return archivados;
   }
 
   /**
@@ -891,6 +915,7 @@ class LunarEngine {
       pin: String(nodoData.pin || existing.pin || '1234').trim(),
       metaPropia: parseInt(nodoData.metaPropia || existing.metaPropia || 100, 10),
       imagen: nodoData.imagen || existing.imagen || '',
+      activo: nodoData.activo !== false,
       redes: {
         instagram: (nodoData.redes && nodoData.redes.instagram) || (existing.redes && existing.redes.instagram) || '',
         wspGrupo: (nodoData.redes && nodoData.redes.wspGrupo) || (existing.redes && existing.redes.wspGrupo) || '',
@@ -900,19 +925,122 @@ class LunarEngine {
       mostrarVrdedores: existing.mostrarVrdedores !== false
     };
 
+    // Si estaba en papelera, sacarlo
+    this.restaurarNodo(id, false);
+
     this.guardarNodos(nodos);
     return nodos[id];
   }
 
   /**
-   * Elimina un Nodo Almacén de la red
+   * Cambia el estado activo / en reposo de un nodo
+   */
+  static togglePausarNodo(nodoId) {
+    const nodos = this.obtenerNodos();
+    const id = String(nodoId || '').trim().toLowerCase();
+    if (!nodos[id]) return null;
+    nodos[id].activo = (nodos[id].activo === false) ? true : false;
+    this.guardarNodos(nodos);
+    return nodos[id];
+  }
+
+  /**
+   * Elimina un Nodo Almacén y lo envía a la papelera / archivados
    */
   static eliminarNodo(nodoId) {
     const nodos = this.obtenerNodos();
     const id = String(nodoId || '').trim().toLowerCase();
     if (!nodos[id]) return false;
+
+    const nodoAEliminar = JSON.parse(JSON.stringify(nodos[id]));
+    nodoAEliminar.fechaEliminado = new Date().toISOString();
     delete nodos[id];
     this.guardarNodos(nodos);
+
+    // Guardar en archivados y lista de eliminados
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const archStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS_ARCHIVADOS') : null;
+        let arch = archStored ? JSON.parse(archStored) : (LUNAR_CONFIG._nodosArchivados || []);
+        arch = arch.filter(x => x.id !== id);
+        arch.push(nodoAEliminar);
+        LUNAR_CONFIG._nodosArchivados = arch;
+        if (typeof localStorage.setItem === 'function') {
+          localStorage.setItem('VRDE_NODOS_ARCHIVADOS', JSON.stringify(arch));
+        }
+
+        const elStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS_ELIMINADOS') : null;
+        let el = elStored ? JSON.parse(elStored) : [];
+        if (!el.includes(id)) el.push(id);
+        if (typeof localStorage.setItem === 'function') {
+          localStorage.setItem('VRDE_NODOS_ELIMINADOS', JSON.stringify(el));
+        }
+      } catch(e){}
+    }
+
+    return true;
+  }
+
+  /**
+   * Restaura un nodo desde la papelera
+   */
+  static restaurarNodo(nodoId, guardar = true) {
+    const id = String(nodoId || '').trim().toLowerCase();
+    let nodoRestaurado = null;
+
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const archStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS_ARCHIVADOS') : null;
+        if (archStored) {
+          let arch = JSON.parse(archStored) || [];
+          nodoRestaurado = arch.find(x => x.id === id);
+          arch = arch.filter(x => x.id !== id);
+          if (typeof localStorage.setItem === 'function') {
+            localStorage.setItem('VRDE_NODOS_ARCHIVADOS', JSON.stringify(arch));
+          }
+          LUNAR_CONFIG._nodosArchivados = arch;
+        }
+
+        const elStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS_ELIMINADOS') : null;
+        if (elStored) {
+          let el = JSON.parse(elStored) || [];
+          el = el.filter(x => x !== id);
+          if (typeof localStorage.setItem === 'function') {
+            localStorage.setItem('VRDE_NODOS_ELIMINADOS', JSON.stringify(el));
+          }
+        }
+      } catch(e){}
+    }
+
+    if (guardar && nodoRestaurado) {
+      delete nodoRestaurado.fechaEliminado;
+      nodoRestaurado.activo = true;
+      const nodos = this.obtenerNodos();
+      nodos[id] = nodoRestaurado;
+      this.guardarNodos(nodos);
+    }
+
+    return nodoRestaurado;
+  }
+
+  /**
+   * Elimina definitivamente un nodo de la papelera
+   */
+  static eliminarNodoPermanente(nodoId) {
+    const id = String(nodoId || '').trim().toLowerCase();
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const archStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_NODOS_ARCHIVADOS') : null;
+        if (archStored) {
+          let arch = JSON.parse(archStored) || [];
+          arch = arch.filter(x => x.id !== id);
+          if (typeof localStorage.setItem === 'function') {
+            localStorage.setItem('VRDE_NODOS_ARCHIVADOS', JSON.stringify(arch));
+          }
+          LUNAR_CONFIG._nodosArchivados = arch;
+        }
+      } catch(e){}
+    }
     return true;
   }
 
@@ -921,7 +1049,9 @@ class LunarEngine {
    */
   static obtenerVrdedoresNodo(nodoId) {
     const nodos = this.obtenerNodos();
-    const n = nodos[nodoId.toLowerCase()] || nodos['escobar'];
+    const nodeKeys = Object.keys(nodos);
+    const safeKey = nodoId && nodos[nodoId.toLowerCase()] ? nodoId.toLowerCase() : (nodeKeys[0] || 'vicente_lopez');
+    const n = nodos[safeKey] || {};
     return {
       mostrar: n.mostrarVrdedores !== false,
       lista: n.vrdedores || []
