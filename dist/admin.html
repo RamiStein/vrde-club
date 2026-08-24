@@ -341,6 +341,9 @@
     @media (max-width: 900px) {
       .product-detail-sheet {
         grid-template-columns: 1fr;
+      }
+    }
+
     /* Estilos Sincronario Lunar y Calendario */
     .lunar-calendar-card {
       background: white;
@@ -453,6 +456,14 @@
       <h2 style="font-size: 22px; color: #0F172A; margin-bottom: 4px;" id="admin-login-name">Panel Gestor de Nodo</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 18px;">Ingresa el PIN de 4 dígitos de tu almacén</p>
       
+      <!-- Selector de nodo en login -->
+      <div style="margin-bottom: 12px; text-align: left;">
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Nodo a Gestionar</label>
+        <select id="loginNodoSelect" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 13px; font-weight: 600;" onchange="changeLoginNode(this.value)">
+          <!-- Inyectado por JS -->
+        </select>
+      </div>
+
       <!-- Selector de ciclo en login -->
       <div style="margin-bottom: 16px; text-align: left;">
         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Compra Lunar a Abrir</label>
@@ -1234,7 +1245,7 @@
   <!-- Scripts -->
   <script src="lunar-engine.js?v=7"></script>
   <script>
-    let CURRENT_REF = 'escobar';
+    let CURRENT_REF = '';
     let CURRENT_CICLO_ID = 'piscis-ago-2026';
     let CICLO_LUNAR = null;
     let ACTIVE_PRODUCT_FILTER = 'ALL';
@@ -1242,17 +1253,33 @@
     let ORDERS_DATA = [];
 
     document.addEventListener('DOMContentLoaded', () => {
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodeKeys = Object.keys(allNodos);
       const urlParams = new URLSearchParams(window.location.search);
       const refParam = urlParams.get('ref');
-      const allNodos = LunarEngine.obtenerNodos();
+      
       if (refParam && allNodos[refParam.toLowerCase()]) {
         CURRENT_REF = refParam.toLowerCase();
+      } else if (nodeKeys.length > 0) {
+        CURRENT_REF = nodeKeys[0];
+      } else {
+        CURRENT_REF = 'vicente_lopez';
       }
       
       const cicloActual = LunarEngine.obtenerCicloActual();
       CURRENT_CICLO_ID = cicloActual.id || 'piscis-ago-2026';
 
-      // Poblar selector en login
+      // Poblar selector de nodo en login
+      let nodeSelectHtml = '';
+      nodeKeys.forEach(k => {
+        const n = allNodos[k];
+        const sel = (k === CURRENT_REF) ? 'selected' : '';
+        nodeSelectHtml += `<option value="${k}" ${sel}>${n.nombre}</option>`;
+      });
+      const loginNodoSel = document.getElementById('loginNodoSelect');
+      if (loginNodoSel) loginNodoSel.innerHTML = nodeSelectHtml;
+
+      // Poblar selector de ciclo en login
       const ciclos = LunarEngine.obtenerListaCiclos();
       let selectHtml = '';
       ciclos.forEach(c => {
@@ -1268,10 +1295,21 @@
       }
     });
 
+    function changeLoginNode(nodeId) {
+      CURRENT_REF = nodeId;
+      const allNodos = LunarEngine.obtenerNodos();
+      const loginName = document.getElementById('admin-login-name');
+      if (loginName && allNodos[CURRENT_REF]) {
+        loginName.innerText = `Panel Gestor • ${allNodos[CURRENT_REF].nombre}`;
+      }
+    }
+
     function attemptLogin() {
       const pin = document.getElementById('pinInput').value;
       const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      const nodeKeys = Object.keys(nodosObj);
+      const safeKey = CURRENT_REF && nodosObj[CURRENT_REF] ? CURRENT_REF : (nodeKeys[0] || 'vicente_lopez');
+      const nodoData = nodosObj[safeKey] || {};
 
       const loginSelect = document.getElementById('loginCicloSelect');
       if (loginSelect) {
@@ -1337,9 +1375,13 @@
     function loadDashboard() {
       CICLO_LUNAR = LunarEngine.obtenerCicloPorId(CURRENT_CICLO_ID);
       const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      const nodeKeys = Object.keys(nodosObj);
+      if (!CURRENT_REF || !nodosObj[CURRENT_REF]) {
+        CURRENT_REF = nodeKeys.length > 0 ? nodeKeys[0] : 'vicente_lopez';
+      }
+      const nodoData = nodosObj[CURRENT_REF] || {};
 
-      document.getElementById('ad-title').innerText = `Panel de ${nodoData.nombre}`;
+      document.getElementById('ad-title').innerText = `Panel de ${nodoData.nombre || 'Nodo'}`;
       const safeDashLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
       document.getElementById('dash-logo').innerText = safeDashLogo;
       document.getElementById('btn-view-shop').href = `tienda.html?ref=${CURRENT_REF}`;
@@ -1735,13 +1777,14 @@
 
     function copyProductSalesPitch(prodId) {
       const p = LunarEngine.obtenerProductos(CURRENT_REF, false).find(item => item.id === prodId);
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       if (!p) return;
 
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       
       let text = `🌱 *${p.nombre}* • Compra Colectiva Lunar\n`;
-      text += `📍 *Origen:* ${p.origen} (${p.variedad})\n`;
+      text += `📍  *Origen:* ${p.origen} (${p.variedad})\n`;
       text += `💰 *Precio Minorista:* $${(p.p1 || 0).toLocaleString('es-AR')}\n`;
       if (p.p2) text += `📍¦ *Precio Mayorista (+${p.m2} un):* $${(p.p2 || 0).toLocaleString('es-AR')}\n`;
       text += `\n✨ *¿Por qué elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo del campo sin agrotóxicos.'}\n\n`;
@@ -1758,7 +1801,8 @@
     // =================================================================
 
     function sendCompiledToCentral() {
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       const totals = getCompiledTotals();
       const prods = LunarEngine.obtenerProductos(CURRENT_REF, false);
 
@@ -1983,7 +2027,8 @@
 
     function renderEconomySection() {
       const econ = LunarEngine.calcularEconomiaNodo(CURRENT_REF, ORDERS_DATA);
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
 
       // KPIs
       document.getElementById('econ-total-ventas').innerText = `$${econ.totalVentas.toLocaleString('es-AR')}`;
@@ -2083,7 +2128,8 @@
         );
       }
 
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
 
       let html = '';
@@ -2228,7 +2274,8 @@
     }
 
     function copyCrmBroadcastMsg() {
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       
       let msg = `🌱 *COMPRA COLECTIVA LUNAR • ${nodoData.nombre.toUpperCase()}*\n`;
@@ -2360,7 +2407,9 @@
       const livePhase = LunarEngine.obtenerFaseLunar(new Date());
       const cicloActivo = LunarEngine.obtenerCicloActual();
       const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'] || {};
+      const nodeKeys = Object.keys(nodosObj);
+      const safeKey = CURRENT_REF && nodosObj[CURRENT_REF] ? CURRENT_REF : (nodeKeys[0] || 'vicente_lopez');
+      const nodoData = nodosObj[safeKey] || {};
 
       // Actualizar tarjeta en vivo
       const emojiEl = document.getElementById('node-live-moon-emoji');
@@ -2468,7 +2517,9 @@
     function copyNodeDeliveryBroadcast() {
       const ciclo = LunarEngine.obtenerCicloActual();
       const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'] || {};
+      const nodeKeys = Object.keys(nodosObj);
+      const safeKey = CURRENT_REF && nodosObj[CURRENT_REF] ? CURRENT_REF : (nodeKeys[0] || 'vicente_lopez');
+      const nodoData = nodosObj[safeKey] || {};
 
       const dia = (document.getElementById('nodo-cycle-entrega-dia')?.value || nodoData.diaEntrega || '').trim();
       const dir = (document.getElementById('nodo-cycle-entrega-dir')?.value || nodoData.direccion || '').trim();

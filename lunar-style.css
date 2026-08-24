@@ -919,3 +919,107 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.35;
 }
 
+/* ==========================================================================
+   ESTILOS GLOBALES DE SINCRONARIO LUNAR Y CALENDARIO
+   ========================================================================== */
+.lunar-calendar-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.lunar-cal-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px;
+}
+.lunar-cal-table-min {
+  min-width: 600px;
+  width: 100%;
+}
+.lunar-cal-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.lunar-cal-header-day {
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748B;
+  padding: 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.lunar-cal-day {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  min-height: 82px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.lunar-cal-day:hover {
+  border-color: #94A3B8;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+.lunar-cal-day.other-month {
+  background: #F8FAFC;
+  opacity: 0.4;
+}
+.lunar-cal-day.is-today {
+  border: 2px solid var(--primary);
+  background: #F0FDF4;
+}
+.lunar-cal-day.has-event {
+  border-color: #CBD5E1;
+}
+.lunar-phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 6px;
+  margin-top: 2px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+.lunar-phase-nueva { background: #0F172A; color: white; }
+.lunar-phase-creciente { background: #E0F2FE; color: #0369A1; }
+.lunar-phase-llena { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+.lunar-phase-menguante { background: #EDE9FE; color: #6D28D9; }
+.lunar-event-pill {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 6px;
+  line-height: 1.2;
+  margin-top: 2px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
