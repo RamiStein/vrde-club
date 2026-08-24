@@ -429,6 +429,40 @@
       text-overflow: ellipsis;
       box-sizing: border-box;
     }
+    .prod-filter-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #CBD5E1;
+      background: white;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .prod-filter-tab:hover {
+      background: #F1F5F9;
+      border-color: #94A3B8;
+    }
+    .prod-filter-tab.active {
+      background: #0F172A;
+      color: white;
+      border-color: #0F172A;
+      box-shadow: 0 3px 10px rgba(15,23,42,0.18);
+    }
+    .prod-filter-tab .badge-count {
+      background: rgba(0,0,0,0.08);
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+    .prod-filter-tab.active .badge-count {
+      background: rgba(255,255,255,0.22);
+      color: white;
+    }
   </style>
 </head>
 <body style="background-color: #F8FAFC; overflow-x: hidden; width: 100%;">
@@ -663,6 +697,22 @@
           </div>
           <button class="btn-checkout-cta" style="padding: 10px 22px; font-size: 14px; display: flex; align-items: center; gap: 8px;" onclick="openCreateProductModal()">
             <i class="fas fa-plus"></i> Agregar Nuevo Producto
+          </button>
+        </div>
+
+        <!-- Pestañas de Filtro: Todos / Activos / En Reposo / Papelera -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;">
+          <button class="prod-filter-tab active" id="filter-prod-all" onclick="setProductFilter('all')">
+            <i class="fas fa-boxes"></i> Todos <span class="badge-count" id="count-prod-all">0</span>
+          </button>
+          <button class="prod-filter-tab" id="filter-prod-active" onclick="setProductFilter('active')">
+            <i class="fas fa-check-circle" style="color: #10B981;"></i> 🟢 Activos en Tienda <span class="badge-count" id="count-prod-active">0</span>
+          </button>
+          <button class="prod-filter-tab" id="filter-prod-paused" onclick="setProductFilter('paused')">
+            <i class="fas fa-pause-circle" style="color: #F59E0B;"></i> 💤 En Reposo / Pausados <span class="badge-count" id="count-prod-paused">0</span>
+          </button>
+          <button class="prod-filter-tab" id="filter-prod-trash" onclick="setProductFilter('trash')">
+            <i class="fas fa-trash-alt" style="color: #EF4444;"></i> 🗑️ Papelera / Archivados <span class="badge-count" id="count-prod-trash">0</span>
           </button>
         </div>
 
@@ -2127,15 +2177,87 @@
     // GESTIÓN DE PRODUCTOS Y PRECIOS
     // =================================================================
 
+    let CURRENT_PRODUCT_FILTER = 'all';
+
+    function setProductFilter(filter) {
+      CURRENT_PRODUCT_FILTER = filter;
+      document.querySelectorAll('.prod-filter-tab').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`filter-prod-${filter}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderProductsTable();
+    }
+
     function renderProductsTable() {
-      const prods = LunarEngine.obtenerProductos(null, false);
+      const allProds = LunarEngine.obtenerProductos(null, false);
+      const trashProds = LunarEngine.obtenerProductosArchivados ? LunarEngine.obtenerProductosArchivados() : [];
+
+      const activeCount = allProds.filter(p => p.activo !== false).length;
+      const pausedCount = allProds.filter(p => p.activo === false).length;
+      const totalCount = allProds.length;
+      const trashCount = trashProds.length;
+
+      const cntAll = document.getElementById('count-prod-all');
+      const cntAct = document.getElementById('count-prod-active');
+      const cntPau = document.getElementById('count-prod-paused');
+      const cntTra = document.getElementById('count-prod-trash');
+
+      if (cntAll) cntAll.innerText = totalCount;
+      if (cntAct) cntAct.innerText = activeCount;
+      if (cntPau) cntPau.innerText = pausedCount;
+      if (cntTra) cntTra.innerText = trashCount;
+
+      let displayList = [];
+      let isTrashView = (CURRENT_PRODUCT_FILTER === 'trash');
+
+      if (isTrashView) {
+        displayList = trashProds;
+      } else if (CURRENT_PRODUCT_FILTER === 'active') {
+        displayList = allProds.filter(p => p.activo !== false);
+      } else if (CURRENT_PRODUCT_FILTER === 'paused') {
+        displayList = allProds.filter(p => p.activo === false);
+      } else {
+        // 'all': Mostrar productos activos primero y pausados abajo
+        displayList = [...allProds].sort((a, b) => {
+          const aAct = (a.activo !== false) ? 1 : 0;
+          const bAct = (b.activo !== false) ? 1 : 0;
+          return bAct - aAct;
+        });
+      }
+
       let html = '';
 
-      prods.forEach(p => {
+      if (displayList.length === 0) {
+        const msg = isTrashView 
+          ? 'No hay productos en la papelera / archivados.' 
+          : (CURRENT_PRODUCT_FILTER === 'paused' 
+              ? 'No hay productos en reposo. Todos están activos en la tienda.' 
+              : 'No se encontraron productos en el catálogo.');
+        html = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 36px 20px; color: #64748B; font-size: 14px;">
+              <i class="fas fa-box-open" style="font-size: 32px; margin-bottom: 10px; color: #94A3B8; display: block;"></i>
+              ${msg}
+            </td>
+          </tr>
+        `;
+        document.getElementById('super-products-tbody').innerHTML = html;
+        return;
+      }
+
+      displayList.forEach(p => {
         const isActive = p.activo !== false;
-        const statusBtn = isActive 
-          ? `<button class="status-toggle-btn status-active" onclick="toggleProductActive('${p.id}')"><i class="fas fa-check-circle"></i> Activo</button>`
-          : `<button class="status-toggle-btn status-paused" onclick="toggleProductActive('${p.id}')"><i class="fas fa-pause-circle"></i> Pausado</button>`;
+        const rowStyle = isTrashView 
+          ? 'background: #FFF1F2; opacity: 0.9;'
+          : (!isActive ? 'background: #F8FAFC; opacity: 0.8;' : '');
+
+        let statusBtn = '';
+        if (isTrashView) {
+          statusBtn = `<span style="background: #FEE2E2; color: #DC2626; padding: 4px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-trash-alt"></i> En Papelera</span>`;
+        } else {
+          statusBtn = isActive 
+            ? `<button class="status-toggle-btn status-active" onclick="toggleProductActive('${p.id}')" title="Clic para poner en reposo"><i class="fas fa-check-circle"></i> 🟢 Activo</button>`
+            : `<button class="status-toggle-btn status-paused" onclick="toggleProductActive('${p.id}')" title="Clic para reactivar en tienda"><i class="fas fa-pause-circle"></i> 💤 En Reposo</button>`;
+        }
 
         let nodesLabel = 'Todos';
         if (p.nodos && !p.nodos.includes('TODOS')) {
@@ -2156,7 +2278,7 @@
           });
           presentacionesHtml += `</div>`;
         } else {
-          presentacionesHtml = `<span style="background: #F1F5F9; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">${p.unidad}</span>`;
+          presentacionesHtml = `<span style="background: #F1F5F9; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">${p.unidad || 'Unidad'}</span>`;
         }
 
         // Renderizado de Costo Base
@@ -2187,44 +2309,62 @@
         } else {
           escalasHtml = `
             <div><span class="tier-badge-pill">Minorista: <strong>$${(p.p1 || 0).toLocaleString('es-AR')}</strong></span></div>
-            ${p.p2 ? `<div><span class="tier-badge-pill">Mayorista (+${p.m2}): <strong>$${p.p2.toLocaleString('es-AR')}</strong></span></div>` : ''}
-            ${p.p3 ? `<div><span class="tier-badge-pill">Distribuidora (+${p.m3}): <strong>$${p.p3.toLocaleString('es-AR')}</strong></span></div>` : ''}
+            ${p.p2 ? `<div><span class="tier-badge-pill">Mayorista (+${p.m2 || 20}): <strong>$${p.p2.toLocaleString('es-AR')}</strong></span></div>` : ''}
+            ${p.p3 ? `<div><span class="tier-badge-pill">Distribuidora (+${p.m3 || 50}): <strong>$${p.p3.toLocaleString('es-AR')}</strong></span></div>` : ''}
+          `;
+        }
+
+        // Acciones: normales vs papelera
+        let actionsHtml = '';
+        if (isTrashView) {
+          actionsHtml = `
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+              <button class="btn-checkout-cta" style="padding: 6px 12px; font-size: 12px; background: #10B981; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;" onclick="restoreProduct('${p.id}')" title="Restaurar este producto">
+                <i class="fas fa-trash-restore"></i> Restaurar
+              </button>
+              <button class="btn-action-icon" style="color: #DC2626; border-color: #FECACA; background: #FEF2F2;" title="Eliminar Definitivamente" onclick="deletePermanentProduct('${p.id}')">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          `;
+        } else {
+          actionsHtml = `
+            <div style="display: flex; justify-content: flex-end; gap: 6px;">
+              <button class="btn-action-icon" title="Ajuste Rápido de Precios" onclick="openQuickPriceModal('${p.id}')">
+                <i class="fas fa-dollar-sign"></i>
+              </button>
+              <button class="btn-action-icon" title="Editar Producto y Formatos" onclick="openEditProductModal('${p.id}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-action-icon" style="color: #DC2626;" title="Mover a Papelera / Archivados" onclick="deleteProduct('${p.id}')">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
           `;
         }
 
         html += `
-          <tr>
+          <tr style="${rowStyle}">
             <td>
               <div style="display: flex; align-items: center; gap: 12px;">
-                <img src="${p.img}" alt="${p.nombre}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);">
+                <img src="${p.img || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400'}" alt="${p.nombre}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);">
                 <div>
                   <strong style="color: #0F172A; font-size: 14.5px;">${p.nombre}</strong>
                   <div style="font-size: 11.5px; color: var(--text-muted);">${p.subtitulo || ''}</div>
+                  ${!isActive && !isTrashView ? '<span style="font-size: 10px; background: #FEF3C7; color: #92400E; padding: 1px 6px; border-radius: 4px; font-weight: 700; display: inline-block; margin-top: 2px;">💤 En Reposo (Oculto en Tienda)</span>' : ''}
                 </div>
               </div>
             </td>
             <td>
-              <div><strong>${p.origen}</strong></div>
-              <div style="font-size: 12px; color: var(--text-muted);">${p.variedad}</div>
+              <div><strong>${p.origen || 'Agroecológico'}</strong></div>
+              <div style="font-size: 12px; color: var(--text-muted);">${p.variedad || ''}</div>
             </td>
             <td>${presentacionesHtml}</td>
             <td>${costoHtml}</td>
             <td>${escalasHtml}</td>
             <td><span style="font-size: 12px; color: #475569; font-weight: 600;">${nodesLabel}</span></td>
             <td>${statusBtn}</td>
-            <td style="text-align: right;">
-              <div style="display: flex; justify-content: flex-end; gap: 6px;">
-                <button class="btn-action-icon" title="Ajuste Rápido de Precios" onclick="openQuickPriceModal('${p.id}')">
-                  <i class="fas fa-dollar-sign"></i>
-                </button>
-                <button class="btn-action-icon" title="Editar Producto y Formatos" onclick="openEditProductModal('${p.id}')">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn-action-icon" style="color: #DC2626;" title="Eliminar Producto" onclick="deleteProduct('${p.id}')">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </td>
+            <td style="text-align: right;">${actionsHtml}</td>
           </tr>
         `;
       });
@@ -2781,8 +2921,21 @@
     }
 
     function deleteProduct(prodId) {
-      if (confirm("¿Estás seguro de que deseas eliminar este producto del catálogo?")) {
+      if (confirm("¿Mover este producto a la Papelera / Archivados?\n\nPodrás restaurarlo en cualquier momento desde la pestaña 'Papelera / Archivados' con un solo clic.")) {
         LunarEngine.eliminarProducto(prodId);
+        renderProductsTable();
+      }
+    }
+
+    function restoreProduct(prodId) {
+      LunarEngine.restaurarProducto(prodId);
+      alert("✅ ¡Producto restaurado con éxito al catálogo!");
+      renderProductsTable();
+    }
+
+    function deletePermanentProduct(prodId) {
+      if (confirm("⚠️ ¿Estás seguro de eliminar este producto definitivamente de la papelera?\nEsta acción no se puede deshacer.")) {
+        LunarEngine.eliminarProductoPermanente(prodId);
         renderProductsTable();
       }
     }

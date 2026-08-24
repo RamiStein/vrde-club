@@ -676,23 +676,51 @@ class LunarEngine {
   }
 
   /**
-   * Elimina un producto del catálogo de forma permanente
+   * Envía un producto a la Papelera / Archivados
    */
   static eliminarProducto(prodId) {
     let prods = this.obtenerProductos(null, false);
+    const itemToDelete = prods.find(p => p.id === prodId) || LUNAR_CONFIG.productos.find(p => p.id === prodId);
     prods = prods.filter(p => p.id !== prodId);
+
+    if (!LUNAR_CONFIG._archivados) LUNAR_CONFIG._archivados = [];
+    if (itemToDelete) {
+      LUNAR_CONFIG._archivados = LUNAR_CONFIG._archivados.filter(x => x.id !== prodId);
+      LUNAR_CONFIG._archivados.push(itemToDelete);
+    }
+    if (!LUNAR_CONFIG._eliminados) LUNAR_CONFIG._eliminados = [];
+    if (!LUNAR_CONFIG._eliminados.includes(prodId)) {
+      LUNAR_CONFIG._eliminados.push(prodId);
+    }
 
     if (typeof localStorage !== 'undefined') {
       try {
         let eliminados = [];
-        const elStored = localStorage.getItem('VRDE_PRODUCTOS_ELIMINADOS');
+        const elStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PRODUCTOS_ELIMINADOS') : null;
         if (elStored) {
           eliminados = JSON.parse(elStored) || [];
         }
         if (!eliminados.includes(prodId)) {
           eliminados.push(prodId);
         }
-        localStorage.setItem('VRDE_PRODUCTOS_ELIMINADOS', JSON.stringify(eliminados));
+        if (typeof localStorage.setItem === 'function') {
+          localStorage.setItem('VRDE_PRODUCTOS_ELIMINADOS', JSON.stringify(eliminados));
+        }
+
+        // Guardar snapshot en papelera/archivados
+        let archivados = [];
+        const archStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PRODUCTOS_ARCHIVADOS') : null;
+        if (archStored) {
+          archivados = JSON.parse(archStored) || [];
+        }
+        if (itemToDelete) {
+          archivados = archivados.filter(x => x.id !== prodId);
+          archivados.push(itemToDelete);
+          if (typeof localStorage.setItem === 'function') {
+            localStorage.setItem('VRDE_PRODUCTOS_ARCHIVADOS', JSON.stringify(archivados));
+          }
+        }
+
         if (typeof localStorage.setItem === 'function') {
           localStorage.setItem('VRDE_PRODUCTOS', JSON.stringify(prods));
         }
@@ -700,6 +728,96 @@ class LunarEngine {
     }
     LUNAR_CONFIG.productos = prods;
     return prods;
+  }
+
+  /**
+   * Obtiene la lista de productos en Papelera / Archivados
+   */
+  static obtenerProductosArchivados() {
+    let archivados = LUNAR_CONFIG._archivados || [];
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const archStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PRODUCTOS_ARCHIVADOS') : null;
+        if (archStored) {
+          archivados = JSON.parse(archStored) || [];
+        }
+        const elStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PRODUCTOS_ELIMINADOS') : null;
+        const eliminados = elStored ? (JSON.parse(elStored) || []) : (LUNAR_CONFIG._eliminados || []);
+
+        // Si hay IDs en eliminados que no están en archivados, buscar en semilla por defecto
+        eliminados.forEach(id => {
+          if (!archivados.some(a => a.id === id)) {
+            const seed = LUNAR_CONFIG.productos.find(x => x.id === id);
+            if (seed) archivados.push(seed);
+          }
+        });
+      } catch(e) {}
+    }
+    return archivados;
+  }
+
+  /**
+   * Restaura un producto de la papelera con 1 solo clic
+   */
+  static restaurarProducto(prodId) {
+    const archivados = this.obtenerProductosArchivados();
+    const itemToRestore = archivados.find(x => x.id === prodId) || LUNAR_CONFIG.productos.find(x => x.id === prodId) || { id: prodId, nombre: `Producto ${prodId}`, activo: true };
+
+    if (itemToRestore) {
+      itemToRestore.activo = true;
+      this.guardarProducto(itemToRestore);
+    }
+
+    if (LUNAR_CONFIG._archivados) {
+      LUNAR_CONFIG._archivados = LUNAR_CONFIG._archivados.filter(x => x.id !== prodId);
+    }
+    if (LUNAR_CONFIG._eliminados) {
+      LUNAR_CONFIG._eliminados = LUNAR_CONFIG._eliminados.filter(x => x !== prodId);
+    }
+
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const archStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PRODUCTOS_ARCHIVADOS') : null;
+        if (archStored) {
+          let arch = JSON.parse(archStored) || [];
+          arch = arch.filter(x => x.id !== prodId);
+          if (typeof localStorage.setItem === 'function') {
+            localStorage.setItem('VRDE_PRODUCTOS_ARCHIVADOS', JSON.stringify(arch));
+          }
+        }
+        const elStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PRODUCTOS_ELIMINADOS') : null;
+        if (elStored) {
+          let el = JSON.parse(elStored) || [];
+          el = el.filter(id => id !== prodId);
+          if (typeof localStorage.setItem === 'function') {
+            localStorage.setItem('VRDE_PRODUCTOS_ELIMINADOS', JSON.stringify(el));
+          }
+        }
+      } catch(e) {}
+    }
+    return this.obtenerProductos(null, false);
+  }
+
+  /**
+   * Elimina definitivamente de la papelera
+   */
+  static eliminarProductoPermanente(prodId) {
+    if (LUNAR_CONFIG._archivados) {
+      LUNAR_CONFIG._archivados = LUNAR_CONFIG._archivados.filter(x => x.id !== prodId);
+    }
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const archStored = (typeof localStorage.getItem === 'function') ? localStorage.getItem('VRDE_PRODUCTOS_ARCHIVADOS') : null;
+        if (archStored) {
+          let arch = JSON.parse(archStored) || [];
+          arch = arch.filter(x => x.id !== prodId);
+          if (typeof localStorage.setItem === 'function') {
+            localStorage.setItem('VRDE_PRODUCTOS_ARCHIVADOS', JSON.stringify(arch));
+          }
+        }
+      } catch(e) {}
+    }
+    return true;
   }
 
   /**
