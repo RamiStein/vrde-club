@@ -1269,7 +1269,7 @@
       });
 
       // Subtotal y precio unitario para el formato activo
-      const activeUnitPrice = getProductPrice(currentV, currentQty || 1, p.id);
+      const activeUnitPrice = getProductPrice(currentV, currentQty || 1);
       const activeFormatSubtotal = currentQty * activeUnitPrice;
 
       // Resumen de otros formatos de este mismo producto en el carrito
@@ -1283,7 +1283,7 @@
             </div>
             ${otherInCart.map(ov => {
               const oQty = CART_ITEMS[`${p.id}_${ov.id || ov.label}`].qty;
-              const oPrice = getProductPrice(ov, oQty, p.id);
+              const oPrice = getProductPrice(ov, oQty);
               return `<div style="display: flex; justify-content: space-between; margin-top: 2px;"><span>• ${oQty}x ${ov.label}</span><strong>$${(oQty * oPrice).toLocaleString('es-AR')}</strong></div>`;
             }).join('')}
           </div>
@@ -1440,13 +1440,13 @@
     function applyTierDirectly(tierNum) {
       const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
       if (!p) return;
-      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1, m1: 1, m2: 20, m3: 50 }];
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1, m1: 1, m2: 6, m3: 12 }];
       const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
       const v = variants[vIdx] || variants[0];
 
       let targetQty = 1;
-      if (tierNum === 2 && v.p2) targetQty = v.m2 || 20;
-      else if (tierNum === 3 && v.p3) targetQty = v.m3 || 50;
+      if (tierNum === 2 && v.p2) targetQty = Number(v.m2) || 6;
+      else if (tierNum === 3 && v.p3) targetQty = Number(v.m3) || 12;
 
       const cartKey = `${p.id}_${v.id || v.label}`;
       CART_ITEMS[cartKey] = {
@@ -1575,24 +1575,27 @@
         updateFloatingCart();
       }
 
-      ACTIVE_PRODUCT_INDEX = (ACTIVE_PRODUCT_INDEX + 1) % DISPLAY_PRODUCTS.length;
-      renderProductTabs();
-      renderSwipeStore();
+      navigateNextProduct();
+    }
+
+    function renderSwipeIfActive() {
+      if (CURRENT_VIEW_MODE === 'swipe') {
+        renderSwipeStore();
+      }
     }
 
     // ==========================================
     // CARRITO Y MODAL CHECKOUT
     // ==========================================
-    function getProductPrice(variant, qty, prodId = null) {
-      const netUnits = prodId ? LunarEngine.obtenerUnidadesAcumuladasProducto(prodId) : 0;
-      const totalUnits = Math.max(qty, netUnits + qty);
+    function getProductPrice(variant, qty) {
+      if (!variant) return 0;
+      const q = Math.max(1, Number(qty) || 1);
+      const m3 = Number(variant.m3) || 12;
+      const m2 = Number(variant.m2) || 6;
 
-      const m3 = variant.m3 || 40;
-      const m2 = variant.m2 || 20;
-
-      if (variant.p3 && variant.p3 > 0 && totalUnits >= m3) return variant.p3;
-      if (variant.p2 && variant.p2 > 0 && totalUnits >= m2) return variant.p2;
-      return variant.p1;
+      if (variant.p3 && variant.p3 > 0 && q >= m3) return Number(variant.p3);
+      if (variant.p2 && variant.p2 > 0 && q >= m2) return Number(variant.p2);
+      return Number(variant.p1 || 0);
     }
 
     function updateFloatingCart() {
@@ -1601,7 +1604,7 @@
 
       Object.keys(CART_ITEMS).forEach(k => {
         const item = CART_ITEMS[k];
-        const price = getProductPrice(item.variant, item.qty, item.prod?.id);
+        const price = getProductPrice(item.variant, item.qty);
         total += item.qty * price;
         totalUnits += item.qty;
       });
@@ -1616,7 +1619,7 @@
 
       Object.keys(CART_ITEMS).forEach(k => {
         const item = CART_ITEMS[k];
-        const price = getProductPrice(item.variant, item.qty, item.prod?.id);
+        const price = getProductPrice(item.variant, item.qty);
         const lineTotal = item.qty * price;
         subtotal += lineTotal;
 
@@ -1624,11 +1627,11 @@
           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; margin-bottom: 8px; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
             <div>
               <strong>${item.qty}x</strong> ${item.prod.nombre}
-              <div style="font-size: 11px; color: var(--text-muted);">${item.variant.label}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">${item.variant.label} • $${price.toLocaleString('es-AR')} c/u</div>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-weight: 700; color: var(--primary);">$${lineTotal.toLocaleString('es-AR')}</span>
-              <button onclick="removeCartItemByKey('${k}')" style="background: none; border: none; color: #EF4444; font-size: 12px; cursor: pointer;">
+              <button onclick="removeCartItemByKey('${k}')" style="background: none; border: none; color: #EF4444; font-size: 12px; cursor: pointer;" title="Eliminar item">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </div>

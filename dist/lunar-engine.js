@@ -177,12 +177,17 @@ const LUNAR_CONFIG = {
       subtitulo: 'Extra Virgen 1° Prensa • Olivares centenarios de Villa Mazán, La Rioja',
       origen: 'Villa Mazán, La Rioja',
       variedad: 'Arauco • Lote Agroecológico #GAIA-25-A',
-      meta: 80,
-      unidad: 'botella 1L',
-      costo: 11500,
-      p1: 18300, m1: 1,
-      p2: 17385, m2: 20,
-      p3: null, m3: null,
+      unidadGlobal: 'litros',
+      meta: 100,
+      costo: 14300,
+      costo2: 13500,
+      costo3: 12500,
+      m1: 20,
+      m2: 50,
+      m3: 100,
+      p1: 19700,
+      p2: 18700,
+      p3: 18100,
       tipsVrdedor: 'Extra Virgen 1° Prensa en frío de variedad Arauco. Cosechado en olivares centenarios de Villa Mazán, La Rioja. 100% agroecológico, puro y sin químicos (Lote #GAIA-25-A).',
       productorInfo: {
         productor: 'Mónica Carrizo (Lorenzo Cabrera)',
@@ -191,8 +196,9 @@ const LUNAR_CONFIG = {
         loc: '📍 Villa Mazán, La Rioja'
       },
       variantes: [
-        { id: '1L', label: 'Botella 1 Litro', unidad: 'botella 1L', costo: 11500, p1: 18300, p2: 17385, p3: null, m1: 1, m2: 20, m3: null, tiers: 'Mayorista (+20L): $17.385' },
-        { id: '2L', label: 'Bidón 2 Litros (Ahorro)', unidad: 'bidón 2L', costo: 22000, p1: 34500, p2: 32500, p3: null, m1: 1, m2: 10, m3: null, tiers: 'Mayorista (+10u): $32.500' }
+        { id: '1L', label: 'Botella 1 Litro', unidad: 'botella 1L', pesoFactor: 1.0, p1: 19700, m2: 6, p2: 18700, m3: 12, p3: 18100, tiers: 'Mayorista (+6u): $18.700 • Distribuidor (+12u): $18.100' },
+        { id: '2L', label: 'Bidón 2 Litros (Ahorro)', unidad: 'bidón 2L', pesoFactor: 2.0, p1: 37500, m2: 3, p2: 35500, m3: 6, p3: 34000, tiers: 'Mayorista (+3u): $35.500 • Distribuidor (+6u): $34.000' },
+        { id: '5L', label: 'Bidón 5 Litros (Familiar)', unidad: 'bidón 5L', pesoFactor: 5.0, p1: 89000, m2: 2, p2: 84000, m3: 4, p3: 80000, tiers: 'Mayorista (+2u): $84.000 • Distribuidor (+4u): $80.000' }
       ],
       activo: true,
       nodos: ['TODOS']
@@ -659,7 +665,7 @@ class LunarEngine {
             prods.forEach(p => {
               const def = LUNAR_CONFIG.productos.find(x => x.id === p.id);
               if (def) {
-                if (p.id === 'P11' || (p.id === 'P2' && (p.origen && p.origen.includes('Traslasierra')))) {
+                if (p.id === 'P11' || p.id === 'P2' || (p.id === 'P2' && (p.origen && p.origen.includes('Traslasierra')))) {
                   p.nombre = def.nombre;
                   p.titulo = def.titulo;
                   p.subtitulo = def.subtitulo;
@@ -677,6 +683,7 @@ class LunarEngine {
                   p.costo2 = def.costo2;
                   p.costo3 = def.costo3;
                   p.meta = def.meta;
+                  p.unidadGlobal = def.unidadGlobal || 'litros';
                   p.variantes = def.variantes;
                 }
                 if (def && (!p.costo2 || !p.costo3)) {
