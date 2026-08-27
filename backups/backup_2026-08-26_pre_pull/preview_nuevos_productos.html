@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Previsualización de Nuevos Productos - Vrde Club</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10B981;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text-main); padding: 40px 20px; line-height: 1.5; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 { font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; }
+    .header p { color: var(--text-muted); font-size: 15px; }
+    .badge { display: inline-block; background: #ECFDF5; color: #059669; padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; flex-direction: column; }
+    .img-wrapper { position: relative; width: 100%; aspect-ratio: 1/1; background: #E2E8F0; overflow: hidden; }
+    .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .img-wrapper:hover img { transform: scale(1.03); }
+    .disclaimer { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 3px 8px; border-radius: 6px; backdrop-filter: blur(4px); }
+    .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .prod-origin { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .prod-name { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; }
+    .prod-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; flex: 1; }
+    .prices-box { background: #F1F5F9; border-radius: 12px; padding: 14px; margin-top: auto; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 6px; }
+    .price-row:last-child { margin-bottom: 0; padding-top: 6px; border-top: 1px dashed #CBD5E1; }
+    .price-label { color: var(--text-muted); font-weight: 600; }
+    .price-val { font-weight: 800; color: var(--text-main); }
+    .price-highlight { color: #059669; font-size: 14px; }
+    .cost-badge { display: inline-block; font-size: 11px; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="badge">Propuesta en Revisión</span>
+      <h1>Nuevos Productos Agroecológicos a Incorporar</h1>
+      <p>Imágenes ilustrativas oficiales y propuesta de costos y escalas de precios para la plataforma Vrde Club</p>
+    </div>
+
+    <div class="grid">
+      <!-- 1. Arroz Caupolicán -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/arroz_caupolican.jpg" alt="Arroz Yamaní Caupolicán">
+          <span class="disclaimer">* Imagen ilustrativa</span>
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">San Salvador, Entre Ríos</div>
+          <h2 class="prod-name">Arroz Yamaní Integral Agroecológico Caupolicán (1 kg)</h2>
+          <p class="prod-desc">Grano entero integral libre de agroquímicos y pesticidas. Cultivo natural sin TACC de la Capital Nacional del Arroz. Procesado físico sin aditivos.</p>
+          
+          <div class="prices-box">
+            <div class="cost-badge">Costo Productor: $2.400 / kg</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 5 kg):</span>
+              <span class="price-val price-highlight">$3.800</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Mayorista (+6 kg en red):</span>
+              <span class="price-val">$3.200</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Distribuidora (+20 kg en red):</span>
+              <span class="price-val">$2.800</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Legumbres Salve la Tierra -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/legumbres_salve_tierra.jpg" alt="Legumbres Salve la Tierra">
+          <span class="disclaimer">* Imagen ilustrativa</span>
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">Capilla del Señor, Buenos Aires</div>
+          <h2 class="prod-name">Legumbres Agroecológicas Salve la Tierra (1 kg)</h2>
+          <p class="prod-desc">Lentejas verdes y garbanzos agroecológicos de producción regenerativa con semillas libres de transgénicos (NO GMO) y respeto por el suelo vivo.</p>
+          
+          <div class="prices-box">
+            <div class="cost-badge">Costo Productor: $2.200 / kg</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 5 kg):</span>
+              <span class="price-val price-highlight">$3.500</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Mayorista (+6 kg en red):</span>
+              <span class="price-val">$3.000</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Distribuidora (+20 kg en red):</span>
+              <span class="price-val">$2.600</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Cacao Puro de Bolivia -->
+      <div class="card">
+        <div class="img-wrapper">
+          <img src="assets/cacao_bolivia.jpg" alt="Cacao Puro de Bolivia">
+          <span class="disclaimer">* Imagen ilustrativa</span>
+        </div>
+        <div class="card-body">
+          <div class="prod-origin">Alto Beni, Bolivia • Coop. El Ceibo</div>
+          <h2 class="prod-name">Cacao Puro 100% Agroecológico de Bolivia (250g)</h2>
+          <p class="prod-desc">Cacao criollo fino de aroma 100% puro en polvo, de sistemas agroforestales en selva tropical. Comercio justo, sin azúcar agregada ni conservantes.</p>
+          
+          <div class="prices-box">
+            <div class="cost-badge">Costo Productor: $4.500 / 250g</div>
+            <div class="price-row">
+              <span class="price-label">1. Minorista (1 a 5 paq):</span>
+              <span class="price-val price-highlight">$7.200</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">2. Mayorista (+6 paq en red):</span>
+              <span class="price-val">$6.200</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">3. Distribuidora (+16 paq en red):</span>
+              <span class="price-val">$5.400</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
