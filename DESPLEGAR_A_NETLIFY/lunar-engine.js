@@ -2542,6 +2542,107 @@ class LunarEngine {
     link.click();
     document.body.removeChild(link);
   }
+
+  // ==========================================
+  // CÍRCULOS Y GRUPOS DE COMPRA COMUNITARIOS
+  // ==========================================
+  static obtenerCirculos(nodoId = null) {
+    let circulos = [];
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('VRDE_CIRCULOS');
+        if (stored) circulos = JSON.parse(stored);
+      } catch(e){}
+    }
+    if (!circulos || circulos.length === 0) {
+      circulos = [
+        {
+          id: 'circulo-maipu-101',
+          slug: 'vecinos-edificio-maipu',
+          nombre: 'Vecinos Edificio Maipú',
+          anfitrion: 'Ramiro Stein',
+          whatsapp: '1148291029',
+          nodoId: 'escobar',
+          direccionEntrega: 'Maipú 450 (Hall PB)',
+          creadoEn: '2026-08-20',
+          activo: true
+        },
+        {
+          id: 'circulo-familia-gomez',
+          slug: 'familia-gomez',
+          nombre: 'Familia Gómez & Amigos',
+          anfitrion: 'Mariana Gómez',
+          whatsapp: '1159203948',
+          nodoId: 'lomaverde',
+          direccionEntrega: 'Los Álamos 120',
+          creadoEn: '2026-08-22',
+          activo: true
+        }
+      ];
+      if (typeof localStorage !== 'undefined') {
+        try { localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(circulos)); } catch(e){}
+      }
+    }
+    if (nodoId && nodoId !== 'ALL') {
+      return circulos.filter(c => c.nodoId === nodoId);
+    }
+    return circulos;
+  }
+
+  static obtenerCirculo(idOrSlug) {
+    if (!idOrSlug) return null;
+    const lista = this.obtenerCirculos();
+    const query = String(idOrSlug).toLowerCase().trim();
+    return lista.find(c => c.id === query || c.slug === query || c.id === idOrSlug) || null;
+  }
+
+  static crearCirculo(datos) {
+    const lista = this.obtenerCirculos();
+    const slug = (datos.nombre || 'circulo').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const id = 'circulo-' + slug + '-' + Math.floor(Math.random() * 900 + 100);
+
+    const nuevoCirculo = {
+      id: id,
+      slug: slug,
+      nombre: datos.nombre,
+      anfitrion: datos.anfitrion,
+      whatsapp: datos.whatsapp,
+      nodoId: datos.nodoId || 'escobar',
+      direccionEntrega: datos.direccionEntrega || '',
+      notas: datos.notas || '',
+      creadoEn: new Date().toISOString(),
+      activo: true
+    };
+
+    lista.unshift(nuevoCirculo);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(lista));
+    }
+    return nuevoCirculo;
+  }
+
+  static obtenerPedidosCirculo(circuloId, cicloId = null) {
+    const pedidos = this.obtenerPedidos(null, cicloId || 'VIGENTE');
+    return pedidos.filter(p => p.circuloId === circuloId || p.circuloSlug === circuloId);
+  }
+
+  static obtenerEstadisticasCirculo(circuloId, cicloId = null) {
+    const circulo = this.obtenerCirculo(circuloId);
+    const pedidos = this.obtenerPedidosCirculo(circuloId, cicloId);
+    const total = pedidos.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
+    const unidades = pedidos.reduce((acc, p) => acc + (Number(p.unidades) || 0), 0);
+    const miembrosSet = new Set(pedidos.map(p => (p.nombre || '').toLowerCase().trim()).filter(Boolean));
+    const ahorroEstimado = Math.round(total * 0.12);
+
+    return {
+      circulo: circulo,
+      pedidos: pedidos,
+      integrantesCount: miembrosSet.size,
+      unidadesTotal: unidades,
+      totalRecaudado: total,
+      ahorroEstimado: ahorroEstimado
+    };
+  }
 }
 
 // Exportar globalmente para scripts tradicionales y módulos
