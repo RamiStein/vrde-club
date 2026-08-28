@@ -49,6 +49,8 @@ const LUNAR_CONFIG = {
       diaEntrega: 'Viernes de 15:00 a 19:00 hs',
       pin: '1234',
       slots: ['Armado de Pedidos', 'Recepción Transporte'],
+      activo: false,
+      pausado: true,
       mostrarVrdedores: true,
       vrdedores: [
         { id: 'VRD-101', nombre: 'Gonzalo Ramos', rol: 'Coordinador General', wsp: '5491127452476', avatar: '🌑' },

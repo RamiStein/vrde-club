@@ -71,101 +71,111 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(updateTimeline, 100);
 
 
-    // --- 3. EXPLORADOR DE NODOS INTERACTIVO ---
-    const nodeData = {
-        'escobar': {
-            title: 'Nodo Escobar',
-            agent: 'Gonzalo',
-            status: 'Activo',
-            days: 'Martes y Viernes',
-            desc: 'El pulmón de zona norte. Especializado en el armado rápido de cajas frescas y conexión directa con rutas provinciales.',
-            slots: ['Armado de Pedidos', 'Recepción Transporte']
-        },
-        'lomaverde': {
-            title: 'Nodo Loma Verde',
-            agent: 'Agustina',
-            status: 'Activo',
-            days: 'Miércoles',
-            desc: 'Nodo de gran capacidad de acopio para compras lunares. Espacio rodeado de verde, con enfoque en conservación.',
-            slots: ['Conservación', 'Atención Comunitaria']
-        },
-        'lalucila': {
-            title: 'Nodo La Lucila',
-            agent: 'Martín',
-            status: 'Próxima Apertura',
-            days: 'Sábados',
-            desc: 'Acercando la red fractal a la ciudad. Funciona como punto de encuentro vecinal para retiros express.',
-            slots: ['Difusión Local', 'Entrega Rápida']
-        },
-        'vicentelopez': {
-            title: 'Nodo Vicente López',
-            agent: 'Laura',
-            status: 'Activo',
-            days: 'Jueves',
-            desc: 'Enlace vital urbano. Gran volumen de consumo y fuerte red de consumidores organizados.',
-            slots: ['Gestión de Stock', 'Difusión']
+    // --- 3. EXPLORADOR DE NODOS INTERACTIVO (DINÁMICO CON LUNAR ENGINE) ---
+    function renderExploradorNodos() {
+        const tabsContainer = document.getElementById('home-node-tabs-container');
+        const detailsContainer = document.getElementById('node-details');
+        if (!tabsContainer || !detailsContainer) return;
+
+        const nodosActivos = (typeof LunarEngine !== 'undefined') 
+            ? LunarEngine.obtenerNodos(true) 
+            : {};
+        const nodeKeys = Object.keys(nodosActivos);
+
+        if (nodeKeys.length === 0) {
+            tabsContainer.innerHTML = '';
+            detailsContainer.innerHTML = `
+                <div class="text-center py-10 text-gray-500 flex flex-col items-center justify-center h-full">
+                    <i class="fas fa-moon text-3xl text-gray-300 mb-3 block"></i>
+                    <h4 class="font-tech text-lg font-bold text-gray-700">No hay nodos activos en este momento</h4>
+                    <p class="text-xs text-gray-500 mt-1 max-w-xs mx-auto">Pronto abriremos nuevos puntos comunitarios de entrega en tu zona.</p>
+                    <a href="#crea-tu-nodo" class="inline-block mt-4 text-xs font-bold text-vrde-brand border border-vrde-brand/30 bg-vrde-brand/10 px-4 py-2 rounded-full hover:bg-vrde-brand hover:text-white transition-all">
+                        🌱 Abrí un Nodo en tu Barrio
+                    </a>
+                </div>
+            `;
+            return;
         }
-    };
 
-    const nodeTabs = document.querySelectorAll('.node-tab');
-    const nodeDetails = document.getElementById('node-details');
+        let tabsHtml = '';
+        nodeKeys.forEach((k, idx) => {
+            const n = nodosActivos[k];
+            const label = n.nombre.replace(/^Nodo\s+/i, '');
+            tabsHtml += `<button class="node-tab ${idx === 0 ? 'active' : ''}" data-node="${k}">${label}</button>`;
+        });
+        tabsContainer.innerHTML = tabsHtml;
 
-    function renderNode(nodeId) {
-        const data = nodeData[nodeId];
-        const statusColor = data.status === 'Activo' ? 'text-green-600 bg-green-100' : 'text-orange-600 bg-orange-100';
-        
-        const slotsHtml = data.slots.map(slot => 
-            `<span class="text-xs font-sans bg-gray-100 text-gray-700 px-3 py-1 rounded-full border border-gray-200"><i class="fas fa-check-circle text-vrde-brand mr-1"></i>${slot}</span>`
-        ).join('');
+        function renderNodeDetail(nodeId) {
+            const data = nodosActivos[nodeId];
+            if (!data) return;
+            
+            const isPaused = data.pausado || data.activo === false;
+            const statusText = isPaused ? 'En Reposo' : 'Activo';
+            const statusColor = isPaused ? 'text-orange-600 bg-orange-100' : 'text-green-600 bg-green-100';
+            
+            const slots = (data.slots && Array.isArray(data.slots) && data.slots.length > 0) 
+                ? data.slots 
+                : ['Armado de Pedidos', 'Recepción de Alimentos'];
+                
+            const slotsHtml = slots.map(slot => 
+                `<span class="text-xs font-sans bg-gray-100 text-gray-700 px-3 py-1 rounded-full border border-gray-200"><i class="fas fa-check-circle text-vrde-brand mr-1"></i>${slot}</span>`
+            ).join('');
 
-        nodeDetails.innerHTML = `
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <h4 class="font-tech text-2xl font-bold text-gray-800">${data.title}</h4>
-                    <p class="text-gray-500 text-sm mt-1"><i class="fas fa-user-circle mr-1"></i> Agente: ${data.agent}</p>
+            const agenteName = data.contacto || data.responsable || (data.vrdedores && data.vrdedores[0]?.nombre) || 'Coordinador del Nodo';
+
+            detailsContainer.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="font-tech text-2xl font-bold text-gray-800">${data.nombre}</h4>
+                        <p class="text-gray-500 text-sm mt-1"><i class="fas fa-user-circle mr-1"></i> Agente / Responsable: ${agenteName}</p>
+                        <p class="text-gray-400 text-xs mt-0.5"><i class="fas fa-map-marker-alt mr-1"></i> ${data.direccion || 'Punto comunitario de entrega'}</p>
+                    </div>
+                    <span class="text-xs font-bold px-3 py-1 rounded-full ${statusColor}">${statusText}</span>
                 </div>
-                <span class="text-xs font-bold px-3 py-1 rounded-full ${statusColor}">${data.status}</span>
-            </div>
-            <p class="text-gray-600 mb-6 line-clamp-3">${data.desc}</p>
-            <div class="mb-6">
-                <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Work Slots Activos</p>
-                <div class="flex flex-wrap gap-2">
-                    ${slotsHtml}
+                <p class="text-gray-600 mb-6 line-clamp-3 text-sm">${data.descripcion || 'Punto oficial de acopio, armado y distribución agroecológica comunitaria.'}</p>
+                <div class="mb-6">
+                    <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Work Slots Activos</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${slotsHtml}
+                    </div>
                 </div>
-            </div>
-            <div class="mt-auto pt-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <span class="text-sm font-tech text-gray-500"><i class="far fa-calendar-alt mr-1"></i> Días: ${data.days}</span>
-                <div class="flex items-center gap-2">
-                    <a href="admin.html?ref=${nodeId}" class="text-xs text-gray-500 hover:text-gray-800 font-medium px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors flex items-center gap-1">
-                        <i class="fas fa-lock text-[10px]"></i> Panel Gestor
-                    </a>
-                    <a href="tienda.html?ref=${nodeId}" class="btn-primary bg-vrde-brand hover:bg-vrde-dark text-white text-xs px-4 py-2 rounded-full font-bold shadow-md shadow-vrde-brand/20 transition-all flex items-center gap-1">
-                        <i class="fas fa-shopping-basket"></i> Comprar en este Nodo
-                    </a>
+                <div class="mt-auto pt-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <span class="text-sm font-tech text-gray-500"><i class="far fa-calendar-alt mr-1"></i> ${data.diaEntrega || 'Entrega semanal'}</span>
+                    <div class="flex items-center gap-2">
+                        <a href="admin.html?ref=${data.id || nodeId}" class="text-xs text-gray-500 hover:text-gray-800 font-medium px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors flex items-center gap-1">
+                            <i class="fas fa-lock text-[10px]"></i> Panel Gestor
+                        </a>
+                        <a href="tienda.html?ref=${data.id || nodeId}" class="btn-primary bg-vrde-brand hover:bg-vrde-dark text-white text-xs px-4 py-2 rounded-full font-bold shadow-md shadow-vrde-brand/20 transition-all flex items-center gap-1">
+                            <i class="fas fa-shopping-basket"></i> Comprar en este Nodo
+                        </a>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
+
+        const tabButtons = tabsContainer.querySelectorAll('.node-tab');
+        tabButtons.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                tabButtons.forEach(t => t.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                
+                detailsContainer.style.opacity = 0;
+                setTimeout(() => {
+                    renderNodeDetail(e.currentTarget.dataset.node);
+                    detailsContainer.style.opacity = 1;
+                }, 150);
+            });
+        });
+
+        if (nodeKeys.length > 0) {
+            renderNodeDetail(nodeKeys[0]);
+        }
     }
 
-    nodeTabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            nodeTabs.forEach(t => t.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            // Animación de transición
-            nodeDetails.style.opacity = 0;
-            setTimeout(() => {
-                renderNode(e.target.dataset.node);
-                nodeDetails.style.opacity = 1;
-            }, 200);
-        });
-    });
-    
-    // Init first node
-    if (nodeTabs.length > 0) renderNode('escobar');
+    renderExploradorNodos();
 
 
-    // --- 4. CALCULADORA ECON�MICA ---
+    // --- 4. CALCULADORA ECONÓMICA ---
     const budgetSlider = document.getElementById('budget-slider');
     const budgetDisplay = document.getElementById('budget-display');
     const savingsDisplay = document.getElementById('savings-display');
@@ -181,22 +191,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 5. RASTREADOR LUNAR SINCRONIZADO ---
+    // --- 5. FASE LUNAR DINÁMICA ---
     function updateMoonPhase() {
-        const shadow = document.getElementById('moon-shadow');
-        const countdown = document.getElementById('lunar-countdown');
-        const heroCycle = document.getElementById('lunar-hero-cycle');
-        const heroStatus = document.getElementById('lunar-hero-status');
-        
-        if (typeof LunarEngine !== 'undefined') {
+        const moonElement = document.getElementById('moon-phase-hero');
+        if (moonElement && typeof LunarEngine !== 'undefined') {
             const ciclo = LunarEngine.obtenerCicloActual();
-            
-            if (heroCycle) heroCycle.textContent = ciclo.nombre;
-            if (heroStatus) heroStatus.textContent = ciclo.abierta ? `Cierra en Luna Llena (${ciclo.llenaFechaStr})` : `Próxima apertura con Luna Nueva`;
-            if (countdown) countdown.textContent = `${ciclo.diasRestantes} DÍAS`;
-            
+            const shadow = moonElement.querySelector('.moon-shadow');
             if (shadow) {
-                // Cálculo de fase visual según el porcentaje transcurrido del ciclo lunar
                 const pct = ciclo.porcentajeCiclo;
                 if (pct <= 50) {
                     shadow.style.width = `${100 - (pct * 2)}%`;
@@ -214,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-// --- 6. MANEJO DE MODALES GLOBAL ---
+// --- 6. MANEJO DE MODALES GLOBAL Y POSTULACIONES ---
 const modal = document.getElementById('action-modal');
 const modalContent = document.getElementById('modal-content');
 const modalBody = document.getElementById('modal-body');
@@ -225,40 +226,65 @@ const modalData = {
         icon: 'fa-shopping-basket',
         color: 'text-blue-600',
         content: `
-            <p class="text-gray-600 mb-6">Elige tu nodo más cercano y empieza a consumir de manera soberana.</p>
-            <form class="space-y-4" onsubmit="event.preventDefault(); alert('Solicitud enviada a Vrde Club. ¡Gracias!'); closeModal();">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Nombre Completo</label>
-                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-vrde-brand outline-none" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Nodo Preferido</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-vrde-brand outline-none">
-                        <option>Nodo Escobar</option>
-                        <option>Nodo Loma Verde</option>
-                        <option>Nodo Vicente López</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full btn-primary mt-4">Unirme a la Red</button>
-            </form>
+            <p class="text-gray-600 mb-6 text-sm">Elegí tu nodo más cercano para ingresar directamente a la tienda comunitaria y participar del ciclo lunar activo.</p>
+            <div class="space-y-3">
+                <a href="lunar.html" class="w-full btn-primary bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm">
+                    <i class="fas fa-map-marker-alt"></i> Ver Nodos Activos en la Red
+                </a>
+                <a href="tienda.html" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl text-center text-sm block">
+                    Ver Catálogo General
+                </a>
+            </div>
         `
     },
     'nodo': {
-        title: 'Ser Nodo Almacén',
+        title: 'Abrir un Nodo Almacén en tu Barrio',
         icon: 'fa-store-alt',
-        color: 'text-orange-600',
+        color: 'text-emerald-600',
         content: `
-            <p class="text-gray-600 mb-6">Convierte tu espacio en un centro de distribución barrial. Completa este pre-formulario.</p>
-            <form class="space-y-4" onsubmit="event.preventDefault(); alert('Solicitud de Nodo enviada. Nos pondremos en contacto.'); closeModal();">
+            <p class="text-gray-600 mb-6 text-sm">Completá los datos de tu espacio y nos pondremos en contacto para coordinar la apertura oficial de tu punto de acopio.</p>
+            <form class="space-y-4 text-left" onsubmit="event.preventDefault(); submitPostulacionNodo(this);">
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Barrio / Ciudad</label>
-                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-vrde-brand outline-none" required>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Tu Nombre y Apellido *</label>
+                    <input type="text" id="post-nodo-nombre" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: Carolina Gómez" required>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">WhatsApp de Contacto *</label>
+                        <input type="tel" id="post-nodo-tel" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: 11 4829 1029" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Localidad / Barrio *</label>
+                        <input type="text" id="post-nodo-barrio" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: Tigre / Villa Crespo" required>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Metros cuadrados disponibles (Aprox)</label>
-                    <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-vrde-brand outline-none">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Dirección Aproximada</label>
+                    <input type="text" id="post-nodo-dir" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: Av. Cazón 850">
                 </div>
-                <button type="submit" class="w-full btn-primary bg-orange-500 hover:bg-orange-600 border-none mt-4">Aplicar como Nodo</button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Tipo de Espacio</label>
+                        <select id="post-nodo-tipo" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm bg-white">
+                            <option value="Garaje / Cochera">Garaje / Cochera amplia</option>
+                            <option value="Local Comercial">Local Comercial / Showroom</option>
+                            <option value="Taller / Galpón">Taller / Galpón</option>
+                            <option value="Espacio Comunitario / Club">Espacio Comunitario / Club</option>
+                            <option value="Casa Particular">Casa Particular con patio cubierto</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Metros Cuadrados Aprox.</label>
+                        <input type="text" id="post-nodo-m2" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: 20 m²">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Comentarios o Motivación (Opcional)</label>
+                    <textarea id="post-nodo-notas" rows="2" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Contanos brevemente sobre tu barrio o interés en la agroecología"></textarea>
+                </div>
+                <button type="submit" class="w-full btn-primary bg-emerald-500 hover:bg-emerald-600 border-none py-3.5 rounded-xl font-bold text-white shadow-lg shadow-emerald-500/20 text-sm flex items-center justify-center gap-2 mt-4">
+                    <i class="fab fa-whatsapp text-lg"></i> ENVIAR POSTULACIÓN A VRDE CLUB
+                </button>
             </form>
         `
     },
