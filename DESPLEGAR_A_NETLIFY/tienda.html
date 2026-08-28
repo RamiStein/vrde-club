@@ -911,7 +911,7 @@
 
   <!-- Modal Crear Círculo -->
   <div class="modal-overlay" id="modal-crear-circulo">
-    <div class="modal-card" style="max-width: 520px;">
+    <div class="modal-card" style="max-width: 540px;">
       <div class="modal-header-row">
         <div style="display: flex; align-items: center; gap: 10px;">
           <span style="font-size: 24px;">👥</span>
@@ -923,56 +923,73 @@
         <span class="modal-close-icon" onclick="closeModal('modal-crear-circulo')">&times;</span>
       </div>
 
-      <form onsubmit="event.preventDefault(); submitCreateCirculo();">
-        <div class="form-group">
-          <label class="form-label">Nombre del Grupo / Círculo *</label>
-          <input type="text" id="circ-nombre" class="input-field" placeholder="Ej: Vecinos Edificio Maipú / Familia Gómez" required>
+      <!-- Paso 1: Formulario de Creación -->
+      <div id="circ-form-step">
+        <form onsubmit="event.preventDefault(); submitCreateCirculo();">
+          <div class="form-group">
+            <label class="form-label">Nombre del Grupo / Círculo *</label>
+            <input type="text" id="circ-nombre" class="input-field" placeholder="Ej: Vecinos Edificio Maipú / Familia Gómez" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tu Nombre (Anfitrión/a) *</label>
+            <input type="text" id="circ-anfitrion" class="input-field" placeholder="Ej: Ramiro Stein" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tu WhatsApp (Para coordinar entregas y pagos) *</label>
+            <input type="tel" id="circ-whatsapp" class="input-field" placeholder="Ej: 11 4829 1029" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nodo Cabecera de Retiro *</label>
+            <select id="circ-nodo-select" class="input-field" style="background: #F8FAFC; font-weight: 600;">
+              <!-- Inyectado por JS con los nodos activos -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Punto de Entrega / Dirección del Grupo (Opcional)</label>
+            <input type="text" id="circ-direccion" class="input-field" placeholder="Ej: Maipú 450 (Hall PB)">
+          </div>
+
+          <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 14px; margin-top: 10px;">
+            <i class="fas fa-magic" style="margin-right: 6px;"></i> CREAR CÍRCULO Y GENERAR ENLACE
+          </button>
+        </form>
+      </div>
+
+      <!-- Paso 2: Éxito y Enlace Compartible (Permanece abierto para copiar y compartir) -->
+      <div id="circ-share-result" class="hidden" style="text-align: left;">
+        <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px;">
+          <div style="width: 52px; height: 52px; background: #10B981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 12px; box-shadow: 0 4px 12px rgba(16,185,129,0.25);">
+            🎉
+          </div>
+          <h4 style="font-size: 18px; font-weight: 800; color: #064E3B; margin-bottom: 4px;" id="circ-succ-title">¡Círculo Creado con Éxito!</h4>
+          <p style="font-size: 13px; color: #047857; margin: 0;" id="circ-succ-subtitle">
+            Tu grupo ya está listo para acumular kilos y alcanzar precio mayorista.
+          </p>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Tu Nombre (Anfitrión/a) *</label>
-          <input type="text" id="circ-anfitrion" class="input-field" placeholder="Ej: Ramiro Stein" required>
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #64748B; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">
+            Enlace Exclusivo para tu Grupo (WhatsApp):
+          </label>
+          <div id="circ-share-link-box" style="background: #F8FAFC; border: 1px solid #CBD5E1; padding: 12px 14px; border-radius: 10px; font-family: monospace; font-size: 12.5px; color: #0F172A; word-break: break-all; user-select: all;"></div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Tu WhatsApp (Para coordinar entregas y pagos) *</label>
-          <input type="tel" id="circ-whatsapp" class="input-field" placeholder="Ej: 11 4829 1029" required>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+          <button type="button" id="btn-copy-circ-link" onclick="copyActiveCirculoLink()" style="flex: 1; background: #FFFFFF; color: #065F46; border: 1.5px solid #059669; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fas fa-copy"></i> <span id="copy-btn-label">Copiar Enlace</span>
+          </button>
+          <button type="button" onclick="shareActiveCirculoWsp()" style="flex: 1.2; background: #25D366; color: #FFFFFF; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(37,211,102,0.25);">
+            <i class="fab fa-whatsapp" style="font-size: 16px;"></i> Compartir en WhatsApp
+          </button>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Nodo Cabecera de Retiro *</label>
-          <select id="circ-nodo-select" class="input-field" style="background: #F8FAFC; font-weight: 600;">
-            <!-- Inyectado por JS con los nodos activos -->
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Punto de Entrega / Dirección del Grupo (Opcional)</label>
-          <input type="text" id="circ-direccion" class="input-field" placeholder="Ej: Maipú 450 (Hall PB)">
-        </div>
-
-        <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 14px; margin-top: 10px;">
-          <i class="fas fa-magic" style="margin-right: 6px;"></i> CREAR CÍRCULO Y GENERAR ENLACE
+        <button type="button" onclick="goToActiveCirculoStore()" class="btn-checkout-cta" style="width: 100%; border-radius: 10px; padding: 13px; font-size: 13.5px;">
+          <i class="fas fa-shopping-bag" style="margin-right: 6px;"></i> IR A LA TIENDA DE MI CÍRCULO
         </button>
-      </form>
-
-      <!-- Caja de Compartir Enlace (Se activa tras crear) -->
-      <div id="circ-share-result" class="hidden" style="margin-top: 20px; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 12px; padding: 16px;">
-        <div style="font-size: 13.5px; font-weight: 800; color: #065F46; display: flex; align-items: center; gap: 6px;">
-          <i class="fas fa-check-circle" style="color: #10B981;"></i> ¡Círculo Creado con Éxito!
-        </div>
-        <p style="font-size: 12px; color: #047857; margin: 4px 0 10px;">
-          Compartí este enlace exclusivo con tu grupo para que cada uno agregue sus productos:
-        </p>
-        <div id="circ-share-link-box" style="background: #FFFFFF; border: 1px solid #BBF7D0; padding: 8px 12px; border-radius: 8px; font-family: monospace; font-size: 12px; color: #065F46; word-break: break-all; margin-bottom: 10px;"></div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onclick="copyActiveCirculoLink()" style="flex: 1; background: #FFFFFF; color: #065F46; border: 1px solid #059669; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;">
-            <i class="fas fa-copy"></i> Copiar Enlace
-          </button>
-          <button type="button" onclick="shareActiveCirculoWsp()" style="flex: 1; background: #25D366; color: #FFFFFF; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-            <i class="fab fa-whatsapp"></i> Compartir en WhatsApp
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -1135,7 +1152,9 @@
       }
 
       if (urlParams.get('crearCirculo') === 'true') {
-        setTimeout(() => { openCreateCirculoModal(); }, 400);
+        const cleanUrl = window.location.origin + window.location.pathname + (refParam ? `?ref=${refParam}` : '');
+        window.history.replaceState({}, '', cleanUrl);
+        setTimeout(() => { openCreateCirculoModal(); }, 300);
       }
 
       if (refParam && (!ACTIVE_CIRCULO || !ACTIVE_CIRCULO.nodoId)) {
@@ -1171,6 +1190,30 @@
       document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
       // Cargar Banner de Círculo Activo
+      updateCirculoActiveBanner();
+
+      // Cargar Banner Lunar
+      document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
+      document.getElementById('shop-lunar-desc').innerText = CICLO_LUNAR.mensajeTienda 
+        ? `${CICLO_LUNAR.mensajeTienda} • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`
+        : `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+
+      // Inicializar selección de variantes por defecto (índice 0)
+      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      if (!allProds || allProds.length === 0) {
+        allProds = LUNAR_CONFIG.productos;
+      }
+      allProds.forEach(p => {
+        SELECTED_VARIANT_INDEX[p.id] = 0;
+      });
+
+      updateProgressBars();
+      renderSpotifyCategories();
+      filterCategoryAndRender('TODOS');
+      initTabsScrollBehavior();
+    }
+
+    function updateCirculoActiveBanner() {
       const circuloBannerContainer = document.getElementById('circulo-active-banner-container');
       if (circuloBannerContainer) {
         if (ACTIVE_CIRCULO) {
@@ -1201,26 +1244,6 @@
           circuloBannerContainer.classList.add('hidden');
         }
       }
-
-      // Cargar Banner Lunar
-      document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
-      document.getElementById('shop-lunar-desc').innerText = CICLO_LUNAR.mensajeTienda 
-        ? `${CICLO_LUNAR.mensajeTienda} • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`
-        : `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
-
-      // Inicializar selección de variantes por defecto (índice 0)
-      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
-      if (!allProds || allProds.length === 0) {
-        allProds = LUNAR_CONFIG.productos;
-      }
-      allProds.forEach(p => {
-        SELECTED_VARIANT_INDEX[p.id] = 0;
-      });
-
-      updateProgressBars();
-      renderSpotifyCategories();
-      filterCategoryAndRender('TODOS');
-      initTabsScrollBehavior();
     }
 
     // ==========================================
@@ -1234,7 +1257,13 @@
           <option value="${k}" ${k === CURRENT_REF ? 'selected' : ''}>${allNodos[k].nombre}</option>
         `).join('');
       }
-      document.getElementById('circ-share-result').classList.add('hidden');
+
+      // Mostrar paso 1 formulario y ocultar paso 2 éxito
+      const formStep = document.getElementById('circ-form-step');
+      const shareResult = document.getElementById('circ-share-result');
+      if (formStep) formStep.classList.remove('hidden');
+      if (shareResult) shareResult.classList.add('hidden');
+
       openModal('modal-crear-circulo');
     }
 
@@ -1262,10 +1291,33 @@
       CURRENT_REF = nodoId;
 
       const link = `${window.location.origin}${window.location.pathname}?ref=${nodoId}&circulo=${nuevo.slug}`;
-      document.getElementById('circ-share-link-box').innerText = link;
-      document.getElementById('circ-share-result').classList.remove('hidden');
+      window.history.replaceState({ circulo: nuevo.slug }, '', link);
 
-      initStore();
+      // Poblar pantalla de éxito con el enlace en el modal
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoNombre = allNodos[nodoId]?.nombre || nodoId;
+
+      const succTitle = document.getElementById('circ-succ-title');
+      if (succTitle) succTitle.innerText = `¡Círculo "${nuevo.nombre}" Creado!`;
+
+      const succSub = document.getElementById('circ-succ-subtitle');
+      if (succSub) succSub.innerHTML = `Anfitrión/a: <strong>${nuevo.anfitrion}</strong> • Retiro en: <strong>${nodoNombre}</strong>`;
+
+      const linkBox = document.getElementById('circ-share-link-box');
+      if (linkBox) linkBox.innerText = link;
+
+      const copyLabel = document.getElementById('copy-btn-label');
+      if (copyLabel) copyLabel.innerText = 'Copiar Enlace';
+
+      // Mostrar pantalla de éxito y ocultar formulario (el modal PERMANECE abierto)
+      const formStep = document.getElementById('circ-form-step');
+      const shareResult = document.getElementById('circ-share-result');
+      if (formStep) formStep.classList.add('hidden');
+      if (shareResult) shareResult.classList.remove('hidden');
+
+      // Actualizar banner de fondo
+      updateCirculoActiveBanner();
+      updateFloatingCart();
     }
 
     function copyActiveCirculoLink() {
@@ -1276,8 +1328,18 @@
       }
       if (link) {
         navigator.clipboard.writeText(link);
-        alert("✅ Enlace del Círculo copiado al portapapeles. ¡Compartilo en tus grupos de WhatsApp!");
+        const label = document.getElementById('copy-btn-label');
+        if (label) {
+          label.innerText = '¡Copiado!';
+          setTimeout(() => { label.innerText = 'Copiar Enlace'; }, 2500);
+        }
       }
+    }
+
+    function goToActiveCirculoStore() {
+      closeModal('modal-crear-circulo');
+      updateCirculoActiveBanner();
+      loadActiveProductView();
     }
 
     function shareActiveCirculoWsp() {
