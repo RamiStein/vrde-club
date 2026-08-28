@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio de Pruebas: Círculos y Grupos de Compra - Vrde Club</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #10B981;
+      --primary-dark: #059669;
+      --primary-light: #ECFDF5;
+      --bg: #0B1320;
+      --surface: #1E293B;
+      --surface-card: #0F172A;
+      --border: #334155;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --accent: #F59E0B;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px 60px; line-height: 1.5; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* Top Lab Banner */
+    .lab-header {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .lab-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .lab-title { font-size: 22px; font-weight: 800; color: #FFFFFF; }
+    .lab-desc { font-size: 13px; color: var(--text-muted); }
+
+    /* Lab Navigation Tabs */
+    .lab-nav {
+      display: flex;
+      gap: 8px;
+      background: #0F172A;
+      padding: 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+    .lab-tab {
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lab-tab.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .lab-tab:hover:not(.active) { background: rgba(255, 255, 255, 0.05); color: #FFFFFF; }
+
+    /* Content Panes */
+    .pane { display: none; }
+    .pane.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Card Components */
+    .card-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Access Mockups */
+    .mockup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .mockup-item {
+      background: #0F172A;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      position: relative;
+    }
+    .mockup-tag {
+      position: absolute;
+      top: -10px;
+      right: 14px;
+      background: #3B82F6;
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+    .btn-mockup-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: 0.2s;
+    }
+    .btn-mockup-action:hover { background: var(--primary-dark); }
+
+    /* Modal / Form Styles */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input, .form-select {
+      width: 100%;
+      background: #0F172A;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 14px;
+      color: #FFFFFF;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+
+    /* Link Share Box */
+    .share-box {
+      background: #064E3B;
+      border: 1px solid #059669;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-top: 20px;
+      display: none;
+    }
+    .share-url {
+      background: #022C22;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 13px;
+      color: #6EE7B7;
+      word-break: break-all;
+      margin: 10px 0;
+    }
+
+    /* Group Dashboard Elements */
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .metric-card {
+      background: #0F172A;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+    }
+    .metric-num { font-size: 24px; font-weight: 800; color: #FFFFFF; margin-top: 4px; }
+    .metric-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+
+    /* Orders Table */
+    .orders-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .orders-table th, .orders-table td { padding: 12px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
+    .orders-table th { background: #0F172A; color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-pending { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .status-paid { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    .btn-wa {
+      background: #25D366;
+      color: white;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .btn-wa:hover { background: #1EBE5D; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header del Sandbox -->
+    <div class="lab-header">
+      <div>
+        <span class="lab-badge"><i class="fas fa-flask"></i> Entorno de Pruebas Local Aislado</span>
+        <h1 class="lab-title">Círculos y Grupos de Compra Comunitarios</h1>
+        <p class="lab-desc">Experimenta con el flujo de creación de grupos, invitación de vecinos y consolidación de pagos en Luna Llena.</p>
+      </div>
+      <button onclick="resetSandboxData()" style="background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer;">
+        <i class="fas fa-trash-alt"></i> Reiniciar Datos de Prueba
+      </button>
+    </div>
+
+    <!-- Navegación de Vistas del Sandbox -->
+    <div class="lab-nav">
+      <button class="lab-tab active" onclick="switchLabTab('tab-access')">
+        <i class="fas fa-compass"></i> 1. Puntos de Acceso (Home / Portal / Tienda)
+      </button>
+      <button class="lab-tab" onclick="switchLabTab('tab-create')">
+        <i class="fas fa-plus-circle"></i> 2. Modal: Crear Círculo de Compra
+      </button>
+      <button class="lab-tab" onclick="switchLabTab('tab-member')">
+        <i class="fas fa-shopping-basket"></i> 3. Vista Invitado: Sumar Pedido
+      </button>
+      <button class="lab-tab" onclick="switchLabTab('tab-host')">
+        <i class="fas fa-users-cog"></i> 4. Tablero del Anfitrión y Cierre
+      </button>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 1: PUNTOS DE ACCESO SIMULADOS                      -->
+    <!-- ======================================================= -->
+    <div id="tab-access" class="pane active">
+      <div class="card-box">
+        <h3 class="card-title"><i class="fas fa-eye" style="color: var(--primary);"></i> Cómo se verá la invitación en cada pantalla de la web:</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
+          Probá hacer clic en los botones de cada maqueta para ver cómo se dispara la creación del grupo en 15 segundos.
+        </p>
+
+        <div class="mockup-grid">
+          <!-- 1. En Home -->
+          <div class="mockup-item">
+            <span class="mockup-tag">1. Portada / Home</span>
+            <div style="font-size: 12px; color: var(--primary); font-weight: 700; margin-bottom: 4px;">ORGANIZACIÓN VECINAL</div>
+            <h4 style="font-size: 15px; margin-bottom: 6px;">¿Querés armar una compra en tu edificio o con amigos?</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Creá tu propio Círculo Lunar, invitá a tu grupo y reciban directo de chacra a precio mayorista.</p>
+            <button class="btn-mockup-action" onclick="openCreateModalFrom('Portada')">
+              <i class="fas fa-plus-circle"></i> Crear Círculo de Compra
+            </button>
+          </div>
+
+          <!-- 2. En Selector de Nodos -->
+          <div class="mockup-item">
+            <span class="mockup-tag">2. Portal Lunar</span>
+            <div style="font-size: 12px; color: var(--primary); font-weight: 700; margin-bottom: 4px;">PUNTOS DE ENTREGA</div>
+            <h4 style="font-size: 15px; margin-bottom: 6px;">¿No tenés un nodo cerca de tu casa?</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Abrí un Micro-Nodo vinculado a tu nodo cabecera y centralizá los pedidos de tus vecinos.</p>
+            <button class="btn-mockup-action" onclick="openCreateModalFrom('Portal Lunar')">
+              <i class="fas fa-map-marker-alt"></i> Abrir Micro-Nodo / Grupo
+            </button>
+          </div>
+
+          <!-- 3. En Tienda de Producto -->
+          <div class="mockup-item">
+            <span class="mockup-tag">3. Tienda (Ficha de Producto)</span>
+            <div style="font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 4px;">AHORRO POR BULTO</div>
+            <h4 style="font-size: 15px; margin-bottom: 6px;">¿Querés precio Distribuidor sin comprar todo solo?</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Creá un grupo en 10 segundos, compartí el link y junten las unidades necesarias entre amigos.</p>
+            <button class="btn-mockup-action" style="background: #F59E0B; color: #000;" onclick="openCreateModalFrom('Ficha de Producto')">
+              <i class="fas fa-users"></i> Crear Grupo para este Bulto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 2: MODAL INTERACTIVO CREAR CÍRCULO                -->
+    <!-- ======================================================= -->
+    <div id="tab-create" class="pane">
+      <div class="card-box" style="max-width: 600px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <span class="lab-badge"><i class="fas fa-magic"></i> Paso 1 de 2 • Muy Veloz</span>
+          <h2 style="font-size: 20px; font-weight: 800;">Crear Círculo de Compra Lunar</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">Armá tu grupo para comprar en conjunto con familiares, vecinos o compañeros de trabajo.</p>
+        </div>
+
+        <form onsubmit="handleCreateGroup(event)">
+          <div class="form-group">
+            <label class="form-label">Nombre del Grupo / Círculo</label>
+            <input type="text" id="grp-name" class="form-input" placeholder="Ej: Vecinos Edificio Maipú / Familia Gómez" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tu Nombre (Anfitrión del Grupo)</label>
+            <input type="text" id="grp-host" class="form-input" placeholder="Ej: Ramiro Stein" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tu WhatsApp (Para coordinar entregas y pagos)</label>
+            <input type="tel" id="grp-phone" class="form-input" placeholder="Ej: 11 4829 1029" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nodo Cabecera de Retiro / Zona</label>
+            <select id="grp-node" class="form-select" required>
+              <option value="escobar">Nodo Escobar (Centro)</option>
+              <option value="lomaverde">Nodo Loma Verde</option>
+              <option value="lalucila">Nodo La Lucila</option>
+              <option value="vicentelopez">Nodo Vicente López</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-mockup-action" style="padding: 14px; font-size: 15px;">
+            <i class="fas fa-check-circle"></i> CREAR MI CÍRCULO Y GENERAR ENLACE
+          </button>
+        </form>
+
+        <!-- Caja de Compartir Enlace (Aparece tras crear) -->
+        <div id="share-result" class="share-box">
+          <div style="display: flex; align-items: center; gap: 8px; color: #A7F3D0; font-weight: 700; font-size: 15px;">
+            <i class="fas fa-check-circle"></i> ¡Círculo Creado con Éxito!
+          </div>
+          <p style="font-size: 13px; color: #D1FAE5; margin-top: 6px;">
+            Compartí este enlace exclusivo con tu familia o vecinos para que cada uno agregue sus productos:
+          </p>
+
+          <div id="share-link-text" class="share-url"></div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;">
+            <button onclick="copyGroupLink()" style="flex: 1; background: #FFFFFF; color: #064E3B; font-weight: 700; border: none; padding: 10px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px;">
+              <i class="fas fa-copy"></i> Copiar Enlace
+            </button>
+            <button onclick="shareViaWhatsApp()" class="btn-wa" style="flex: 1; justify-content: center;">
+              <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+            </button>
+          </div>
+
+          <div style="margin-top: 14px; text-align: center;">
+            <a href="javascript:void(0)" onclick="switchLabTab('tab-member')" style="color: #6EE7B7; font-size: 12px; font-weight: 700; text-decoration: underline;">
+              ➡️ Ver cómo lo verá un invitado al abrir el enlace
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 3: VISTA DEL INVITADO (SIMULADOR DE PEDIDOS)      -->
+    <!-- ======================================================= -->
+    <div id="tab-member" class="pane">
+      <div class="card-box">
+        <!-- Banner del Círculo en la Tienda -->
+        <div style="background: linear-gradient(135deg, #064E3B, #022C22); border: 1px solid #059669; border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <div style="font-size: 11px; font-weight: 800; color: #6EE7B7; text-transform: uppercase;">Estás pidiendo con el Círculo Lunar:</div>
+            <h3 id="view-grp-title" style="font-size: 18px; color: #FFFFFF;">Grupo: Vecinos Edificio Maipú</h3>
+            <div id="view-grp-host" style="font-size: 12px; color: #A7F3D0;">Anfitrión: Ramiro Stein • Entrega coordinada en grupo</div>
+          </div>
+          <span style="background: rgba(16, 185, 129, 0.2); color: #6EE7B7; border: 1px solid #059669; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px;">
+            🌕 Pago en Luna Llena
+          </span>
+        </div>
+
+        <h3 class="card-title"><i class="fas fa-user-plus" style="color: var(--primary);"></i> Simular un Pedido de un Invitado / Vecino:</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">
+          Elige el nombre de un integrante del grupo y agrega productos para simular cómo se construye la compra comunitaria:
+        </p>
+
+        <div style="background: #0F172A; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 14px;">
+            <div>
+              <label class="form-label">Nombre del Integrante</label>
+              <input type="text" id="sim-member-name" class="form-input" value="Mariana (Depto 2A)">
+            </div>
+            <div>
+              <label class="form-label">Producto a Sumar</label>
+              <select id="sim-product" class="form-select">
+                <option value="cacao|Cacao Puro Bolivia 250g|7200">🍫 Cacao Puro Bolivia 250g ($7.200)</option>
+                <option value="aceite|Aceite Oliva Lorenzo Cabrera 1L|19700">🫒 Aceite Lorenzo Cabrera 1L ($19.700)</option>
+                <option value="yerba|Yerba Grapia Milenaria 1kg|5100">🌿 Yerba Grapia 1kg ($5.100)</option>
+                <option value="bolson|Bolsón Agroecológico 8kg|11500">🥬 Bolsón Agroecológico ($11.500)</option>
+                <option value="legumbres|Lentejas Salve la Tierra 1kg|3500">🫘 Lentejas Salve la Tierra ($3.500)</option>
+                <option value="girgolas|Gírgolas Grises Delta 1kg|23000">🍄 Gírgolas Grises 1kg ($23.000)</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Cantidad</label>
+              <input type="number" id="sim-qty" class="form-input" value="2" min="1" max="20">
+            </div>
+          </div>
+
+          <button onclick="addSimulatedOrder()" class="btn-mockup-action" style="margin-top: 0;">
+            <i class="fas fa-cart-plus"></i> SUMAR A LA RESERVA DEL GRUPO (Sin Pagar Ahora)
+          </button>
+        </div>
+
+        <!-- Alerta de Notificación Simulada -->
+        <div id="sim-toast" style="display: none; background: #065F46; border: 1px solid #10B981; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: #ECFDF5; margin-bottom: 20px;">
+          🎉 <strong>¡Pedido sumado!</strong> Se agregaron los productos al Círculo. Tu anfitrión lo verá reflejado al instante.
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 4: TABLERO DEL ANFITRIÓN EN VIVO                   -->
+    <!-- ======================================================= -->
+    <div id="tab-host" class="pane">
+      <div class="card-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
+          <div>
+            <span class="lab-badge"><i class="fas fa-crown"></i> Panel de Control del Anfitrión</span>
+            <h2 id="dash-grp-title" style="font-size: 20px; font-weight: 800;">Círculo: Vecinos Edificio Maipú</h2>
+            <div id="dash-grp-node" style="font-size: 12px; color: var(--text-muted);">Nodo Cabecera: Nodo Escobar • Cierre: Luna Llena (28 de Agosto)</div>
+          </div>
+          <button onclick="simulateFullMoonSettlement()" style="background: var(--accent); color: #000; font-weight: 800; font-size: 12px; padding: 10px 16px; border-radius: var(--radius-sm); border: none; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            🌕 Simular Cierre de Luna Llena y Liquidación
+          </button>
+        </div>
+
+        <!-- Métricas del Grupo -->
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Integrantes Activos</div>
+            <div id="dash-members-count" class="metric-num">3</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Unidades Totales</div>
+            <div id="dash-units-count" class="metric-num">8</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Total Acumulado</div>
+            <div id="dash-total-amount" class="metric-num" style="color: #34D399;">$62.400</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Ahorro Comunitario</div>
+            <div id="dash-savings-amount" class="metric-num" style="color: #FBBF24;">$8.600</div>
+          </div>
+        </div>
+
+        <!-- Tabla de Pedidos del Grupo -->
+        <h4 style="font-size: 14px; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">Detalle de Pedidos por Integrante:</h4>
+        <div style="overflow-x: auto;">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Integrante</th>
+                <th>Productos Pedidos</th>
+                <th>Total ($)</th>
+                <th>Estado de Pago</th>
+                <th>Acción Anfitrión</th>
+              </tr>
+            </thead>
+            <tbody id="dash-orders-tbody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // =========================================================================
+    // ESTADO LOCAL AISLADO DEL SANDBOX (No toca los datos reales)
+    // =========================================================================
+    const STORAGE_KEY = 'VRDE_SANDBOX_CIRCULOS';
+
+    let CURRENT_GROUP = {
+      id: 'circulo-maipu-101',
+      nombre: 'Vecinos Edificio Maipú',
+      anfitrion: 'Ramiro Stein',
+      whatsapp: '1148291029',
+      nodoId: 'escobar',
+      pedidos: [
+        { id: 1, nombre: 'Ramiro Stein (Depto 4B)', detalle: '1x Aceite Lorenzo Cabrera 1L, 1x Bolsón Agroecológico', total: 31200, estado: 'Pendiente' },
+        { id: 2, nombre: 'Mariana (Depto 2A)', detalle: '2x Cacao Puro Bolivia 250g, 1x Yerba Grapia 1kg', total: 19500, estado: 'Pendiente' },
+        { id: 3, nombre: 'Carlos (Depto 6C)', detalle: '2x Lentejas Salve la Tierra 1kg, 1x Yerba Grapia 1kg', total: 12100, estado: 'Pagado' }
+      ]
+    };
+
+    function loadSandboxData() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try { CURRENT_GROUP = JSON.parse(stored); } catch(e){}
+      }
+      renderDashboard();
+      updateGroupViewLabels();
+    }
+
+    function saveSandboxData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(CURRENT_GROUP));
+      renderDashboard();
+      updateGroupViewLabels();
+    }
+
+    function resetSandboxData() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    // =========================================================================
+    // NAVEGACIÓN DE TABS
+    // =========================================================================
+    function switchLabTab(tabId) {
+      document.querySelectorAll('.lab-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) targetPane.classList.add('active');
+
+      const activeBtn = Array.from(document.querySelectorAll('.lab-tab')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function openCreateModalFrom(source) {
+      switchLabTab('tab-create');
+      document.getElementById('grp-name').focus();
+    }
+
+    // =========================================================================
+    // CREACIÓN DE GRUPO
+    // =========================================================================
+    function handleCreateGroup(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('grp-name').value.trim();
+      const anfitrion = document.getElementById('grp-host').value.trim();
+      const whatsapp = document.getElementById('grp-phone').value.trim();
+      const nodoId = document.getElementById('grp-node').value;
+
+      const slug = nombre.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const grpId = 'circulo-' + slug + '-' + Math.floor(Math.random()*900 + 100);
+
+      CURRENT_GROUP = {
+        id: grpId,
+        nombre: nombre,
+        anfitrion: anfitrion,
+        whatsapp: whatsapp,
+        nodoId: nodoId,
+        pedidos: []
+      };
+
+      saveSandboxData();
+
+      // Mostrar link
+      const fakeUrl = window.location.origin + '/sandbox_circulos.html?circulo=' + grpId;
+      document.getElementById('share-link-text').innerText = fakeUrl;
+      document.getElementById('share-result').style.display = 'block';
+    }
+
+    function copyGroupLink() {
+      const url = document.getElementById('share-link-text').innerText;
+      navigator.clipboard.writeText(url);
+      alert("✅ Enlace copiado al portapapeles.");
+    }
+
+    function shareViaWhatsApp() {
+      const url = document.getElementById('share-link-text').innerText;
+      const text = `¡Hola! Creé el Círculo de Compra Lunar "${CURRENT_GROUP.nombre}" en Vrde Club 🌿. Sumate al pedido grupal para que recibamos todo directo de chacra con mejores precios: ${url}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function updateGroupViewLabels() {
+      const viewTitle = document.getElementById('view-grp-title');
+      const viewHost = document.getElementById('view-grp-host');
+      const dashTitle = document.getElementById('dash-grp-title');
+      const dashNode = document.getElementById('dash-grp-node');
+
+      if (viewTitle) viewTitle.innerText = `Grupo: ${CURRENT_GROUP.nombre}`;
+      if (viewHost) viewHost.innerText = `Anfitrión: ${CURRENT_GROUP.anfitrion} • Entrega coordinada en grupo`;
+      if (dashTitle) dashTitle.innerText = `Círculo: ${CURRENT_GROUP.nombre}`;
+      if (dashNode) dashNode.innerText = `Nodo Cabecera: ${CURRENT_GROUP.nodoId.toUpperCase()} • Cierre: Luna Llena`;
+    }
+
+    // =========================================================================
+    // SIMULADOR DE PEDIDOS DE INVITADOS
+    // =========================================================================
+    function addSimulatedOrder() {
+      const name = document.getElementById('sim-member-name').value.trim() || 'Vecino Invitado';
+      const [prodKey, prodName, priceStr] = document.getElementById('sim-product').value.split('|');
+      const qty = parseInt(document.getElementById('sim-qty').value) || 1;
+      const price = parseFloat(priceStr);
+      const total = price * qty;
+
+      CURRENT_GROUP.pedidos.push({
+        id: Date.now(),
+        nombre: name,
+        detalle: `${qty}x ${prodName}`,
+        total: total,
+        estado: 'Pendiente'
+      });
+
+      saveSandboxData();
+
+      const toast = document.getElementById('sim-toast');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+
+    // =========================================================================
+    // TABLERO DEL ANFITRIÓN
+    // =========================================================================
+    function renderDashboard() {
+      const pList = CURRENT_GROUP.pedidos || [];
+      const total = pList.reduce((acc, p) => acc + (p.total || 0), 0);
+      const uniqueMembers = new Set(pList.map(p => p.nombre)).size;
+
+      document.getElementById('dash-members-count').innerText = uniqueMembers || 0;
+      document.getElementById('dash-units-count').innerText = pList.length;
+      document.getElementById('dash-total-amount').innerText = `$${total.toLocaleString('es-AR')}`;
+      document.getElementById('dash-savings-amount').innerText = `$${Math.round(total * 0.12).toLocaleString('es-AR')}`;
+
+      const tbody = document.getElementById('dash-orders-tbody');
+      if (!tbody) return;
+
+      if (pList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">Aún no hay pedidos en este Círculo. ¡Invitá a tus amigos o sumá un pedido de prueba en el paso 3!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = pList.map((p, idx) => `
+        <tr>
+          <td style="font-weight: 700; color: #FFFFFF;">${p.nombre}</td>
+          <td style="color: var(--text-muted);">${p.detalle}</td>
+          <td style="font-weight: 800; color: #34D399;">$${p.total.toLocaleString('es-AR')}</td>
+          <td>
+            <span class="status-badge ${p.estado === 'Pagado' ? 'status-paid' : 'status-pending'}">
+              ${p.estado === 'Pagado' ? '✓ Pagado' : '⏳ Pendiente'}
+            </span>
+          </td>
+          <td>
+            <button onclick="togglePaymentStatus(${idx})" style="background: #334155; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-right: 4px;">
+              ${p.estado === 'Pagado' ? 'Marcar Pendiente' : 'Marcar Pagado'}
+            </button>
+            <button onclick="sendWhatsAppReminder('${p.nombre}', ${p.total})" class="btn-wa" style="padding: 4px 8px; font-size: 11px;">
+              <i class="fab fa-whatsapp"></i> Cobrar
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function togglePaymentStatus(index) {
+      if (CURRENT_GROUP.pedidos[index]) {
+        CURRENT_GROUP.pedidos[index].estado = (CURRENT_GROUP.pedidos[index].estado === 'Pagado') ? 'Pendiente' : 'Pagado';
+        saveSandboxData();
+      }
+    }
+
+    function sendWhatsAppReminder(nombre, total) {
+      const msg = `¡Hola ${nombre}! 🌕 Llegó la Luna Llena y cerramos la compra de ${CURRENT_GROUP.nombre}. Tu total final rebajado es de $${total.toLocaleString('es-AR')}. Transferir al alias del Anfitrión: VRDE.CIRCULO.GRACIAS`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function simulateFullMoonSettlement() {
+      const total = CURRENT_GROUP.pedidos.reduce((acc, p) => acc + (p.total || 0), 0);
+      alert(`🌕 ¡SIMULACIÓN DE CIERRE EN LUNA LLENA!\n\n• Grupo: ${CURRENT_GROUP.nombre}\n• Pedidos acumulados: ${CURRENT_GROUP.pedidos.length}\n• Recaudación total a transferir al Nodo: $${total.toLocaleString('es-AR')}\n\nEl sistema ya generó los mensajes personalizados para que el anfitrión cobre a cada vecino con 1 solo toque.`);
+    }
+
+    // Inicializar
+    loadSandboxData();
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta Visual: Círculos y Grupos de Compra - Vrde Club</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #0B1320; color: #F8FAFC; padding: 40px 20px; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .badge { display: inline-block; background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 14px; border-radius: 99px; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+    h1 { font-size: 28px; font-weight: 800; color: #FFFFFF; margin-bottom: 8px; }
+    p.subtitle { color: #94A3B8; font-size: 15px; max-width: 700px; margin: 0 auto; }
+    .card { background: #1E293B; border: 1px solid #334155; border-radius: 20px; padding: 28px; margin-bottom: 40px; }
+    .card-title { font-size: 20px; font-weight: 700; color: #10B981; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .img-container { width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid #334155; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .img-container img { width: 100%; height: auto; display: block; }
+    .details-list { background: #0F172A; border-radius: 12px; padding: 18px 24px; color: #E2E8F0; font-size: 14px; }
+    .details-list li { margin-bottom: 8px; }
+    .details-list li strong { color: #34D399; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="badge">🌿 Propuesta de Diseño UX/UI</span>
+      <h1>Integración Visual de Círculos y Grupos de Compra</h1>
+      <p class="subtitle">Así se adaptan las pantallas del Sandbox a la estética limpia, luminosa y orgánica oficial de Vrde Club.</p>
+    </div>
+
+    <!-- MOCKUP 1 -->
+    <div class="card">
+      <h2 class="card-title">🛒 1. Vista de la Tienda con Círculo Activo</h2>
+      <div class="img-container">
+        <img src="assets/mockup_circulos_tienda.jpg" alt="Vista Tienda con Círculo Activo">
+      </div>
+      <ul class="details-list">
+        <li><strong>Banner Superior de Círculo:</strong> Aviso armónico en la cabecera indicando con qué grupo y anfitrión se está comprando y que el pago se realiza al cierre del ciclo.</li>
+        <li><strong>Columna Izquierda (Meta Colectiva):</strong> Barra de progreso en vivo, nivel desbloqueado ($45.000/kg) y botón para invitar por WhatsApp para seguir sumando kilos.</li>
+        <li><strong>Columna Derecha (Acceso y Reserva):</strong> Opciones comerciales por bulto, invitación para juntar unidades con amigos y botón: <em>"Reservar para mi Círculo • Pagar en Luna Llena"</em>.</li>
+      </ul>
+    </div>
+
+    <!-- MOCKUP 2 -->
+    <div class="card">
+      <h2 class="card-title">📱 2. Modal de Creación y Tablero del Anfitrión</h2>
+      <div class="img-container">
+        <img src="assets/mockup_circulo_dashboard.jpg" alt="Modal de Creación y Tablero del Anfitrión">
+      </div>
+      <ul class="details-list">
+        <li><strong>Modal de Creación (Izquierda):</strong> Formulario rápido de 15 segundos con generación de enlace mágico y botón directo a WhatsApp.</li>
+        <li><strong>Tablero del Anfitrión (Derecha):</strong> Panel con 4 métricas clave (Integrantes, Kilos, Total y Ahorro), detalle de pedidos por vecino con estado y botón para liquidar en Luna Llena.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
