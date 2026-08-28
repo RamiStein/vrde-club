@@ -23,8 +23,14 @@ La funcionalidad de **Círculos / Grupos de Compra Comunitarios (Micro-Nodos)** 
    * **Cálculo de Precios Unitarios y Totales**:
      * Determinación de precios estrictamente por escala de bulto individual con sincronización de subtotales y donación del 3%.
 
-2. **Portada Oficial (`index.html`)**:
-   * Banner de organización vecinal: *¿Querés armar una compra en tu edificio o con amigos?*
+2. **Portada Oficial (`index.html` y `app.js`)**:
+   * **Nueva Sección Dedicada `#crea-tu-nodo`**:
+     * Espacio completo con los 4 pilares de ser Nodo Almacén (*Ingresos y Work Slots, Alimentos al Costo, Software Gestor con PIN y Logística En Conjunto*).
+     * Requisitos claros de postulación y botón directo que abre el formulario online / WhatsApp.
+     * Acceso desde el menú superior de navegación (`Creá tu Nodo`).
+   * **Explorador de Nodos 100% Dinámico**:
+     * Lee en tiempo real los nodos activos desde `LunarEngine.obtenerNodos(true)`.
+     * Los nodos cerrados/pausados/eliminados (como **Escobar**) quedan automáticamente excluidos del Home.
 
 3. **Portal Lunar (`lunar.html`)**:
    * Banner de Micro-Nodos barriales para personas sin un nodo físico cercano.
