@@ -1,80 +1,74 @@
 # 📌 ESTADO ACTUAL Y PRÓXIMOS PASOS — VRDE CLUB
 
 > **Archivo de Sincronización entre Computadoras**
-> **Fecha de Actualización**: 28 de Agosto de 2026 (Madrugada)
-> **Repositorio**: `https://github.com/RamiStein/vrde-club` (Rama `main` / `eter`)
+> **Fecha de Actualización**: 28 de Agosto de 2026
+> **Repositorio**: `https://github.com/RamiStein/vrde-club` (Rama `main` / `master` / `eter`)
+> **Sitio Web Oficial en Producción**: `https://www.vrde.club`
 
 ---
 
-## 🎯 1. ¿DÓNDE ESTAMOS EXACTAMENTE? (PUNTO DE REANUDACIÓN)
+## 🎯 1. ¿DÓNDE ESTAMOS EXACTAMENTE? (VERSION FINAL OFICIAL DESPLEGADA)
 
-En la última sesión completamos dos hitos fundamentales para la plataforma:
+La funcionalidad de **Círculos / Grupos de Compra Comunitarios (Micro-Nodos)** y la mecánica de **Reserva y Pago Diferido en Luna Llena** ya se encuentran **100% integradas y activas en producción** en la web oficial:
 
-1. **Corrección de Cálculo de Totales y Precios Unitarios**:
-   * Se corrigió la función `getProductPrice` en `tienda.html` para que el cálculo de subtotales individuales aplique de forma estricta el precio correspondiente a la cantidad pedida por el comprador (Minorista 1u, Mayorista +6u, Distribuidor +12u), evitando que las unidades acumuladas en la red alteren de forma errónea el precio minorista base en el checkout.
+1. **Tienda Oficial (`tienda.html`)**:
+   * **Modo Estándar**: Compras individuales regulares en todos los nodos activos.
+   * **Modo Círculo Activo (`tienda.html?ref=escobar&circulo=...`)**:
+     * Banner superior con nombre del Círculo, anfitrión/a y recordatorio de *Pago en Luna Llena*.
+     * Botón de WhatsApp para invitar amigos a la meta de kilos.
+     * Tarjeta de invitación a juntar bulto para precio Distribuidor.
+     * Modal de creación en 15 segundos (`?crearCirculo=true`).
+     * Tablero del Anfitrión con métricas en tiempo real (Integrantes, Unidades, Recaudación, Ahorro).
+     * Checkout configurado como **"RESERVAR EN CÍRCULO (Pagar en Luna Llena)"**.
+   * **Cálculo de Precios Unitarios y Totales**:
+     * Determinación de precios estrictamente por escala de bulto individual con sincronización de subtotales y donación del 3%.
 
-2. **Diseño Visual de Integración de Círculos / Grupos de Compra**:
-   * Se diseñaron las **maquetas de alta fidelidad** adaptando la lógica del Sandbox a la estética oficial, limpia, luminosa y orgánica de Vrde Club (fondo claro `#F8FAFC`, verde esmeralda `#10B981` / `#064E3B`, tarjetas redondeadas y tipografía *Plus Jakarta Sans*).
-   * Se generaron y guardaron las imágenes oficiales en la carpeta `assets/`:
-     * `assets/mockup_circulos_tienda.jpg` (Vista de la Tienda con Círculo activo y reserva a Luna Llena).
-     * `assets/mockup_circulo_dashboard.jpg` (Modal de creación rápida en 15s y Tablero de Control del Anfitrión).
-   * Se creó una página dedicada para visualizarlas en el navegador:
-     👉 **`preview_mockups_circulos.html`** *(o `http://localhost:3000/preview_mockups_circulos.html`)*.
+2. **Portada Oficial (`index.html`)**:
+   * Banner de organización vecinal: *¿Querés armar una compra en tu edificio o con amigos?*
 
----
+3. **Portal Lunar (`lunar.html`)**:
+   * Banner de Micro-Nodos barriales para personas sin un nodo físico cercano.
 
-## 🎨 2. DETALLE DE LA PROPUESTA VISUAL Y FLUJO ACORDADO
+4. **Panel Gestor de Nodo (`admin.html`)**:
+   * Detección y etiquetas de Círculos en las tarjetas de pedidos para acopio y entrega agrupada.
 
-### A. Vista Tienda con Círculo Activo (`assets/mockup_circulos_tienda.jpg`):
-* **Banner Superior de Círculo**: Cabecera armónica que indica:  
-  *`🟢 Estás pidiendo con el Círculo: Vecinos Edificio Maipú (Anfitrión: Ramiro) • Pagás al cierre`*
-* **Columna Izquierda (Meta Colectiva Global)**: Barra de avance en tiempo real (ej. `22 / 40 kg`), nivel de costo desbloqueado (`$45.000/kg`) y botón directo para invitar amigos por WhatsApp y seguir sumando kilos.
-* **Columna Derecha (Acceso por Bulto y Reserva)**: Opciones comerciales, invitación *`¿Querés precio Distribuidor? Juntá el bulto con tu Círculo`* y botón principal de acción:  
-  **`[ Reservar para mi Círculo • Pagar en Luna Llena ]`**.
-
-### B. Modal de Creación y Tablero del Anfitrión (`assets/mockup_circulo_dashboard.jpg`):
-* **Modal de Creación (Izquierda)**: Formulario de 15 segundos (Nombre Grupo, Anfitrión, WhatsApp, Nodo) que genera el **Enlace Mágico** y el botón para compartirlo en grupos de WhatsApp.
-* **Tablero del Anfitrión (Derecha)**: Panel de control con 4 métricas en vivo (*Integrantes, Kilos acumulados, Total del Grupo y Ahorro Colectivo*), listado de pedidos individuales por vecino con estado (*Pagado / Pendiente*) y botón para **Liquidar en Luna Llena**.
+5. **Motor Central (`lunar-engine.js`)**:
+   * Lógica completa de persistencia, cálculo de escalas y estadísticas de Círculos.
 
 ---
 
-## 🧪 3. ARCHIVOS CLAVE DE CONSULTA LOCAL
+## 🌐 2. ENLACES OFICIALES ACTIVOS EN PRODUCCIÓN
 
-1. **`preview_mockups_circulos.html`**: Previsualización visual de las dos maquetas integradas.
-2. **`sandbox_circulos.html`**: Laboratorio interactivo funcional con las 4 pestañas de prueba.
-3. **`propuesta_visual_circulos.md`**: Documento markdown con explicaciones detalladas y capturas.
-
----
-
-## 🗺️ 4. PRÓXIMOS PASOS (PLAN DE INTEGRACIÓN EN CÓDIGO)
-
-Cuando el usuario dé el visto bueno final para pasar del diseño al desarrollo:
-
-1. **`lunar-engine.js` (Lógica de Círculos)**:
-   * Implementar `LunarEngine.crearCirculo(...)`, `obtenerCirculo(...)` y `guardarPedidoEnCirculo(...)`.
-2. **`tienda.html` (Experiencia de Compra)**:
-   * Leer parámetro `?circulo=...` de la URL para activar el banner contextual y el checkout diferido a Luna Llena.
-   * Agregar el botón/caja en la ficha de producto para crear o invitar a un Círculo.
-3. **`index.html` y `lunar.html`**:
-   * Insertar los banners y accesos rápidos para abrir Círculos barriales.
-4. **`admin.html` (Gestor de Nodo)**:
-   * Agrupar y consolidar los pedidos por Círculo para facilitar el acopio y la entrega al anfitrión.
+* 🏠 **Portada:** `https://www.vrde.club/`
+* 🌑 **Portal Lunar:** `https://www.vrde.club/lunar.html`
+* 🛒 **Tienda Oficial:** `https://www.vrde.club/tienda.html`
+* 👥 **Crear Círculo:** `https://www.vrde.club/tienda.html?crearCirculo=true`
+* 🔗 **Ejemplo Círculo Activo:** `https://www.vrde.club/tienda.html?ref=escobar&circulo=vecinos-edificio-maipu`
+* 🛠️ **Panel Gestor:** `https://www.vrde.club/admin.html`
 
 ---
 
-## 💻 5. PASOS AL ABRIR LA OTRA COMPUTADORA
+## 🗺️ 3. PRÓXIMAS MEJORAS Y LÍNEAS DE DESARROLLO
+
+1. **Sincronización en la Nube (Backend)**:
+   * Conectar la base de datos central (Firebase / REST API) para que los Círculos creados por un usuario se sincronicen en tiempo real entre múltiples dispositivos sin depender de enlaces con parámetros.
+2. **Herramientas para el Anfitrión**:
+   * Generación de PDF / Ticket imprimible con el desglose de lo que pidió cada vecino para el momento de entrega en el edificio.
+   * Mensajes de cobro individual por WhatsApp listos para enviar a cada vecino al cerrar la Luna Llena.
+3. **Notificaciones y Push**:
+   * Avisos web / WhatsApp automáticos cuando un producto alcanza una meta de rebaja comunitaria.
+
+---
+
+## 💻 4. PASOS AL ABRIR LA OTRA COMPUTADORA
 
 1. **Traer todo de GitHub**:
    ```bash
    git pull origin main
    ```
 
-2. **Abrir la propuesta visual en el navegador**:
-   Entra a:
-   👉 **`http://localhost:3000/preview_mockups_circulos.html`**
-
-3. **Prompt sugerido para Antigravity en la otra computadora**:
-   > *"Hola, por favor lee ESTADO_ACTUAL_Y_PROXIMOS_PASOS.md. Ya vi la propuesta visual en preview_mockups_circulos.html. Avancemos con el Paso 1 de la integración de Círculos en lunar-engine.js y tienda.html..."*
+2. **Prompt sugerido para Antigravity en la otra computadora**:
+   > *"Hola, por favor lee ESTADO_ACTUAL_Y_PROXIMOS_PASOS.md. Ya tenemos la versión final de Círculos desplegada en producción en vrde.club. Continuemos con las próximas mejoras..."*
 
 ---
 *Fin del informe de sincronización — VRDE Club 2026*
