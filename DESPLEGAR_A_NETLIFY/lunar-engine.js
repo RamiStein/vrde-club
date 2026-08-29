@@ -2680,6 +2680,7 @@ class LunarEngine {
       nombre: datos.nombre,
       anfitrion: datos.anfitrion,
       whatsapp: datos.whatsapp,
+      linkGrupoWsp: datos.linkGrupoWsp || '',
       nodoId: datos.nodoId || 'lomaverde',
       direccionEntrega: datos.direccionEntrega || '',
       privacidad: datos.privacidad || 'abierto', // 'abierto' | 'cerrado'
@@ -2691,6 +2692,10 @@ class LunarEngine {
     lista.unshift(nuevoCirculo);
     if (typeof localStorage !== 'undefined') {
       try { localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(lista)); } catch(e){}
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:circulos-updated', { detail: nuevoCirculo }));
     }
 
     // Sincronización en Firebase Firestore en tiempo real
@@ -2707,6 +2712,74 @@ class LunarEngine {
     return nuevoCirculo;
   }
 
+  static actualizarCirculo(circuloId, datos) {
+    const lista = this.obtenerCirculos();
+    const idx = lista.findIndex(c => c.id === circuloId || c.slug === circuloId);
+    if (idx === -1) return null;
+
+    lista[idx] = {
+      ...lista[idx],
+      ...datos,
+      actualizadoEn: new Date().toISOString()
+    };
+
+    if (typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(lista)); } catch(e){}
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:circulos-updated', { detail: lista[idx] }));
+    }
+
+    if (typeof window !== 'undefined' && window.vrdeFirebaseDb) {
+      try {
+        import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js").then(({ doc, setDoc }) => {
+          setDoc(doc(window.vrdeFirebaseDb, "circulos", lista[idx].id), lista[idx], { merge: true });
+        });
+      } catch(e){
+        console.warn("Error sync Firestore al actualizar círculo:", e);
+      }
+    }
+
+    return lista[idx];
+  }
+
+  static eliminarCirculo(circuloId) {
+    const lista = this.obtenerCirculos();
+    const idx = lista.findIndex(c => c.id === circuloId || c.slug === circuloId);
+    if (idx === -1) return false;
+
+    const [eliminado] = lista.splice(idx, 1);
+
+    if (typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(lista)); } catch(e){}
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:circulos-updated', { detail: { id: circuloId, eliminado: true } }));
+    }
+
+    if (typeof window !== 'undefined' && window.vrdeFirebaseDb) {
+      try {
+        import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js").then(({ doc, deleteDoc }) => {
+          deleteDoc(doc(window.vrdeFirebaseDb, "circulos", eliminado.id));
+        });
+      } catch(e){
+        console.warn("Error sync Firestore al eliminar círculo:", e);
+      }
+    }
+
+    return true;
+  }
+
+  static desvincularCirculoActivo() {
+    const perfil = this.obtenerPerfilUsuario();
+    if (perfil) {
+      perfil.circuloId = null;
+      this.guardarPerfilUsuario(perfil);
+    }
+  }
+
   static generarLinkCirculo(circulo, baseUrl = null) {
     if (!circulo) return '';
     const base = baseUrl || (typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : 'https://www.vrde.club/tienda.html');
@@ -2716,6 +2789,7 @@ class LunarEngine {
     params.set('c_nom', circulo.nombre || '');
     params.set('c_anf', circulo.anfitrion || '');
     if (circulo.whatsapp) params.set('c_wsp', circulo.whatsapp);
+    if (circulo.linkGrupoWsp) params.set('c_gwsp', circulo.linkGrupoWsp);
     if (circulo.privacidad) params.set('c_tipo', circulo.privacidad);
     if (circulo.direccionEntrega) params.set('c_dir', circulo.direccionEntrega);
     return `${base}?${params.toString()}`;
@@ -2732,7 +2806,8 @@ class LunarEngine {
     const total = pedidos.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
     const unidades = pedidos.reduce((acc, p) => acc + (Number(p.unidades) || 0), 0);
     const miembrosSet = new Set(pedidos.map(p => (p.nombre || '').toLowerCase().trim()).filter(Boolean));
-    const ahorroEstimado = Math.round(total * 0.12);
+    if (circulo && circulo.anfitrion) miembrosSet.add(circulo.anfitrion.toLowerCase().trim());
+    const ahorroEstimado = Math.round(total * 0.15);
 
     return {
       circulo: circulo,
@@ -2741,6 +2816,101 @@ class LunarEngine {
       unidadesTotal: unidades,
       totalRecaudado: total,
       ahorroEstimado: ahorroEstimado
+    };
+  }
+
+  static obtenerIntegrantesCirculo(circuloId, cicloId = null) {
+    const circulo = this.obtenerCirculo(circuloId);
+    const pedidos = this.obtenerPedidosCirculo(circuloId, cicloId);
+    const integrantesMap = new Map();
+
+    // Si existe el círculo y tiene anfitrión, registrarlo primero
+    if (circulo && circulo.anfitrion) {
+      const key = circulo.anfitrion.trim().toLowerCase();
+      integrantesMap.set(key, {
+        nombre: circulo.anfitrion,
+        telefono: circulo.whatsapp || '',
+        esAnfitrion: true,
+        rol: '👑 Anfitrión/a del Círculo',
+        pedidosCount: 0,
+        unidadesTotal: 0,
+        montoTotal: 0,
+        itemsDetalle: [],
+        pedidos: [],
+        avatar: '👑'
+      });
+    }
+
+    // Agregar participantes por pedidos
+    pedidos.forEach(p => {
+      const nombre = (p.nombre || 'Vecino/a').trim();
+      const key = nombre.toLowerCase();
+      let member = integrantesMap.get(key);
+      if (!member) {
+        member = {
+          nombre: nombre,
+          telefono: p.telefono || '',
+          esAnfitrion: false,
+          rol: '👤 Vecino/a Integrante',
+          pedidosCount: 0,
+          unidadesTotal: 0,
+          montoTotal: 0,
+          itemsDetalle: [],
+          pedidos: [],
+          avatar: '🌱'
+        };
+        integrantesMap.set(key, member);
+      }
+
+      member.pedidosCount += 1;
+      member.unidadesTotal += (Number(p.unidades) || 0);
+      member.montoTotal += (Number(p.total) || 0);
+      if (p.detalle) member.itemsDetalle.push(p.detalle);
+      member.pedidos.push(p);
+      if (!member.telefono && p.telefono) member.telefono = p.telefono;
+    });
+
+    return Array.from(integrantesMap.values());
+  }
+
+  static obtenerEscalaCirculo(circuloId, cicloId = null) {
+    const stats = this.obtenerEstadisticasCirculo(circuloId, cicloId);
+    const unidades = stats.unidadesTotal || 0;
+
+    let tier = 1;
+    let tierNombre = 'Minorista (Consumo Individual)';
+    let ahorroPorcentaje = 0;
+    let siguienteTierNombre = 'Mayorista (+20 u.)';
+    let faltante = Math.max(0, 20 - unidades);
+    let progreso = Math.min(100, Math.round((unidades / 20) * 100));
+
+    if (unidades >= 50) {
+      tier = 3;
+      tierNombre = 'Distribuidor / Directo Productor';
+      ahorroPorcentaje = 25;
+      siguienteTierNombre = '¡Meta Máxima Superada!';
+      faltante = 0;
+      progreso = 100;
+    } else if (unidades >= 20) {
+      tier = 2;
+      tierNombre = 'Mayorista';
+      ahorroPorcentaje = 15;
+      siguienteTierNombre = 'Distribuidor (+50 u.)';
+      faltante = Math.max(0, 50 - unidades);
+      progreso = Math.min(100, Math.round(((unidades - 20) / 30) * 100));
+    }
+
+    return {
+      unidadesTotal: unidades,
+      totalRecaudado: stats.totalRecaudado,
+      ahorroEstimado: stats.ahorroEstimado,
+      tier: tier,
+      tierNombre: tierNombre,
+      ahorroPorcentaje: ahorroPorcentaje,
+      siguienteTierNombre: siguienteTierNombre,
+      faltante: faltante,
+      progreso: progreso,
+      integrantesCount: stats.integrantesCount
     };
   }
 

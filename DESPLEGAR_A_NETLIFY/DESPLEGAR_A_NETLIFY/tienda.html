@@ -2,123 +2,1036 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Tienda Lunar • Vrde Club</title>
   <meta name="description" content="Compra comunitaria y soberana de alimentos agroecológicos sincronizada con los ciclos lunares.">
 
-  <!-- Favicon e Icono de Navegador -->
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="alternate icon" href="favicon.svg">
-  <link rel="apple-touch-icon" href="assets/favicon.svg">
+  <!-- Favicon e Icono de Pestana del Navegador -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png?v=3">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=3">
+  <link rel="shortcut icon" href="favicon.ico?v=3">
+  <link rel="apple-touch-icon" href="assets/favicon.png?v=3">
 
   <!-- Tipografías -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Hoja de estilos del sistema Lunar -->
   <link rel="stylesheet" href="lunar-style.css">
+
+  <style>
+    :root {
+      --spotify-radius: 12px;
+      --sidebar-width: 275px;
+    }
+
+    body {
+      background-color: #0B1120;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* =========================================
+       APP SHELL LAYOUT (SPOTIFY WEB APP)
+       ========================================= */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* SIDEBAR IZQUIERDO */
+    .app-sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      max-width: var(--sidebar-width);
+      background: #0F172A;
+      border-right: 1px solid #1E293B;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      color: #F8FAFC;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand-section {
+      padding: 16px 18px;
+      border-bottom: 1px solid #1E293B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-user-card {
+      margin: 12px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sidebar-user-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .sidebar-nav-menu {
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: #94A3B8;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .sidebar-nav-item:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .sidebar-nav-item.active {
+      color: #FFFFFF;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.1));
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .sidebar-nav-item.active i {
+      color: #10B981;
+    }
+
+    .sidebar-footer-widget {
+      padding: 14px;
+      border-top: 1px solid #1E293B;
+      background: #0B1120;
+    }
+
+    /* MAIN VIEWPORT */
+    .app-main-viewport {
+      flex: 1;
+      min-width: 0;
+      min-height: 100vh;
+      background: #F8FAFC;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-topbar {
+      background: #FFFFFF;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .app-view-panel {
+      display: none;
+      padding: 14px 18px 80px;
+      max-width: 1160px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+    .app-view-panel.active {
+      display: block;
+      animation: fadeInView 0.2s ease forwards;
+    }
+
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MOBILE BOTTOM NAV */
+    .app-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #0F172A;
+      border-top: 1px solid #1E293B;
+      z-index: 50;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 6px;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #94A3B8;
+      font-size: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      gap: 3px;
+      flex: 1;
+      padding: 6px 0;
+      cursor: pointer;
+    }
+    .bottom-nav-item i {
+      font-size: 17px;
+    }
+    .bottom-nav-item.active {
+      color: #10B981;
+    }
+
+    @media (max-width: 960px) {
+      .app-sidebar {
+        display: none;
+      }
+      .app-bottom-nav {
+        display: flex;
+      }
+      .app-view-panel {
+        padding: 12px 12px 90px;
+      }
+    }
+
+    /* Header Compacto */
+    .shop-header {
+      padding: 10px 16px;
+    }
+
+    /* Banner Lunar Compacto */
+    .lunar-banner-card {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 12px 18px;
+      margin: 6px auto 10px;
+      max-width: 1100px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .lunar-top-row {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+    }
+
+    /* Switch de Modos de Vista */
+    .view-mode-bar-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 6px 0 10px;
+      padding: 0 16px;
+    }
+    .view-mode-pill-btn {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .view-mode-pill-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(16,163,82,0.25);
+    }
+
+    /* Bloques de Categorías Spotify: 2 FILAS DE 4 COLUMNAS (8 EN TOTAL) */
+    .spotify-categories-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 10px;
+      padding: 0 16px;
+    }
+    .spotify-categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 768px) {
+      .spotify-categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+    }
+
+    .spotify-cat-card {
+      position: relative;
+      height: 54px;
+      border-radius: var(--spotify-radius);
+      padding: 6px 10px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      line-height: 1.15;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      flex-shrink: 0;
+    }
+    .spotify-cat-card:hover { transform: translateY(-1.5px); }
+    .spotify-cat-card.active { outline: 3px solid #0F172A; outline-offset: 1px; }
+    .spotify-cat-card .cat-name { z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .spotify-cat-card .cat-icon {
+      position: absolute;
+      right: 2px;
+      bottom: -2px;
+      font-size: 24px;
+      opacity: 0.85;
+      transform: rotate(15deg);
+    }
+
+    .scat-all { background: linear-gradient(135deg, #10A352, #059669); }
+    .scat-granos { background: linear-gradient(135deg, #D97706, #B45309); }
+    .scat-cacao { background: linear-gradient(135deg, #92400E, #78350F); }
+    .scat-yerba { background: linear-gradient(135deg, #0D9488, #115E59); }
+    .scat-aceite { background: linear-gradient(135deg, #65A30D, #4D7C0F); }
+    .scat-hongos { background: linear-gradient(135deg, #475569, #334155); }
+    .scat-huerta { background: linear-gradient(135deg, #16A34A, #15803D); }
+    .scat-granja { background: linear-gradient(135deg, #EA580C, #C2410C); }
+
+    /* Pestañas de Variedades de Producto con Flechas de Navegación */
+    .product-tabs-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 12px;
+      padding: 0 16px;
+      position: relative;
+    }
+    .product-tabs-outer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+    .tab-nav-arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid var(--border-color);
+      color: #334155;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.15s ease;
+      z-index: 5;
+    }
+    .tab-nav-arrow:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .tab-nav-arrow:active { transform: scale(0.9); }
+
+    .product-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 4px 2px 8px;
+      white-space: nowrap;
+      flex: 1;
+      cursor: grab;
+      user-select: none;
+      min-height: 42px;
+    }
+    .product-tabs:active { cursor: grabbing; }
+    
+    .product-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-track {
+      background: #F1F5F9;
+      border-radius: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .product-tabs::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    .tab-item {
+      flex-shrink: 0;
+      padding: 7px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: white;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-item:hover { border-color: var(--primary); color: var(--primary); }
+    .tab-item.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(16, 163, 82, 0.25);
+    }
+
+    /* =========================================================
+       ESCAPARATE SHOWCASE 3 COLUMNAS
+       ========================================================= */
+    .product-showcase {
+      max-width: 1100px;
+      margin: 0 auto 20px;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 290px 1fr 330px;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 960px) {
+      .product-showcase {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .showcase-center { order: 1 !important; }
+      .showcase-left { order: 2 !important; }
+      .showcase-right { order: 3 !important; }
+    }
+
+    .showcase-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Columna Izquierda: Origen, Presentación e Impacto */
+    .card-section-title {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94A3B8;
+      margin-bottom: 5px;
+      font-weight: 800;
+    }
+    .showcase-producer-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.25;
+      margin-bottom: 3px;
+    }
+    .showcase-variedad-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* Selector de Presentación en la Columna Izquierda */
+    .presentation-selector-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .pres-header {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #64748B;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pres-chips-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pres-chip-btn {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #CBD5E1;
+      background: white;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.15s;
+    }
+    .pres-chip-btn:hover {
+      border-color: var(--primary);
+    }
+    .pres-chip-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(16,163,82,0.25);
+    }
+    .pres-chip-btn .pres-sub { font-size: 12px; opacity: 0.95; font-weight: 700; }
+    .pres-chip-btn.active .pres-sub { color: #F0FDF4; }
+
+    /* Impacto en la Red */
+    .impact-badge-box {
+      background: rgba(16, 163, 82, 0.06);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      border: 1px solid rgba(16, 163, 82, 0.15);
+    }
+    .impact-badge-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .impact-badge-desc { font-size: 10.5px; color: #475569; line-height: 1.3; }
+
+    /* Columna Central: Foto y Título */
+    .showcase-center {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .prod-main-img {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 5px solid white;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .prod-main-img:hover { transform: scale(1.03); }
+    .prod-badge-unit {
+      display: inline-block;
+      background: #F1F5F9;
+      color: #475569;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .prod-title { font-size: 21px; font-weight: 800; color: #0F172A; margin: 0 0 4px; line-height: 1.2; }
+    .prod-subtitle { font-size: 12px; color: #64748B; margin: 0; }
+
+    .btn-show-story-flip {
+      margin-top: 10px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-show-story-flip:hover { background: var(--primary); color: white; }
+
+    /* Columna Derecha: Escalas por Volumen & Cantidades */
+    .showcase-right {
+      justify-content: space-between;
+    }
+    .scale-tier-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      background: #F8FAFC;
+      border-radius: var(--radius-md);
+      border: 2px solid transparent;
+      margin-bottom: 7px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .scale-tier-card:hover { border-color: #CBD5E1; }
+    .scale-tier-card.active {
+      background: rgba(16, 163, 82, 0.08);
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(16, 163, 82, 0.1);
+    }
+    .scale-tier-info .st-title { font-size: 14.5px; font-weight: 700; color: #0F172A; }
+    .scale-tier-info .st-sub { font-size: 10.5px; color: #64748B; }
+    .scale-tier-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .scale-tier-card.active .scale-tier-price {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .qty-control-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F1F5F9;
+      border-radius: 40px;
+      padding: 4px;
+      margin-top: 8px;
+    }
+    .qty-btn-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease;
+    }
+    .qty-btn-circle:active { transform: scale(0.9); }
+    .qty-input-text {
+      width: 60px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #0F172A;
+    }
+
+    /* Modal Ficha Productor y Mapa */
+    .story-modal-body {
+      padding: 14px 0;
+    }
+    .story-impact-box {
+      background: rgba(16,163,82,0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      margin: 12px 0;
+      border: 1px solid rgba(16,163,82,0.2);
+    }
+    .story-map-box {
+      width: 100%;
+      height: 120px;
+      background: #1E293B;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      position: relative;
+    }
+
+    /* =========================================================
+       MODO JUEGO (SWIPE)
+       ========================================================= */
+    #swipe-view-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-width: 380px;
+      margin: 0 auto 30px;
+      padding: 0 12px;
+    }
+    .swipe-actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .btn-act-circle {
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease;
+    }
+    .btn-act-circle:active { transform: scale(0.9); }
+    .btn-act-pass { width: 48px; height: 48px; background: white; color: #EF4444; border: 2px solid #FEE2E2; font-size: 18px; }
+    .btn-act-info { width: 40px; height: 40px; background: white; color: #6366F1; border: 2px solid #E0E7FF; font-size: 14px; }
+    .btn-act-like { width: 56px; height: 56px; background: var(--primary); color: white; font-size: 22px; box-shadow: 0 6px 18px rgba(16,163,82,0.35); }
+  </style>
 </head>
 <body>
 
-  
+<div class="app-container">
 
-  <!-- Header del Nodo Activo -->
-  
-  <header class="shop-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: white; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50;">
-    <div style="display: flex; align-items: center; gap: 14px;">
-      <button onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;" title="Volver a la página anterior">
-        <i class="fas fa-arrow-left"></i> Volver
+  <!-- =========================================
+       1. SIDEBAR IZQUIERDO (ESTILO SPOTIFY)
+       ========================================= -->
+  <aside class="app-sidebar" id="app-sidebar">
+    <!-- Brand -->
+    <div class="sidebar-brand-section">
+      <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="location.href='index.html'">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(16,185,129,0.15); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 18px;">🌱</div>
+        <div>
+          <h1 style="font-size: 15.5px; font-weight: 800; margin: 0; color: white; line-height: 1.1; letter-spacing: 0.5px;">VRDE.CLUB</h1>
+          <p style="font-size: 10px; color: #94A3B8; margin: 0;">Almacén Lunar Comunitario</p>
+        </div>
+      </div>
+      <a href="index.html" style="color: #64748B; font-size: 13px;" title="Ir al Home"><i class="fas fa-home"></i></a>
+    </div>
+
+    <!-- Tarjeta de Usuario / Prosumidor -->
+    <div class="sidebar-user-card" onclick="openEditUserProfileModal()" id="sidebar-user-box" title="Clic para editar tus datos de comprador">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; background: #10B981; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0;" id="sidebar-user-avatar">
+          👤
+        </div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 13px; font-weight: 800; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="sidebar-user-name">Prosumidor/a</div>
+          <div style="font-size: 10.5px; color: #34D399; margin-top: 1px;" id="sidebar-user-tag">📍 Miembro de la Red</div>
+        </div>
+        <i class="fas fa-pen text-xs" style="color: #64748B;"></i>
+      </div>
+    </div>
+
+    <!-- Menú de Navegación Spotify -->
+    <nav class="sidebar-nav-menu">
+      <div class="sidebar-nav-item active" id="nav-item-catalogo" onclick="switchAppView('catalogo')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-shopping-basket"></i>
+          <span>Catálogo Lunar</span>
+        </div>
+        <span style="font-size: 10px; background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius: 4px;" id="badge-total-prods">0</span>
+      </div>
+
+      <div class="sidebar-nav-item" id="nav-item-mi-panel" onclick="switchAppView('mi-panel')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-user-circle"></i>
+          <span>Mi Panel (Compras & Pagos)</span>
+        </div>
+        <span style="font-size: 10px; background: #10B981; color: #064E3B; padding: 1px 6px; border-radius: 99px; font-weight: 800;" id="badge-panel-debt">🌕</span>
+      </div>
+
+      <div class="sidebar-nav-item" id="nav-item-circulos" onclick="switchAppView('circulos')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-users"></i>
+          <span>Círculos Comunitarios</span>
+        </div>
+        <span style="font-size: 10px; background: rgba(16,185,129,0.2); color: #34D399; padding: 1px 6px; border-radius: 4px;" id="badge-open-circulos">0</span>
+      </div>
+
+      <div class="sidebar-nav-item" id="nav-item-mi-nodo" onclick="switchAppView('mi-nodo')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-store-alt"></i>
+          <span>Mi Nodo Cabecera</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mini Widget Fase Lunar en Sidebar -->
+    <div style="margin: 0 14px 12px; background: rgba(15,23,42,0.6); border: 1px solid #1E293B; border-radius: 12px; padding: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-size: 10.5px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Ciclo Lunar Activo</span>
+        <span style="font-size: 10.5px; color: #10B981; font-weight: 800;" id="sidebar-lunar-phase">🌕 Abierto</span>
+      </div>
+      <div style="font-size: 12px; font-weight: 800; color: #FFFFFF;" id="sidebar-lunar-title">Luna Llena</div>
+      <div style="font-size: 10px; color: #64748B; margin-top: 2px;" id="sidebar-lunar-countdown">Cierra en X días</div>
+    </div>
+
+    <!-- Mini Carrito en Sidebar -->
+    <div class="sidebar-footer-widget" id="sidebar-cart-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 11.5px; color: #94A3B8; font-weight: 700;">Tu Canasta</span>
+        <span style="font-size: 13.5px; font-weight: 800; color: #10B981;" id="sidebar-cart-total">$0</span>
+      </div>
+      <button onclick="openCheckoutModal()" class="btn-checkout-cta" style="width: 100%; border-radius: 8px; padding: 9px; font-size: 12px;">
+        <i class="fas fa-shopping-bag" style="margin-right: 6px;"></i> FINALIZAR PEDIDO
       </button>
-      <div class="shop-brand" onclick="openNodeProfile()" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
-        <div class="shop-brand-logo" id="shop-logo" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(16,163,82,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 2px solid var(--primary); flex-shrink: 0;">🌱</div>
+    </div>
+  </aside>
+
+  <!-- =========================================
+       2. MAIN VIEWPORT (CONTENIDO DE APLICACIÓN)
+       ========================================= -->
+  <div class="app-main-viewport">
+    
+    <!-- Topbar Compacta para Navegación y Contexto -->
+    <div class="app-topbar">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="margin: 0; padding: 6px 10px; font-size: 11px;" title="Volver">
+          <i class="fas fa-arrow-left"></i>
+        </button>
         <div>
-          <h2 class="shop-brand-name" id="shop-name" style="font-size: 17px; font-weight: 700; color: #0F172A; margin: 0; line-height: 1.2;">Nodo Escobar</h2>
-          <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0; display: flex; align-items: center; gap: 4px;">
-            <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
-            <span id="shop-subheading">Ver dirección, día de entrega y contacto &rarr;</span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <a href="javascript:void(0)" onclick="openNodeProfile()" style="text-decoration: none; font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(16,163,82,0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(16,163,82,0.25); white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;">
-      <i class="fas fa-info-circle"></i> Info del Nodo
-    </a>
-  </header>
-
-
-  <!-- Banner de Estado Lunar & Metas Colectivas -->
-  <div style="padding: 0 16px;">
-    <div class="lunar-banner-card">
-      <div class="lunar-top-row">
-        <div>
-          <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 4px;">Ciclo Astronómico de Compra</div>
-          <h2 style="font-size: 26px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
-          <p style="font-size: 14px; color: #CBD5E1; margin-top: 4px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días (28 de Agosto)</p>
-        </div>
-        <div style="text-align: right;">
-          <div class="lunar-phase-badge">
-            <span style="font-size: 16px;">🌕</span> Compra Abierta
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <h2 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;" id="topbar-nodo-title">Nodo Loma Verde</h2>
+            <button onclick="switchAppView('mi-nodo')" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 700; cursor: pointer; padding: 0 2px;" title="Ver info del nodo">(Ver info)</button>
           </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin: 0;" id="topbar-circulo-sub">Retiro personal en sede central</p>
         </div>
       </div>
 
-      <div class="progress-grid">
-        <!-- Meta del Nodo -->
-        <div class="progress-box">
-          <div class="progress-info">
-            <span class="label">Meta del <span id="shop-nodo-label">Nodo Escobar</span>:</span>
-            <span class="val" id="shop-nodo-prog-text">48 / 120 unidades</span>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')" style="margin: 0;">
+          <i class="fas fa-th-large"></i> Catálogo
+        </button>
+        <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')" style="margin: 0;">
+          <i class="fas fa-gamepad"></i> 🎮
+        </button>
+      </div>
+    </div>
+
+    <!-- =========================================
+         VISTA 1: CATÁLOGO DE ALIMENTOS
+         ========================================= -->
+    <section class="app-view-panel active" id="view-catalogo">
+      <!-- Banner Compacto de Círculo (si activo) -->
+      <div id="circulo-active-banner-container" class="hidden" style="margin-bottom: 12px;"></div>
+
+      <!-- Banner de Estado Lunar & Metas Colectivas -->
+      <div class="lunar-banner-card">
+        <div class="lunar-top-row">
+          <div>
+            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 2px;">Ciclo Astronómico de Compra</div>
+            <h2 style="font-size: 20px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
+            <p style="font-size: 12.5px; color: #CBD5E1; margin-top: 2px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días</p>
           </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="shop-nodo-prog-bar" style="width: 40%; background: #D4F1A0;"></div>
+          <div style="text-align: right;">
+            <div class="lunar-phase-badge">
+              <span style="font-size: 13px;">🌕</span> Compra Abierta
+            </div>
           </div>
         </div>
 
-        <!-- Meta Global de la Red -->
-        <div class="progress-box">
-          <div class="progress-info">
-            <span class="label">Meta Colectiva de la Red:</span>
-            <span class="val" id="shop-global-prog-text">385 / 500 unidades</span>
+        <div class="progress-grid">
+          <!-- Meta del Nodo -->
+          <div class="progress-box">
+            <div class="progress-info">
+              <span class="label">Meta del <span id="shop-nodo-label">Nodo</span>:</span>
+              <span class="val" id="shop-nodo-prog-text">0 / 120 u.</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="shop-nodo-prog-bar" style="width: 40%; background: #D4F1A0;"></div>
+            </div>
           </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="shop-global-prog-bar" style="width: 77%; background: #10A352;"></div>
+
+          <!-- Meta Global de la Red -->
+          <div class="progress-box">
+            <div class="progress-info">
+              <span class="label">Meta Global de la Red:</span>
+              <span class="val" id="shop-global-prog-text">0 / 500 u.</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="shop-global-prog-bar" style="width: 77%; background: #10A352;"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <!-- Categorías de Alimentos Spotify -->
+      <div class="spotify-categories-wrapper" style="margin: 0 0 10px; padding: 0;">
+        <div class="spotify-categories-grid" id="spotify-categories-container"></div>
+      </div>
+
+      <!-- Pestañas de Variedades -->
+      <div class="product-tabs-wrapper" style="margin: 0 0 12px; padding: 0;">
+        <div class="product-tabs-outer">
+          <button class="tab-nav-arrow" onclick="scrollTabs(-200)"><i class="fas fa-chevron-left"></i></button>
+          <div class="product-tabs" id="shop-product-tabs"></div>
+          <button class="tab-nav-arrow" onclick="scrollTabs(200)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Escaparate Principal de Productos -->
+      <main class="product-showcase" id="showcase-container"></main>
+
+      <!-- Modo Juego Swipe -->
+      <div id="swipe-view-container">
+        <div class="showcase-card" style="max-width: 380px; width: 100%; padding: 16px;">
+          <div style="position: relative; text-align: center;">
+            <img id="sw-img" src="" alt="Producto" style="width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+            <div class="prod-badge-unit" id="sw-badge" style="display: block; width: fit-content; margin: 8px auto 4px;">Formato</div>
+            <h3 class="prod-title" id="sw-title" style="font-size: 19px;">Producto</h3>
+            <p class="prod-subtitle" id="sw-desc" style="font-size: 12px; margin-bottom: 12px;">Descripción</p>
+          </div>
+
+          <!-- Presentación en Swipe -->
+          <div class="presentation-selector-box" style="margin-bottom: 10px;">
+            <div class="pres-header">
+              <span>Presentación / Peso:</span>
+            </div>
+            <div class="pres-chips-grid" id="sw-chips-grid"></div>
+          </div>
+
+          <!-- Cantidad y Precio en Swipe -->
+          <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 10px; padding: 6px 12px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 11px; font-weight: 700;">Cant:</span>
+              <div class="qty-control-box" style="margin-top: 0; padding: 2px;">
+                <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(-1)">-</button>
+                <span id="sw-qty-val" style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">1</span>
+                <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(1)">+</button>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div class="scale-tier-price" id="sw-total-val" style="color: var(--primary); font-size: 18px;">$0</div>
+              <div style="font-size: 9.5px; color: var(--text-muted);" id="sw-unit-val"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de Acción Swipe -->
+        <div class="swipe-actions-bar">
+          <button class="btn-act-circle btn-act-pass" onclick="triggerSwipeAction('left')" title="Pasar al siguiente">
+            <i class="fas fa-times"></i>
+          </button>
+          <button class="btn-act-circle btn-act-info" onclick="openProductStoryModal(ACTIVE_PRODUCT_INDEX)" title="Ver historia y mapa">
+            <i class="fas fa-info"></i>
+          </button>
+          <button class="btn-act-circle btn-act-like" onclick="triggerSwipeAction('right')" title="¡Sumar al pedido!">
+            <i class="fas fa-heart"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================
+         VISTA 2: MI PANEL / ESPACIO DEL PROSUMIDOR
+         ========================================= -->
+    <section class="app-view-panel" id="view-mi-panel">
+      <!-- Inyectado dinámicamente por renderMiPanel() -->
+    </section>
+
+    <!-- =========================================
+         VISTA 3: EXPLORADOR DE CÍRCULOS
+         ========================================= -->
+    <section class="app-view-panel" id="view-circulos">
+      <!-- Inyectado dinámicamente por renderCirculosView() -->
+    </section>
+
+    <!-- =========================================
+         VISTA 4: MI NODO CABECERA
+         ========================================= -->
+    <section class="app-view-panel" id="view-mi-nodo">
+      <!-- Inyectado dinámicamente por renderMiNodoView() -->
+    </section>
+
   </div>
 
-  <!-- Pestañas de Selección de Producto -->
-  <div class="product-tabs-wrapper">
-    <div class="product-tabs" id="shop-tabs">
-      <!-- Inyectado dinámicamente por JS -->
+  <!-- =========================================
+       3. MOBILE BOTTOM NAVIGATION
+       ========================================= -->
+  <nav class="app-bottom-nav">
+    <div class="bottom-nav-item active" id="bnav-catalogo" onclick="switchAppView('catalogo')">
+      <i class="fas fa-shopping-basket"></i>
+      <span>Catálogo</span>
     </div>
-  </div>
-
-  <!-- Escaparate de Producto Activo -->
-  <main class="product-showcase" id="shop-product-container">
-    <!-- Inyectado dinámicamente por JS -->
-  </main>
-
-  <!-- Espacio de seguridad inferior para la barra flotante -->
-  <div style="height: 140px; width: 100%; pointer-events: none;"></div>
-
-  <!-- Barra Flotante de Carrito -->
-  <div class="floating-cart-bar" id="floating-cart">
-    <div>
-      <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Total de tu pedido</div>
-      <div class="cart-summary-total" id="cart-total-text">$0</div>
+    <div class="bottom-nav-item" id="bnav-mi-panel" onclick="switchAppView('mi-panel')">
+      <i class="fas fa-user-circle"></i>
+      <span>Mi Panel</span>
     </div>
-    <button class="btn-checkout-cta" id="btn-checkout" onclick="openCheckoutModal()">
-      FINALIZAR PEDIDO <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
-    </button>
+    <div class="bottom-nav-item" id="bnav-circulos" onclick="switchAppView('circulos')">
+      <i class="fas fa-users"></i>
+      <span>Círculos</span>
+    </div>
+    <div class="bottom-nav-item" id="bnav-carrito" onclick="openCheckoutModal()">
+      <i class="fas fa-shopping-bag"></i>
+      <span id="bnav-cart-text">Canasta ($0)</span>
+    </div>
+  </nav>
+
+</div>
+
+<!-- Barra Flotante de Carrito (Desktop / Mobile Bottom Overlay) -->
+<div class="floating-cart-bar" id="floating-cart">
+  <div>
+    <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Total de tu pedido</div>
+    <div class="cart-summary-total" id="cart-total-text">$0</div>
   </div>
+  <button class="btn-checkout-cta" id="btn-checkout" onclick="openCheckoutModal()">
+    FINALIZAR PEDIDO <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+  </button>
+</div>
 
   <!-- =========================================
        MODALES
        ========================================= -->
+
+  <!-- Modal Ficha de Historia y Mapa del Productor -->
+  <div class="modal-overlay" id="modal-story">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="st-modal-title">Origen y Trazabilidad</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-story')">&times;</span>
+      </div>
+      <div class="story-modal-body">
+        <h4 style="font-size: 17px; color: var(--primary); margin: 0 0 6px;" id="st-producer-name">Productor</h4>
+        <p style="font-size: 13.5px; color: #334155; line-height: 1.45; margin: 0 0 10px;" id="st-producer-desc"></p>
+        
+        <div class="story-impact-box">
+          <strong style="color: var(--primary);"><i class="fas fa-seedling"></i> Impacto Agroecológico:</strong>
+          <div style="margin-top: 4px; color: #1E293B;" id="st-producer-impact"></div>
+        </div>
+
+        <div class="story-map-box">
+          <i class="fas fa-map-marker-alt" style="font-size: 24px; color: var(--accent); animation: bounce 1.5s infinite;"></i>
+          <span style="position: absolute; bottom: 8px; font-size: 11px; background: rgba(0,0,0,0.7); padding: 3px 10px; border-radius: 4px;" id="st-producer-loc">📍 Ubicación</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal Checkout -->
   <div class="modal-overlay" id="modal-checkout">
@@ -149,403 +1062,2088 @@
           </div>
         </div>
 
-        <!-- Selector Tipo de Entrega: Retiro vs Delivery -->
-        <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 6px;">Forma de Entrega *</label>
-          <div class="don-btn-group" style="margin-top: 4px;">
-            <button class="don-btn-opt active" id="btn-entrega-retiro" onclick="setDeliveryType('Retiro en Nodo')">
-              <i class="fas fa-store"></i> Retiro en Nodo (Gratis)
-            </button>
-            <button class="don-btn-opt" id="btn-entrega-delivery" onclick="setDeliveryType('Delivery')">
-              <i class="fas fa-motorcycle"></i> Envío a Domicilio (Delivery)
-            </button>
-          </div>
-
-          <!-- Info Retiro -->
-          <div id="info-entrega-retiro" style="background: #F1F5F9; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: #475569; margin-top: 10px;">
-            <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Retiras en el punto de encuentro del nodo. Sin costo adicional.
-          </div>
-
-          <!-- Formulario Dirección Delivery -->
-          <div id="form-entrega-delivery" class="hidden" style="margin-top: 10px;">
-            <div class="input-field-group" style="margin-bottom: 10px;">
-              <label style="font-size: 12px;">Dirección completa (Calle, Altura, Piso/Depto) *</label>
-              <input type="text" id="chk-direccion-delivery" class="input-field" placeholder="Ej: Av. San Martín 1420, Piso 3 Depto B">
-            </div>
-            <div class="input-field-group" style="margin-bottom: 0;">
-              <label style="font-size: 12px;">Localidad / Barrio *</label>
-              <input type="text" id="chk-localidad-delivery" class="input-field" placeholder="Ej: Escobar / Loma Verde">
-            </div>
-          </div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 2px solid #E2E8F0;">
-          <span style="font-size: 15px; font-weight: 700; color: #0F172A;">TOTAL A TRANSFERIR</span>
-          <span style="font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--primary);" id="checkout-total-final">$0</span>
+        <div class="total-row" style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #CBD5E1;">
+          <span style="font-size: 16px; font-weight: 700; color: #0F172A;">Total a Transferir:</span>
+          <span style="font-size: 22px; font-weight: 800; color: var(--primary);" id="checkout-total-final">$0</span>
         </div>
       </div>
 
-      <!-- Selección de Vrdedor Comunitario -->
-      <div class="input-field-group" id="group-chk-vrdedor" style="margin-bottom: 12px;">
-        <label style="font-size: 13px; font-weight: 700; color: #0F172A;">¿Con qué Vrdedor te estás comunicando? (Opcional)</label>
-        <select id="chk-vrdedor-select" class="input-field" style="margin-top: 4px;">
-          <option value="Coordinación General del Nodo">🌱 Coordinación General del Nodo</option>
-        </select>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Elige a tu coordinador/a de confianza para gestionar la entrega de este pedido.</p>
-      </div>
+      <!-- Formulario de Pedido -->
+      <form onsubmit="event.preventDefault(); submitOrder();">
+        
+        <!-- Asignación de Vrdedor/a -->
+        <div class="form-group" id="vrdedor-selector-group">
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>🤝 ¿Quién te invitó o acompaña tu compra?</span>
+            <span style="font-weight: 400; color: var(--text-muted); font-size: 11px;">(Vrdedores Locales)</span>
+          </label>
+          <select id="chk-vrdedor-select" class="input-field" style="background: #F8FAFC; font-weight: 600;">
+            <!-- Inyectado por JS -->
+          </select>
+        </div>
 
-      <!-- Datos del Comprador -->
-      <div class="input-field-group">
-        <label>Nombre y Apellido *</label>
-        <input type="text" id="chk-nombre" class="input-field" placeholder="Ej: Sofía Almada" required>
-      </div>
+        <div class="form-group">
+          <label class="form-label">Nombre y Apellido *</label>
+          <input type="text" id="chk-nombre" class="input-field" placeholder="Tu nombre completo" required>
+        </div>
 
-      <div class="input-field-group">
-        <label>Teléfono (WhatsApp) *</label>
-        <input type="tel" id="chk-tel" class="input-field" placeholder="Ej: 11 2345 6789" required>
-      </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono / WhatsApp *</label>
+          <input type="tel" id="chk-tel" class="input-field" placeholder="Ej: 1123456789 (Sin 0 ni 15)" required>
+        </div>
 
-      <div class="input-field-group">
-        <label>Comentario adicional (opcional)</label>
-        <textarea id="chk-msg" class="input-field" rows="2" placeholder="Ej: Avisar por WhatsApp antes de llegar"></textarea>
-      </div>
+        <!-- Opciones de Entrega -->
+        <div class="form-group">
+          <label class="form-label">Forma de Entrega *</label>
+          <div class="delivery-options-grid">
+            <button type="button" class="delivery-card active" id="btn-entrega-retiro" onclick="setDeliveryType('Retiro en Nodo')">
+              <i class="fas fa-store"></i>
+              <div class="title">Retiro en Nodo</div>
+              <div class="sub">Sin costo adicional</div>
+            </button>
+            <button type="button" class="delivery-card" id="btn-entrega-delivery" onclick="setDeliveryType('Delivery')">
+              <i class="fas fa-motorcycle"></i>
+              <div class="title">Envío a Domicilio</div>
+              <div class="sub">Coordinar con el nodo</div>
+            </button>
+          </div>
+        </div>
 
-      <button class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-sm); margin-top: 8px;" id="btn-submit-order" onclick="submitOrder()">
-        CONFIRMAR PEDIDO
-      </button>
+        <div id="info-entrega-retiro" class="delivery-info-box">
+          <i class="fas fa-map-pin" style="color: var(--primary); margin-right: 6px;"></i>
+          <span>Retiras tu pedido el día asignado en la sede del nodo.</span>
+        </div>
+
+        <div id="form-entrega-delivery" class="hidden" style="margin-bottom: 16px;">
+          <div class="form-group">
+            <label class="form-label">Dirección de Entrega</label>
+            <input type="text" id="chk-direccion-delivery" class="input-field" placeholder="Calle, número, piso/depto">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Localidad / Barrio</label>
+            <input type="text" id="chk-localidad-delivery" class="input-field" placeholder="Ej: Maschwitz, Loma Verde, etc.">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notas o aclaraciones (opcional)</label>
+          <textarea id="chk-msg" class="input-field" rows="2" placeholder="Indicaciones para la entrega o retiro..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 15px; margin-top: 10px;">
+          CONFIRMAR Y ENVIAR PEDIDO
+        </button>
+      </form>
     </div>
   </div>
 
-  <!-- Modal Éxito y WhatsApp -->
+  <!-- Modal Éxito -->
   <div class="modal-overlay" id="modal-success">
     <div class="modal-card" style="text-align: center;">
-      <div style="font-size: 54px; margin-bottom: 16px;">🌱</div>
-      <h2 style="color: var(--primary); font-size: 26px; margin-bottom: 6px;">¡Pedido Registrado!</h2>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Código de orden: <strong id="succ-id" style="color: #0F172A;"></strong></p>
-
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; text-align: left; margin-bottom: 24px;">
-        <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 6px;">Datos para la transferencia:</div>
-        <div style="font-size: 14px; margin-bottom: 4px;">Alias / CBU: <strong id="succ-alias" style="color: var(--primary);"></strong></div>
-        <div style="font-size: 15px; margin-top: 6px;">Total a transferir: <strong id="succ-total" style="color: var(--primary); font-size: 20px; font-family: var(--font-heading);"></strong></div>
-      </div>
-
-      <p style="font-size: 13px; color: #64748B; margin-bottom: 20px; line-height: 1.4;">
-        Haz clic a continuación para notificar a tu agente de nodo por WhatsApp y adjuntar tu comprobante de pago.
+      <div style="font-size: 54px; color: var(--primary); margin-bottom: 10px;">🎉</div>
+      <h3 style="font-size: 22px; color: #0F172A; margin: 0 0 8px;">¡Pedido Registrado con Éxito!</h3>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+        Tu pedido comunitario <strong id="succ-id">#G-000000</strong> ha sido guardado en la red.
       </p>
 
-      <button class="btn-checkout-cta" style="background: #25D366; width: 100%; border-radius: var(--radius-sm); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="sendWsp()">
-        <i class="fab fa-whatsapp" style="font-size: 20px;"></i> ENVIAR A WHATSAPP
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 24px; text-align: left;">
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 6px;">Datos para Transferir</div>
+        <div style="font-size: 13px; color: #0F172A; margin-bottom: 4px;">Alias / CBU: <strong id="succ-alias" style="color: var(--primary);">escobar.vrde.mp</strong></div>
+        <div style="font-size: 13px; color: #0F172A;">Total a Transferir: <strong id="succ-total" style="font-size: 16px; color: #0F172A;">$0</strong></div>
+      </div>
+
+      <button class="btn-checkout-cta" onclick="sendWsp()" style="width: 100%; background: #25D366; border-radius: var(--radius-md); padding: 14px; font-size: 15px;">
+        <i class="fab fa-whatsapp" style="font-size: 18px; margin-right: 8px;"></i> ENVIAR COMPROBANTE AL NODO
       </button>
 
-      <button onclick="window.location.href='index.html'" style="background: transparent; border: 1px solid var(--border-color); color: #475569; width: 100%; padding: 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">
-        Volver a la portada
+      <button onclick="closeModal('modal-success')" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 16px;">
+        Cerrar ventana
       </button>
     </div>
   </div>
 
   <!-- Modal Perfil del Nodo -->
   <div class="modal-overlay" id="modal-node">
-    <div class="modal-card" style="text-align: center;">
+    <div class="modal-card">
       <div class="modal-header-row">
-        <h3 style="font-size: 20px; margin: 0;">Información del Nodo</h3>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 32px;" id="prof-logo">🌱</div>
+          <div>
+            <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="prof-name">Nodo Escobar</h3>
+            <span style="font-size: 12px; color: var(--primary); font-weight: 600;">Punto Oficial de Acopio y Entrega</span>
+          </div>
+        </div>
         <span class="modal-close-icon" onclick="closeModal('modal-node')">&times;</span>
       </div>
 
-      <div id="prof-logo" style="width: 70px; height: 70px; border-radius: 50%; background: rgba(16,163,82,0.1); color: var(--primary); display: inline-flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 12px;">🌱</div>
-      <h2 id="prof-name" style="color: #0F172A; font-size: 24px; margin-bottom: 6px;">Nombre Nodo</h2>
-      <p id="prof-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.4;">Descripción</p>
+      <div style="padding: 10px 0;">
+        <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-bottom: 16px;" id="prof-desc"></p>
 
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; text-align: left; font-size: 14px;">
-        <p style="margin-bottom: 10px;"><strong>📍 Dirección:</strong> <span id="prof-dir"></span></p>
-        <p style="margin-bottom: 10px;"><strong>👤 Agente Responsable:</strong> <span id="prof-contacto"></span></p>
-        <p style="margin-bottom: 10px;"><strong>🚚 Día de Entrega:</strong> <span id="prof-entrega"></span></p>
-        <p style="margin-bottom: 0;"><strong>💳 Alias:</strong> <span id="prof-cbu" style="color: var(--primary); font-weight: bold;"></span></p>
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary); width: 20px;"></i>
+            <strong id="prof-dir">Dirección</strong>
+          </div>
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-user-check" style="color: var(--primary); width: 20px;"></i>
+            <span id="prof-contacto">Responsable</span>
+          </div>
+          <div style="font-size: 13px; color: #334155; margin-bottom: 8px;">
+            <i class="fas fa-calendar-alt" style="color: var(--primary); width: 20px;"></i>
+            <span id="prof-entrega">Horario de entrega</span>
+          </div>
+          <div style="font-size: 13px; color: #334155;">
+            <i class="fas fa-university" style="color: var(--primary); width: 20px;"></i>
+            <span>Alias / CBU: <strong id="prof-cbu" style="color: var(--primary);">alias</strong></span>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 8px;">Redes y Difusión del Nodo:</div>
+          <div id="prof-social-badges" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+        </div>
+
+        <!-- Botón de Acceso a Gestión de Nodo (PIN) -->
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <a id="prof-admin-link" href="admin.html" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 700; background: #F8FAFC;">
+            <i class="fas fa-lock" style="color: var(--primary);"></i> Panel Gestor (PIN)
+          </a>
+          <button class="btn-checkout-cta" style="flex: 1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Crear Círculo -->
+  <div class="modal-overlay" id="modal-crear-circulo">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header-row">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">👥</span>
+          <div>
+            <h3 style="font-size: 18px; color: #0F172A; margin: 0;">Crear Círculo de Compra Lunar</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Organizá la compra con tus vecinos, amigos o familia</p>
+          </div>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('modal-crear-circulo')">&times;</span>
       </div>
 
-      <div id="prof-social-badges" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
-        <!-- Inyectado por JS -->
+      <!-- Paso 1: Formulario de Creación -->
+      <div id="circ-form-step">
+        <form onsubmit="event.preventDefault(); submitCreateCirculo();">
+          <div class="form-group">
+            <label class="form-label">Nombre del Grupo / Círculo *</label>
+            <input type="text" id="circ-nombre" class="input-field" placeholder="Ej: Vecinos Edificio Maipú / Familia Gómez" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tu Nombre (Anfitrión/a) *</label>
+            <input type="text" id="circ-anfitrion" class="input-field" placeholder="Ej: Ramiro Stein" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tu WhatsApp (Para coordinar entregas y pagos) *</label>
+            <input type="tel" id="circ-whatsapp" class="input-field" placeholder="Ej: 11 4829 1029" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nodo Cabecera de Retiro y Logística *</label>
+            <select id="circ-nodo-select" class="input-field" style="background: #F8FAFC; font-weight: 600;">
+              <!-- Inyectado por JS con los nodos activos -->
+            </select>
+            <p style="font-size: 11px; color: var(--text-muted); margin: 3px 0 0;">Los pedidos del Círculo se consolidan con las rutas de este Nodo oficial.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo de Círculo / Privacidad *</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px;">
+              <label style="border: 1.5px solid #10B981; background: #ECFDF5; padding: 10px 12px; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 12.5px; color: #064E3B;">
+                  <input type="radio" name="circ-privacidad" value="abierto" checked style="accent-color: #10B981;">
+                  <span>🌐 Círculo Abierto</span>
+                </div>
+                <span style="font-size: 11px; color: #047857;">Público en la tienda para que vecinos del barrio puedan sumarse</span>
+              </label>
+
+              <label style="border: 1.5px solid #CBD5E1; background: #F8FAFC; padding: 10px 12px; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 12.5px; color: #334155;">
+                  <input type="radio" name="circ-privacidad" value="cerrado" style="accent-color: #10B981;">
+                  <span>🔒 Círculo Privado</span>
+                </div>
+                <span style="font-size: 11px; color: #64748B;">Oculto. Solo para quienes reciban el link privado de WhatsApp</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Link de Grupo de WhatsApp del Círculo (Opcional)</label>
+            <input type="url" id="circ-link-grupo" class="input-field" placeholder="Ej: https://chat.whatsapp.com/ABC123xyz...">
+            <p style="font-size: 11px; color: var(--text-muted); margin: 3px 0 0;">Si ya creaste un grupo de WhatsApp para tu barrio/edificio, pegá el enlace acá.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Punto de Entrega / Dirección del Grupo (Opcional)</label>
+            <input type="text" id="circ-direccion" class="input-field" placeholder="Ej: Maipú 450 (Hall PB) / Taller de Cerámica">
+          </div>
+
+          <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 14px; margin-top: 10px;">
+            <i class="fas fa-magic" style="margin-right: 6px;"></i> CREAR CÍRCULO Y GENERAR ENLACE
+          </button>
+        </form>
       </div>
 
-      <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <a id="prof-admin-link" href="admin.html" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-size: 13px; font-weight: 600;">
-          <i class="fas fa-lock"></i> Panel Gestor (PIN)
-        </a>
-        <button class="btn-checkout-cta" style="flex: 1; border-radius: var(--radius-sm); padding: 12px;" onclick="closeModal('modal-node')">
-          Entendido
+      <!-- Paso 2: Éxito y Enlace Compartible (Permanece abierto para copiar y compartir) -->
+      <div id="circ-share-result" class="hidden" style="text-align: left;">
+        <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px;">
+          <div style="width: 52px; height: 52px; background: #10B981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 12px; box-shadow: 0 4px 12px rgba(16,185,129,0.25);">
+            🎉
+          </div>
+          <h4 style="font-size: 18px; font-weight: 800; color: #064E3B; margin-bottom: 4px;" id="circ-succ-title">¡Círculo Creado con Éxito!</h4>
+          <p style="font-size: 13px; color: #047857; margin: 0;" id="circ-succ-subtitle">
+            Tu grupo ya está listo para acumular kilos y alcanzar precio mayorista.
+          </p>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #64748B; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">
+            Enlace Exclusivo para tu Grupo (WhatsApp):
+          </label>
+          <div id="circ-share-link-box" style="background: #F8FAFC; border: 1px solid #CBD5E1; padding: 12px 14px; border-radius: 10px; font-family: monospace; font-size: 12.5px; color: #0F172A; word-break: break-all; user-select: all;"></div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+          <button type="button" id="btn-copy-circ-link" onclick="copyActiveCirculoLink()" style="flex: 1; background: #FFFFFF; color: #065F46; border: 1.5px solid #059669; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fas fa-copy"></i> <span id="copy-btn-label">Copiar Enlace</span>
+          </button>
+          <button type="button" onclick="shareActiveCirculoWsp()" style="flex: 1.2; background: #25D366; color: #FFFFFF; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(37,211,102,0.25);">
+            <i class="fab fa-whatsapp" style="font-size: 16px;"></i> Compartir en WhatsApp
+          </button>
+        </div>
+
+        <button type="button" onclick="goToActiveCirculoStore()" class="btn-checkout-cta" style="width: 100%; border-radius: 10px; padding: 13px; font-size: 13.5px;">
+          <i class="fas fa-shopping-bag" style="margin-right: 6px;"></i> IR A LA TIENDA DE MI CÍRCULO
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- Modal Tablero de Integrantes y Compra Comunitaria del Círculo -->
+  <div class="modal-overlay" id="modal-circulo-dashboard">
+    <div class="modal-card" style="max-width: 680px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header-row" style="margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 12px rgba(16,185,129,0.25); flex-shrink: 0;">
+            👥
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span id="dash-circ-priv-badge" style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">🌐 ABIERTO</span>
+              <span id="dash-circ-nodo-badge" style="font-size: 10.5px; font-weight: 700; color: #64748B;">📍 Nodo Cabecera</span>
+            </div>
+            <h3 style="font-size: 19px; font-weight: 800; color: #0F172A; margin: 2px 0 0;" id="dash-circ-title">Tablero del Círculo</h3>
+            <p style="font-size: 12px; color: #64748B; margin: 0;" id="dash-circ-subtitle">Anfitrión/a y compra vecinal</p>
+          </div>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('modal-circulo-dashboard')">&times;</span>
+      </div>
+
+      <!-- 1. BLOQUE DE COMUNICACIÓN Y CHAT GRUPAL DE WHATSAPP -->
+      <div id="dash-circ-comm-box" style="background: linear-gradient(135deg, #064E3B, #0F172A); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; color: white;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #A7F3D0;">💬 Chat y Comunicación</div>
+            <div style="font-size: 13px; font-weight: 600; color: #F8FAFC; margin-top: 2px;">Coordiná la entrega y hablá con tus vecinos</div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="dash-circ-comm-buttons"></div>
+        </div>
+      </div>
+
+      <!-- 2. PROGRESO DE ESCALA COLECTIVA Y VALOR/DESCUENTO ACCEDIDO -->
+      <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <div>
+            <span style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #64748B;">Nivel de Descuento Comunitario:</span>
+            <div id="dash-scale-tier-badge" style="font-size: 16px; font-weight: 800; color: #0F172A; margin-top: 2px;">
+              🔥 Nivel 1: Minorista
+            </div>
+          </div>
+          <div id="dash-scale-saving-pill" style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800;">
+            Ahorro: $0
+          </div>
+        </div>
+
+        <!-- Barra de Progreso a Siguiente Nivel -->
+        <div style="background: #E2E8F0; border-radius: 99px; height: 8px; overflow: hidden; margin: 10px 0 6px;">
+          <div id="dash-scale-prog-bar" style="background: #10B981; height: 100%; width: 20%; border-radius: 99px; transition: width 0.4s ease;"></div>
+        </div>
+        <div id="dash-scale-prog-text" style="font-size: 12px; color: #059669; font-weight: 700;">
+          🚀 Faltan 20 unidades para Nivel Mayorista (-15% de ahorro)
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; border-top: 1px dashed #CBD5E1; padding-top: 12px; text-align: center;">
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Integrantes</div>
+            <div id="dash-stat-members" style="font-size: 18px; font-weight: 800; color: #0F172A;">0</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Unidades</div>
+            <div id="dash-stat-units" style="font-size: 18px; font-weight: 800; color: #0F172A;">0</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Total Grupo</div>
+            <div id="dash-stat-total" style="font-size: 18px; font-weight: 800; color: #10B981;">$0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. LISTADO DE INTEGRANTES DEL CÍRCULO -->
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #475569; letter-spacing: 0.5px;">
+            👥 Integrantes del Círculo (<span id="dash-members-count-num">0</span>)
+          </span>
+          <span style="font-size: 11px; color: #64748B;">Contactá 1 a 1 para coordinar</span>
+        </div>
+        <div id="dash-circ-members-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; padding-right: 4px;"></div>
+      </div>
+
+      <!-- 4. BOTONES DE INVITACIÓN Y SALIR -->
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #E2E8F0; padding-top: 14px;">
+        <button type="button" onclick="copyActiveCirculoLink()" style="flex: 1; background: #FFFFFF; color: #065F46; border: 1.5px solid #059669; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;">
+          <i class="fas fa-link"></i> Copiar Enlace
+        </button>
+        <button type="button" onclick="shareActiveCirculoWsp()" style="flex: 1; background: #25D366; color: #FFFFFF; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+          <i class="fab fa-whatsapp"></i> Invitar Vecinos
+        </button>
+        <button type="button" id="dash-btn-leave-circulo" onclick="leaveCurrentCirculo()" style="background: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; padding: 10px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;" title="Dejar de participar en este Círculo">
+          <i class="fas fa-sign-out-alt"></i> Salir del Círculo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar Perfil Prosumidor -->
+  <div class="modal-overlay" id="modal-user-profile">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header-row">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 26px;">👤</span>
+          <div>
+            <h3 style="font-size: 18px; color: #0F172A; margin: 0;">Mi Perfil de Prosumidor</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Tus datos para pedidos, pagos y entregas</p>
+          </div>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('modal-user-profile')">&times;</span>
+      </div>
+
+      <form onsubmit="event.preventDefault(); submitUserProfile();" style="padding: 10px 0;">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Nombre y Apellido *</label>
+          <input type="text" id="prof-user-nombre" class="input-field" placeholder="Ej: Carolina Gómez" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">WhatsApp / Teléfono *</label>
+          <input type="tel" id="prof-user-telefono" class="input-field" placeholder="Ej: 11 4829 1029" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Tu Nodo Cabecera de Retiro *</label>
+          <select id="prof-user-nodo" class="input-field" style="background: #F8FAFC; font-weight: 600;"></select>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Dirección Habitual de Entrega (Opcional)</label>
+          <input type="text" id="prof-user-direccion" class="input-field" placeholder="Ej: Calle Los Tilos 120, PB">
+        </div>
+        <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 14px; margin-top: 10px;">
+          GUARDAR Y ACTUALIZAR MI PERFIL
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts del Sistema Lunar -->
   <script src="lunar-engine.js"></script>
+
   <script>
     let CURRENT_REF = 'escobar';
-    let ACTIVE_INDEX = 0;
-    let CARRITO = {};
+    let CICLO_LUNAR = null;
     let DONATION_TYPE = '3';
     let ORDER_SUCCESS_DATA = null;
-    let CICLO_LUNAR = null;
+    let ACTIVE_CIRCULO = null;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const refParam = urlParams.get('ref');
-    if (refParam && LUNAR_CONFIG.nodos[refParam.toLowerCase()]) {
-      CURRENT_REF = refParam.toLowerCase();
-    }
+    // Estado del Catálogo y Selección
+    let CURRENT_CATEGORY = 'TODOS';
+    let DISPLAY_PRODUCTS = [];
+    let ACTIVE_PRODUCT_INDEX = 0;
+    let SELECTED_VARIANT_INDEX = {}; // { prodId: variantIndex }
+    let CART_ITEMS = {}; // { "prodId_variantId": { prod, variant, qty } }
+    let STORE_VIEW_MODE = 'showcase'; // 'showcase' o 'swipe'
 
-    function initStore() {
-      CICLO_LUNAR = LunarEngine.obtenerCicloActual();
+    function mostrarLandingNodoCerrado(nodoInfo, motivo) {
+      // Ocultar elementos de compras de la tienda
+      const elemsToHide = [
+        document.querySelector('.lunar-banner-card'),
+        document.querySelector('.view-mode-bar-container'),
+        document.querySelector('.spotify-categories-wrapper'),
+        document.querySelector('.product-tabs-wrapper'),
+        document.getElementById('showcase-container'),
+        document.getElementById('swipe-view-container'),
+        document.querySelector('.floating-cart-bar'),
+        document.getElementById('circulo-active-banner-container')
+      ];
+      elemsToHide.forEach(el => { if (el) el.style.display = 'none'; });
 
-      // Cargar carrito persistido en sesión si existe
-      try {
-        const storedCart = sessionStorage.getItem('VRDE_CART');
-        if (storedCart) {
-          CARRITO = JSON.parse(storedCart);
-        }
-      } catch(e){}
+      const ciclo = LunarEngine.obtenerCicloVigente();
+      const nodeName = nodoInfo.nombre || 'Este Nodo';
+      const isPaused = (motivo === 'pausado');
 
-      document.querySelectorAll('.node-select-btn').forEach(btn => {
-        const text = btn.innerText.toLowerCase().replace(/[\s\.]/g, '');
-        btn.classList.toggle('active', text.includes(CURRENT_REF.replace(/[\s\.]/g, '')));
-      });
+      // Actualizar encabezado superior
+      const shopName = document.getElementById('shop-name');
+      if (shopName) shopName.innerText = nodeName;
+      const shopLabel = document.getElementById('shop-nodo-label');
+      if (shopLabel) shopLabel.innerText = isPaused ? 'Punto de Acopio en Reposo' : 'Nodo Fuera de Servicio';
 
-      const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
-
-      document.getElementById('shop-name').innerText = nodoData.nombre;
-      const elBar = document.getElementById('bar-current-node'); if (elBar) elBar.innerText = nodoData.nombre;
-      document.getElementById('shop-logo').innerText = nodoData.logo;
-      document.getElementById('shop-nodo-label').innerText = nodoData.nombre;
-      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
-
-      document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
-      document.getElementById('shop-lunar-desc').innerText = `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
-
-      const ventasNodo = 48;
-      const metaNodo = nodoData.metaPropia || 100;
-      const pNodo = Math.min(100, Math.round((ventasNodo / metaNodo) * 100));
-      document.getElementById('shop-nodo-prog-text').innerText = `${ventasNodo} / ${metaNodo} unidades`;
-      document.getElementById('shop-nodo-prog-bar').style.width = `${pNodo}%`;
-
-      const ventasGlobal = 385;
-      const metaGlobal = 500;
-      const pGlobal = Math.min(100, Math.round((ventasGlobal / metaGlobal) * 100));
-      document.getElementById('shop-global-prog-text').innerText = `${ventasGlobal} / ${metaGlobal} unidades`;
-      document.getElementById('shop-global-prog-bar').style.width = `${pGlobal}%`;
-
-      buildTabs();
-      loadProductView(0);
-      updateFloatingCart();
-    }
-
-    function selectNode(nodeId) {
-      CURRENT_REF = nodeId;
-      const newUrl = window.location.pathname + '?ref=' + nodeId;
-      window.history.pushState({ path: newUrl }, '', newUrl);
-      initStore();
-    }
-
-    function getStoreProducts() {
-      return LunarEngine.obtenerProductos(CURRENT_REF, true);
-    }
-
-    function buildTabs() {
-      let html = '';
-      const prods = getStoreProducts();
-      if (ACTIVE_INDEX >= prods.length) ACTIVE_INDEX = 0;
-
-      prods.forEach((p, i) => {
-        html += `<div class="tab-item ${i === ACTIVE_INDEX ? 'active' : ''}" onclick="loadProductView(${i})">${p.nombre}</div>`;
-      });
-      document.getElementById('shop-tabs').innerHTML = html;
-    }
-
-    function loadProductView(index) {
-      const prods = getStoreProducts();
-      if (prods.length === 0) {
-        document.getElementById('shop-product-container').innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">No hay productos activos para este nodo.</p>';
-        return;
-      }
-
-      ACTIVE_INDEX = index;
-      const prod = prods[index];
-
-      document.querySelectorAll('.tab-item').forEach((t, i) => {
-        t.classList.toggle('active', i === index);
-      });
-
-      const qty = CARRITO[index] || 0;
-      const realAccumulated = getProductRealUnits(prod.id);
-      const totalGlobalProd = realAccumulated + qty;
-      
-      // La escala activa se calcula con precisión según las unidades que pide el socio
-      const pricing = LunarEngine.calcularPrecio(prod, qty > 0 ? qty : 1);
-
-      const html = `
-        <!-- Columna Izquierda -->
-        <div class="showcase-card">
-          <div>
-            <div class="card-section-title">Origen y Producción</div>
-            <h3 style="font-size: 18px; color: #0F172A; margin-bottom: 6px;">${prod.origen}</h3>
-            <p style="font-size: 13px; color: var(--text-muted);"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 4px;"></i> Variedad: <strong>${prod.variedad}</strong></p>
-          </div>
-
-          <div class="impact-badge">
-            <div class="card-section-title" style="color: var(--primary);">Impacto en la Red Lunar</div>
-            <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--primary);">${totalGlobalProd}</div>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">unidades pedidas entre todos los nodos.</p>
-            <div class="progress-bar-container" style="background: #E2E8F0; height: 8px;">
-              <div class="progress-bar-fill" style="width: ${Math.min(100, (totalGlobalProd / (prod.meta || 100)) * 100)}%; background: var(--primary);"></div>
-            </div>
-            <div style="font-size: 11px; text-align: right; color: #94A3B8; margin-top: 4px;">Meta colectiva: ${prod.meta || 100} ${prod.unidad}</div>
-          </div>
-        </div>
-
-        <!-- Columna Central -->
-        <div class="showcase-card showcase-center">
-          <img src="${prod.img}" alt="${prod.nombre}" class="prod-main-img">
-          <span class="prod-badge-unit">${prod.unidad}</span>
-          <h2 class="prod-title">${prod.nombre}</h2>
-          <p class="prod-subtitle">${prod.subtitulo || ''}</p>
-        </div>
-
-        <!-- Columna Derecha -->
-        <div class="showcase-card">
-          <div>
-            <div class="card-section-title" style="display: flex; justify-content: space-between; align-items: center;">
-              <span>Escalas por Volumen</span>
-              <span style="font-size: 10px; font-weight: 600; color: var(--primary);">Clic para aplicar</span>
-            </div>
-            
-            <!-- Tarjeta Minorista -->
-            <div class="price-tier-row ${pricing.tier === 1 ? 'active' : ''}" onclick="selectTierDirectly(1)" style="cursor: pointer;" title="Clic para aplicar escala Minorista (1 unidad)">
-              <div>
-                <div class="tier-title">Minorista <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);">(1 a ${(prod.m2 || 20) - 1} un.)</span></div>
-                <div class="tier-req-badge">Precio Base</div>
-              </div>
-              <div class="tier-price-val">$${prod.p1?.toLocaleString('es-AR')}</div>
+      const landingHtml = `
+        <div style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 30px 16px;">
+          <div style="max-width: 520px; width: 100%; background: white; border: 1px solid var(--border-color); border-radius: 24px; padding: 40px 28px; text-align: center; box-shadow: 0 12px 35px rgba(0,0,0,0.07);">
+            <div style="width: 76px; height: 76px; border-radius: 50%; background: ${isPaused ? '#FEF3C7' : '#FEE2E2'}; color: ${isPaused ? '#D97706' : '#DC2626'}; display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+              ${isPaused ? '⏳' : '📍'}
             </div>
 
-            <!-- Tarjeta Mayorista -->
-            ${prod.p2 && prod.m2 ? `
-            <div class="price-tier-row ${pricing.tier === 2 ? 'active' : ''}" onclick="selectTierDirectly(2)" style="cursor: pointer;" title="Clic para aplicar escala Mayorista (${prod.m2} unidades)">
-              <div>
-                <div class="tier-title">Mayorista <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);">(${prod.m2} a ${(prod.m3 || 999) - 1} un.)</span></div>
-                <div class="tier-req-badge" style="color: var(--primary);">Descuento +${prod.m2} un.</div>
-              </div>
-              <div class="tier-price-val">$${prod.p2?.toLocaleString('es-AR')}</div>
-            </div>` : ''}
+            <span style="background: ${isPaused ? '#FEF3C7' : '#FEE2E2'}; color: ${isPaused ? '#B45309' : '#991B1B'}; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 5px 14px; border-radius: 20px; display: inline-block;">
+              ${isPaused ? 'Nodo en Reposo Temporal' : 'Nodo Fuera de Servicio'}
+            </span>
 
-            <!-- Tarjeta Distribuidora -->
-            ${prod.p3 && prod.m3 ? `
-            <div class="price-tier-row ${pricing.tier === 3 ? 'active' : ''}" onclick="selectTierDirectly(3)" style="cursor: pointer;" title="Clic para aplicar escala Distribuidora (${prod.m3} unidades)">
-              <div>
-                <div class="tier-title">Distribuidora <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);">(+${prod.m3} un.)</span></div>
-                <div class="tier-req-badge" style="color: #EA580C;">Gran Volumen +${prod.m3} un.</div>
-              </div>
-              <div class="tier-price-val">$${prod.p3?.toLocaleString('es-AR')}</div>
-            </div>` : ''}
-          </div>
+            <h2 style="font-size: 23px; font-weight: 800; color: #0F172A; margin: 18px 0 10px; line-height: 1.3;">
+              ${nodeName} está momentáneamente cerrado
+            </h2>
 
-          <div>
-            <div class="qty-control-box">
-              <button class="qty-btn-circle" onclick="changeQty(-1)">-</button>
-              <input type="text" class="qty-display-input" value="${qty}" readonly>
-              <button class="qty-btn-circle" onclick="changeQty(1)">+</button>
+            <p style="font-size: 14px; color: #64748B; line-height: 1.6; margin: 0 auto 26px; max-width: 440px;">
+              ${isPaused 
+                ? `Este punto comunitario de entrega se encuentra en pausa durante el ciclo actual (<strong>${ciclo.nombre}</strong>) y no está recibiendo pedidos. Volverá a activarse en próximas lunas.` 
+                : `El nodo solicitado (<strong>${nodoInfo.id || 'referencia'}</strong>) ya no se encuentra disponible en la red comunitaria de Vrde Club o fue dado de baja.`}
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <a href="lunar.html" class="btn-checkout-cta" style="display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; padding: 14px 20px; font-size: 14px; border-radius: 12px;">
+                <i class="fas fa-map-marker-alt"></i> Elegir otro Nodo Activo en la Red
+              </a>
+              <a href="tienda.html" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px 20px; font-size: 13.5px; font-weight: 700; color: #475569; background: #F1F5F9; border-radius: 12px; border: 1px solid var(--border-color);">
+                <i class="fas fa-store"></i> Ver Catálogo General de Vrde Club
+              </a>
             </div>
-            <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 8px;">Ajusta cantidades o haz clic en las escalas arriba</p>
           </div>
         </div>
       `;
 
-      document.getElementById('shop-product-container').innerHTML = html;
-    }
+      const existingLanding = document.getElementById('store-closed-landing');
+      if (existingLanding) existingLanding.remove();
 
-    function selectTierDirectly(tierNum) {
-      const prods = getStoreProducts();
-      const prod = prods[ACTIVE_INDEX];
-      if (!prod) return;
-
-      if (tierNum === 1) {
-        CARRITO[ACTIVE_INDEX] = 1;
-      } else if (tierNum === 2) {
-        CARRITO[ACTIVE_INDEX] = prod.m2 || 25;
-      } else if (tierNum === 3) {
-        CARRITO[ACTIVE_INDEX] = prod.m3 || 50;
-      }
-
-      try { sessionStorage.setItem('VRDE_CART', JSON.stringify(CARRITO)); } catch(e){}
-      loadProductView(ACTIVE_INDEX);
-      updateFloatingCart();
-    }
-
-    function getProductRealUnits(prodId) {
-      let count = 0;
-      const orders = LunarEngine.obtenerPedidos(null);
-      orders.forEach(o => {
-        if (o.items) {
-          o.items.forEach(i => {
-            if (i.prodId === prodId) count += (i.cant || 0);
-          });
-        }
-      });
-      return count;
-    }
-
-    function changeQty(delta) {
-      const current = CARRITO[ACTIVE_INDEX] || 0;
-      const next = Math.max(0, current + delta);
-      if (next === 0) {
-        delete CARRITO[ACTIVE_INDEX];
+      const container = document.createElement('div');
+      container.id = 'store-closed-landing';
+      container.innerHTML = landingHtml;
+      
+      const header = document.querySelector('.shop-header');
+      if (header) {
+        header.after(container);
       } else {
-        CARRITO[ACTIVE_INDEX] = next;
+        document.body.prepend(container);
+      }
+    }
+
+    let CURRENT_APP_VIEW = 'catalogo'; // 'catalogo' | 'mi-panel' | 'circulos' | 'mi-nodo'
+
+    function switchAppView(viewName) {
+      CURRENT_APP_VIEW = viewName;
+
+      // Actualizar paneles de vista
+      const panels = document.querySelectorAll('.app-view-panel');
+      panels.forEach(p => p.classList.remove('active'));
+
+      const target = document.getElementById(`view-${viewName}`);
+      if (target) target.classList.add('active');
+
+      // Actualizar elementos del Sidebar
+      const sidebarItems = document.querySelectorAll('.sidebar-nav-item');
+      sidebarItems.forEach(i => i.classList.remove('active'));
+      const activeSidebarItem = document.getElementById(`nav-item-${viewName}`);
+      if (activeSidebarItem) activeSidebarItem.classList.add('active');
+
+      // Actualizar Bottom Nav en Mobile
+      const bottomItems = document.querySelectorAll('.bottom-nav-item');
+      bottomItems.forEach(i => i.classList.remove('active'));
+      const activeBottomItem = document.getElementById(`bnav-${viewName}`);
+      if (activeBottomItem) activeBottomItem.classList.add('active');
+
+      // Renderizar la vista específica
+      if (viewName === 'mi-panel') {
+        renderMiPanel();
+      } else if (viewName === 'circulos') {
+        renderCirculosView();
+      } else if (viewName === 'mi-nodo') {
+        renderMiNodoView();
+      } else if (viewName === 'catalogo') {
+        loadActiveProductView();
       }
 
-      try { sessionStorage.setItem('VRDE_CART', JSON.stringify(CARRITO)); } catch(e){}
-      loadProductView(ACTIVE_INDEX);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderSidebarUserInfo() {
+      const resumen = LunarEngine.obtenerResumenUsuario();
+      const perfil = resumen.perfil;
+
+      const avatarBox = document.getElementById('sidebar-user-avatar');
+      const nameBox = document.getElementById('sidebar-user-name');
+      const tagBox = document.getElementById('sidebar-user-tag');
+
+      if (avatarBox) {
+        if (perfil.nombre && perfil.nombre.trim().length > 0) {
+          avatarBox.innerText = perfil.nombre.trim().charAt(0).toUpperCase();
+        } else {
+          avatarBox.innerText = '👤';
+        }
+      }
+
+      if (nameBox) {
+        nameBox.innerText = perfil.nombre || 'Identificarme';
+      }
+
+      if (tagBox) {
+        if (ACTIVE_CIRCULO) {
+          tagBox.innerHTML = `👥 ${ACTIVE_CIRCULO.nombre}`;
+        } else if (resumen.nodo && resumen.nodo.nombre) {
+          tagBox.innerHTML = `📍 ${resumen.nodo.nombre}`;
+        } else {
+          tagBox.innerText = '🌱 Prosumidor/a';
+        }
+      }
+
+      // Deuda en badge de Mi Panel
+      const debtBadge = document.getElementById('badge-panel-debt');
+      if (debtBadge) {
+        if (resumen.totalAPagar > 0) {
+          debtBadge.innerText = `$${resumen.totalAPagar.toLocaleString('es-AR')}`;
+          debtBadge.style.display = 'inline-block';
+        } else {
+          debtBadge.style.display = 'none';
+        }
+      }
+    }
+
+    function renderMiPanel() {
+      const container = document.getElementById('view-mi-panel');
+      if (!container) return;
+
+      const resumen = LunarEngine.obtenerResumenUsuario();
+      const perfil = resumen.perfil;
+      const nodo = resumen.nodo || {};
+      const circulo = ACTIVE_CIRCULO || resumen.circulo;
+      const pedidosActivos = resumen.pedidosActivos;
+      const totalAPagar = resumen.totalAPagar;
+      const ciclo = resumen.cicloVigente;
+
+      let pedidosHtml = '';
+      if (pedidosActivos.length > 0) {
+        pedidosHtml = `
+          <div style="background: white; border: 1.5px solid #10B981; border-radius: 18px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(16,185,129,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+              <div>
+                <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #059669; background: #ECFDF5; padding: 3px 8px; border-radius: 6px;">
+                  🌕 RESERVA ACTIVA • PAGO EN LUNA LLENA
+                </span>
+                <h3 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 6px 0 2px;">
+                  Total a Transferir: <span style="color: #10B981;">$${totalAPagar.toLocaleString('es-AR')}</span>
+                </h3>
+                <p style="font-size: 12.5px; color: #64748B; margin: 0;">
+                  Ciclo ${ciclo.nombre} • Cierra en <strong>${ciclo.diasRestantes} días</strong> (${ciclo.llenaFechaStr})
+                </p>
+              </div>
+              <button type="button" onclick="sendComprobanteWsp()" style="background: #25D366; color: white; border: none; font-weight: 700; font-size: 12.5px; padding: 10px 16px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                <i class="fab fa-whatsapp" style="font-size: 16px;"></i> Enviar Comprobante
+              </button>
+            </div>
+
+            <!-- Datos de CBU -->
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <div style="font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase;">Datos de Transferencia (${nodo.nombre || 'Nodo'}):</div>
+                <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Alias / CBU: <span style="color: #059669;" id="panel-cbu-text">${nodo.cbu || 'vrde.club.mp'}</span></div>
+              </div>
+              <button type="button" onclick="navigator.clipboard.writeText('${nodo.cbu || 'vrde.club.mp'}'); alert('¡Alias copiado al portapapeles!');" style="background: white; border: 1px solid #CBD5E1; color: #334155; font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-copy"></i> Copiar Alias
+              </button>
+            </div>
+
+            <!-- Desglose de Productos Reservados -->
+            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748B; margin-bottom: 8px;">Tus alimentos reservados:</div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              ${pedidosActivos.map(p => `
+                <div style="background: #F1F5F9; border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                  <div>
+                    <strong>${p.nombre || 'Pedido Comunitario'}</strong>
+                    <div style="font-size: 11.5px; color: #64748B;">${p.items ? p.items.map(i => `${i.cant}x ${i.nombre}`).join(', ') : `${p.unidades || 1} unidades`}</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-weight: 800; color: #0F172A;">$${(Number(p.total) || 0).toLocaleString('es-AR')}</div>
+                    <div style="font-size: 10.5px; color: #059669; font-weight: 700;">✓ Reservado</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        pedidosHtml = `
+          <div style="background: white; border: 1px dashed #CBD5E1; border-radius: 18px; padding: 28px 20px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 36px; margin-bottom: 8px;">🧺</div>
+            <h4 style="font-size: 17px; font-weight: 800; color: #0F172A; margin: 0 0 6px;">No tenés pedidos reservados en esta Luna</h4>
+            <p style="font-size: 13px; color: #64748B; margin: 0 auto 16px; max-width: 400px;">
+              Aprovechá la apertura del ciclo astronómico <strong>${ciclo.nombre}</strong> para sumar alimentos agroecológicos directo de chacra.
+            </p>
+            <button type="button" onclick="switchAppView('catalogo')" class="btn-checkout-cta" style="border-radius: 10px; padding: 10px 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fas fa-shopping-basket"></i> Explorar Catálogo de Alimentos
+            </button>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h2 style="font-size: 24px; font-weight: 800; color: #0F172A; margin: 0;">
+                👤 Mi Espacio Lunar
+              </h2>
+              <p style="font-size: 13.5px; color: #64748B; margin: 2px 0 0;">
+                Bienvenido/a, <strong style="color: #0F172A;">${perfil.nombre || 'Prosumidor/a'}</strong>
+              </p>
+            </div>
+            <button type="button" onclick="openEditUserProfileModal()" style="background: white; border: 1px solid #CBD5E1; color: #334155; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <i class="fas fa-user-edit"></i> Editar Mis Datos
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. HERO DE PEDIDO & PAGO DE LUNA LLENA -->
+        ${pedidosHtml}
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          
+          <!-- 2. MI NODO CABECERA -->
+          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 22px;">📍</span>
+                <div>
+                  <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Mi Nodo Cabecera</h4>
+                  <span style="font-size: 11px; color: #059669; font-weight: 700;">Punto oficial de acopio</span>
+                </div>
+              </div>
+              <button type="button" onclick="location.href='lunar.html'" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 800; cursor: pointer;">
+                Cambiar &rarr;
+              </button>
+            </div>
+            <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">${nodo.nombre || 'Nodo Almacén'}</div>
+            <div style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><i class="fas fa-map-marker-alt" style="color: #10B981; width: 16px;"></i> ${nodo.direccion || 'Consultar dirección'}</div>
+            <div style="font-size: 12.5px; color: #475569; margin-bottom: 12px;"><i class="fas fa-calendar-alt" style="color: #10B981; width: 16px;"></i> ${nodo.diaEntrega || 'Entrega en Luna Llena'}</div>
+            <button type="button" onclick="switchAppView('mi-nodo')" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; color: #334155; font-size: 12px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer;">
+              Ver ficha completa del Nodo
+            </button>
+          </div>
+
+          <!-- 3. MI CÍRCULO COMUNITARIO -->
+          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 22px;">👥</span>
+                <div>
+                  <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Mi Círculo Comunitario</h4>
+                  <span style="font-size: 11px; color: #059669; font-weight: 700;">Grupo vecinal de compra</span>
+                </div>
+              </div>
+              <button type            ${circulo ? `
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <span style="font-size: 10px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">
+                  ${circulo.privacidad === 'cerrado' ? '🔒 PRIVADO' : '🌐 ABIERTO'}
+                </span>
+                <span style="font-size: 11px; font-weight: 700; color: #10B981;">
+                  ${LunarEngine.obtenerEscalaCirculo(circulo.id || circulo.slug).tierNombre}
+                </span>
+              </div>
+              <div style="font-size: 16px; font-weight: 800; color: #064E3B; margin-bottom: 2px;">${circulo.nombre}</div>
+              <div style="font-size: 12px; color: #047857; margin-bottom: 10px;">👑 Anfitrión/a: <strong>${circulo.anfitrion}</strong></div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                <button type="button" onclick="openCirculoDashboardModal()" style="background: #F0FDF4; border: 1px solid #A7F3D0; color: #065F46; font-size: 11.5px; font-weight: 800; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                  <i class="fas fa-users"></i> Ver Integrantes
+                </button>
+                <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: white; border: none; font-size: 11.5px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                  <i class="fab fa-whatsapp"></i> Invitar
+                </button>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                ${circulo.linkGrupoWsp ? `
+                  <a href="${circulo.linkGrupoWsp}" target="_blank" style="flex: 1; background: #047857; color: white; text-decoration: none; font-size: 11px; font-weight: 700; padding: 7px; border-radius: 8px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                    <i class="fab fa-whatsapp"></i> Grupo WhatsApp
+                  </a>
+                ` : ''}
+                <button type="button" onclick="leaveCurrentCirculo()" style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #B91C1C; font-size: 11px; font-weight: 700; padding: 7px 10px; border-radius: 8px; cursor: pointer;" title="Comprar individual en el Nodo">
+                  Salir del Círculo
+                </button>
+              </div>
+            ` : `
+              <p style="font-size: 12.5px; color: #64748B; margin-bottom: 12px;">
+                No estás unido a ningún Círculo. Podés sumarte a uno abierto o abrir el tuyo para juntar kilos y alcanzar precio mayorista.
+              </p>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" onclick="openCreateCirculoModal()" style="flex: 1; background: #10B981; color: #064E3B; font-weight: 800; font-size: 11px; padding: 8px; border-radius: 8px; border: none; cursor: pointer;">
+                  + Abrir mi Círculo
+                </button>
+                <button type="button" onclick="switchAppView('circulos')" style="flex: 1; background: #F8FAFC; border: 1px solid #CBD5E1; font-weight: 700; font-size: 11px; padding: 8px; border-radius: 8px; cursor: pointer;">
+                  Ver Círculos
+                </button>
+              </div>
+            `}
+          </div>
+
+        </div>
+
+        <!-- 4. HISTORIAL DE PEDIDOS -->
+        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px;">
+          <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0 0 12px;">📜 Historial de Compras Lunares</h4>
+          ${resumen.historialPedidos.length > 0 ? `
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${resumen.historialPedidos.map(p => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #F1F5F9; font-size: 12.5px;">
+                  <div>
+                    <strong>${p.fecha ? new Date(p.fecha).toLocaleDateString('es-AR') : 'Ciclo Lunar'}</strong>
+                    <div style="font-size: 11px; color: #64748B;">${p.detalle || `${p.unidades || 1} unidades`} • Nodo: ${p.nodo || 'Central'}</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <strong style="color: #0F172A;">$${(Number(p.total) || 0).toLocaleString('es-AR')}</strong>
+                    <div style="font-size: 10.5px; color: #059669;">${p.estado || 'Confirmado'}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          ` : `
+            <div style="text-align: center; color: #94A3B8; font-size: 12.5px; padding: 20px;">
+              Aún no registrás compras anteriores en este navegador.
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderCirculosView() {
+      const container = document.getElementById('view-circulos');
+      if (!container) return;
+
+      const nodoId = CURRENT_REF || 'lomaverde';
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[nodoId] || {};
+      const circulosAbiertos = LunarEngine.obtenerCirculos(nodoId, true);
+
+      let cardsHtml = '';
+      if (circulosAbiertos.length === 0) {
+        cardsHtml = `
+          <div style="grid-column: 1 / -1; background: white; border: 1px dashed #CBD5E1; border-radius: 16px; padding: 30px; text-align: center; color: #64748B;">
+            <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+            <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">Aún no hay círculos abiertos en ${nodoData.nombre || 'este Nodo'}</h4>
+            <p style="font-size: 13px; margin: 0 auto 16px; max-width: 360px;">¡Sé el primero en abrir un grupo vecinal y juntar kilos para acceder a precios mayoristas!</p>
+            <button type="button" onclick="openCreateCirculoModal()" class="btn-checkout-cta" style="border-radius: 8px; padding: 10px 18px; font-size: 13px;">
+              + Abrir el primer Círculo
+            </button>
+          </div>
+        `;
+      } else {
+        circulosAbiertos.forEach(c => {
+          const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+          const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+          const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+          const isSelected = ACTIVE_CIRCULO && (ACTIVE_CIRCULO.id === c.id || ACTIVE_CIRCULO.slug === c.slug);
+
+          cardsHtml += `
+            <div style="background: white; border: 1.5px solid ${isSelected ? '#10B981' : '#E2E8F0'}; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                  <span style="font-size: 24px;">👥</span>
+                  <div style="display: flex; gap: 4px; align-items: center;">
+                    <span style="font-size: 9.5px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">🌐 ABIERTO</span>
+                    <span style="font-size: 9.5px; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">${escala.tierNombre}</span>
+                  </div>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${c.nombre}</h4>
+                <div style="font-size: 12.5px; color: #059669; font-weight: 700; margin-bottom: 6px;">👑 Anfitrión/a: ${c.anfitrion}</div>
+                <div style="font-size: 11.5px; color: #64748B; margin-bottom: 10px;">
+                  ${c.direccionEntrega ? `📍 Entrega: ${c.direccionEntrega}` : '📦 Retiro conjunto en la sede del Nodo'}
+                </div>
+                
+                <div style="background: #F8FAFC; border-radius: 8px; padding: 8px 10px; font-size: 11.5px; color: #334155; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                  <span><i class="fas fa-users" style="color: #10B981;"></i> <strong>${integrantes.length}</strong> integrantes</span>
+                  <span style="font-weight: 700; color: #059669;">${stats.unidadesTotal || 0} u. ($${stats.totalRecaudado.toLocaleString('es-AR')})</span>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <button type="button" onclick="openCirculoDashboardModal('${c.slug || c.id}')" style="width: 100%; background: #F0FDF4; border: 1px solid #A7F3D0; color: #065F46; font-weight: 800; font-size: 12px; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                  <i class="fas fa-chart-pie"></i> Ver Integrantes & Tablero
+                </button>
+                <button type="button" onclick="selectCirculo('${c.slug || c.id}'); switchAppView('catalogo');" style="width: 100%; background: ${isSelected ? '#059669' : '#10B981'}; color: white; font-weight: 800; font-size: 12.5px; padding: 9px; border-radius: 8px; border: none; cursor: pointer;">
+                  ${isSelected ? '✓ Círculo Activo (Comprando acá)' : 'Unirme y Comprar acá'}
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 24px; font-weight: 800; color: #0F172A; margin: 0;">👥 Círculos Comunitarios</h2>
+            <p style="font-size: 13.5px; color: #64748B; margin: 2px 0 0;">
+              Micro-nodos de compra en <strong>${nodoData.nombre || 'este Nodo'}</strong>
+            </p>
+          </div>
+          <button type="button" onclick="openCreateCirculoModal()" class="btn-checkout-cta" style="border-radius: 10px; padding: 10px 18px; font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-plus"></i> Abrir mi Círculo (15 seg)
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+          ${cardsHtml}
+        </div>
+      `;
+    }
+
+    function renderMiNodoView() {
+      const container = document.getElementById('view-mi-nodo');
+      if (!container) return;
+
+      const nodoId = CURRENT_REF || 'lomaverde';
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[nodoId] || {};
+
+      container.innerHTML = `
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 24px; font-weight: 800; color: #0F172A; margin: 0;">📍 Sede Oficial: ${nodoData.nombre || 'Nodo Almacén'}</h2>
+          <p style="font-size: 13.5px; color: #64748B; margin: 2px 0 0;">Punto físico oficial de logística, acopio y distribución comunitaria</p>
+        </div>
+
+        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 18px; padding: 24px; max-width: 680px; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+            <div style="width: 56px; height: 56px; border-radius: 16px; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 28px;">
+              ${nodoData.logo || '🌱'}
+            </div>
+            <div>
+              <h3 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0;">${nodoData.nombre}</h3>
+              <span style="font-size: 12px; color: #059669; font-weight: 700;">Abierto en el ciclo lunar</span>
+            </div>
+          </div>
+
+          <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-bottom: 18px;">
+            ${nodoData.descripcion || 'Punto de acopio y distribución agroecológica comunitaria.'}
+          </p>
+
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+            <div><i class="fas fa-map-marker-alt" style="color: #10B981; width: 22px;"></i> <strong>Dirección:</strong> ${nodoData.direccion || 'Consultar sede'}</div>
+            <div><i class="fas fa-calendar-alt" style="color: #10B981; width: 22px;"></i> <strong>Día y Horario de Entrega:</strong> ${nodoData.diaEntrega || 'Luna Llena'}</div>
+            <div><i class="fas fa-user-check" style="color: #10B981; width: 22px;"></i> <strong>Responsable / Agente:</strong> ${nodoData.contacto || 'Coordinador del Nodo'}</div>
+            <div><i class="fas fa-university" style="color: #10B981; width: 22px;"></i> <strong>Alias / CBU:</strong> <strong style="color: #059669;">${nodoData.cbu || 'vrde.club.mp'}</strong></div>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" onclick="switchAppView('catalogo')" class="btn-checkout-cta" style="flex: 1; border-radius: 10px; padding: 12px; font-size: 13px;">
+              <i class="fas fa-shopping-basket"></i> Comprar en este Nodo
+            </button>
+            <a href="admin.html?ref=${CURRENT_REF}" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: 10px; border: 1px solid #CBD5E1; color: #475569; text-decoration: none; font-size: 13px; font-weight: 700; background: #F8FAFC;">
+              <i class="fas fa-lock" style="color: #10B981;"></i> Panel Gestor con PIN
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function openEditUserProfileModal() {
+      const perfil = LunarEngine.obtenerPerfilUsuario();
+      const allNodos = LunarEngine.obtenerNodos(true);
+
+      document.getElementById('prof-user-nombre').value = perfil.nombre || '';
+      document.getElementById('prof-user-telefono').value = perfil.telefono || '';
+      document.getElementById('prof-user-direccion').value = perfil.direccion || '';
+
+      const nodoSelect = document.getElementById('prof-user-nodo');
+      if (nodoSelect) {
+        nodoSelect.innerHTML = Object.keys(allNodos).map(k => `
+          <option value="${k}" ${k === (perfil.nodoId || CURRENT_REF) ? 'selected' : ''}>${allNodos[k].nombre}</option>
+        `).join('');
+      }
+
+      openModal('modal-user-profile');
+    }
+
+    function submitUserProfile() {
+      const nombre = document.getElementById('prof-user-nombre').value.trim();
+      const telefono = document.getElementById('prof-user-telefono').value.trim();
+      const nodoId = document.getElementById('prof-user-nodo').value;
+      const direccion = document.getElementById('prof-user-direccion').value.trim();
+
+      if (!nombre || !telefono) {
+        alert("Por favor completá tu nombre y teléfono.");
+        return;
+      }
+
+      LunarEngine.guardarPerfilUsuario({
+        nombre: nombre,
+        telefono: telefono,
+        nodoId: nodoId,
+        direccion: direccion
+      });
+
+      CURRENT_REF = nodoId;
+      closeModal('modal-user-profile');
+      renderSidebarUserInfo();
+      renderMiPanel();
+      initStore();
+    }
+
+    function sendComprobanteWsp() {
+      const resumen = LunarEngine.obtenerResumenUsuario();
+      const nodo = resumen.nodo || {};
+      const total = resumen.totalAPagar;
+      const nombre = resumen.perfil.nombre || 'Comprador';
+      const text = `¡Hola! Soy *${nombre}* de Vrde Club 🌿.\n\nTe envío el comprobante de transferencia de mi pedido de Luna Llena por un total de *$${total.toLocaleString('es-AR')}* para retirar en *${nodo.nombre || 'el Nodo'}*.\n\n¡Muchas gracias!`;
+      const tel = (nodo.whatsapp || '').replace(/\D/g, '');
+      const wspUrl = tel ? `https://api.whatsapp.com/send?phone=${tel}&text=${encodeURIComponent(text)}` : `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      window.open(wspUrl, '_blank');
+    }
+
+    function initStore() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refParam = urlParams.get('ref') ? urlParams.get('ref').toLowerCase() : null;
+      const circuloParam = urlParams.get('circulo');
+      const allNodos = LunarEngine.obtenerNodos(false);
+      const archivados = LunarEngine.obtenerNodosArchivados();
+      const nodeKeys = Object.keys(allNodos);
+
+      CICLO_LUNAR = LunarEngine.obtenerCicloVigente();
+
+      // Detección de Círculo Activo (incluyendo auto-rescate cross-device con parámetros portables)
+      if (circuloParam) {
+        ACTIVE_CIRCULO = LunarEngine.obtenerCirculo(circuloParam, urlParams);
+        if (ACTIVE_CIRCULO && ACTIVE_CIRCULO.nodoId && allNodos[ACTIVE_CIRCULO.nodoId]) {
+          CURRENT_REF = ACTIVE_CIRCULO.nodoId;
+        }
+      }
+
+      if (urlParams.get('crearCirculo') === 'true') {
+        const cleanUrl = window.location.origin + window.location.pathname + (refParam ? `?ref=${refParam}` : '');
+        window.history.replaceState({}, '', cleanUrl);
+        setTimeout(() => { openCreateCirculoModal(); }, 300);
+      }
+
+      if (refParam && (!ACTIVE_CIRCULO || !ACTIVE_CIRCULO.nodoId)) {
+        const nodo = allNodos[refParam];
+        const nodoArchivado = archivados.find(a => a.id === refParam);
+
+        // Caso 1: El nodo existe pero está en reposo (activo === false o pausado: true)
+        if (nodo && (nodo.activo === false || nodo.pausado)) {
+          mostrarLandingNodoCerrado(nodo, 'pausado');
+          return;
+        }
+
+        // Caso 2: El nodo fue eliminado / archivado o no existe
+        if (!nodo) {
+          const nodoNombre = nodoArchivado ? nodoArchivado.nombre : `Nodo ${refParam}`;
+          mostrarLandingNodoCerrado({ id: refParam, nombre: nodoNombre }, 'eliminado');
+          return;
+        }
+
+        CURRENT_REF = refParam;
+      } else if (!ACTIVE_CIRCULO) {
+        const userProf = LunarEngine.obtenerPerfilUsuario();
+        if (userProf && userProf.nodoId && allNodos[userProf.nodoId]) {
+          CURRENT_REF = userProf.nodoId;
+        } else {
+          const activos = LunarEngine.obtenerNodos(true);
+          const activeKeys = Object.keys(activos);
+          CURRENT_REF = activeKeys.length > 0 ? activeKeys[0] : (nodeKeys[0] || 'lomaverde');
+        }
+      }
+
+      const nodoData = allNodos[CURRENT_REF] || {};
+
+      // Cargar Header y Topbar
+      const topbarNodo = document.getElementById('topbar-nodo-title');
+      if (topbarNodo) topbarNodo.innerText = nodoData.nombre || 'Vrde Club';
+      const topbarSub = document.getElementById('topbar-circulo-sub');
+      if (topbarSub) {
+        topbarSub.innerText = ACTIVE_CIRCULO ? `👥 Círculo: ${ACTIVE_CIRCULO.nombre}` : `Retiro personal en sede central (${nodoData.direccion || ''})`;
+      }
+
+      // Cargar Sidebar info
+      const sideLunarTitle = document.getElementById('sidebar-lunar-title');
+      if (sideLunarTitle) sideLunarTitle.innerText = CICLO_LUNAR.nombre;
+      const sideLunarCount = document.getElementById('sidebar-lunar-countdown');
+      if (sideLunarCount) sideLunarCount.innerText = `Cierra en ${CICLO_LUNAR.diasRestantes} días`;
+      
+      const badgeCircs = document.getElementById('badge-open-circulos');
+      if (badgeCircs) {
+        badgeCircs.innerText = LunarEngine.obtenerCirculos(CURRENT_REF, true).length;
+      }
+
+      // Cargar Banner de Círculo Activo y Estante Spotify de Círculos
+      updateCirculoActiveBanner();
+      renderSidebarUserInfo();
+
+      // Cargar Banner Lunar
+      const lunarTitle = document.getElementById('shop-lunar-title');
+      if (lunarTitle) lunarTitle.innerText = `${CICLO_LUNAR.nombre}`;
+      const lunarDesc = document.getElementById('shop-lunar-desc');
+      if (lunarDesc) {
+        lunarDesc.innerText = CICLO_LUNAR.mensajeTienda 
+          ? `${CICLO_LUNAR.mensajeTienda} • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`
+          : `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+      }
+
+      // Inicializar selección de variantes por defecto (índice 0)
+      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      if (!allProds || allProds.length === 0) {
+        allProds = LUNAR_CONFIG.productos;
+      }
+      allProds.forEach(p => {
+        SELECTED_VARIANT_INDEX[p.id] = 0;
+      });
+
+      const badgeProds = document.getElementById('badge-total-prods');
+      if (badgeProds) badgeProds.innerText = allProds.length;
+
+      updateProgressBars();
+      renderSpotifyCategories();
+      filterCategoryAndRender('TODOS');
+      initTabsScrollBehavior();
+    }
+
+    function selectCirculo(slugOrId) {
+      if (!slugOrId) {
+        ACTIVE_CIRCULO = null;
+        const cleanUrl = `${window.location.origin}${window.location.pathname}?ref=${CURRENT_REF}`;
+        window.history.replaceState({}, '', cleanUrl);
+      } else {
+        ACTIVE_CIRCULO = LunarEngine.obtenerCirculo(slugOrId);
+        if (ACTIVE_CIRCULO) {
+          const link = LunarEngine.generarLinkCirculo(ACTIVE_CIRCULO);
+          window.history.replaceState({ circulo: ACTIVE_CIRCULO.slug }, '', link);
+        }
+      }
+      updateCirculoActiveBanner();
+      renderSidebarUserInfo();
+      updateFloatingCart();
+      loadActiveProductView();
+    }
+
+    function updateCirculoActiveBanner() {
+      const circuloBannerContainer = document.getElementById('circulo-active-banner-container');
+      if (circuloBannerContainer) {
+        if (ACTIVE_CIRCULO) {
+          const stats = LunarEngine.obtenerEstadisticasCirculo(ACTIVE_CIRCULO.id || ACTIVE_CIRCULO.slug);
+          const allNodos = LunarEngine.obtenerNodos();
+          const nodoNombre = (allNodos[ACTIVE_CIRCULO.nodoId]?.nombre) || (allNodos[CURRENT_REF]?.nombre) || 'Nodo Cabecera';
+          const isPrivado = ACTIVE_CIRCULO.privacidad === 'cerrado';
+
+          circuloBannerContainer.innerHTML = `
+            <div style="background: linear-gradient(135deg, #064E3B, #0F172A); border: 1.5px solid #10B981; border-radius: 16px; padding: 14px 18px; margin: 4px 0 14px; color: white; box-shadow: 0 8px 24px rgba(16,185,129,0.15);">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                
+                <!-- Left: Identity & Badges -->
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(16,185,129,0.3); flex-shrink: 0;">
+                    👥
+                  </div>
+                  <div>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                      <span style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; background: rgba(16,185,129,0.25); color: #6EE7B7; padding: 2px 6px; border-radius: 4px;">
+                        🟣 CÍRCULO COMUNITARIO
+                      </span>
+                      <span style="font-size: 9.5px; font-weight: 700; color: ${isPrivado ? '#FCD34D' : '#A7F3D0'};">
+                        ${isPrivado ? '🔒 Privado' : '🌐 Abierto'}
+                      </span>
+                    </div>
+                    <h2 style="font-size: 16px; font-weight: 800; color: #F8FAFC; margin: 0; line-height: 1.2;">
+                      ${ACTIVE_CIRCULO.nombre}
+                    </h2>
+                    <div style="font-size: 11.5px; color: #CBD5E1; margin-top: 2px;">
+                      👑 Anfitrión/a: <strong style="color: #FFFFFF;">${ACTIVE_CIRCULO.anfitrion}</strong> • 
+                      📍 Retiro en: <strong style="color: #A7F3D0;">${nodoNombre}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Actions -->
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" onclick="openCirculoDashboardModal()" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #FFFFFF; font-weight: 700; font-size: 11.5px; padding: 6px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-chart-pie" style="color: #34D399;"></i> Tablero (${stats.pedidos.length})
+                  </button>
+                  <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: #FFFFFF; font-weight: 700; font-size: 11.5px; padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                    <i class="fab fa-whatsapp"></i> Invitar
+                  </button>
+                  <button type="button" onclick="selectCirculo(null)" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #94A3B8; font-size: 11px; padding: 6px 8px; border-radius: 8px; cursor: pointer;" title="Salir del Círculo y pedir individual en el Nodo">
+                    ✕ Salir
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          `;
+          circuloBannerContainer.classList.remove('hidden');
+        } else {
+          circuloBannerContainer.classList.add('hidden');
+        }
+      }
+    }
+
+    // ==========================================
+    // FUNCIONES DE CÍRCULOS Y GRUPOS DE COMPRA
+    // ==========================================
+    function openCreateCirculoModal() {
+      const allNodos = LunarEngine.obtenerNodos(true);
+      const select = document.getElementById('circ-nodo-select');
+      if (select) {
+        select.innerHTML = Object.keys(allNodos).map(k => `
+          <option value="${k}" ${k === CURRENT_REF ? 'selected' : ''}>${allNodos[k].nombre}</option>
+        `).join('');
+      }
+
+      // Mostrar paso 1 formulario y ocultar paso 2 éxito
+      const formStep = document.getElementById('circ-form-step');
+      const shareResult = document.getElementById('circ-share-result');
+      if (formStep) formStep.classList.remove('hidden');
+      if (shareResult) shareResult.classList.add('hidden');
+
+      openModal('modal-crear-circulo');
+    }
+
+    function submitCreateCirculo() {
+      const nombre = document.getElementById('circ-nombre').value.trim();
+      const anfitrion = document.getElementById('circ-anfitrion').value.trim();
+      const whatsapp = document.getElementById('circ-whatsapp').value.trim();
+      const linkGrupoWsp = document.getElementById('circ-link-grupo') ? document.getElementById('circ-link-grupo').value.trim() : '';
+      const nodoId = document.getElementById('circ-nodo-select').value;
+      const direccion = document.getElementById('circ-direccion').value.trim();
+      const privacidad = document.querySelector('input[name="circ-privacidad"]:checked')?.value || 'abierto';
+
+      if (!nombre || !anfitrion || !whatsapp) {
+        alert("Por favor completa los campos requeridos.");
+        return;
+      }
+
+      const nuevo = LunarEngine.crearCirculo({
+        nombre: nombre,
+        anfitrion: anfitrion,
+        whatsapp: whatsapp,
+        linkGrupoWsp: linkGrupoWsp,
+        nodoId: nodoId,
+        direccionEntrega: direccion,
+        privacidad: privacidad
+      });
+
+      ACTIVE_CIRCULO = nuevo;
+      CURRENT_REF = nodoId;
+
+      // Auto-guardar en perfil del usuario
+      LunarEngine.guardarPerfilUsuario({
+        nombre: anfitrion,
+        telefono: whatsapp,
+        nodoId: nodoId,
+        circuloId: nuevo.id
+      });
+
+      // Generar link universal portable (funciona en cualquier dispositivo)
+      const link = LunarEngine.generarLinkCirculo(nuevo);
+      window.history.replaceState({ circulo: nuevo.slug }, '', link);
+
+      // Poblar pantalla de éxito con el enlace en el modal
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoNombre = allNodos[nodoId]?.nombre || nodoId;
+
+      const succTitle = document.getElementById('circ-succ-title');
+      if (succTitle) succTitle.innerText = `¡Círculo "${nuevo.nombre}" Creado!`;
+
+      const succSub = document.getElementById('circ-succ-subtitle');
+      if (succSub) succSub.innerHTML = `Anfitrión/a: <strong>${nuevo.anfitrion}</strong> • Retiro en: <strong>${nodoNombre}</strong> (${privacidad === 'cerrado' ? '🔒 Privado' : '🌐 Abierto'})`;
+
+      const linkBox = document.getElementById('circ-share-link-box');
+      if (linkBox) linkBox.innerText = link;
+
+      const copyLabel = document.getElementById('copy-btn-label');
+      if (copyLabel) copyLabel.innerText = 'Copiar Enlace';
+
+      // Mostrar pantalla de éxito y ocultar formulario (el modal PERMANECE abierto)
+      const formStep = document.getElementById('circ-form-step');
+      const shareResult = document.getElementById('circ-share-result');
+      if (formStep) formStep.classList.add('hidden');
+      if (shareResult) shareResult.classList.remove('hidden');
+
+      // Actualizar banner y vistas de fondo
+      updateCirculoActiveBanner();
+      renderSidebarUserInfo();
+      renderMiPanel();
+      renderCirculosView();
       updateFloatingCart();
     }
 
-    function getActiveProductPrice(prod, index) {
-      const qty = CARRITO[index] || 0;
-      if (qty === 0) return prod.p1;
-      return LunarEngine.calcularPrecio(prod, qty).precio;
+    function copyActiveCirculoLink() {
+      const box = document.getElementById('circ-share-link-box');
+      let link = box ? box.innerText : '';
+      if (!link && ACTIVE_CIRCULO) {
+        link = LunarEngine.generarLinkCirculo(ACTIVE_CIRCULO);
+      }
+      if (link) {
+        navigator.clipboard.writeText(link);
+        const label = document.getElementById('copy-btn-label');
+        if (label) {
+          label.innerText = '¡Copiado!';
+          setTimeout(() => { label.innerText = 'Copiar Enlace'; }, 2500);
+        }
+      }
+    }
+
+    function goToActiveCirculoStore() {
+      closeModal('modal-crear-circulo');
+      updateCirculoActiveBanner();
+      switchAppView('catalogo');
+      loadActiveProductView();
+    }
+
+    function shareActiveCirculoWsp() {
+      if (!ACTIVE_CIRCULO) return;
+      const link = LunarEngine.generarLinkCirculo(ACTIVE_CIRCULO);
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoNombre = allNodos[ACTIVE_CIRCULO.nodoId]?.nombre || 'Nodo Central';
+      const text = `¡Hola! Creé el Círculo de Compra Lunar "${ACTIVE_CIRCULO.nombre}" en Vrde Club 🌿 (Cabecera: ${nodoNombre}).\n\nSumate al pedido comunitario para que alcancemos mejores precios y recibamos todo directo de chacra al cerrar la Luna Llena:\n${link}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function openCirculoDashboardModal(circuloIdOrSlug = null) {
+      let target = null;
+      if (circuloIdOrSlug) {
+        target = LunarEngine.obtenerCirculo(circuloIdOrSlug);
+      }
+      if (!target) {
+        target = ACTIVE_CIRCULO;
+      }
+      if (!target) {
+        openCreateCirculoModal();
+        return;
+      }
+
+      const stats = LunarEngine.obtenerEstadisticasCirculo(target.id || target.slug);
+      const escala = LunarEngine.obtenerEscalaCirculo(target.id || target.slug);
+      const integrantes = LunarEngine.obtenerIntegrantesCirculo(target.id || target.slug);
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoNombre = allNodos[target.nodoId]?.nombre || target.nodoId.toUpperCase();
+      const isPrivado = target.privacidad === 'cerrado';
+
+      // Títulos y Badges
+      const titleEl = document.getElementById('dash-circ-title');
+      if (titleEl) titleEl.innerText = target.nombre;
+      const subEl = document.getElementById('dash-circ-subtitle');
+      if (subEl) subEl.innerText = `Anfitrión/a: ${target.anfitrion} • Entrega: ${target.direccionEntrega || nodoNombre}`;
+
+      const privBadge = document.getElementById('dash-circ-priv-badge');
+      if (privBadge) {
+        privBadge.innerText = isPrivado ? '🔒 PRIVADO' : '🌐 ABIERTO';
+        privBadge.style.background = isPrivado ? '#FEF3C7' : '#ECFDF5';
+        privBadge.style.color = isPrivado ? '#92400E' : '#059669';
+      }
+
+      const nodoBadge = document.getElementById('dash-circ-nodo-badge');
+      if (nodoBadge) nodoBadge.innerText = `📍 ${nodoNombre}`;
+
+      // Canales de Comunicación WhatsApp
+      const commBox = document.getElementById('dash-circ-comm-buttons');
+      if (commBox) {
+        let commHtml = '';
+        if (target.linkGrupoWsp && target.linkGrupoWsp.trim() !== '') {
+          commHtml += `
+            <a href="${target.linkGrupoWsp}" target="_blank" style="background: #25D366; color: white; text-decoration: none; font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(37,211,102,0.3);">
+              <i class="fab fa-whatsapp" style="font-size: 15px;"></i> Grupo WhatsApp
+            </a>
+          `;
+        }
+        if (target.whatsapp) {
+          const anfNum = target.whatsapp.replace(/\D/g, '');
+          const anfMsg = encodeURIComponent(`¡Hola ${target.anfitrion}! Te escribo por el Círculo ${target.nombre} en Vrde Club 🌿`);
+          commHtml += `
+            <a href="https://wa.me/${anfNum}?text=${anfMsg}" target="_blank" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; text-decoration: none; font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fas fa-comment-dots"></i> WhatsApp Anfitrión/a
+            </a>
+          `;
+        }
+        commBox.innerHTML = commHtml;
+      }
+
+      // Escala Colectiva y Descuento
+      const tierBadge = document.getElementById('dash-scale-tier-badge');
+      if (tierBadge) {
+        tierBadge.innerHTML = `🔥 <strong>Nivel ${escala.tier}: ${escala.tierNombre}</strong> ${escala.ahorroPorcentaje > 0 ? `<span style="background: #10B981; color: white; font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">-${escala.ahorroPorcentaje}% AHORRO</span>` : ''}`;
+      }
+
+      const savingPill = document.getElementById('dash-scale-saving-pill');
+      if (savingPill) {
+        savingPill.innerText = `Ahorro colectivo: $${escala.ahorroEstimado.toLocaleString('es-AR')}`;
+      }
+
+      const progBar = document.getElementById('dash-scale-prog-bar');
+      if (progBar) progBar.style.width = `${escala.progreso}%`;
+
+      const progText = document.getElementById('dash-scale-prog-text');
+      if (progText) {
+        progText.innerHTML = escala.faltante > 0 
+          ? `🚀 Faltan solo <strong>${escala.faltante} unidades</strong> para alcanzar <strong>${escala.siguienteTierNombre}</strong>`
+          : `🎉 <strong>¡Meta comunitaria superada!</strong> Este Círculo ya desbloqueó el mejor costo colectivo.`;
+      }
+
+      // Métricas numéricas
+      const statM = document.getElementById('dash-stat-members');
+      if (statM) statM.innerText = integrantes.length;
+      const statU = document.getElementById('dash-stat-units');
+      if (statU) statU.innerText = escala.unidadesTotal;
+      const statT = document.getElementById('dash-stat-total');
+      if (statT) statT.innerText = `$${escala.totalRecaudado.toLocaleString('es-AR')}`;
+      const countNum = document.getElementById('dash-members-count-num');
+      if (countNum) countNum.innerText = integrantes.length;
+
+      // Lista de Integrantes
+      const membersList = document.getElementById('dash-circ-members-list');
+      if (membersList) {
+        if (integrantes.length === 0) {
+          membersList.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 12.5px; padding: 16px;">Aún no hay integrantes registrados. ¡Compartí el link para sumar a tus vecinos!</div>`;
+        } else {
+          membersList.innerHTML = integrantes.map(m => {
+            const hasWsp = m.telefono && m.telefono.trim().length > 0;
+            const num = (m.telefono || '').replace(/\D/g, '');
+            const chatUrl = num ? `https://wa.me/${num}?text=${encodeURIComponent(`¡Hola ${m.nombre}! Te escribo desde el Círculo ${target.nombre} en Vrde Club 🌿`)}` : '#';
+
+            return `
+              <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: ${m.esAnfitrion ? 'linear-gradient(135deg, #F59E0B, #D97706)' : 'linear-gradient(135deg, #10B981, #059669)'}; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0;">
+                    ${m.avatar === '👑' ? '👑' : (m.nombre.charAt(0).toUpperCase() || '👤')}
+                  </div>
+                  <div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      <strong style="font-size: 13.5px; color: #0F172A;">${m.nombre}</strong>
+                      <span style="font-size: 10px; font-weight: 700; background: ${m.esAnfitrion ? '#FEF3C7' : '#F1F5F9'}; color: ${m.esAnfitrion ? '#92400E' : '#475569'}; padding: 1px 6px; border-radius: 4px;">
+                        ${m.esAnfitrion ? '👑 Anfitrión/a' : '👤 Vecino/a'}
+                      </span>
+                    </div>
+                    <div style="font-size: 11.5px; color: #64748B; margin-top: 1px;">
+                      ${m.pedidosCount > 0 
+                        ? `📦 ${m.unidadesTotal} un. acumuladas ($${m.montoTotal.toLocaleString('es-AR')})` 
+                        : '🌱 Anfitrión/a coordinador del grupo'}
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  ${hasWsp ? `
+                    <a href="${chatUrl}" target="_blank" style="background: #F0FDF4; border: 1px solid #BBF7D0; color: #16A34A; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Chatear con ${m.nombre}">
+                      <i class="fab fa-whatsapp"></i> Chat
+                    </a>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // Configurar Botón Salir / Unirse
+      const btnLeave = document.getElementById('dash-btn-leave-circulo');
+      if (btnLeave) {
+        const isCurrentActive = ACTIVE_CIRCULO && (ACTIVE_CIRCULO.id === target.id || ACTIVE_CIRCULO.slug === target.slug);
+        if (isCurrentActive) {
+          btnLeave.innerHTML = `<i class="fas fa-sign-out-alt"></i> Salir del Círculo`;
+          btnLeave.onclick = leaveCurrentCirculo;
+          btnLeave.style.display = 'block';
+          btnLeave.style.background = '#FEE2E2';
+          btnLeave.style.color = '#B91C1C';
+          btnLeave.style.borderColor = '#FCA5A5';
+        } else {
+          btnLeave.innerHTML = `<i class="fas fa-plus"></i> Unirme a este Círculo`;
+          btnLeave.onclick = () => {
+            selectCirculo(target.slug || target.id);
+            closeModal('modal-circulo-dashboard');
+            switchAppView('catalogo');
+          };
+          btnLeave.style.display = 'block';
+          btnLeave.style.background = '#ECFDF5';
+          btnLeave.style.color = '#065F46';
+          btnLeave.style.borderColor = '#A7F3D0';
+        }
+      }
+
+      openModal('modal-circulo-dashboard');
+    }
+
+    function leaveCurrentCirculo() {
+      if (!confirm("¿Seguro que querés salir de este Círculo y comprar de forma individual en el Nodo cabecera?")) return;
+
+      LunarEngine.desvincularCirculoActivo();
+      ACTIVE_CIRCULO = null;
+
+      const cleanUrl = `${window.location.origin}${window.location.pathname}?ref=${CURRENT_REF}`;
+      window.history.replaceState({}, '', cleanUrl);
+
+      closeModal('modal-circulo-dashboard');
+      updateCirculoActiveBanner();
+      renderSidebarUserInfo();
+      renderMiPanel();
+      if (CURRENT_APP_VIEW === 'circulos') renderCirculosView();
+      updateFloatingCart();
+      loadActiveProductView();
+    }
+
+    function shareProductGoalWsp(prodId) {
+      const p = DISPLAY_PRODUCTS.find(x => x.id === prodId) || DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const escala = LunarEngine.obtenerCostoGlobalProductor(p);
+      const link = window.location.href;
+      const text = `🌿 *Compra Comunitaria Vrde Club: ${p.nombre}*\n` +
+        `Actualmente llevamos *${escala.volumenActual} ${escala.unidadGlobal} acumulados* en toda la red.\n` +
+        (escala.faltante > 0 ? `🚀 ¡Faltan solo *${escala.faltante} ${escala.unidadGlobal}* para que baje el costo de toda la red!\n` : `🎉 ¡Ya desbloqueamos el costo más bajo de compra colectiva!\n`) +
+        `\nSumate al pedido acá: ${link}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function updateProgressBars() {
+      const orders = LunarEngine.obtenerPedidos(CURRENT_REF);
+      let nodoUnits = 0;
+      orders.forEach(o => {
+        if (o.items) o.items.forEach(i => nodoUnits += (Number(i.cant) || 0));
+        else if (o.unidades) nodoUnits += Number(o.unidades);
+      });
+
+      const allOrders = LunarEngine.obtenerPedidos(null);
+      let globalUnits = 0;
+      allOrders.forEach(o => {
+        if (o.items) o.items.forEach(i => globalUnits += (Number(i.cant) || 0));
+        else if (o.unidades) globalUnits += Number(o.unidades);
+      });
+
+      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || {};
+      const nodoMeta = nodoData.metaPropia || 120;
+      const globalMeta = 500;
+
+      document.getElementById('shop-nodo-prog-text').innerText = `${nodoUnits} / ${nodoMeta} unidades`;
+      document.getElementById('shop-nodo-prog-bar').style.width = `${Math.min(100, Math.round((nodoUnits / nodoMeta) * 100))}%`;
+
+      document.getElementById('shop-global-prog-text').innerText = `${globalUnits} / ${globalMeta} unidades`;
+      document.getElementById('shop-global-prog-bar').style.width = `${Math.min(100, Math.round((globalUnits / globalMeta) * 100))}%`;
+    }
+
+    // ==========================================
+    // FILTRADO POR CATEGORÍAS SPOTIFY (DINÁMICAS)
+    // ==========================================
+    function renderSpotifyCategories() {
+      const container = document.getElementById('spotify-categories-container');
+      if (!container) return;
+      
+      // Obtener únicamente categorías activas que tengan productos asignados en este nodo
+      const cats = LunarEngine.obtenerCategorias(true, true, CURRENT_REF);
+
+      // Si la categoría actualmente seleccionada ya no tiene productos, volver a "TODOS"
+      if (CURRENT_CATEGORY !== 'TODOS' && !cats.some(c => c.id === CURRENT_CATEGORY)) {
+        CURRENT_CATEGORY = 'TODOS';
+      }
+
+      let html = `
+        <div class="spotify-cat-card scat-all ${CURRENT_CATEGORY === 'TODOS' ? 'active' : ''}" onclick="filterByStoreCategory('TODOS', this)">
+          <div class="cat-name">Ver Todo</div>
+          <div class="cat-icon">🌱</div>
+        </div>
+      `;
+
+      cats.forEach(c => {
+        const isActive = (CURRENT_CATEGORY === c.id) ? 'active' : '';
+        const bgStyle = c.colorBg ? `background: linear-gradient(135deg, ${c.colorBg}, rgba(0,0,0,0.35));` : '';
+        html += `
+          <div class="spotify-cat-card scat-${c.id} ${isActive}" style="${bgStyle}" onclick="filterByStoreCategory('${c.id}', this)">
+            <div class="cat-name">${c.nombre}</div>
+            <div class="cat-icon">${c.emoji || '🌱'}</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function filterByStoreCategory(cat, el) {
+      document.querySelectorAll('.spotify-cat-card').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      filterCategoryAndRender(cat);
+    }
+
+    function filterCategoryAndRender(cat) {
+      CURRENT_CATEGORY = cat;
+      let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
+      if (!allProds || allProds.length === 0) {
+        allProds = LunarEngine.obtenerProductos(null, false);
+      }
+      if (!allProds || allProds.length === 0) {
+        allProds = LUNAR_CONFIG.productos;
+      }
+
+      if (cat === 'TODOS') {
+        DISPLAY_PRODUCTS = allProds;
+      } else {
+        const filtered = allProds.filter(p => p.categoria === cat);
+        DISPLAY_PRODUCTS = (filtered && filtered.length > 0) ? filtered : allProds;
+      }
+
+      ACTIVE_PRODUCT_INDEX = 0;
+      renderProductTabs();
+      loadActiveProductView();
+    }
+
+    function renderProductTabs() {
+      const tabsContainer = document.getElementById('shop-product-tabs');
+      let html = '';
+
+      DISPLAY_PRODUCTS.forEach((p, idx) => {
+        const activeClass = (idx === ACTIVE_PRODUCT_INDEX) ? 'active' : '';
+        html += `
+          <button class="tab-item ${activeClass}" onclick="selectProductTab(${idx})">
+            ${p.nombre}
+          </button>
+        `;
+      });
+
+      tabsContainer.innerHTML = html;
+    }
+
+    function selectProductTab(idx) {
+      ACTIVE_PRODUCT_INDEX = idx;
+      renderProductTabs();
+      loadActiveProductView();
+    }
+
+    function scrollTabs(delta) {
+      const el = document.getElementById('shop-product-tabs');
+      if (el) el.scrollBy({ left: delta, behavior: 'smooth' });
+    }
+
+    function initTabsScrollBehavior() {
+      const slider = document.getElementById('shop-product-tabs');
+      if (!slider) return;
+
+      slider.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          slider.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+      slider.addEventListener('mouseleave', () => { isDown = false; });
+      slider.addEventListener('mouseup', () => { isDown = false; });
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    }
+
+    // ==========================================
+    // RENDERIZADO DEL SHOWCASE (3 COLUMNAS)
+    // ==========================================
+    function loadActiveProductView() {
+      if (STORE_VIEW_MODE === 'swipe') {
+        renderSwipeStore();
+        return;
+      }
+
+      if (!DISPLAY_PRODUCTS || DISPLAY_PRODUCTS.length === 0) {
+        DISPLAY_PRODUCTS = LUNAR_CONFIG.productos;
+      }
+
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX] || DISPLAY_PRODUCTS[0];
+      if (!p) return;
+
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [
+        { id: 'v1', label: p.unidad || 'Unidad', unidad: p.unidad, costo: p.costo, p1: p.p1, p2: p.p2, p3: p.p3, m1: 1, m2: p.m2 || 20, m3: p.m3 || 50 }
+      ];
+
+      const currentVIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const currentV = variants[currentVIdx] || variants[0];
+      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía alimentaria real.', loc: p.origen };
+
+      const cartKey = `${p.id}_${currentV.id || currentV.label}`;
+      const currentQty = CART_ITEMS[cartKey]?.qty || 0;
+
+      // Calcular volumen global acumulado en la red (todas las presentaciones sumadas) y escala del productor
+      const totalGlobalVolumen = LunarEngine.obtenerVolumenAcumuladoProducto(p.id);
+      const escalaGlobal = LunarEngine.obtenerCostoGlobalProductor(p, totalGlobalVolumen);
+      const unidadGlobal = p.unidadGlobal || p.unidad || 'kg';
+
+      // Calcular categorías comerciales para la variante seleccionada
+      const p1 = currentV.p1;
+      const m2 = currentV.m2 || 6;
+      const p2 = (currentV.p2 && currentV.p2 > 0) ? currentV.p2 : null;
+      const m3 = currentV.m3 || 12;
+      const p3 = (currentV.p3 && currentV.p3 > 0) ? currentV.p3 : null;
+
+      const isTier1 = (!p2 && !p3) || (currentQty < m2);
+      const isTier2 = p2 && currentQty >= m2 && (!p3 || currentQty < m3);
+      const isTier3 = p3 && currentQty >= m3;
+
+      // Generar Botones de Presentación para Columna Izquierda con badge de cantidad en carrito
+      let presChipsHtml = '';
+      variants.forEach((v, vIdx) => {
+        const isAct = vIdx === currentVIdx ? 'active' : '';
+        const vKey = `${p.id}_${v.id || v.label}`;
+        const vInCart = CART_ITEMS[vKey]?.qty || 0;
+        const inCartBadge = vInCart > 0 
+          ? `<span style="background: #10B981; color: white; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; gap: 3px;"><i class="fas fa-shopping-bag" style="font-size: 9px;"></i> ${vInCart}</span>` 
+          : '';
+
+        presChipsHtml += `
+          <button type="button" class="pres-chip-btn ${isAct}" onclick="selectProductVariant('${p.id}', ${vIdx})">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span>${v.label}</span>
+              ${inCartBadge}
+            </div>
+            <span class="pres-sub">$${v.p1.toLocaleString('es-AR')}</span>
+          </button>
+        `;
+      });
+
+      // Subtotal y precio unitario para el formato activo
+      const activeUnitPrice = getProductPrice(currentV, currentQty || 1);
+      const activeFormatSubtotal = currentQty * activeUnitPrice;
+
+      // Resumen de otros formatos de este mismo producto en el carrito
+      let otherFormatsInCartHtml = '';
+      const otherInCart = variants.filter((v, vIdx) => vIdx !== currentVIdx && CART_ITEMS[`${p.id}_${v.id || v.label}`]?.qty > 0);
+      if (otherInCart.length > 0) {
+        otherFormatsInCartHtml = `
+          <div style="margin-top: 10px; padding: 8px 10px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; font-size: 11px; color: #166534;">
+            <div style="font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+              <i class="fas fa-check-circle" style="color: #10B981;"></i> Otros formatos en tu pedido:
+            </div>
+            ${otherInCart.map(ov => {
+              const oQty = CART_ITEMS[`${p.id}_${ov.id || ov.label}`].qty;
+              const oPrice = getProductPrice(ov, oQty);
+              return `<div style="display: flex; justify-content: space-between; margin-top: 2px;"><span>• ${oQty}x ${ov.label}</span><strong>$${(oQty * oPrice).toLocaleString('es-AR')}</strong></div>`;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      const showcaseContainer = document.getElementById('showcase-container');
+      showcaseContainer.innerHTML = `
+        <!-- COLUMNA IZQUIERDA: PRESENTACIÓN, ORIGEN E IMPACTO -->
+        <div class="showcase-card showcase-left">
+          <div>
+            <!-- SECTOR PRESENTACIÓN DEL PRODUCTO (Primero para elegir formato) -->
+            <div class="presentation-selector-box">
+              <div class="pres-header">
+                <span>1. ELEGÍ EL FORMATO / PESO:</span>
+                <span style="color: var(--primary); font-weight: 800;">${currentV.label}</span>
+              </div>
+              <div class="pres-chips-grid">
+                ${presChipsHtml}
+              </div>
+            </div>
+
+            <div class="card-section-title">ORIGEN Y PRODUCCIÓN</div>
+            <div class="showcase-producer-name">${p.origen || info.productor}</div>
+            <div class="showcase-variedad-badge">
+              <i class="fas fa-check-circle"></i>
+              <span>${p.variedad}</span>
+            </div>
+          </div>
+
+          <!-- IMPACTO EN LA RED LUNAR Y META GLOBAL DEL PRODUCTOR -->
+          <div class="impact-badge-box" style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 12px 14px; margin-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="card-section-title" style="color: #166534; margin: 0; font-size: 11.5px; font-weight: 800;">
+                <i class="fas fa-bullhorn"></i> META COMUNITARIA GLOBAL
+              </div>
+              <span style="font-size: 10.5px; font-weight: 800; background: ${escalaGlobal.tier >= 2 ? '#DCFCE7' : '#FEF3C7'}; color: ${escalaGlobal.tier >= 2 ? '#15803D' : '#B45309'}; padding: 2px 8px; border-radius: 10px;">
+                Nivel ${escalaGlobal.tier}/3
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: baseline; gap: 6px; margin: 8px 0 4px;">
+              <span class="impact-badge-num" style="font-size: 26px; font-weight: 900; color: #10A352;">${totalGlobalVolumen}</span>
+              <span style="font-size: 12px; color: #475569; font-weight: 600;">${unidadGlobal} pedidos en toda la red</span>
+            </div>
+
+            <div style="font-size: 11px; color: #64748B; margin-bottom: 6px;">
+              Costo Base Productor: <strong style="color: #10A352;">$${escalaGlobal.costoBase.toLocaleString('es-AR')} / ${unidadGlobal}</strong>
+            </div>
+
+            <!-- Barra de Progreso de Meta -->
+            <div style="background: #E2E8F0; border-radius: 6px; height: 7px; overflow: hidden; margin: 6px 0;">
+              <div style="background: #10A352; height: 100%; width: ${escalaGlobal.porcentajeMeta}%; border-radius: 6px; transition: width 0.4s ease;"></div>
+            </div>
+
+            <div style="font-size: 11px; color: #166534; line-height: 1.4; margin-top: 6px;">
+              ${escalaGlobal.faltante > 0 
+                ? `🚀 <strong>¡Faltan solo ${escalaGlobal.faltante} ${unidadGlobal}</strong> entre todos los nodos para desbloquear el costo productor de <strong>$${(p.costo3 || p.costo2 || escalaGlobal.costoBase).toLocaleString('es-AR')} / ${unidadGlobal}</strong>!`
+                : `🎉 <strong>¡Meta comunitaria superada!</strong> Se alcanzó el costo más bajo de compra colectiva para toda la red.`
+              }
+            </div>
+
+            <!-- Botón Invitar WhatsApp a la Meta -->
+            <button type="button" onclick="shareProductGoalWsp('${p.id}')" style="width: 100%; margin-top: 10px; background: #25D366; color: white; border: none; border-radius: 8px; padding: 9px 12px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <i class="fab fa-whatsapp"></i> Invitar amigos por WhatsApp (+ sumá kilos)
+            </button>
+          </div>
+        </div>
+
+        <!-- COLUMNA CENTRAL: FOTO PROTAGONISTA Y DETALLE -->
+        <div class="showcase-card showcase-center">
+          <div style="position: relative;">
+            <img src="${currentV.img || p.img}" alt="${p.nombre}" class="prod-main-img" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})">
+          </div>
+          <div>
+            <div class="prod-badge-unit">${currentV.unidad || p.unidad}</div>
+            <h2 class="prod-title">${p.nombre}</h2>
+            <p class="prod-subtitle">${p.subtitulo || p.titulo}</p>
+            <button class="btn-show-story-flip" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})">
+              <i class="fas fa-book-open"></i> Ver Historia y Mapa del Productor
+            </button>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: CATEGORÍAS COMERCIALES (MINORISTA, MAYORISTA, DISTRIBUIDOR) -->
+        <div class="showcase-card showcase-right">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span class="card-section-title" style="margin: 0;">2. CATEGORÍA COMERCIAL</span>
+              <span style="font-size: 11px; font-weight: 700; color: var(--primary);">CLIC PARA APLICAR</span>
+            </div>
+            <div style="font-size: 11.5px; color: #64748B; margin-bottom: 8px;">
+              Para: <strong style="color: #0F172A;">${currentV.label}</strong>
+            </div>
+
+            <!-- Escala 1: Minorista -->
+            <div class="scale-tier-card ${isTier1 ? 'active' : ''}" onclick="applyTierDirectly(1)">
+              <div class="scale-tier-info">
+                <div class="st-title">Minorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(${p2 ? `1 a ${m2 - 1} un.` : 'Precio Estándar'})</span></div>
+                <div class="st-sub">Consumo Familiar / Unitario</div>
+              </div>
+              <div class="scale-tier-price">$${p1.toLocaleString('es-AR')}</div>
+            </div>
+
+            ${p2 ? `
+            <!-- Escala 2: Mayorista -->
+            <div class="scale-tier-card ${isTier2 ? 'active' : ''}" onclick="applyTierDirectly(2)">
+              <div class="scale-tier-info">
+                <div class="st-title">Mayorista <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(${m2} ${p3 ? `a ${m3 - 1}` : '+'} un.)</span></div>
+                <div class="st-sub">Compra Colectiva / Familiar +${m2} un.</div>
+              </div>
+              <div class="scale-tier-price">$${p2.toLocaleString('es-AR')}</div>
+            </div>
+            ` : ''}
+
+            ${p3 ? `
+            <!-- Escala 3: Distribuidor -->
+            <div class="scale-tier-card ${isTier3 ? 'active' : ''}" onclick="applyTierDirectly(3)">
+              <div class="scale-tier-info">
+                <div class="st-title">Distribuidor <span style="font-size: 11.5px; font-weight: 500; color: #64748B;">(+${m3} un.)</span></div>
+                <div class="st-sub">Gran Volumen / Reventa +${m3} un.</div>
+              </div>
+              <div class="scale-tier-price">$${p3.toLocaleString('es-AR')}</div>
+            </div>
+            ` : ''}
+
+            <!-- Caja de Acceso a Círculos de Compra -->
+            <div onclick="openCreateCirculoModal()" style="margin-top: 10px; background: #F8FAFC; border: 1px dashed #94A3B8; border-radius: 10px; padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;" onmouseover="this.style.borderColor='#10B981'; this.style.background='#F0FDF4';" onmouseout="this.style.borderColor='#94A3B8'; this.style.background='#F8FAFC';">
+              <span style="font-size: 20px;">📦</span>
+              <div style="flex: 1;">
+                <div style="font-size: 11.5px; font-weight: 700; color: #0F172A;">¿Querés precio Distribuidor?</div>
+                <div style="font-size: 10.5px; color: #64748B;">Creá un Círculo y junten las unidades entre amigos.</div>
+              </div>
+              <i class="fas fa-plus-circle" style="color: #10B981; font-size: 14px;"></i>
+            </div>
+          </div>
+
+          <!-- Selector de Cantidad -->
+          <div>
+            <div class="qty-control-box">
+              <button class="qty-btn-circle" onclick="adjustProductQty(-1)" title="Restar">-</button>
+              <div style="text-align: center;">
+                <input type="text" class="qty-input-text" value="${currentQty}" readonly style="width: 50px; font-size: 18px; font-weight: 800; border: none; background: transparent; text-align: center; color: #0F172A;">
+                <div style="font-size: 10px; color: #64748B; font-weight: 700;">${currentV.unidad || p.unidad}</div>
+              </div>
+              <button class="qty-btn-circle" onclick="adjustProductQty(1)" title="Sumar">+</button>
+            </div>
+            ${currentQty > 0 ? `
+              <div style="text-align: center; margin-top: 6px; font-size: 12px; color: #0F172A; font-weight: 700;">
+                Subtotal formato: <span style="color: var(--primary);">$${activeFormatSubtotal.toLocaleString('es-AR')}</span> ($${activeUnitPrice.toLocaleString('es-AR')} c/u)
+              </div>
+            ` : `
+              <div style="font-size: 10.5px; text-align: center; color: var(--text-muted); margin-top: 5px;">
+                Elegí la cantidad para este formato
+              </div>
+            `}
+
+            ${otherFormatsInCartHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function selectProductVariant(prodId, vIdx) {
+      SELECTED_VARIANT_INDEX[prodId] = vIdx;
+      loadActiveProductView();
+    }
+
+    function applyTierDirectly(tierNum) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1, m1: 1, m2: 6, m3: 12 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      let targetQty = 1;
+      if (tierNum === 2 && v.p2) targetQty = Number(v.m2) || 6;
+      else if (tierNum === 3 && v.p3) targetQty = Number(v.m3) || 12;
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      CART_ITEMS[cartKey] = {
+        prod: p,
+        variant: v,
+        qty: targetQty
+      };
+
+      loadActiveProductView();
+      updateFloatingCart();
+    }
+
+    function adjustProductQty(delta) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const current = CART_ITEMS[cartKey]?.qty || 0;
+      const next = Math.max(0, current + delta);
+
+      if (next === 0) {
+        delete CART_ITEMS[cartKey];
+      } else {
+        CART_ITEMS[cartKey] = {
+          prod: p,
+          variant: v,
+          qty: next
+        };
+      }
+
+      loadActiveProductView();
+      updateFloatingCart();
+    }
+
+    function openProductStoryModal(prodIdx) {
+      const p = DISPLAY_PRODUCTS[prodIdx];
+      if (!p) return;
+      const info = p.productorInfo || { productor: p.origen, historia: p.tipsVrdedor, impacto: 'Soberanía y precio justo.', loc: p.origen };
+
+      document.getElementById('st-modal-title').innerText = `Origen: ${p.nombre}`;
+      document.getElementById('st-producer-name').innerText = p.origen || info.productor;
+      document.getElementById('st-producer-desc').innerText = info.historia || p.tipsVrdedor || p.subtitulo || '';
+      document.getElementById('st-producer-impact').innerText = info.impacto || 'Comercio transparente y agroecología comunitaria.';
+      document.getElementById('st-producer-loc').innerText = p.origen || info.loc;
+
+      openModal('modal-story');
+    }
+
+    // ==========================================
+    // RENDERIZADO MODO JUEGO (SWIPE)
+    // ==========================================
+    function renderSwipeStore() {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const inCartQty = CART_ITEMS[cartKey]?.qty || 0;
+      const displayQty = inCartQty > 0 ? inCartQty : 1;
+
+      document.getElementById('sw-img').src = v.img || p.img;
+      document.getElementById('sw-badge').innerText = v.unidad || p.unidad;
+      document.getElementById('sw-title').innerText = p.nombre;
+      document.getElementById('sw-desc').innerText = p.subtitulo || p.titulo;
+
+      let chipsHtml = '';
+      variants.forEach((vr, idx) => {
+        const isAct = idx === vIdx ? 'active' : '';
+        chipsHtml += `
+          <button class="pres-chip-btn ${isAct}" onclick="selectSwipeVariant('${p.id}', ${idx})">
+            <span>${vr.label}</span>
+            <span class="pres-sub">$${vr.p1.toLocaleString('es-AR')}</span>
+          </button>
+        `;
+      });
+      document.getElementById('sw-chips-grid').innerHTML = chipsHtml;
+      document.getElementById('sw-qty-val').innerText = displayQty;
+
+      const price = getProductPrice(v, displayQty);
+      document.getElementById('sw-total-val').innerText = `$${(price * displayQty).toLocaleString('es-AR')}`;
+      document.getElementById('sw-unit-val').innerText = inCartQty > 0 ? `(${inCartQty} en tu carrito)` : `($${price.toLocaleString('es-AR')} / u)`;
+    }
+
+    function selectSwipeVariant(prodId, vIdx) {
+      SELECTED_VARIANT_INDEX[prodId] = vIdx;
+      renderSwipeStore();
+    }
+
+    function adjustSwipeQty(delta) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (!p) return;
+      const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+      const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+      const v = variants[vIdx] || variants[0];
+
+      const cartKey = `${p.id}_${v.id || v.label}`;
+      const current = CART_ITEMS[cartKey]?.qty || 0;
+      const next = Math.max(0, (current > 0 ? current : 1) + delta);
+
+      if (next === 0) {
+        delete CART_ITEMS[cartKey];
+      } else {
+        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: next };
+      }
+
+      renderSwipeStore();
+      updateFloatingCart();
+    }
+
+    function triggerSwipeAction(dir) {
+      const p = DISPLAY_PRODUCTS[ACTIVE_PRODUCT_INDEX];
+      if (dir === 'right' && p) {
+        const variants = p.variantes && p.variantes.length > 0 ? p.variantes : [{ id: 'v1', label: p.unidad, p1: p.p1 }];
+        const vIdx = SELECTED_VARIANT_INDEX[p.id] || 0;
+        const v = variants[vIdx] || variants[0];
+        const cartKey = `${p.id}_${v.id || v.label}`;
+        const prev = CART_ITEMS[cartKey]?.qty || 0;
+        const addQty = prev > 0 ? 1 : 1;
+        CART_ITEMS[cartKey] = { prod: p, variant: v, qty: prev + addQty };
+        updateFloatingCart();
+      }
+
+      navigateNextProduct();
+    }
+
+    function renderSwipeIfActive() {
+      if (CURRENT_VIEW_MODE === 'swipe') {
+        renderSwipeStore();
+      }
+    }
+
+    // ==========================================
+    // CARRITO Y MODAL CHECKOUT
+    // ==========================================
+    function getProductPrice(variant, qty) {
+      if (!variant) return 0;
+      const q = Math.max(1, Number(qty) || 1);
+      const m3 = Number(variant.m3) || 12;
+      const m2 = Number(variant.m2) || 6;
+
+      if (variant.p3 && variant.p3 > 0 && q >= m3) return Number(variant.p3);
+      if (variant.p2 && variant.p2 > 0 && q >= m2) return Number(variant.p2);
+      return Number(variant.p1 || 0);
     }
 
     function updateFloatingCart() {
       let total = 0;
-      let items = 0;
-      const prods = getStoreProducts();
-      prods.forEach((p, i) => {
-        const q = CARRITO[i] || 0;
-        if (q > 0) {
-          total += q * getActiveProductPrice(p, i);
-          items += q;
-        }
+      let totalUnits = 0;
+
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        total += item.qty * price;
+        totalUnits += item.qty;
       });
 
-      document.getElementById('cart-total-text').innerText = `$${total.toLocaleString('es-AR')}`;
-      document.getElementById('floating-cart').classList.toggle('visible', items > 0);
+      const totalStr = `$${total.toLocaleString('es-AR')}`;
+      const totalEl = document.getElementById('cart-total-text');
+      if (totalEl) totalEl.innerText = totalStr;
+
+      const sidebarCartTotal = document.getElementById('sidebar-cart-total');
+      if (sidebarCartTotal) sidebarCartTotal.innerText = totalStr;
+
+      const bnavCartText = document.getElementById('bnav-cart-text');
+      if (bnavCartText) bnavCartText.innerText = totalUnits > 0 ? `Canasta (${totalStr})` : 'Canasta ($0)';
+
+      const floatingCart = document.getElementById('floating-cart');
+      if (floatingCart) {
+        floatingCart.classList.toggle('visible', totalUnits > 0);
+        const cartActionBtn = floatingCart.querySelector('button');
+        if (cartActionBtn) {
+          if (ACTIVE_CIRCULO) {
+            cartActionBtn.innerHTML = `<span>RESERVAR EN CÍRCULO</span> <span style="font-size: 10px; font-weight: 600; opacity: 0.9;">(Pagar en Luna Llena)</span> <i class="fas fa-arrow-right"></i>`;
+          } else {
+            cartActionBtn.innerHTML = `<span>FINALIZAR PEDIDO</span> <i class="fas fa-arrow-right"></i>`;
+          }
+        }
+      }
     }
 
     function openCheckoutModal() {
       let html = '';
       let subtotal = 0;
-      const prods = getStoreProducts();
 
-      prods.forEach((p, i) => {
-        const q = CARRITO[i] || 0;
-        if (q > 0) {
-          const price = getActiveProductPrice(p, i);
-          const lineTotal = q * price;
-          subtotal += lineTotal;
-          html += `
-            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
-              <span><strong>${q}x</strong> ${p.nombre}</span>
-              <span style="font-weight: 600;">$${lineTotal.toLocaleString('es-AR')}</span>
+      if (ACTIVE_CIRCULO) {
+        html += `
+          <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px; color: #065F46;">
+            <strong>👥 Círculo Activo:</strong> ${ACTIVE_CIRCULO.nombre} (Anfitrión/a: ${ACTIVE_CIRCULO.anfitrion})<br>
+            <span style="font-size: 11px; color: #047857;">🌕 Esta es una <strong>reserva comunitaria</strong>. Abonarás al cierre en Luna Llena con el mejor valor logrado por la red.</span>
+          </div>
+        `;
+      }
+
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        const lineTotal = item.qty * price;
+        subtotal += lineTotal;
+
+        html += `
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; margin-bottom: 8px; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
+            <div>
+              <strong>${item.qty}x</strong> ${item.prod.nombre}
+              <div style="font-size: 11px; color: var(--text-muted);">${item.variant.label} • $${price.toLocaleString('es-AR')} c/u</div>
             </div>
-          `;
-        }
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 700; color: var(--primary);">$${lineTotal.toLocaleString('es-AR')}</span>
+              <button onclick="removeCartItemByKey('${k}')" style="background: none; border: none; color: #EF4444; font-size: 12px; cursor: pointer;" title="Eliminar item">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        `;
       });
 
       document.getElementById('checkout-items').innerHTML = html;
@@ -560,10 +3158,33 @@
         });
       }
       vHtml += '<option value="Directo por la Web">🌐 Directo por la Web / Sin Vrdedor previo</option>';
-      document.getElementById('chk-vrdedor-select').innerHTML = vHtml;
+      const vSelect = document.getElementById('chk-vrdedor-select');
+      if (vSelect) vSelect.innerHTML = vHtml;
+
+      // Auto-completar datos del prosumidor si ya están guardados
+      const userProfile = LunarEngine.obtenerPerfilUsuario();
+      if (userProfile) {
+        const nomInput = document.getElementById('chk-nombre');
+        if (nomInput && !nomInput.value && userProfile.nombre) nomInput.value = userProfile.nombre;
+        const telInput = document.getElementById('chk-tel');
+        if (telInput && !telInput.value && userProfile.telefono) telInput.value = userProfile.telefono;
+        const dirInput = document.getElementById('chk-direccion-delivery');
+        if (dirInput && !dirInput.value && userProfile.direccion) dirInput.value = userProfile.direccion;
+      }
 
       setDonation('3');
       openModal('modal-checkout');
+    }
+
+    function removeCartItemByKey(k) {
+      delete CART_ITEMS[k];
+      updateFloatingCart();
+      loadActiveProductView();
+      if (Object.keys(CART_ITEMS).length === 0) {
+        closeModal('modal-checkout');
+      } else {
+        openCheckoutModal();
+      }
     }
 
     let DELIVERY_TYPE = 'Retiro en Nodo';
@@ -623,27 +3244,31 @@
       const tData = updateTotalFinal();
       const cartDetails = [];
       const orderItems = [];
-      const prods = getStoreProducts();
 
-      prods.forEach((p, i) => {
-        const q = CARRITO[i] || 0;
-        if (q > 0) {
-          cartDetails.push(`${q} ${p.unidad} ${p.nombre}`);
-          orderItems.push({
-            prodId: p.id,
-            nombre: p.nombre,
-            cant: q,
-            unidad: p.unidad
-          });
-        }
+      Object.keys(CART_ITEMS).forEach(k => {
+        const item = CART_ITEMS[k];
+        const price = getProductPrice(item.variant, item.qty);
+        cartDetails.push(`${item.qty}x ${item.prod.nombre} (${item.variant.label})`);
+        orderItems.push({
+          prodId: item.prod.id,
+          nombre: item.prod.nombre,
+          variante: item.variant.label,
+          cant: item.qty,
+          unidad: item.variant.unidad || item.prod.unidad,
+          precio: price
+        });
       });
 
       const orderId = 'G-' + Math.floor(Math.random() * 900000 + 100000);
-      const nodoData = LUNAR_CONFIG.nodos[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
+      const totalUnidadesPedido = orderItems.reduce((s, it) => s + (Number(it.cant) || 0), 0);
 
       ORDER_SUCCESS_DATA = {
         id: orderId,
         fecha: new Date().toLocaleString('es-AR'),
+        cicloId: CICLO_LUNAR.id,
+        ciclo: CICLO_LUNAR.nombre,
         nombre: nombre,
         telefono: tel,
         nodo: nodoData.nombre,
@@ -653,28 +3278,48 @@
         direccionEntrega: direccionDelivery,
         detalle: cartDetails.join(', '),
         items: orderItems,
+        unidades: totalUnidadesPedido,
         total: tData.total,
         donacion: tData.don,
         mensaje: msg,
         cbu: nodoData.cbu,
         wsp: nodoData.wspPedidos,
-        ciclo: CICLO_LUNAR.nombre,
         estado: 'Pendiente'
       };
 
-      // Guardar centralmente y en Google Sheets si la API está conectada
+      if (ACTIVE_CIRCULO) {
+        ORDER_SUCCESS_DATA.circuloId = ACTIVE_CIRCULO.id;
+        ORDER_SUCCESS_DATA.circuloSlug = ACTIVE_CIRCULO.slug;
+        ORDER_SUCCESS_DATA.circuloNombre = ACTIVE_CIRCULO.nombre;
+        ORDER_SUCCESS_DATA.circuloAnfitrion = ACTIVE_CIRCULO.anfitrion;
+        ORDER_SUCCESS_DATA.pagoEnLunaLlena = true;
+      }
+
+      // Guardar centralmente
       LunarEngine.guardarNuevoPedido(ORDER_SUCCESS_DATA);
       LunarEngine.enviarPedidoApi(ORDER_SUCCESS_DATA);
+
+      // Actualizar perfil de usuario recordado
+      LunarEngine.guardarPerfilUsuario({
+        nombre: nombre,
+        telefono: tel,
+        nodoId: CURRENT_REF,
+        circuloId: ACTIVE_CIRCULO?.id || null,
+        direccion: direccionDelivery || ''
+      });
+
+      renderSidebarUserInfo();
+      renderMiPanel();
+      updateProgressBars();
 
       closeModal('modal-checkout');
       document.getElementById('succ-id').innerText = orderId;
       document.getElementById('succ-alias').innerText = nodoData.cbu;
       document.getElementById('succ-total').innerText = `$${tData.total.toLocaleString('es-AR')}`;
 
-      CARRITO = {};
-      try { sessionStorage.removeItem('VRDE_CART'); } catch(e){}
+      CART_ITEMS = {};
       updateFloatingCart();
-      loadProductView(ACTIVE_INDEX);
+      loadActiveProductView();
       openModal('modal-success');
     }
 
@@ -685,20 +3330,28 @@
       let msg = `🌱 *Nuevo Pedido Vrde Club*\n`;
       msg += `🔖 Pedido: #${d.id}\n`;
       msg += `👤 Nombre: ${d.nombre}\n`;
-      msg += `📍ž Teléfono: ${d.telefono}\n`;
+      msg += `📞 Teléfono: ${d.telefono}\n`;
+      if (d.circuloNombre) {
+        msg += `👥 *Círculo de Compra:* ${d.circuloNombre} (Anfitrión/a: ${d.circuloAnfitrion})\n`;
+        msg += `🌕 *Modalidad:* Reserva Comunitaria (Pago en Luna Llena)\n`;
+      }
       if (d.vrdedor) msg += `🤝 Vrdedor/a: ${d.vrdedor}\n`;
-      msg += `📍¦ Detalle:\n${d.detalle}\n`;
-      msg += `💰 Total a transferir: $${d.total.toLocaleString('es-AR')}\n`;
+      msg += `📦 Detalle:\n${d.detalle}\n`;
+      msg += `💰 Total estimado: $${d.total.toLocaleString('es-AR')}\n`;
       
       if (d.tipoEntrega === 'Delivery') {
         msg += `🛵 *Entrega:* Envío a Domicilio: ${d.direccionEntrega}\n`;
       } else {
-        msg += `📍 *Entrega:* Retiro en ${d.nodo}\n`;
+        msg += `📍 *Entrega:* Retiro en ${d.nodo}\n`;
       }
 
       msg += `🌑 Ciclo: ${d.ciclo}\n`;
       if (d.mensaje) msg += `💬 Nota: ${d.mensaje}\n`;
-      msg += `\n_Adjunto el comprobante de transferencia._`;
+      if (d.pagoEnLunaLlena) {
+        msg += `\n_Reserva confirmada. Se liquida al valor final en Luna Llena._`;
+      } else {
+        msg += `\n_Adjunto el comprobante de transferencia._`;
+      }
 
       const num = d.wsp.replace(/\D/g, '');
       const url = `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
@@ -715,8 +3368,8 @@
       document.getElementById('prof-contacto').innerText = nodoData.contacto;
       document.getElementById('prof-entrega').innerText = nodoData.diaEntrega;
       document.getElementById('prof-cbu').innerText = nodoData.cbu;
+      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
-      
       const redes = nodoData.redes || {};
       let socialHtml = '';
       if (redes.instagram && redes.instagram.trim() !== '') {
@@ -734,8 +3387,18 @@
       }
       document.getElementById('prof-social-badges').innerHTML = socialHtml;
 
-
       openModal('modal-node');
+    }
+
+    function switchStoreView(mode) {
+      STORE_VIEW_MODE = mode;
+      document.getElementById('btn-view-showcase').classList.toggle('active', mode === 'showcase');
+      document.getElementById('btn-view-swipe').classList.toggle('active', mode === 'swipe');
+
+      document.getElementById('showcase-container').style.display = (mode === 'showcase') ? 'grid' : 'none';
+      document.getElementById('swipe-view-container').style.display = (mode === 'swipe') ? 'flex' : 'none';
+
+      loadActiveProductView();
     }
 
     function openModal(id) {
@@ -745,6 +3408,31 @@
     function closeModal(id) {
       document.getElementById(id).classList.remove('active');
     }
+
+    // Cerrar cualquier modal al hacer clic fuera de la tarjeta (en el fondo)
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+      }
+    });
+
+    // Cerrar modales con tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+      }
+    });
+
+    window.addEventListener('vrde:circulos-updated', () => {
+      renderSidebarUserInfo();
+      if (CURRENT_APP_VIEW === 'circulos') renderCirculosView();
+      if (CURRENT_APP_VIEW === 'mi-panel') renderMiPanel();
+    });
+
+    window.addEventListener('vrde:user-profile-updated', () => {
+      renderSidebarUserInfo();
+      if (CURRENT_APP_VIEW === 'mi-panel') renderMiPanel();
+    });
 
     document.addEventListener('DOMContentLoaded', initStore);
   </script>

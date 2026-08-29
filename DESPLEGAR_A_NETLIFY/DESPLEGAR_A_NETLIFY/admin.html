@@ -6,10 +6,12 @@
   <title>Panel de Administración de Nodo • Vrde Club</title>
   <meta name="description" content="Gestión comunitaria de pedidos, socios y entregas por nodo.">
 
-  <!-- Favicon e Icono de Navegador -->
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="alternate icon" href="favicon.svg">
-  <link rel="apple-touch-icon" href="assets/favicon.svg">
+  <!-- Favicon e Icono de Pestana del Navegador -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png?v=3">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=3">
+  <link rel="shortcut icon" href="favicon.ico?v=3">
+  <link rel="apple-touch-icon" href="assets/favicon.png?v=3">
 
   <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +21,135 @@
   
   <link rel="stylesheet" href="lunar-style.css">
   <style>
+    /* Header Responsive del Administrador de Nodo */
+    .admin-header-responsive {
+      background: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .admin-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .admin-header-logo {
+      font-size: 26px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .admin-header-titles {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .admin-header-titles h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.25;
+    }
+    .admin-header-subtitle {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .admin-header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header-btn-super {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 20px;
+      background: rgba(234,88,12,0.1);
+      color: #EA580C;
+      border: 1px solid rgba(234,88,12,0.25);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .header-btn-shop {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 20px;
+      background: #F1F5F9;
+      color: #475569;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .header-btn-logout {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 20px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    @media (max-width: 640px) {
+      .admin-header-responsive {
+        padding: 10px 14px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .admin-header-brand {
+        flex: 1 1 100%;
+      }
+      .admin-header-titles h2 {
+        font-size: 16px;
+      }
+      .admin-header-subtitle {
+        font-size: 11px;
+      }
+      .admin-header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr 0.9fr;
+        gap: 6px;
+      }
+      .header-btn-super, .header-btn-shop, .header-btn-logout {
+        justify-content: center;
+        padding: 7px 6px;
+        font-size: 11.5px;
+      }
+    }
+
     .admin-metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -166,11 +297,84 @@
       width: 100%;
       overflow-x: hidden;
     }
+    /* Off-Canvas Sidebar Drawer para Móviles */
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 190;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .sidebar-backdrop.active {
+      display: block;
+      opacity: 1;
+    }
+
     @media (max-width: 960px) {
       .admin-layout-wrapper {
         grid-template-columns: 1fr;
       }
+      .admin-sidebar-nav {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 290px !important;
+        max-width: 85vw !important;
+        height: 100vh !important;
+        z-index: 200 !important;
+        box-shadow: 4px 0 25px rgba(0,0,0,0.3) !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto !important;
+        padding: 20px 16px !important;
+        border-right: 1px solid var(--border-color) !important;
+        border-bottom: none !important;
+      }
+      .admin-sidebar-nav.mobile-open {
+        transform: translateX(0) !important;
+      }
+      .mobile-only-close {
+        display: flex !important;
+      }
+      .mobile-menu-toggle-bar {
+        display: flex !important;
+      }
     }
+
+    .mobile-menu-toggle-bar {
+      display: none;
+      background: white;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .btn-mobile-menu-open {
+      background: #F1F5F9;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0F172A;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .btn-mobile-menu-open:hover {
+      background: #E2E8F0;
+      color: var(--primary);
+    }
+
     .admin-sidebar-nav {
       background: white;
       border-right: 1px solid var(--border-color);
@@ -178,15 +382,6 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-    }
-    @media (max-width: 960px) {
-      .admin-sidebar-nav {
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        flex-direction: row;
-        overflow-x: auto;
-        padding: 10px;
-      }
     }
     .sidebar-btn {
       display: flex;
@@ -341,6 +536,108 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Estilos Sincronario Lunar y Calendario */
+    .lunar-calendar-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .lunar-cal-scroll-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
+    }
+    .lunar-cal-table-min {
+      min-width: 600px;
+      width: 100%;
+    }
+    .lunar-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .lunar-cal-header-day {
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748B;
+      padding: 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .lunar-cal-day {
+      background: white;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      min-height: 82px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+      min-width: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .lunar-cal-day:hover {
+      border-color: #94A3B8;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      transform: translateY(-1px);
+    }
+    .lunar-cal-day.other-month {
+      background: #F8FAFC;
+      opacity: 0.4;
+    }
+    .lunar-cal-day.is-today {
+      border: 2px solid var(--primary);
+      background: #F0FDF4;
+    }
+    .lunar-cal-day.has-event {
+      border-color: #CBD5E1;
+    }
+    .lunar-phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 6px;
+      margin-top: 2px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+    }
+    .lunar-phase-nueva { background: #0F172A; color: white; }
+    .lunar-phase-creciente { background: #E0F2FE; color: #0369A1; }
+    .lunar-phase-llena { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+    .lunar-phase-menguante { background: #EDE9FE; color: #6D28D9; }
+    .lunar-event-pill {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 6px;
+      line-height: 1.2;
+      margin-top: 2px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body style="background-color: #F8FAFC; overflow-x: hidden; width: 100%;">
@@ -352,6 +649,17 @@
       <h2 style="font-size: 22px; color: #0F172A; margin-bottom: 4px;" id="admin-login-name">Panel Gestor de Nodo</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 18px;">Ingresa el PIN de 4 dígitos de tu almacén</p>
       
+      <!-- Aviso de estado de nodo en login -->
+      <div id="login-node-notice" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; line-height: 1.4; text-align: left; margin-bottom: 14px;"></div>
+
+      <!-- Selector de nodo en login -->
+      <div style="margin-bottom: 12px; text-align: left;">
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Nodo a Gestionar</label>
+        <select id="loginNodoSelect" class="input-field" style="margin-top: 4px; padding: 8px 12px; font-size: 13px; font-weight: 600;" onchange="changeLoginNode(this.value)">
+          <!-- Inyectado por JS -->
+        </select>
+      </div>
+
       <!-- Selector de ciclo en login -->
       <div style="margin-bottom: 16px; text-align: left;">
         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Compra Lunar a Abrir</label>
@@ -388,38 +696,57 @@
 
   <!-- DASHBOARD PRINCIPAL CON SIDEBAR A LA IZQUIERDA -->
   <div id="admin-dashboard" class="hidden">
-    <header class="shop-header">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <span id="dash-logo" style="font-size: 26px;">🌱</span>
-        <div>
-          <h2 class="admin-title" id="ad-title" style="margin: 0; font-size: 18px; color: var(--primary);">Panel Nodo</h2>
-          <span style="font-size: 11px; color: var(--text-muted);" id="ad-active-cycle-header-text">🌕 Luna Llena en Piscis (Compra Vigente)</span>
+    <!-- BACKDROP PARA EL MENÚ LATERAL EN CELULAR -->
+    <div id="admin-sidebar-backdrop" class="sidebar-backdrop" onclick="toggleMobileSidebar(false)"></div>
+
+    <header class="admin-header-responsive">
+      <div class="admin-header-brand">
+        <span id="dash-logo" class="admin-header-logo">🌱</span>
+        <div class="admin-header-titles">
+          <h2 class="admin-title" id="ad-title">Panel Nodo</h2>
+          <span class="admin-header-subtitle" id="ad-active-cycle-header-text">🌕 Luna Llena en Piscis (Compra Vigente)</span>
         </div>
       </div>
-      <div style="display: flex; gap: 10px; align-items: center;">
-        <a href="superadmin.html" style="padding: 8px 14px; font-size: 12px; font-weight: 700; text-decoration: none; border-radius: 20px; background: rgba(234,88,12,0.1); color: #EA580C; border: 1px solid rgba(234,88,12,0.2); display: flex; align-items: center; gap: 6px;">
-          <i class="fas fa-carrot"></i> Super Admin
+      <div class="admin-header-actions">
+        <a href="superadmin.html" class="header-btn-super">
+          <i class="fas fa-carrot"></i> <span>Super Admin</span>
         </a>
-        <a id="btn-view-shop" href="tienda.html" style="padding: 8px 16px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 20px; background: #F1F5F9; color: #475569; display: flex; align-items: center; gap: 6px;">
-          <i class="fas fa-external-link-alt"></i> Ver Tienda
+        <a id="btn-view-shop" href="tienda.html" class="header-btn-shop">
+          <i class="fas fa-external-link-alt"></i> <span>Ver Tienda</span>
         </a>
-        <button onclick="logout()" style="padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 20px; background: transparent; border: 1px solid var(--border-color); color: #64748B;">
-          <i class="fas fa-sign-out-alt"></i> Salir
+        <button onclick="logout()" class="header-btn-logout">
+          <i class="fas fa-sign-out-alt"></i> <span>Salir</span>
         </button>
       </div>
     </header>
 
+    <!-- BARRA DE ACCESO AL MENÚ LATERAL EN CELULARES -->
+    <div class="mobile-menu-toggle-bar">
+      <button type="button" class="btn-mobile-menu-open" onclick="toggleMobileSidebar(true)">
+        <i class="fas fa-bars" style="color: var(--primary);"></i>
+        <span>☰ Módulos del Nodo</span>
+      </button>
+      <span style="font-size: 12px; font-weight: 700; color: var(--primary);" id="mobile-current-module-badge">
+        ⊞ Vista General
+      </span>
+    </div>
+
     <div class="admin-layout-wrapper">
       <!-- BARRA LATERAL IZQUIERDA -->
-      <aside class="admin-sidebar-nav">
-        <div style="padding: 6px 8px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
-          <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Módulos del Nodo</div>
-          <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-top: 2px;" id="sidebar-nodo-title">Nodo Escobar</div>
+      <aside class="admin-sidebar-nav" id="admin-sidebar">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 8px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Módulos del Nodo</div>
+            <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-top: 2px;" id="sidebar-nodo-title">Nodo Escobar</div>
+          </div>
+          <button type="button" class="btn-action-icon mobile-only-close" style="display: none; width: 32px; height: 32px;" onclick="toggleMobileSidebar(false)" title="Cerrar Menú">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
 
-        <button class="sidebar-btn active" id="sbtn-all" onclick="switchNodeSection('all')">
-          <i class="fas fa-th-large" style="color: var(--primary);"></i>
-          <span>Vista General (Todo)</span>
+        <button class="sidebar-btn active" id="sbtn-info" onclick="switchNodeSection('info')">
+          <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+          <span>Información General</span>
         </button>
 
         <button class="sidebar-btn" id="sbtn-compiled" onclick="switchNodeSection('compiled')">
@@ -430,6 +757,11 @@
         <button class="sidebar-btn" id="sbtn-vrdedores" onclick="switchNodeSection('vrdedores')">
           <i class="fas fa-users" style="color: #10A352;"></i>
           <span>Equipo de Vrdedores</span>
+        </button>
+
+        <button class="sidebar-btn" id="sbtn-circulos" onclick="switchNodeSection('circulos')">
+          <i class="fas fa-users-cog" style="color: #10B981;"></i>
+          <span>Círculos del Nodo</span>
         </button>
 
         <button class="sidebar-btn" id="sbtn-economy" onclick="switchNodeSection('economy')">
@@ -450,6 +782,11 @@
         <button class="sidebar-btn" id="sbtn-broadcast" onclick="switchNodeSection('broadcast')">
           <i class="fas fa-bullhorn" style="color: #EC4899;"></i>
           <span>Difusión y Redes</span>
+        </button>
+
+        <button class="sidebar-btn" id="sbtn-cycle" onclick="switchNodeSection('cycle')">
+          <i class="fas fa-moon" style="color: #6366F1;"></i>
+          <span>Sincronario Lunar</span>
         </button>
 
         <button class="sidebar-btn" id="sbtn-profile" onclick="switchNodeSection('profile')">
@@ -485,41 +822,83 @@
           </div>
         </div>
 
-        <!-- Banner Estado Lunar -->
-        <div class="lunar-banner-card" style="margin: 0 0 20px 0;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
+        <!-- =======================================================
+             SECCIÓN 0: INFORMACIÓN GENERAL Y MÉTRICAS CLAVE
+             ======================================================= -->
+        <div id="sec-info-wrap" class="compiled-section">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
             <div>
-              <h3 style="color: var(--accent); margin-bottom: 4px; font-size: 20px;" id="ad-lunar-title">🌕 Luna Llena en Piscis</h3>
-              <p style="font-size: 13px; margin: 0; color: #CBD5E1;" id="ad-lunar-status">Cargando fechas de acopio...</p>
+              <h3 style="margin: 0; font-size: 19px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+                INFORMACIÓN GENERAL DEL NODO
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Resumen ejecutivo del ciclo activo, métricas de acopio y balance de pedidos.
+              </p>
             </div>
-            <div style="font-size: 30px;" id="ad-lunar-emoji">🌕</div>
           </div>
-        </div>
 
-        <!-- Métricas Resumen -->
-        <div class="admin-metrics-grid" id="node-metrics-top">
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-pedidos" style="color: var(--primary);">0</div>
-            <div class="metric-desc">Pedidos en Ciclo</div>
+          <!-- Banner Estado Lunar -->
+          <div class="lunar-banner-card" style="margin: 0 0 20px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h3 style="color: var(--accent); margin-bottom: 4px; font-size: 20px;" id="ad-lunar-title">🌕 Luna Llena en Piscis</h3>
+                <p style="font-size: 13px; margin: 0; color: #CBD5E1;" id="ad-lunar-status">Cargando fechas de acopio...</p>
+              </div>
+              <div style="font-size: 30px;" id="ad-lunar-emoji">🌕</div>
+            </div>
           </div>
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-socios" style="color: #2563EB;">0</div>
-            <div class="metric-desc">Socios Activos</div>
+
+          <!-- Métricas Resumen -->
+          <div class="admin-metrics-grid" id="node-metrics-top" style="margin-bottom: 24px;">
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-pedidos" style="color: var(--primary);">0</div>
+              <div class="metric-desc">Pedidos en Ciclo</div>
+            </div>
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-socios" style="color: #2563EB;">0</div>
+              <div class="metric-desc">Socios Activos</div>
+            </div>
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-recaudado" style="color: #059669;">$0</div>
+              <div class="metric-desc">Total Recaudado</div>
+            </div>
+            <div class="metric-card-clean">
+              <div class="metric-num" id="ad-m-unidades" style="color: #D97706;">0</div>
+              <div class="metric-desc">Unidades Pedidas</div>
+            </div>
           </div>
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-recaudado" style="color: #059669;">$0</div>
-            <div class="metric-desc">Total Recaudado</div>
-          </div>
-          <div class="metric-card-clean">
-            <div class="metric-num" id="ad-m-unidades" style="color: #D97706;">0</div>
-            <div class="metric-desc">Unidades Pedidas</div>
+
+          <!-- Accesos Rápidos a Módulos del Nodo -->
+          <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #0F172A; font-weight: 700;">Acceso Rápido a Módulos de Trabajo:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+              <button type="button" onclick="switchNodeSection('compiled')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-boxes" style="color: #2563EB;"></i> <span>Compilado y Fichas</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('vrdedores')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-users" style="color: #10A352;"></i> <span>Equipo Vrdedores</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('economy')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-chart-pie" style="color: #059669;"></i> <span>Balance & Ganancias</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('orders')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-clipboard-list" style="color: #D97706;"></i> <span>Pedidos y Delivery</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('crm')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-address-book" style="color: #8B5CF6;"></i> <span>Base de Socios</span>
+              </button>
+              <button type="button" onclick="switchNodeSection('broadcast')" class="sidebar-btn" style="background: white; border: 1px solid var(--border-color); justify-content: flex-start;">
+                <i class="fas fa-bullhorn" style="color: #EC4899;"></i> <span>Difusión y Redes</span>
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- =======================================================
              SECCIÓN 1: COMPILADO DE ACOPIO Y FICHAS DE PRODUCTO
              ======================================================= -->
-        <div id="sec-compiled-wrap" class="compiled-section">
+        <div id="sec-compiled-wrap" class="compiled-section hidden">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
             <div>
               <h3 style="margin: 0; font-size: 19px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
@@ -601,6 +980,31 @@
           </div>
 
           <div id="ad-vrdedores-list-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+        <!-- =======================================================
+             SECCIÓN NUEVA: CÍRCULOS COMUNITARIOS DEL NODO
+             ======================================================= -->
+        <div id="sec-circulos-wrap" class="hidden" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 18px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-users" style="color: #10B981;"></i>
+                CÍRCULOS COMUNITARIOS DE ESTE NODO
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+                Grupos barriales, edificios y compras colectivas que consolidan sus entregas en esta sede.
+              </p>
+            </div>
+
+            <button class="btn-checkout-cta" style="padding: 8px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px; background: #10B981;" onclick="openNodeCreateCirculoModal()">
+              <i class="fas fa-plus"></i> Crear Círculo en este Nodo
+            </button>
+          </div>
+
+          <div id="ad-circulos-list-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
             <!-- Inyectado por JS -->
           </div>
         </div>
@@ -865,6 +1269,205 @@
             </div>
           </div>
 
+          <!-- MEDIATECA Y RECURSOS DE DIFUSIÓN (TIPO GOOGLE DRIVE) -->
+          <div style="grid-column: 1 / -1; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
+              <div>
+                <h4 style="margin: 0; font-size: 17px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+                  <i class="fab fa-google-drive" style="color: #F59E0B;"></i> Mediateca & Recursos de Difusión (Drive Vrde)
+                </h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 2px 0 0;">
+                  Flyers, videos, mensajes de WhatsApp y catálogos provistos por Vrde Central listos para usar en tus canales y estados barriales.
+                </p>
+              </div>
+              
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="node-media-search-input" class="input-field" placeholder="🔍 Buscar material..." style="padding: 7px 12px; font-size: 13px; width: 200px;" oninput="filterNodeMediaBySearch(this.value)">
+              </div>
+            </div>
+
+            <!-- Filtros de Mediateca del Nodo -->
+            <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;" id="node-media-filter-tabs">
+              <button type="button" class="prod-filter-tab active" id="nmftab-ALL" onclick="filterNodeMediaTab('ALL')">
+                <i class="fas fa-th"></i> Todos (<span id="nmcount-ALL">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-imagen" onclick="filterNodeMediaTab('imagen')">
+                <i class="fas fa-image" style="color: #2563EB;"></i> Flyers & Fotos (<span id="nmcount-imagen">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-texto" onclick="filterNodeMediaTab('texto')">
+                <i class="fas fa-comment-alt" style="color: #10A352;"></i> Textos & Copies (<span id="nmcount-texto">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-documento" onclick="filterNodeMediaTab('documento')">
+                <i class="fas fa-file-pdf" style="color: #EF4444;"></i> Catálogos & PDFs (<span id="nmcount-documento">0</span>)
+              </button>
+              <button type="button" class="prod-filter-tab" id="nmftab-enlace" onclick="filterNodeMediaTab('enlace')">
+                <i class="fab fa-google-drive" style="color: #F59E0B;"></i> Google Drive (<span id="nmcount-enlace">0</span>)
+              </button>
+            </div>
+
+            <!-- Grilla de Mediateca en Panel de Nodo -->
+            <div id="node-media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+              <!-- Inyectado por JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =======================================================
+             SECCIÓN: SINCRONARIO LUNAR & LOGÍSTICA DEL NODO
+             ======================================================= -->
+        <div id="sec-cycle-wrap" class="hidden">
+          
+          <!-- Tarjeta de Fase Lunar en Vivo y Estado del Ciclo General (Solo Lectura) -->
+          <div style="background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%); color: white; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 18px;">
+                <div id="node-live-moon-emoji" style="font-size: 54px; filter: drop-shadow(0 0 16px rgba(255,255,255,0.4));">🌑</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                    <span id="node-live-moon-phase-name" style="font-size: 22px; font-weight: 700; color: #F8FAFC;">Luna en tránsito</span>
+                    <span id="node-live-moon-zodiac" style="font-size: 13px; background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 12px; font-weight: 600; color: #E2E8F0;">Piscis ♓</span>
+                  </div>
+                  <div style="font-size: 13.5px; color: #94A3B8;">
+                    Iluminación: <strong id="node-live-moon-illum" style="color: #FCD34D;">--%</strong> • Fase: <strong id="node-live-moon-days">--</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estado Tienda y Ciclo Vigente -->
+              <div style="text-align: right; background: rgba(255,255,255,0.06); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-bottom: 4px;">
+                  <span style="font-size: 10.5px; text-transform: uppercase; background: rgba(16,185,129,0.2); color: #34D399; padding: 3px 9px; border-radius: 10px; font-weight: 800; letter-spacing: 0.3px;">🔒 Logística General Vrde</span>
+                </div>
+                <div id="node-cycle-name" style="font-size: 18px; font-weight: 800; color: #D4F1A0; margin: 2px 0;">🌑 Luna Llena en Piscis</div>
+                <div id="node-cycle-details" style="font-size: 12.5px; color: #E2E8F0;">Apertura activa • Cierra en 6 días</div>
+              </div>
+            </div>
+
+            <!-- Barra de Progreso del Ciclo Actual -->
+            <div style="margin-top: 18px; background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; overflow: hidden;">
+              <div id="node-cycle-progress-bar" style="background: linear-gradient(90deg, #10A352, #F59E0B); height: 100%; width: 45%; border-radius: 10px; transition: width 0.4s ease;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #94A3B8; margin-top: 6px; flex-wrap: wrap; gap: 6px;">
+              <span id="node-cycle-start-label">🟢 Apertura Tienda: --</span>
+              <span id="node-cycle-close-label">🟡 Cierre Compras (Luna Llena): --</span>
+              <span id="node-cycle-delivery-label">📦 Entrega de Vrde al Nodo: --</span>
+            </div>
+          </div>
+
+          <!-- CALENDARIO LUNAR MES A MES (CONSULTA Y ORGANIZACIÓN) -->
+          <div class="lunar-calendar-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" class="btn-action-icon" style="width: 36px; height: 36px;" onclick="navigateNodeLunarMonth(-1)" title="Mes Anterior">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3 id="node-cal-current-month-label" style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0; min-width: 160px; text-align: center;">Agosto 2026</h3>
+                <button type="button" class="btn-action-icon" style="width: 36px; height: 36px;" onclick="navigateNodeLunarMonth(1)" title="Mes Siguiente">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+
+              <div style="display: flex; gap: 8px;">
+                <button type="button" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 12.5px; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer;" onclick="goCurrentNodeLunarMonth()">
+                  📍 Mes Actual
+                </button>
+              </div>
+            </div>
+
+            <!-- Grilla del Calendario -->
+            <div class="lunar-cal-scroll-wrapper">
+              <div class="lunar-cal-table-min">
+                <div class="lunar-cal-grid" style="margin-bottom: 6px;">
+                  <div class="lunar-cal-header-day">Lun</div>
+                  <div class="lunar-cal-header-day">Mar</div>
+                  <div class="lunar-cal-header-day">Mié</div>
+                  <div class="lunar-cal-header-day">Jue</div>
+                  <div class="lunar-cal-header-day">Vie</div>
+                  <div class="lunar-cal-header-day">Sáb</div>
+                  <div class="lunar-cal-header-day">Dom</div>
+                </div>
+                <div class="lunar-cal-grid" id="node-lunar-calendar-days-container">
+                  <!-- Inyectado por JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Leyenda Explicativa -->
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #F1F5F9; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 12px; color: #64748B;">
+              <div>🌑 <strong>Luna Nueva:</strong> Apertura de tienda comunitaria</div>
+              <div>🌓 <strong>Cuarto Creciente:</strong> Crecimiento del acopio</div>
+              <div>🌕 <strong>Luna Llena:</strong> Cierre de compras y consolidación</div>
+              <div>🌗 <strong>Cuarto Menguante:</strong> Despacho y entrega en nodos</div>
+            </div>
+          </div>
+
+          <!-- MÓDULO DE LOGÍSTICA Y ENTREGA LOCAL DEL NODO (CONFIGURABLE POR EL NODO) -->
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 30px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid #F1F5F9; padding-bottom: 14px;">
+              <div>
+                <h4 style="font-size: 18px; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+                  <i class="fas fa-truck-loading" style="color: #10A352;"></i> Logística y Entrega Local de tu Nodo
+                </h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px; margin-bottom: 0;">
+                  Definí los días, horarios y pautas para que los miembros de tu nodo retiren sus pedidos una vez que Vrde entrega en tu espacio.
+                </p>
+              </div>
+              <div style="background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-check-circle"></i> Configurable por tu Nodo
+              </div>
+            </div>
+
+            <!-- Banner comparativo de logística: Central vs Local -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: var(--radius-md); padding: 16px;">
+                <div style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">1. Entrega de Vrde a tu Nodo (Central)</div>
+                <div style="font-size: 15px; font-weight: 700; color: #0F172A; margin-top: 6px;" id="node-box-vrde-delivery">📦 Fecha de Entrega: --</div>
+                <div style="font-size: 12px; color: #64748B; margin-top: 4px;">Fijada por la logística general de Vrde Club para abastecer a todos los nodos.</div>
+              </div>
+
+              <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-md); padding: 16px;">
+                <div style="font-size: 11px; font-weight: 800; color: #065F46; text-transform: uppercase; letter-spacing: 0.5px;">2. Tu Entrega Local a Miembros (Tu Nodo)</div>
+                <div style="font-size: 15px; font-weight: 700; color: #047857; margin-top: 6px;" id="node-box-local-delivery-preview">🌱 Días y Horarios: --</div>
+                <div style="font-size: 12px; color: #065F46; margin-top: 4px;">Información comunicada a tus vecinos y socios que eligen este nodo de retiro.</div>
+              </div>
+            </div>
+
+            <!-- Formulario de Configuración de Entrega Local -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+              <div class="input-field-group">
+                <label><i class="fas fa-calendar-check" style="color: #10A352; margin-right: 4px;"></i> Días y Horarios de Retiro / Entrega en tu Nodo</label>
+                <input type="text" id="nodo-cycle-entrega-dia" class="input-field" placeholder="Ej: Miércoles 17/04 de 16 a 20hs y Jueves 18/04 de 10 a 14hs" oninput="updateNodeDeliveryPreview()">
+              </div>
+
+              <div class="input-field-group">
+                <label><i class="fas fa-map-marker-alt" style="color: #2563EB; margin-right: 4px;"></i> Dirección / Punto de Retiro Específico</label>
+                <input type="text" id="nodo-cycle-entrega-dir" class="input-field" placeholder="Ej: Calle Las Lilas 450, Almacén Escobar" oninput="updateNodeDeliveryPreview()">
+              </div>
+            </div>
+
+            <div class="input-field-group" style="margin-top: 8px;">
+              <label><i class="fas fa-info-circle" style="color: #8B5CF6; margin-right: 4px;"></i> Indicaciones y Pautas para los Miembros del Nodo</label>
+              <textarea id="nodo-cycle-entrega-instrucciones" class="input-field" rows="2" placeholder="Ej: Por favor traer bolsas o canastas propias. Si retira un comisionista o amigo, avisar con anticipación por WhatsApp." oninput="updateNodeDeliveryPreview()"></textarea>
+            </div>
+
+            <div class="input-field-group">
+              <label><i class="fab fa-whatsapp" style="color: #25D366; margin-right: 4px;"></i> WhatsApp de Coordinación de Entrega</label>
+              <input type="text" id="nodo-cycle-entrega-wsp" class="input-field" placeholder="Ej: 11 3456-7890">
+            </div>
+
+            <!-- Botones de Acción -->
+            <div style="display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+              <button type="button" class="btn-checkout-cta" style="flex: 1; min-width: 240px; padding: 13px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="saveNodeDeliveryConfig()">
+                <i class="fas fa-save"></i> Guardar Logística de Entrega del Nodo
+              </button>
+              <button type="button" class="btn-outline-action" style="flex: 1; min-width: 240px; padding: 13px; font-size: 14px; background: #25D366; color: white; border-color: #25D366; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="copyNodeDeliveryBroadcast()">
+                <i class="fab fa-whatsapp"></i> Copiar Mensaje de Entrega para WhatsApp
+              </button>
+            </div>
+            <div id="nodo-cycle-save-msg" style="font-size: 13px; font-weight: 700; color: var(--primary); text-align: center; margin-top: 10px; min-height: 20px;"></div>
+          </div>
+
         </div>
 
         <!-- =======================================================
@@ -969,9 +1572,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js"></script>
+  <script src="lunar-engine.js?v=7"></script>
   <script>
-    let CURRENT_REF = 'escobar';
+    let CURRENT_REF = '';
     let CURRENT_CICLO_ID = 'piscis-ago-2026';
     let CICLO_LUNAR = null;
     let ACTIVE_PRODUCT_FILTER = 'ALL';
@@ -979,17 +1582,68 @@
     let ORDERS_DATA = [];
 
     document.addEventListener('DOMContentLoaded', () => {
+      const allNodos = LunarEngine.obtenerNodos(false);
+      const archivados = LunarEngine.obtenerNodosArchivados();
+      const nodeKeys = Object.keys(allNodos);
       const urlParams = new URLSearchParams(window.location.search);
-      const refParam = urlParams.get('ref');
-      const allNodos = LunarEngine.obtenerNodos();
-      if (refParam && allNodos[refParam.toLowerCase()]) {
-        CURRENT_REF = refParam.toLowerCase();
+      const refParam = urlParams.get('ref') ? urlParams.get('ref').toLowerCase() : null;
+      
+      const noticeBox = document.getElementById('login-node-notice');
+
+      if (refParam) {
+        if (allNodos[refParam]) {
+          CURRENT_REF = refParam;
+          const n = allNodos[refParam];
+          if (n.activo === false || n.pausado) {
+            if (noticeBox) {
+              noticeBox.style.display = 'block';
+              noticeBox.style.background = '#FEF3C7';
+              noticeBox.style.color = '#92400E';
+              noticeBox.style.border = '1px solid #FCD34D';
+              noticeBox.innerHTML = `⏳ <strong>${n.nombre}</strong> se encuentra en <strong>reposo temporal</strong>. Puedes ingresar con tu PIN para reactivarlo o consultar registros.`;
+            }
+          }
+        } else {
+          // El nodo solicitado fue eliminado o no existe
+          const arch = archivados.find(a => a.id === refParam);
+          const nombreArch = arch ? arch.nombre : `Nodo "${refParam}"`;
+          
+          CURRENT_REF = nodeKeys.length > 0 ? nodeKeys[0] : 'vicente_lopez';
+          
+          // Actualizar URL limpia
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, '', `admin.html?ref=${CURRENT_REF}`);
+          }
+
+          if (noticeBox) {
+            noticeBox.style.display = 'block';
+            noticeBox.style.background = '#FEE2E2';
+            noticeBox.style.color = '#991B1B';
+            noticeBox.style.border = '1px solid #FECACA';
+            noticeBox.innerHTML = `⚠️ <strong>${nombreArch}</strong> ya no se encuentra disponible o fue dado de baja. Selecciona un nodo disponible a continuación para ingresar.`;
+          }
+        }
+      } else if (nodeKeys.length > 0) {
+        CURRENT_REF = nodeKeys[0];
+      } else {
+        CURRENT_REF = 'vicente_lopez';
       }
       
       const cicloActual = LunarEngine.obtenerCicloActual();
       CURRENT_CICLO_ID = cicloActual.id || 'piscis-ago-2026';
 
-      // Poblar selector en login
+      // Poblar selector de nodo en login
+      let nodeSelectHtml = '';
+      nodeKeys.forEach(k => {
+        const n = allNodos[k];
+        const sel = (k === CURRENT_REF) ? 'selected' : '';
+        const pausedTag = (n.activo === false || n.pausado) ? ' ⏳ (En Reposo)' : '';
+        nodeSelectHtml += `<option value="${k}" ${sel}>${n.nombre}${pausedTag}</option>`;
+      });
+      const loginNodoSel = document.getElementById('loginNodoSelect');
+      if (loginNodoSel) loginNodoSel.innerHTML = nodeSelectHtml;
+
+      // Poblar selector de ciclo en login
       const ciclos = LunarEngine.obtenerListaCiclos();
       let selectHtml = '';
       ciclos.forEach(c => {
@@ -1005,10 +1659,37 @@
       }
     });
 
+    function changeLoginNode(nodeId) {
+      CURRENT_REF = nodeId;
+      const allNodos = LunarEngine.obtenerNodos(false);
+      const loginName = document.getElementById('admin-login-name');
+      if (loginName && allNodos[CURRENT_REF]) {
+        loginName.innerText = `Panel Gestor • ${allNodos[CURRENT_REF].nombre}`;
+      }
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, '', `admin.html?ref=${CURRENT_REF}`);
+      }
+      const noticeBox = document.getElementById('login-node-notice');
+      if (noticeBox) {
+        const n = allNodos[CURRENT_REF];
+        if (n && (n.activo === false || n.pausado)) {
+          noticeBox.style.display = 'block';
+          noticeBox.style.background = '#FEF3C7';
+          noticeBox.style.color = '#92400E';
+          noticeBox.style.border = '1px solid #FCD34D';
+          noticeBox.innerHTML = `⏳ <strong>${n.nombre}</strong> se encuentra en <strong>reposo temporal</strong>. Puedes ingresar con tu PIN para reactivarlo o consultar registros.`;
+        } else {
+          noticeBox.style.display = 'none';
+        }
+      }
+    }
+
     function attemptLogin() {
       const pin = document.getElementById('pinInput').value;
       const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      const nodeKeys = Object.keys(nodosObj);
+      const safeKey = CURRENT_REF && nodosObj[CURRENT_REF] ? CURRENT_REF : (nodeKeys[0] || 'vicente_lopez');
+      const nodoData = nodosObj[safeKey] || {};
 
       const loginSelect = document.getElementById('loginCicloSelect');
       if (loginSelect) {
@@ -1073,12 +1754,40 @@
 
     function loadDashboard() {
       CICLO_LUNAR = LunarEngine.obtenerCicloPorId(CURRENT_CICLO_ID);
-      const nodosObj = LunarEngine.obtenerNodos();
-      const nodoData = nodosObj[CURRENT_REF] || nodosObj['escobar'];
+      const nodosObj = LunarEngine.obtenerNodos(false);
+      const nodeKeys = Object.keys(nodosObj);
+      if (!CURRENT_REF || !nodosObj[CURRENT_REF]) {
+        CURRENT_REF = nodeKeys.length > 0 ? nodeKeys[0] : 'vicente_lopez';
+      }
+      const nodoData = nodosObj[CURRENT_REF] || {};
 
-      document.getElementById('ad-title').innerText = `Panel de ${nodoData.nombre}`;
-      document.getElementById('dash-logo').innerText = nodoData.logo || '🌱';
+      document.getElementById('ad-title').innerText = `Panel de ${nodoData.nombre || 'Nodo'}`;
+      const safeDashLogo = (nodoData.logo && nodoData.logo.trim().toLowerCase() !== 'x') ? nodoData.logo : '🌑';
+      document.getElementById('dash-logo').innerText = safeDashLogo;
       document.getElementById('btn-view-shop').href = `tienda.html?ref=${CURRENT_REF}`;
+
+      // Si el nodo está en reposo, mostrar aviso con botón de reactivar
+      const existingWarning = document.getElementById('admin-paused-node-banner');
+      if (existingWarning) existingWarning.remove();
+
+      if (nodoData.activo === false || nodoData.pausado) {
+        const pausedBanner = document.createElement('div');
+        pausedBanner.id = 'admin-paused-node-banner';
+        pausedBanner.style = "background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;";
+        pausedBanner.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px; color: #92400E; font-size: 13.5px;">
+            <span style="font-size: 24px;">⏳</span>
+            <div>
+              <strong>Nodo en Reposo Temporal:</strong> Los compradores que ingresen a la tienda ven la landing de "Nodo Cerrado".
+            </div>
+          </div>
+          <button onclick="reactivarNodoDesdeAdmin()" style="background: #10A352; color: white; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-play"></i> Reactivar Nodo Ahora
+          </button>
+        `;
+        const mainView = document.querySelector('.admin-main-view');
+        if (mainView) mainView.prepend(pausedBanner);
+      }
 
       // Banner Lunar
       document.getElementById('ad-lunar-title').innerText = CICLO_LUNAR.nombre;
@@ -1110,9 +1819,12 @@
       renderExcelLunarTabs();
       renderCompiledSection();
       renderVrdedoresSection();
+      renderNodeCirculosSection();
       renderEconomySection();
       renderOrdersList();
       renderCrmSection();
+      renderNodeCycleSection();
+      renderNodeMediaSection();
 
       // Sidebar title
       document.getElementById('sidebar-nodo-title').innerText = nodoData.nombre;
@@ -1148,32 +1860,307 @@
     }
 
     // =================================================================
-    // NAVEGACIÓN MODULAR DE SECCIONES (SIDEBAR IZQUIERDA)
+    // NAVEGACIÓN MODULAR DE SECCIONES (SIDEBAR IZQUIERDA Y MÓVIL)
     // =================================================================
 
+    function toggleMobileSidebar(open) {
+      const sidebar = document.getElementById('admin-sidebar');
+      const backdrop = document.getElementById('admin-sidebar-backdrop');
+      if (open) {
+        if (sidebar) sidebar.classList.add('mobile-open');
+        if (backdrop) backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      } else {
+        if (sidebar) sidebar.classList.remove('mobile-open');
+        if (backdrop) backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
     function switchNodeSection(secId) {
+      toggleMobileSidebar(false); // Cierra automáticamente el drawer en celular
+
+      // Compatibilidad con invocaciones antiguas de 'all'
+      if (secId === 'all') secId = 'info';
+
+      // Actualizar badge en la barra móvil
+      const moduleNames = {
+        info: '📊 Información General',
+        compiled: '📦 Compilado y Fichas',
+        vrdedores: '👥 Equipo de Vrdedores',
+        circulos: '👥 Círculos del Nodo',
+        economy: '📊 Balance & Ganancias',
+        orders: '📋 Pedidos y Delivery',
+        crm: '📇 Base de Datos y Socios',
+        broadcast: '📢 Difusión y Redes',
+        cycle: '🌑 Sincronario Lunar',
+        profile: '⚙️ Perfil del Nodo'
+      };
+      const badgeEl = document.getElementById('mobile-current-module-badge');
+      if (badgeEl && moduleNames[secId]) {
+        badgeEl.innerText = moduleNames[secId];
+      }
+
       document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById(`sbtn-${secId}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const allWraps = ['compiled', 'vrdedores', 'economy', 'orders', 'crm', 'broadcast', 'profile'];
+      const allWraps = ['info', 'compiled', 'vrdedores', 'circulos', 'economy', 'orders', 'crm', 'broadcast', 'cycle', 'profile'];
       
-      if (secId === 'all') {
-        document.getElementById('node-metrics-top').classList.remove('hidden');
-        allWraps.forEach(w => {
-          const el = document.getElementById(`sec-${w}-wrap`);
-          if (el) el.classList.remove('hidden');
-        });
-      } else {
-        allWraps.forEach(w => {
-          const el = document.getElementById(`sec-${w}-wrap`);
-          if (el) {
-            el.classList.toggle('hidden', w !== secId);
-          }
-        });
+      allWraps.forEach(w => {
+        const el = document.getElementById(`sec-${w}-wrap`);
+        if (el) {
+          el.classList.toggle('hidden', w !== secId);
+        }
+      });
+
+      if (secId === 'circulos') {
+        renderNodeCirculosSection();
+      }
+      if (secId === 'cycle') {
+        renderNodeCycleSection();
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =================================================================
+    // GESTIÓN DE CÍRCULOS DEL NODO
+    // =================================================================
+
+    function renderNodeCirculosSection() {
+      const container = document.getElementById('ad-circulos-list-container');
+      if (!container) return;
+
+      const nodoId = CURRENT_REF || 'lomaverde';
+      const circulos = LunarEngine.obtenerCirculos(nodoId, false);
+
+      if (circulos.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #F8FAFC; border: 1px dashed var(--border-color); border-radius: var(--radius-md); color: var(--text-muted);">
+            <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+            <h4 style="font-size: 16px; color: #0F172A; margin: 0 0 4px;">No hay Círculos en este Nodo</h4>
+            <p style="font-size: 13px; margin: 0 0 16px;">Creá el primer círculo vecinal para tu comunidad barrial.</p>
+            <button class="btn-checkout-cta" style="padding: 8px 16px; font-size: 12.5px; background: #10B981;" onclick="openNodeCreateCirculoModal()">
+              + Crear Círculo
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = circulos.map(c => {
+        const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+        const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+        const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+        const isPriv = c.privacidad === 'cerrado';
+        const num = (c.whatsapp || '').replace(/\D/g, '');
+
+        return `
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm);">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                  <span style="font-size: 9.5px; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${isPriv ? 'background: #FEF3C7; color: #92400E;' : 'background: #ECFDF5; color: #059669;'}">
+                    ${isPriv ? '🔒 PRIVADO' : '🌐 ABIERTO'}
+                  </span>
+                  <span style="font-size: 9.5px; font-weight: 800; background: #F1F5F9; color: #475569; padding: 2px 6px; border-radius: 4px;">
+                    🔥 ${escala.tierNombre}
+                  </span>
+                </div>
+                <div style="display: flex; gap: 4px;">
+                  <button type="button" class="btn-action-icon" style="width: 26px; height: 26px; font-size: 11px;" onclick="openNodeEditCirculoModal('${c.id}')" title="Editar">
+                    <i class="fas fa-edit" style="color: #2563EB;"></i>
+                  </button>
+                  <button type="button" class="btn-action-icon" style="width: 26px; height: 26px; font-size: 11px;" onclick="deleteNodeCirculo('${c.id}')" title="Eliminar">
+                    <i class="fas fa-trash-alt" style="color: #EF4444;"></i>
+                  </button>
+                </div>
+              </div>
+
+              <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 4px;">${c.nombre}</h4>
+              
+              <div style="font-size: 12.5px; color: #334155; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <span>👑 <strong>${c.anfitrion}</strong></span>
+                ${num ? `
+                  <a href="https://wa.me/${num}" target="_blank" style="color: #16A34A; text-decoration: none; font-size: 11.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; background: #F0FDF4; padding: 2px 6px; border-radius: 4px;">
+                    <i class="fab fa-whatsapp"></i> Chat
+                  </a>
+                ` : ''}
+              </div>
+
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px;">
+                ${c.direccionEntrega ? `📍 ${c.direccionEntrega}` : '📦 Retiro en sede'}
+              </div>
+
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fas fa-users" style="color: #10B981;"></i> <strong>${integrantes.length}</strong> integrantes</span>
+                <span style="font-weight: 700; color: #059669;">${stats.unidadesTotal || 0} u. ($${(stats.totalRecaudado || 0).toLocaleString('es-AR')})</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn-checkout-cta" style="flex: 1; padding: 7px; font-size: 11.5px; background: #0F172A; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="openNodeCirculoMembersModal('${c.id}')">
+                <i class="fas fa-users"></i> Ver Integrantes
+              </button>
+              <button type="button" class="btn-action-icon" style="width: 32px; height: 32px; border-radius: 6px; background: #F1F5F9;" onclick="navigator.clipboard.writeText(LunarEngine.generarLinkCirculo(c)); alert('¡Enlace copiado!');" title="Copiar Enlace">
+                <i class="fas fa-link" style="color: #059669;"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openNodeCreateCirculoModal() {
+      openNodeEditCirculoModal(null);
+    }
+
+    function openNodeEditCirculoModal(circuloId) {
+      const modal = document.getElementById('node-modal-circulo-edit');
+      const title = document.getElementById('node-circ-modal-title');
+      const hiddenId = document.getElementById('node-edit-circ-id');
+      const inpNombre = document.getElementById('node-edit-circ-nombre');
+      const inpAnfitrion = document.getElementById('node-edit-circ-anfitrion');
+      const inpWhatsapp = document.getElementById('node-edit-circ-whatsapp');
+      const inpLinkGwsp = document.getElementById('node-edit-circ-linkgwsp');
+      const selPriv = document.getElementById('node-edit-circ-privacidad');
+      const inpDir = document.getElementById('node-edit-circ-direccion');
+
+      if (circuloId) {
+        const c = LunarEngine.obtenerCirculo(circuloId);
+        if (!c) return;
+        title.innerText = `Editar Círculo: ${c.nombre}`;
+        hiddenId.value = c.id;
+        inpNombre.value = c.nombre || '';
+        inpAnfitrion.value = c.anfitrion || '';
+        inpWhatsapp.value = c.whatsapp || '';
+        inpLinkGwsp.value = c.linkGrupoWsp || '';
+        selPriv.value = c.privacidad || 'abierto';
+        inpDir.value = c.direccionEntrega || '';
+      } else {
+        title.innerText = 'Nuevo Círculo Comunitario';
+        hiddenId.value = '';
+        inpNombre.value = '';
+        inpAnfitrion.value = '';
+        inpWhatsapp.value = '';
+        inpLinkGwsp.value = '';
+        selPriv.value = 'abierto';
+        inpDir.value = '';
+      }
+
+      openModal('node-modal-circulo-edit');
+    }
+
+    function submitNodeCirculo() {
+      const circId = document.getElementById('node-edit-circ-id').value;
+      const nombre = document.getElementById('node-edit-circ-nombre').value.trim();
+      const anfitrion = document.getElementById('node-edit-circ-anfitrion').value.trim();
+      const whatsapp = document.getElementById('node-edit-circ-whatsapp').value.trim();
+      const linkGrupoWsp = document.getElementById('node-edit-circ-linkgwsp').value.trim();
+      const privacidad = document.getElementById('node-edit-circ-privacidad').value;
+      const direccionEntrega = document.getElementById('node-edit-circ-direccion').value.trim();
+      const nodoId = CURRENT_REF || 'lomaverde';
+
+      if (!nombre || !anfitrion || !whatsapp) {
+        alert('Por favor completá los campos obligatorios (Nombre, Anfitrión y WhatsApp).');
+        return;
+      }
+
+      if (circId) {
+        LunarEngine.actualizarCirculo(circId, {
+          nombre,
+          anfitrion,
+          whatsapp,
+          linkGrupoWsp,
+          nodoId,
+          privacidad,
+          direccionEntrega
+        });
+      } else {
+        LunarEngine.crearCirculo({
+          nombre,
+          anfitrion,
+          whatsapp,
+          linkGrupoWsp,
+          nodoId,
+          privacidad,
+          direccionEntrega
+        });
+      }
+
+      closeModal('node-modal-circulo-edit');
+      renderNodeCirculosSection();
+    }
+
+    function openNodeCirculoMembersModal(circuloId) {
+      const c = LunarEngine.obtenerCirculo(circuloId);
+      if (!c) return;
+
+      const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+      const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+      const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+
+      document.getElementById('node-circ-m-title').innerText = `Círculo: ${c.nombre}`;
+      document.getElementById('node-circ-m-subtitle').innerText = `Anfitrión/a: ${c.anfitrion} (${c.privacidad === 'cerrado' ? '🔒 Privado' : '🌐 Abierto'})`;
+
+      document.getElementById('node-circ-m-stat-count').innerText = integrantes.length;
+      document.getElementById('node-circ-m-stat-units').innerText = stats.unidadesTotal || 0;
+      document.getElementById('node-circ-m-stat-total').innerText = `$${(stats.totalRecaudado || 0).toLocaleString('es-AR')}`;
+      document.getElementById('node-circ-m-stat-tier').innerText = escala.tierNombre;
+
+      const listEl = document.getElementById('node-circ-m-list');
+      if (integrantes.length === 0) {
+        listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">No hay integrantes registrados en este círculo aún.</div>`;
+      } else {
+        listEl.innerHTML = integrantes.map(m => {
+          const num = (m.telefono || '').replace(/\D/g, '');
+          const chatUrl = num ? `https://wa.me/${num}?text=${encodeURIComponent(`Hola ${m.nombre}, te escribimos desde la coordinación del nodo por el Círculo ${c.nombre}.`)}` : '#';
+
+          return `
+            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: ${m.esAnfitrion ? '#FEF3C7' : '#F1F5F9'}; color: ${m.esAnfitrion ? '#92400E' : '#475569'}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">
+                  ${m.esAnfitrion ? '👑' : (m.nombre.charAt(0).toUpperCase() || '👤')}
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <strong style="font-size: 13px; color: #0F172A;">${m.nombre}</strong>
+                    <span style="font-size: 9.5px; font-weight: 700; background: ${m.esAnfitrion ? '#FEF3C7' : '#EFF6FF'}; color: ${m.esAnfitrion ? '#92400E' : '#1E40AF'}; padding: 1px 5px; border-radius: 4px;">
+                      ${m.esAnfitrion ? '👑 Anfitrión/a' : '👤 Vecino/a'}
+                    </span>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                    ${m.pedidosCount > 0 
+                      ? `📦 ${m.pedidosCount} pedidos • ${m.unidadesTotal} unidades • Total: $${m.montoTotal.toLocaleString('es-AR')}`
+                      : '🌱 Anfitrión/a coordinador'}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                ${num ? `
+                  <a href="${chatUrl}" target="_blank" style="background: #25D366; color: white; padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                    <i class="fab fa-whatsapp"></i> Chat
+                  </a>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      openModal('node-modal-circulo-members');
+    }
+
+    function deleteNodeCirculo(circuloId) {
+      const c = LunarEngine.obtenerCirculo(circuloId);
+      if (!c) return;
+
+      if (!confirm(`¿Seguro que deseas eliminar el Círculo "${c.nombre}"?`)) return;
+
+      LunarEngine.eliminarCirculo(circuloId);
+      renderNodeCirculosSection();
     }
 
     function renderSocialBadges(redes) {
@@ -1389,40 +2376,53 @@
 
       document.getElementById('compiled-products-grid').innerHTML = gridHtml;
 
-      // 3. Renderizar Fichas Detalladas con Costo Base y Tips para Vrdedores
+      // 3. Renderizar Fichas Detalladas con Escala Global del Productor y Tips para Vrdedores
       let detailHtml = '';
       productsToDisplay.forEach(p => {
-        const costo = p.costo || 0;
-        const p1 = p.p1 || 0;
-        const p2 = p.p2 || p1;
-        const p3 = p.p3 || p1;
-        const margenUnitario = p1 - costo;
+        const totalGlobalVolumen = LunarEngine.obtenerVolumenAcumuladoProducto(p.id);
+        const escalaGlobal = LunarEngine.obtenerCostoGlobalProductor(p, totalGlobalVolumen);
+        const unidadGlobal = p.unidadGlobal || p.unidad || 'kg';
+        const costoKg = escalaGlobal.costoBase;
+        
+        // Variante principal
+        const vPrincipal = p.variantes && p.variantes.length > 0 ? p.variantes[0] : p;
+        const costoUnitPrincipal = LunarEngine.obtenerCostoUnitarioPresentacion(p, vPrincipal, totalGlobalVolumen);
+        const p1 = vPrincipal.p1 || p.p1 || 0;
+        const margenUnitario = Math.max(0, p1 - costoUnitPrincipal);
         const laborVrdedor = Math.round(margenUnitario * 0.333333);
 
         detailHtml += `
           <div class="product-detail-sheet">
-            <!-- Columna 1: Imagen y Meta -->
+            <!-- Columna 1: Imagen y Meta Global -->
             <div style="text-align: center;">
               <img src="${p.img}" alt="${p.nombre}" style="width: 100%; height: 110px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 8px;">
-              <span style="font-size: 11px; font-weight: 700; background: #F1F5F9; padding: 3px 8px; border-radius: 10px; color: #475569;">${p.unidad}</span>
+              <span style="font-size: 11px; font-weight: 700; background: #F1F5F9; padding: 3px 8px; border-radius: 10px; color: #475569;">${vPrincipal.label || p.unidad}</span>
+              <div style="margin-top: 8px; font-size: 11px; font-weight: 800; color: #166534; background: #DCFCE7; padding: 3px 6px; border-radius: 8px;">
+                ${totalGlobalVolumen} ${unidadGlobal} en toda la red
+              </div>
             </div>
 
-            <!-- Columna 2: Ficha Técnica y Costos Detallados -->
+            <!-- Columna 2: Ficha Técnica y Costos Detallados con Escala Global -->
             <div>
-              <h4 style="margin: 0 0 4px; font-size: 16px; color: #0F172A;">${p.nombre}</h4>
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <h4 style="margin: 0 0 4px; font-size: 16px; color: #0F172A;">${p.nombre}</h4>
+                <span style="font-size: 11px; font-weight: 800; background: ${escalaGlobal.tier >= 2 ? '#DCFCE7' : '#FEF3C7'}; color: ${escalaGlobal.tier >= 2 ? '#15803D' : '#B45309'}; padding: 2px 8px; border-radius: 10px;">
+                  Nivel ${escalaGlobal.tier}/3 Desbloqueado en Red
+                </span>
+              </div>
               <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
-                <strong>📍 Origen:</strong> ${p.origen} • <em>${p.variedad}</em>
+                <strong>📍  Origen:</strong> ${p.origen} • <em>${p.variedad}</em>
               </div>
 
-              <!-- Costo Base vs Precio Venta -->
-              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <!-- Costo Base vs Precio Venta según escala activa -->
+              <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
                 <div>
-                  <span style="color: #991B1B; font-weight: 700; display: block;">🌱 Costo Base Productor:</span>
-                  <strong style="font-size: 14px; color: #DC2626;">$${costo.toLocaleString('es-AR')}</strong>
+                  <span style="color: #991B1B; font-weight: 700; display: block;">🌱 Costo Productor (${unidadGlobal}):</span>
+                  <strong style="font-size: 15px; color: #DC2626;">$${costoKg.toLocaleString('es-AR')} / ${unidadGlobal}</strong>
                 </div>
                 <div>
-                  <span style="color: #1E40AF; font-weight: 700; display: block;">🌱ï¸ Venta Minorista:</span>
-                  <strong style="font-size: 14px; color: #2563EB;">$${p1.toLocaleString('es-AR')}</strong>
+                  <span style="color: #1E40AF; font-weight: 700; display: block;">🛒 Venta (${vPrincipal.label || vPrincipal.unidad}):</span>
+                  <strong style="font-size: 15px; color: #2563EB;">$${p1.toLocaleString('es-AR')}</strong>
                 </div>
                 <div>
                   <span style="color: var(--text-muted); display: block;">Margen Bruto Unitario:</span>
@@ -1433,15 +2433,22 @@
                   <strong style="color: var(--primary); font-size: 13px;">$${laborVrdedor.toLocaleString('es-AR')} / un.</strong>
                 </div>
               </div>
+
+              <!-- Escalas de volumen global de la propuesta del productor -->
+              <div style="background: #F1F5F9; border-radius: 8px; padding: 6px 10px; font-size: 11px; color: #334155; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+                <span><strong>Meta 1 (${escalaGlobal.m1} ${unidadGlobal}):</strong> Costo $${escalaGlobal.c1.toLocaleString('es-AR')}</span>
+                <span><strong>Meta 2 (${escalaGlobal.m2} ${unidadGlobal}):</strong> Costo $${escalaGlobal.c2.toLocaleString('es-AR')}</span>
+                <span><strong>Meta 3 (${escalaGlobal.m3} ${unidadGlobal}):</strong> Costo $${escalaGlobal.c3.toLocaleString('es-AR')}</span>
+              </div>
             </div>
 
             <!-- Columna 3: Tips para el Vrdedor y Botón de Venta -->
-            <div style="background: rgba(16,163,82,0.03); border: 1pdashed rgba(16,163,82,0.3); border-radius: var(--radius-sm); padding: 12px 14px;">
+            <div style="background: rgba(16,163,82,0.03); border: 1px dashed rgba(16,163,82,0.3); border-radius: var(--radius-sm); padding: 12px 14px;">
               <div style="font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                <i class="fas fa-lightbulb"></i> Tips de Venta para el Vrdedor:
+                <i class="fas fa-lightbulb"></i> Tips de Venta & Meta Colectiva:
               </div>
               <p style="font-size: 12px; color: #334155; line-height: 1.4; margin: 0 0 10px;">
-                ${p.tipsVrdedor || p.titulo || 'Alimento agroecológico fresco, sin intermediarios especulativos directo de cooperativas y familias productoras.'}
+                ${p.tipsVrdedor || p.titulo || 'Alimento agroecológico directo de cooperativas. ¡A más pedidos acumulados en la red, más baja el costo para todos!'}
               </p>
               <button class="btn-checkout-cta" style="width: 100%; padding: 8px 12px; font-size: 12px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="copyProductSalesPitch('${p.id}')">
                 <i class="fab fa-whatsapp"></i> Copiar Mensaje de Venta para WhatsApp
@@ -1466,18 +2473,25 @@
 
     function copyProductSalesPitch(prodId) {
       const p = LunarEngine.obtenerProductos(CURRENT_REF, false).find(item => item.id === prodId);
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       if (!p) return;
 
+      const totalGlobalVolumen = LunarEngine.obtenerVolumenAcumuladoProducto(p.id);
+      const escalaGlobal = LunarEngine.obtenerCostoGlobalProductor(p, totalGlobalVolumen);
+      const unidadGlobal = p.unidadGlobal || p.unidad || 'kg';
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       
       let text = `🌱 *${p.nombre}* • Compra Colectiva Lunar\n`;
-      text += `📍 *Origen:* ${p.origen} (${p.variedad})\n`;
-      text += `💰 *Precio Minorista:* $${(p.p1 || 0).toLocaleString('es-AR')}\n`;
-      if (p.p2) text += `📍¦ *Precio Mayorista (+${p.m2} un):* $${(p.p2 || 0).toLocaleString('es-AR')}\n`;
-      text += `\n✨ *¿Por qué elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo del campo sin agrotóxicos.'}\n\n`;
+      text += `📍  *Origen:* ${p.origen} (${p.variedad})\n`;
+      text += `🎯 *Meta Colectiva Red:* Llevamos acumulados ${totalGlobalVolumen} ${unidadGlobal} entre todos los nodos.\n`;
+      text += `💰 *Costo Base Productor Actual:* $${escalaGlobal.costoBase.toLocaleString('es-AR')} / ${unidadGlobal}\n`;
+      if (escalaGlobal.faltante > 0) {
+        text += `🚀 *¡Faltan solo ${escalaGlobal.faltante} ${unidadGlobal}* para que el productor baje el costo a $${(p.costo3 || p.costo2 || escalaGlobal.costoBase).toLocaleString('es-AR')} / ${unidadGlobal}!\n`;
+      }
+      text += `\n✨ *¿Por qué elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo de productores sin intermediarios.'}\n\n`;
       text += `🚚 *Entrega:* ${nodoData.diaEntrega} en ${nodoData.direccion}\n`;
-      text += `🛒 *Pedí acá:* ${storeUrl}`;
+      text += `🛒 *Sumate al pedido:* ${storeUrl}`;
 
       navigator.clipboard.writeText(text).then(() => {
         alert(`¡Ficha de venta de "${p.nombre}" copiada al portapapeles! Lista para pegar en WhatsApp.`);
@@ -1489,7 +2503,8 @@
     // =================================================================
 
     function sendCompiledToCentral() {
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       const totals = getCompiledTotals();
       const prods = LunarEngine.obtenerProductos(CURRENT_REF, false);
 
@@ -1652,9 +2667,10 @@
           html += `
             <div class="order-box">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                   <span style="font-weight: 700; color: #0F172A;">#${o.id}</span>
-                  ${o.tipoEntrega === 'Delivery' ? '<span class="badge-delivery" style="font-size: 11px; padding: 2px 8px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 11px; padding: 2px 8px;">📍 Retiro</span>'}
+                  ${o.tipoEntrega === 'Delivery' ? '<span class="badge-delivery" style="font-size: 11px; padding: 2px 8px;">🛵 Delivery</span>' : '<span class="badge-retiro" style="font-size: 11px; padding: 2px 8px;">📍 Retiro</span>'}
+                  ${o.circuloNombre ? `<span style="background: rgba(16,185,129,0.15); color: #065F46; border: 1px solid #A7F3D0; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 99px;"><i class="fas fa-users"></i> ${o.circuloNombre}</span>` : ''}
                 </div>
                 <span class="badge-estado ${badgeClass}">${o.estado}</span>
               </div>
@@ -1662,6 +2678,7 @@
                 <span style="font-weight: 600; color: #0F172A;">${o.nombre}</span>
                 <span style="color: var(--text-muted);">${o.telefono}</span>
               </div>
+              ${o.circuloAnfitrion ? `<div style="font-size: 11px; color: #059669; font-weight: 700; margin-bottom: 4px;">👥 Anfitrión/a del Círculo: ${o.circuloAnfitrion} ${o.pagoEnLunaLlena ? '• 🌕 Pago al cierre en Luna Llena' : ''}</div>` : ''}
               ${o.vrdedor ? `<div style="font-size: 11px; color: var(--primary); font-weight: 600; margin-bottom: 6px;">🤝 Vrdedor/a: ${o.vrdedor}</div>` : ''}
               ${o.tipoEntrega === 'Delivery' && o.direccionEntrega ? `<div style="font-size: 12px; color: #D97706; margin-bottom: 6px;"><strong>🌱  Dirección entrega:</strong> ${o.direccionEntrega}</div>` : ''}
               <div style="background: #F8FAFC; padding: 10px; border-radius: var(--radius-sm); font-size: 13px; color: #475569; margin-bottom: 12px;">
@@ -1671,6 +2688,7 @@
                 <span style="font-size: 13px; color: var(--text-muted);">Total: <strong style="font-size: 16px; color: var(--primary);">$${(o.total || 0).toLocaleString('es-AR')}</strong></span>
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <button onclick="openEditOrderModal('${o.id}')" style="background: #F1F5F9; color: #475569; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;" title="Editar datos del pedido"><i class="fas fa-pencil-alt"></i> Editar</button>
+                  <button onclick="deleteNodeOrder('${o.id}')" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;" title="Eliminar pedido permanentemente"><i class="fas fa-trash-alt"></i></button>
                   ${actionsHtml}
                   ${wspBtn}
                 </div>
@@ -1680,6 +2698,14 @@
         });
       }
       document.getElementById('ad-orders-list').innerHTML = html;
+    }
+
+    function deleteNodeOrder(orderId) {
+      if (confirm(`¿Estás seguro de que deseas eliminar permanentemente el pedido #${orderId}?`)) {
+        LunarEngine.eliminarPedido(orderId);
+        loadDashboard();
+        alert(`🗑️ Pedido #${orderId} eliminado.`);
+      }
     }
 
     function filterOrders(status, btnEl) {
@@ -1705,7 +2731,8 @@
 
     function renderEconomySection() {
       const econ = LunarEngine.calcularEconomiaNodo(CURRENT_REF, ORDERS_DATA);
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
 
       // KPIs
       document.getElementById('econ-total-ventas').innerText = `$${econ.totalVentas.toLocaleString('es-AR')}`;
@@ -1805,7 +2832,8 @@
         );
       }
 
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
 
       let html = '';
@@ -1854,11 +2882,19 @@
                 ${statusBadge}
               </td>
               <td style="padding: 12px 14px; text-align: right;">
-                ${cleanPhone ? `
-                  <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6px 10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar recordatorio por WhatsApp">
-                    <i class="fab fa-whatsapp"></i> Chat
-                  </a>
-                ` : ''}
+                <div style="display: flex; justify-content: flex-end; gap: 6px;">
+                  ${cleanPhone ? `
+                    <a href="${wspUrl}" target="_blank" class="btn-checkout-cta" style="padding: 6px 10px; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Enviar recordatorio por WhatsApp">
+                      <i class="fab fa-whatsapp"></i> Chat
+                    </a>
+                  ` : ''}
+                  <button type="button" class="btn-action-icon" style="color: #2563EB; width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: white; cursor: pointer;" title="Editar Datos del Socio" onclick="openEditSocioModalNode('${s.cleanPhone || s.nombre}')">
+                    <i class="fas fa-user-edit"></i>
+                  </button>
+                  <button type="button" class="btn-action-icon" style="color: #EF4444; width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid #FECACA; background: #FEF2F2; cursor: pointer;" title="Eliminar Socio de la Base" onclick="deleteSocioConfirmNode('${s.cleanPhone || s.nombre}')">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
               </td>
             </tr>
           `;
@@ -1866,6 +2902,53 @@
       }
 
       document.getElementById('crm-socios-tbody').innerHTML = html;
+    }
+
+    function openEditSocioModalNode(socioKey) {
+      const allSocios = LunarEngine.obtenerBaseSocios(CURRENT_REF, CURRENT_CICLO_ID, 'ALL');
+      const socio = allSocios.find(s => (s.cleanPhone && s.cleanPhone === socioKey) || s.nombre === socioKey);
+      if (!socio) return;
+
+      document.getElementById('ad-edit-socio-orig-key').value = socioKey;
+      document.getElementById('ad-edit-socio-nombre').value = socio.nombre || '';
+      document.getElementById('ad-edit-socio-tel').value = socio.telefono || '';
+      document.getElementById('ad-edit-socio-dir').value = socio.direccion || '';
+      document.getElementById('ad-edit-socio-vrdedor').value = socio.vrdedor || '';
+
+      openModal('modal-admin-edit-socio');
+    }
+
+    function saveAdminEditedSocio() {
+      const origKey = document.getElementById('ad-edit-socio-orig-key').value;
+      const nombre = document.getElementById('ad-edit-socio-nombre').value.trim();
+      const tel = document.getElementById('ad-edit-socio-tel').value.trim();
+      const dir = document.getElementById('ad-edit-socio-dir').value.trim();
+      const vrdedor = document.getElementById('ad-edit-socio-vrdedor').value.trim();
+
+      if (!nombre || !tel) {
+        alert("Por favor completa el nombre y teléfono del socio.");
+        return;
+      }
+
+      LunarEngine.actualizarSocio(origKey, {
+        nombre: nombre,
+        telefono: tel,
+        direccion: dir,
+        nodoId: CURRENT_REF,
+        vrdedor: vrdedor
+      });
+
+      closeModal('modal-admin-edit-socio');
+      loadDashboard();
+      alert("✅ Datos del socio actualizados con éxito.");
+    }
+
+    function deleteSocioConfirmNode(socioKey) {
+      if (confirm(`¿Estás seguro de que deseas eliminar a este socio y todos sus pedidos asociados de la base de datos?`)) {
+        LunarEngine.eliminarSocio(socioKey);
+        loadDashboard();
+        alert("🗑️ Socio y pedidos eliminados de la base de datos.");
+      }
     }
 
     function filterCrm(filterType, btnEl) {
@@ -1895,7 +2978,8 @@
     }
 
     function copyCrmBroadcastMsg() {
-      const nodoData = LunarEngine.obtenerNodos()[CURRENT_REF] || LUNAR_CONFIG.nodos['escobar'];
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[CURRENT_REF] || allNodos[Object.keys(allNodos)[0]] || {};
       const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
       
       let msg = `🌱 *COMPRA COLECTIVA LUNAR • ${nodoData.nombre.toUpperCase()}*\n`;
@@ -2007,6 +3091,17 @@
       });
     }
 
+    function reactivarNodoDesdeAdmin() {
+      const allNodos = LunarEngine.obtenerNodos(false);
+      if (allNodos[CURRENT_REF]) {
+        allNodos[CURRENT_REF].activo = true;
+        allNodos[CURRENT_REF].pausado = false;
+        LunarEngine.guardarNodo(allNodos[CURRENT_REF]);
+        alert(`✅ ¡${allNodos[CURRENT_REF].nombre} ha sido reactivado con éxito y ya recibe pedidos en la tienda!`);
+        location.reload();
+      }
+    }
+
     function openModal(id) {
       const el = document.getElementById(id);
       if (el) el.classList.add('active');
@@ -2016,6 +3111,407 @@
       const el = document.getElementById(id);
       if (el) el.classList.remove('active');
     }
+
+    // =================================================================
+    // SINCRONARIO LUNAR & LOGÍSTICA DEL NODO (CONSULTA + CONFIG LOCAL)
+    // =================================================================
+    let NODE_CAL_YEAR = 2026;
+    let NODE_CAL_MONTH = 7; // Agosto (base 0)
+
+    function renderNodeCycleSection() {
+      const livePhase = LunarEngine.obtenerFaseLunar(new Date());
+      const cicloActivo = LunarEngine.obtenerCicloActual();
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodeKeys = Object.keys(nodosObj);
+      const safeKey = CURRENT_REF && nodosObj[CURRENT_REF] ? CURRENT_REF : (nodeKeys[0] || 'vicente_lopez');
+      const nodoData = nodosObj[safeKey] || {};
+
+      // Actualizar tarjeta en vivo
+      const emojiEl = document.getElementById('node-live-moon-emoji');
+      if (emojiEl) emojiEl.innerText = livePhase.emoji;
+
+      const phaseNameEl = document.getElementById('node-live-moon-phase-name');
+      if (phaseNameEl) phaseNameEl.innerText = livePhase.phaseName;
+
+      const zodiacEl = document.getElementById('node-live-moon-zodiac');
+      if (zodiacEl) zodiacEl.innerText = livePhase.zodiacSign;
+
+      const illumEl = document.getElementById('node-live-moon-illum');
+      if (illumEl) illumEl.innerText = `${livePhase.illumination}%`;
+
+      const daysEl = document.getElementById('node-live-moon-days');
+      if (daysEl) daysEl.innerText = `${livePhase.phaseDays} días`;
+
+      // Header ciclo vigente
+      const nameEl = document.getElementById('node-cycle-name');
+      if (nameEl) nameEl.innerText = cicloActivo.nombre;
+
+      const detEl = document.getElementById('node-cycle-details');
+      if (detEl) {
+        detEl.innerText = `${cicloActivo.abierta ? '🟢 Apertura activa' : '🔴 Tienda en pausa'} • Cierra en ${cicloActivo.diasRestantes} días (${cicloActivo.llenaFechaStr})`;
+      }
+
+      const progBar = document.getElementById('node-cycle-progress-bar');
+      if (progBar) progBar.style.width = `${cicloActivo.porcentajeCiclo || 45}%`;
+
+      const startLbl = document.getElementById('node-cycle-start-label');
+      if (startLbl) startLbl.innerText = `🟢 Apertura: ${cicloActivo.nuevaFechaStr}`;
+
+      const closeLbl = document.getElementById('node-cycle-close-label');
+      if (closeLbl) closeLbl.innerText = `🟡 Cierre Luna Llena: ${cicloActivo.llenaFechaStr}`;
+
+      const delLbl = document.getElementById('node-cycle-delivery-label');
+      if (delLbl) delLbl.innerText = `📦 Entrega Vrde al Nodo: ${cicloActivo.entregaFechaStr || 'A convenir'}`;
+
+      // Banner comparativo de entrega
+      const vrdeBox = document.getElementById('node-box-vrde-delivery');
+      if (vrdeBox) {
+        vrdeBox.innerText = `📦 Entrega Vrde: ${cicloActivo.entregaFechaStr || 'A coordinar por central'}`;
+      }
+
+      // Cargar configuración local de entrega del nodo
+      const diaEnt = nodoData.diaEntrega || '';
+      const dirEnt = nodoData.direccion || '';
+      const instEnt = nodoData.instruccionesEntrega || '';
+      const wspEnt = nodoData.contactoEntrega || nodoData.contacto || '';
+
+      const inpDia = document.getElementById('nodo-cycle-entrega-dia');
+      const inpDir = document.getElementById('nodo-cycle-entrega-dir');
+      const inpInst = document.getElementById('nodo-cycle-entrega-instrucciones');
+      const inpWsp = document.getElementById('nodo-cycle-entrega-wsp');
+
+      if (inpDia) inpDia.value = diaEnt;
+      if (inpDir) inpDir.value = dirEnt;
+      if (inpInst) inpInst.value = instEnt;
+      if (inpWsp) inpWsp.value = wspEnt;
+
+      updateNodeDeliveryPreview();
+      renderNodeLunarCalendarMonth();
+    }
+
+    function updateNodeDeliveryPreview() {
+      const dia = (document.getElementById('nodo-cycle-entrega-dia')?.value || '').trim();
+      const prevEl = document.getElementById('node-box-local-delivery-preview');
+      if (prevEl) {
+        prevEl.innerText = dia ? `🌱 ${dia}` : '🌱 Sin horarios fijados aún';
+      }
+    }
+
+    function saveNodeDeliveryConfig() {
+      const diaEntrega = (document.getElementById('nodo-cycle-entrega-dia')?.value || '').trim();
+      const direccion = (document.getElementById('nodo-cycle-entrega-dir')?.value || '').trim();
+      const instruccionesEntrega = (document.getElementById('nodo-cycle-entrega-instrucciones')?.value || '').trim();
+      const contactoEntrega = (document.getElementById('nodo-cycle-entrega-wsp')?.value || '').trim();
+
+      const existingNodos = LunarEngine.obtenerNodos();
+      const currentData = existingNodos[CURRENT_REF] || {};
+
+      LunarEngine.actualizarPerfilNodo(CURRENT_REF, {
+        ...currentData,
+        diaEntrega: diaEntrega || currentData.diaEntrega,
+        direccion: direccion || currentData.direccion,
+        instruccionesEntrega: instruccionesEntrega,
+        contactoEntrega: contactoEntrega
+      });
+
+      // Sincronizar campos en pestaña de perfil
+      const editDia = document.getElementById('editDia');
+      if (editDia) editDia.value = diaEntrega;
+      const editDir = document.getElementById('editDireccion');
+      if (editDir) editDir.value = direccion;
+
+      const saveMsg = document.getElementById('nodo-cycle-save-msg');
+      if (saveMsg) {
+        saveMsg.innerText = "✓ ¡Logística y entrega local del nodo guardadas con éxito!";
+        setTimeout(() => { saveMsg.innerText = ""; }, 4000);
+      }
+      updateNodeDeliveryPreview();
+      alert("✅ ¡Pautas y horarios de entrega local guardados correctamente para tu nodo!");
+    }
+
+    function copyNodeDeliveryBroadcast() {
+      const ciclo = LunarEngine.obtenerCicloActual();
+      const nodosObj = LunarEngine.obtenerNodos();
+      const nodeKeys = Object.keys(nodosObj);
+      const safeKey = CURRENT_REF && nodosObj[CURRENT_REF] ? CURRENT_REF : (nodeKeys[0] || 'vicente_lopez');
+      const nodoData = nodosObj[safeKey] || {};
+
+      const dia = (document.getElementById('nodo-cycle-entrega-dia')?.value || nodoData.diaEntrega || '').trim();
+      const dir = (document.getElementById('nodo-cycle-entrega-dir')?.value || nodoData.direccion || '').trim();
+      const inst = (document.getElementById('nodo-cycle-entrega-instrucciones')?.value || nodoData.instruccionesEntrega || '').trim();
+      const wsp = (document.getElementById('nodo-cycle-entrega-wsp')?.value || nodoData.contactoEntrega || nodoData.contacto || '').trim();
+
+      let msg = `📦 *INFORMACIÓN DE ENTREGA Y RETIRO • ${nodoData.nombre.toUpperCase()}*\n`;
+      msg += `🌕 *Ciclo:* ${ciclo.nombre}\n\n`;
+      msg += `🗓️ *Días y Horarios de Retiro:* ${dia || 'A coordinar'}\n`;
+      msg += `📍 *Punto de Retiro:* ${dir || 'Consultar dirección'}\n`;
+      if (inst) msg += `💡 *Pautas:* ${inst}\n`;
+      if (wsp) msg += `📲 *Contacto de retiro:* ${wsp}\n`;
+      msg += `\n✨ ¡Gracias por ser parte del consumo consciente en red!`;
+
+      navigator.clipboard.writeText(msg).then(() => {
+        alert("✅ ¡Mensaje de entrega copiado al portapapeles! Listo para enviar a tu grupo de WhatsApp.");
+      });
+    }
+
+    function renderNodeLunarCalendarMonth() {
+      const calData = LunarEngine.obtenerCalendarioMes(NODE_CAL_YEAR, NODE_CAL_MONTH);
+      const container = document.getElementById('node-lunar-calendar-days-container');
+      const label = document.getElementById('node-cal-current-month-label');
+
+      if (label) label.innerText = `${calData.monthName} ${calData.year}`;
+      if (!container) return;
+
+      let html = '';
+      calData.dias.forEach(d => {
+        const otherClass = d.isCurrentMonth ? '' : 'other-month';
+        const todayClass = d.isToday ? 'is-today' : '';
+        const eventClass = d.eventoCiclo ? 'has-event' : '';
+
+        let badgeHtml = '';
+        if (d.phase.isPrincipal && d.phase.principalType) {
+          const pClass = `lunar-phase-${(d.phase.principalType || '').toLowerCase()}`;
+          const pEmoji = d.phase.principalEmoji || d.phase.emoji;
+          const pName = d.phase.principalName || d.phase.phaseName;
+          badgeHtml = `<div class="lunar-phase-badge ${pClass}">${pEmoji} ${pName}</div>`;
+        }
+
+        let eventHtml = '';
+        if (d.eventoCiclo) {
+          eventHtml = `<div class="lunar-event-pill" style="background: ${d.eventoCiclo.color}; color: white;" title="${d.eventoCiclo.label}">${d.eventoCiclo.label}</div>`;
+        }
+
+        html += `
+          <div class="lunar-cal-day ${otherClass} ${todayClass} ${eventClass}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span style="font-size: 13px; font-weight: 800; color: ${d.isToday ? 'var(--primary)' : (d.isCurrentMonth ? '#0F172A' : '#94A3B8')};">${d.num}</span>
+              <span style="font-size: 16px; line-height: 1;" title="${d.phase.phaseName} (${d.phase.illumination}% - ${d.phase.zodiacSign})">${d.phase.emoji}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; overflow: hidden;">
+              ${badgeHtml}
+              ${eventHtml}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function navigateNodeLunarMonth(direction) {
+      NODE_CAL_MONTH += direction;
+      if (NODE_CAL_MONTH > 11) {
+        NODE_CAL_MONTH = 0;
+        NODE_CAL_YEAR += 1;
+      } else if (NODE_CAL_MONTH < 0) {
+        NODE_CAL_MONTH = 11;
+        NODE_CAL_YEAR -= 1;
+      }
+      renderNodeLunarCalendarMonth();
+    }
+
+    function goCurrentNodeLunarMonth() {
+      const now = new Date();
+      NODE_CAL_YEAR = now.getFullYear();
+      NODE_CAL_MONTH = now.getMonth();
+      renderNodeLunarCalendarMonth();
+    }
+
+    // =================================================================
+    // BANCO DE RECURSOS Y MEDIATECA DE DIFUSIÓN (DRIVE VRDE - NODO)
+    // =================================================================
+    let ACTIVE_NODE_MEDIA_FILTER = 'ALL';
+    let NODE_MEDIA_SEARCH_QUERY = '';
+
+    function filterNodeMediaTab(tipo) {
+      ACTIVE_NODE_MEDIA_FILTER = tipo;
+      document.querySelectorAll('#node-media-filter-tabs .prod-filter-tab').forEach(b => {
+        b.classList.toggle('active', b.id === `nmftab-${tipo}`);
+      });
+      renderNodeMediaSection();
+    }
+
+    function filterNodeMediaBySearch(q) {
+      NODE_MEDIA_SEARCH_QUERY = (q || '').trim().toLowerCase();
+      renderNodeMediaSection();
+    }
+
+    function renderNodeMediaSection() {
+      const allRecursos = LunarEngine.obtenerRecursosMediateca();
+      const storeUrl = window.location.origin + window.location.pathname.replace('admin.html', 'tienda.html') + `?ref=${CURRENT_REF}`;
+
+      // Contadores
+      let countImg = 0, countTxt = 0, countDoc = 0, countEnlace = 0;
+      allRecursos.forEach(r => {
+        if (r.tipo === 'imagen') countImg++;
+        else if (r.tipo === 'texto') countTxt++;
+        else if (r.tipo === 'documento') countDoc++;
+        else if (r.tipo === 'enlace') countEnlace++;
+      });
+
+      const cAll = document.getElementById('nmcount-ALL');
+      if (cAll) cAll.innerText = allRecursos.length;
+      const cImg = document.getElementById('nmcount-imagen');
+      if (cImg) cImg.innerText = countImg;
+      const cTxt = document.getElementById('nmcount-texto');
+      if (cTxt) cTxt.innerText = countTxt;
+      const cDoc = document.getElementById('nmcount-documento');
+      if (cDoc) cDoc.innerText = countDoc;
+      const cEnl = document.getElementById('nmcount-enlace');
+      if (cEnl) cEnl.innerText = countEnlace;
+
+      // Filtrado
+      let filtered = allRecursos;
+      if (ACTIVE_NODE_MEDIA_FILTER !== 'ALL') {
+        filtered = filtered.filter(r => r.tipo === ACTIVE_NODE_MEDIA_FILTER);
+      }
+      if (NODE_MEDIA_SEARCH_QUERY) {
+        filtered = filtered.filter(r => 
+          (r.titulo && r.titulo.toLowerCase().includes(NODE_MEDIA_SEARCH_QUERY)) ||
+          (r.descripcion && r.descripcion.toLowerCase().includes(NODE_MEDIA_SEARCH_QUERY)) ||
+          (r.categoria && r.categoria.toLowerCase().includes(NODE_MEDIA_SEARCH_QUERY))
+        );
+      }
+
+      const gridEl = document.getElementById('node-media-grid');
+      if (!gridEl) return;
+
+      let html = '';
+      if (filtered.length === 0) {
+        html = `
+          <div style="grid-column: 1 / -1; background: #F8FAFC; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 36px; margin-bottom: 8px;">📁</div>
+            <h4 style="font-size: 15px; color: #0F172A; margin-bottom: 4px;">No hay archivos en esta categoría</h4>
+            <p style="font-size: 12.5px; margin: 0;">Vrde Central cargará nuevos materiales para el próximo ciclo lunar.</p>
+          </div>
+        `;
+      } else {
+        filtered.forEach(r => {
+          let badgeBg = '#F1F5F9', badgeColor = '#475569', badgeText = 'ARCHIVO';
+          let previewHtml = '';
+
+          if (r.tipo === 'imagen') {
+            badgeBg = '#EFF6FF'; badgeColor = '#1D4ED8'; badgeText = 'IMAGEN / FLYER';
+            previewHtml = `
+              <div style="height: 130px; background: #F8FAFC; border-bottom: 1px solid var(--border-color); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img src="${r.url}" alt="${r.titulo}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='assets/hero_bg.png';">
+                <a href="${r.url}" target="_blank" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.65); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; text-decoration: none;" title="Ver imagen completa">
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
+            `;
+          } else if (r.tipo === 'video') {
+            badgeBg = '#F5F3FF'; badgeColor = '#6D28D9'; badgeText = 'VIDEO / REEL';
+            previewHtml = `
+              <div style="height: 130px; background: #1E1B4B; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;">
+                <i class="fas fa-play-circle" style="font-size: 38px; color: #A78BFA;"></i>
+                <span style="font-size: 11px; margin-top: 6px; opacity: 0.8;">Video / Reel</span>
+              </div>
+            `;
+          } else if (r.tipo === 'texto') {
+            badgeBg = '#F0FDF4'; badgeColor = '#15803D'; badgeText = 'COPY WHATSAPP';
+            previewHtml = `
+              <div style="height: 130px; background: #F0FDF4; border-bottom: 1px solid #BBF7D0; padding: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+                <p style="font-size: 11px; color: #166534; line-height: 1.35; margin: 0; font-family: monospace; white-space: pre-line; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+                  ${r.copyTexto ? r.copyTexto.replace('{LINK_TIENDA}', storeUrl) : r.descripcion}
+                </p>
+                <span style="font-size: 10px; color: #15803D; font-weight: 700;">💬 Mensaje para tus grupos</span>
+              </div>
+            `;
+          } else if (r.tipo === 'documento') {
+            badgeBg = '#FEF2F2'; badgeColor = '#B91C1C'; badgeText = 'DOCUMENTO / PDF';
+            previewHtml = `
+              <div style="height: 130px; background: #FEF2F2; border-bottom: 1px solid #FECACA; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #B91C1C;">
+                <i class="fas fa-file-pdf" style="font-size: 38px;"></i>
+                <span style="font-size: 11px; margin-top: 6px; font-weight: 600;">Catálogo / Guía</span>
+              </div>
+            `;
+          } else if (r.tipo === 'enlace') {
+            badgeBg = '#FFFBEB'; badgeColor = '#B45309'; badgeText = 'GOOGLE DRIVE';
+            previewHtml = `
+              <div style="height: 130px; background: #FFFBEB; border-bottom: 1px solid #FDE68A; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #B45309;">
+                <i class="fab fa-google-drive" style="font-size: 38px;"></i>
+                <span style="font-size: 11px; margin-top: 6px; font-weight: 700;">Carpeta Drive Compartida</span>
+              </div>
+            `;
+          }
+
+          const resolvedCopy = (r.copyTexto || '').replace('{LINK_TIENDA}', storeUrl);
+
+          html += `
+            <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+              <div>
+                ${previewHtml}
+                <div style="padding: 14px;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; margin-bottom: 6px;">
+                    <span style="font-size: 9.5px; font-weight: 800; background: ${badgeBg}; color: ${badgeColor}; padding: 2px 6px; border-radius: 6px;">
+                      ${badgeText}
+                    </span>
+                    <span style="font-size: 10.5px; color: var(--text-muted);">${r.categoria || ''}</span>
+                  </div>
+
+                  <h5 style="font-size: 13.5px; font-weight: 700; color: #0F172A; margin: 0 0 6px; line-height: 1.3;">
+                    ${r.titulo}
+                  </h5>
+                  
+                  <p style="font-size: 11.5px; color: var(--text-muted); line-height: 1.35; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    ${r.descripcion || 'Material de difusión de Vrde Club.'}
+                  </p>
+                </div>
+              </div>
+
+              <div style="padding: 10px 14px; background: #F8FAFC; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px;">
+                ${resolvedCopy ? `
+                  <button type="button" class="btn-checkout-cta" style="width: 100%; border-radius: 6px; padding: 8px 10px; font-size: 12px; background: #10A352; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="copyNodeMediaCopy('${encodeURIComponent(resolvedCopy)}')">
+                    <i class="fas fa-copy"></i> Copiar Texto + Link de mi Nodo
+                  </button>
+                ` : ''}
+
+                <div style="display: flex; gap: 6px;">
+                  ${r.url ? `
+                    <a href="${r.url}" target="_blank" style="flex: 1; text-align: center; font-size: 11.5px; font-weight: 700; color: #2563EB; background: white; border: 1px solid #BFDBFE; padding: 6px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                      <i class="fas fa-external-link-alt"></i> ${r.tipo === 'enlace' ? 'Abrir Drive' : (r.tipo === 'imagen' ? 'Ver Flyer' : 'Abrir Archivo')}
+                    </a>
+                    ${r.tipo === 'imagen' ? `
+                      <a href="${r.url}" download="${r.titulo.replace(/[^a-zA-Z0-9]/g, '_')}.jpg" target="_blank" style="font-size: 11.5px; font-weight: 700; color: #475569; background: white; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; text-decoration: none;" title="Descargar Imagen">
+                        <i class="fas fa-download"></i>
+                      </a>
+                    ` : ''}
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      gridEl.innerHTML = html;
+    }
+
+    function copyNodeMediaCopy(encodedText) {
+      const text = decodeURIComponent(encodedText);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("📋 ¡Texto copiado con el link de tu nodo listo para enviar a WhatsApp!");
+        });
+      } else {
+        alert("Texto: \n\n" + text);
+      }
+    }
+
+    // Cerrar modales al hacer clic fuera de la tarjeta (backdrop)
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+      }
+    });
+
+    // Cerrar modales con tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+      }
+    });
   </script>
 
   <!-- MODAL PARA EDITAR PEDIDO -->
@@ -2077,6 +3573,130 @@
         </button>
         <button type="button" onclick="saveEditedOrderFromModal()" class="btn-checkout-cta" style="flex: 1; padding: 12px; border-radius: var(--radius-sm);">
           <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA EDITAR SOCIO EN CRM (NODO) -->
+  <div class="modal-overlay" id="modal-admin-edit-socio">
+    <div class="modal-card" style="max-width: 480px; text-align: left;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; margin: 0; color: #0F172A;"><i class="fas fa-user-edit" style="color: var(--primary); margin-right: 6px;"></i> Editar Socio / Cliente</h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-admin-edit-socio')">&times;</span>
+      </div>
+      <input type="hidden" id="ad-edit-socio-orig-key">
+      
+      <div class="input-field-group">
+        <label>Nombre y Apellido *</label>
+        <input type="text" id="ad-edit-socio-nombre" class="input-field" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Teléfono / WhatsApp *</label>
+        <input type="text" id="ad-edit-socio-tel" class="input-field" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Dirección Habitual de Entrega</label>
+        <input type="text" id="ad-edit-socio-dir" class="input-field" placeholder="Calle, altura, localidad">
+      </div>
+
+      <div class="input-field-group">
+        <label>Vrdedor/a de Referencia</label>
+        <input type="text" id="ad-edit-socio-vrdedor" class="input-field" placeholder="Ej: Camila Rossi">
+      </div>
+
+  <!-- MODAL CREAR/EDITAR CÍRCULO EN NODO -->
+  <div class="modal-overlay" id="node-modal-circulo-edit">
+    <div class="modal-card" style="max-width: 520px; text-align: left;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; margin: 0; color: #0F172A;"><i class="fas fa-users" style="color: #10B981; margin-right: 6px;"></i> <span id="node-circ-modal-title">Nuevo Círculo Comunitario</span></h3>
+        <span class="modal-close-icon" onclick="closeModal('node-modal-circulo-edit')">&times;</span>
+      </div>
+      <input type="hidden" id="node-edit-circ-id">
+
+      <div class="input-field-group">
+        <label>Nombre del Círculo *</label>
+        <input type="text" id="node-edit-circ-nombre" class="input-field" placeholder="Ej: Vecinos Barrio Parque" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Nombre del Anfitrión/a *</label>
+        <input type="text" id="node-edit-circ-anfitrion" class="input-field" placeholder="Ej: Marcela Benítez" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>WhatsApp del Anfitrión *</label>
+        <input type="tel" id="node-edit-circ-whatsapp" class="input-field" placeholder="Ej: 1155443322" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Link al Grupo de WhatsApp del Círculo (Opcional)</label>
+        <input type="url" id="node-edit-circ-linkgwsp" class="input-field" placeholder="https://chat.whatsapp.com/...">
+        <p style="font-size: 11px; color: var(--text-muted); margin: 3px 0 0;">Para que los vecinos se sumen directamente.</p>
+      </div>
+
+      <div class="input-field-group">
+        <label>Privacidad *</label>
+        <select id="node-edit-circ-privacidad" class="input-field">
+          <option value="abierto">🌐 Círculo Abierto (Público en la tienda)</option>
+          <option value="cerrado">🔒 Círculo Privado (Solo con link)</option>
+        </select>
+      </div>
+
+      <div class="input-field-group">
+        <label>Punto de Entrega / Dirección (Opcional)</label>
+        <input type="text" id="node-edit-circ-direccion" class="input-field" placeholder="Ej: Mitre 120 (Hall) / Taller de Cerámica">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button type="button" onclick="closeModal('node-modal-circulo-edit')" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; cursor: pointer; font-weight: 600;">
+          Cancelar
+        </button>
+        <button type="button" onclick="submitNodeCirculo()" class="btn-checkout-cta" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); background: #10B981;">
+          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Círculo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL INTEGRANTES Y PEDIDOS DEL CÍRCULO EN NODO -->
+  <div class="modal-overlay" id="node-modal-circulo-members">
+    <div class="modal-card" style="max-width: 600px; text-align: left; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header-row">
+        <div>
+          <h3 style="font-size: 18px; margin: 0; color: #0F172A;" id="node-circ-m-title">Integrantes del Círculo</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="node-circ-m-subtitle">Detalle de compras vecinales</p>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('node-modal-circulo-members')">&times;</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px; text-align: center; margin-bottom: 14px;">
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Integrantes</div>
+          <div id="node-circ-m-stat-count" style="font-size: 15px; font-weight: 800; color: #0F172A;">0</div>
+        </div>
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Unidades</div>
+          <div id="node-circ-m-stat-units" style="font-size: 15px; font-weight: 800; color: #0F172A;">0</div>
+        </div>
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Total $</div>
+          <div id="node-circ-m-stat-total" style="font-size: 15px; font-weight: 800; color: #10B981;">$0</div>
+        </div>
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Escala</div>
+          <div id="node-circ-m-stat-tier" style="font-size: 13px; font-weight: 800; color: #F59E0B;">Minorista</div>
+        </div>
+      </div>
+
+      <div style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #64748B; margin-bottom: 8px;">Listado de Participantes</div>
+      <div id="node-circ-m-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;"></div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="button" onclick="closeModal('node-modal-circulo-members')" class="btn-checkout-cta" style="padding: 9px 20px; font-size: 12.5px; background: #0F172A;">
+          Cerrar
         </button>
       </div>
     </div>

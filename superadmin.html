@@ -633,6 +633,11 @@
           <span>Red de Nodos y Redes</span>
         </button>
 
+        <button class="sidebar-btn" id="sp-sbtn-circulos" onclick="switchSuperTab('circulos')">
+          <i class="fas fa-users-cog" style="color: #10B981;"></i>
+          <span>Círculos Comunitarios</span>
+        </button>
+
         <button class="sidebar-btn" id="sp-sbtn-teams" onclick="switchSuperTab('teams')">
           <i class="fas fa-users" style="color: #10A352;"></i>
           <span>Equipos y Vrdedores</span>
@@ -896,6 +901,79 @@
 
         <div id="super-nodes-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
           <!-- Inyectado por JS -->
+        </div>
+      </div>
+
+      <!-- =========================================================
+           SECCIÓN CENTRAL: GESTIÓN DE CÍRCULOS COMUNITARIOS
+           ========================================================= -->
+      <div id="super-section-circulos" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 20px; color: #0F172A; margin: 0;">👥 Círculos Comunitarios de Compra Colectiva</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+              Grupos vecinales asociados a Nodos, escalas de descuento alcanzadas y enlaces de WhatsApp.
+            </p>
+          </div>
+          <button class="btn-checkout-cta" style="padding: 10px 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; background: #10B981;" onclick="openSuperAdminCirculoModal()">
+            <i class="fas fa-plus-circle"></i> Nuevo Círculo Comunitario
+          </button>
+        </div>
+
+        <!-- KPIs de Círculos -->
+        <div class="admin-metrics-grid" style="margin-bottom: 20px;">
+          <div class="metric-card-clean">
+            <div class="metric-icon-bubble" style="background: rgba(16, 185, 129, 0.12); color: #10B981;">👥</div>
+            <div>
+              <div class="metric-label-clean">Total Círculos</div>
+              <div class="metric-value-clean" id="sp-circ-stat-total">0</div>
+            </div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-icon-bubble" style="background: rgba(37, 99, 235, 0.12); color: #2563EB;">🌐</div>
+            <div>
+              <div class="metric-label-clean">Círculos Abiertos</div>
+              <div class="metric-value-clean" id="sp-circ-stat-open">0</div>
+            </div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-icon-bubble" style="background: rgba(245, 158, 11, 0.12); color: #F59E0B;">👤</div>
+            <div>
+              <div class="metric-label-clean">Integrantes Activos</div>
+              <div class="metric-value-clean" id="sp-circ-stat-members">0</div>
+            </div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-icon-bubble" style="background: rgba(139, 92, 246, 0.12); color: #8B5CF6;">💰</div>
+            <div>
+              <div class="metric-label-clean">Ahorro Red Total</div>
+              <div class="metric-value-clean" id="sp-circ-stat-savings">$0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Filtros -->
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; flex: 1;">
+            <div style="min-width: 220px; flex: 1;">
+              <input type="text" id="sp-circ-search-input" class="input-field" placeholder="🔍 Buscar por nombre de círculo o anfitrión..." oninput="renderSuperCirculosSection()" style="margin: 0;">
+            </div>
+            <div style="width: 180px;">
+              <select id="sp-circ-node-filter" class="input-field" onchange="renderSuperCirculosSection()" style="margin: 0; background: #F8FAFC; font-weight: 600;"></select>
+            </div>
+            <div style="width: 160px;">
+              <select id="sp-circ-privacy-filter" class="input-field" onchange="renderSuperCirculosSection()" style="margin: 0; background: #F8FAFC;">
+                <option value="ALL">Todos los tipos</option>
+                <option value="abierto">🌐 Solo Abiertos</option>
+                <option value="cerrado">🔒 Solo Privados</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grilla de Círculos -->
+        <div id="super-circulos-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px;">
+          <!-- Inyectado dinámicamente -->
         </div>
       </div>
 
@@ -2140,8 +2218,116 @@
         <button type="button" class="btn-action-icon" style="width: auto; padding: 0 16px; border-radius: 6px; background: #F1F5F9; color: #475569;" onclick="closeModal('modal-media-editor')">
           Cancelar
         </button>
-        <button type="button" class="btn-checkout-cta" style="padding: 10px 24px; font-size: 13px; background: #EC4899;" onclick="saveMediaFromModal()">
-          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Recurso
+  <!-- Modal Crear/Editar Círculo Comunitario (Super Admin) -->
+  <div class="modal-overlay" id="sp-modal-circulo-edit">
+    <div class="modal-card" style="max-width: 580px; width: 95%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+        <h3 style="font-size: 18px; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-users" style="color: #10B981;"></i> <span id="sp-circ-modal-title">Nuevo Círculo Comunitario</span>
+        </h3>
+        <button type="button" class="btn-action-icon" onclick="closeModal('sp-modal-circulo-edit')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="sp-edit-circ-id">
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Nombre del Círculo *</label>
+          <input type="text" id="sp-edit-circ-nombre" class="input-field" placeholder="Ej: Vecinos Edificio Maipú 450" required>
+        </div>
+
+        <div class="input-field-group">
+          <label>Nombre del Anfitrión/a *</label>
+          <input type="text" id="sp-edit-circ-anfitrion" class="input-field" placeholder="Ej: Camila Rossi" required>
+        </div>
+
+        <div class="input-field-group">
+          <label>WhatsApp del Anfitrión *</label>
+          <input type="tel" id="sp-edit-circ-whatsapp" class="input-field" placeholder="Ej: 1148291029" required>
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Enlace al Grupo de WhatsApp del Círculo (Opcional)</label>
+          <input type="url" id="sp-edit-circ-linkgwsp" class="input-field" placeholder="https://chat.whatsapp.com/...">
+          <p style="font-size: 11px; color: var(--text-muted); margin: 3px 0 0;">Permite a los miembros unirse con 1 clic al grupo vecinal.</p>
+        </div>
+
+        <div class="input-field-group">
+          <label>Nodo Cabecera de Retiro *</label>
+          <select id="sp-edit-circ-nodo" class="input-field" style="background: #F8FAFC; font-weight: 600;"></select>
+        </div>
+
+        <div class="input-field-group">
+          <label>Privacidad *</label>
+          <select id="sp-edit-circ-privacidad" class="input-field">
+            <option value="abierto">🌐 Círculo Abierto (Público)</option>
+            <option value="cerrado">🔒 Círculo Privado (Solo por Link)</option>
+          </select>
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Dirección de Entrega / Punto Barrial (Opcional)</label>
+          <input type="text" id="sp-edit-circ-direccion" class="input-field" placeholder="Ej: Maipú 450, PB / Taller de Arte">
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Notas Internas (Opcional)</label>
+          <textarea id="sp-edit-circ-notas" class="input-field" rows="2" placeholder="Notas de coordinación para el Nodo..."></textarea>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+        <button type="button" class="btn-action-icon" style="width: auto; padding: 0 16px; border-radius: 6px; background: #F1F5F9; color: #475569;" onclick="closeModal('sp-modal-circulo-edit')">
+          Cancelar
+        </button>
+        <button type="button" class="btn-checkout-cta" style="padding: 10px 24px; font-size: 13px; background: #10B981;" onclick="submitSuperAdminCirculo()">
+          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Círculo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detalle de Integrantes y Pedidos del Círculo (Super Admin) -->
+  <div class="modal-overlay" id="sp-modal-circulo-members">
+    <div class="modal-card" style="max-width: 680px; width: 95%; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+        <div>
+          <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="sp-circ-m-title">Integrantes del Círculo</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="sp-circ-m-subtitle">Detalle de pedidos y participantes</p>
+        </div>
+        <button type="button" class="btn-action-icon" onclick="closeModal('sp-modal-circulo-members')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Resumen rápido de métricas -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 16px;">
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Integrantes</div>
+          <div id="sp-circ-m-stat-count" style="font-size: 16px; font-weight: 800; color: #0F172A;">0</div>
+        </div>
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Unidades</div>
+          <div id="sp-circ-m-stat-units" style="font-size: 16px; font-weight: 800; color: #0F172A;">0</div>
+        </div>
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Total $</div>
+          <div id="sp-circ-m-stat-total" style="font-size: 16px; font-weight: 800; color: #10B981;">$0</div>
+        </div>
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Escala</div>
+          <div id="sp-circ-m-stat-tier" style="font-size: 14px; font-weight: 800; color: #F59E0B;">Minorista</div>
+        </div>
+      </div>
+
+      <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748B; margin-bottom: 8px;">Listado de Participantes & Pedidos</div>
+      <div id="sp-circ-m-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;"></div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn-action-icon" style="width: auto; padding: 0 16px; border-radius: 6px; background: #F1F5F9; color: #475569;" onclick="closeModal('sp-modal-circulo-members')">
+          Cerrar
         </button>
       </div>
     </div>
@@ -2196,6 +2382,9 @@
       const spCrmNodeEl = document.getElementById('sp-crm-node-select');
       if (spCrmNodeEl) spCrmNodeEl.innerHTML = nodeSelectHtml;
 
+      const spCircNodeEl = document.getElementById('sp-circ-node-filter');
+      if (spCircNodeEl) spCircNodeEl.innerHTML = nodeSelectHtml;
+
       const spVEditNodeEl = document.getElementById('sp-v-edit-node');
       if (spVEditNodeEl) spVEditNodeEl.innerHTML = modalNodeSelectHtml;
 
@@ -2203,6 +2392,7 @@
       renderProductsTable();
       renderCategoriesSection();
       renderNodesSection();
+      renderSuperCirculosSection();
       renderTeamsSection();
       renderSuperCrmSection();
       renderFinancesSection();
@@ -2214,14 +2404,17 @@
     function toggleMobileSuperSidebar(open) {
       const sidebar = document.getElementById('super-sidebar');
       const backdrop = document.getElementById('super-sidebar-backdrop');
-      if (open) {
-        if (sidebar) sidebar.classList.add('mobile-open');
-        if (backdrop) backdrop.classList.add('active');
-        document.body.style.overflow = 'hidden';
+      if (!sidebar || !backdrop) return;
+
+      if (open === undefined) {
+        sidebar.classList.toggle('mobile-open');
+        backdrop.classList.toggle('active');
+      } else if (open) {
+        sidebar.classList.add('mobile-open');
+        backdrop.classList.add('active');
       } else {
-        if (sidebar) sidebar.classList.remove('mobile-open');
-        if (backdrop) backdrop.classList.remove('active');
-        document.body.style.overflow = '';
+        sidebar.classList.remove('mobile-open');
+        backdrop.classList.remove('active');
       }
     }
 
@@ -2234,6 +2427,7 @@
         products: '📦 Catálogo Maestro',
         categories: '🏷️ Categorías',
         nodes: '🌱 Nodos y Puntos',
+        circulos: '👥 Círculos Comunitarios',
         teams: '👥 Equipos Vrdedores',
         crm: '📇 Base de Datos & Socios',
         finances: '💰 Finanzas & Balances',
@@ -2254,6 +2448,7 @@
       document.getElementById('super-section-products').classList.toggle('hidden', tabId !== 'products');
       document.getElementById('super-section-categories').classList.toggle('hidden', tabId !== 'categories');
       document.getElementById('super-section-nodes').classList.toggle('hidden', tabId !== 'nodes');
+      document.getElementById('super-section-circulos').classList.toggle('hidden', tabId !== 'circulos');
       document.getElementById('super-section-teams').classList.toggle('hidden', tabId !== 'teams');
       document.getElementById('super-section-crm').classList.toggle('hidden', tabId !== 'crm');
       document.getElementById('super-section-finances').classList.toggle('hidden', tabId !== 'finances');
@@ -2262,6 +2457,7 @@
       document.getElementById('super-section-media').classList.toggle('hidden', tabId !== 'media');
 
       if (tabId === 'categories') renderCategoriesSection();
+      if (tabId === 'circulos') renderSuperCirculosSection();
       if (tabId === 'teams') renderTeamsSection();
       if (tabId === 'crm') renderSuperCrmSection();
       if (tabId === 'finances') renderFinancesSection();
@@ -2270,6 +2466,325 @@
       if (tabId === 'media') renderMediaSection();
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =================================================================
+    // GESTIÓN CENTRAL DE CÍRCULOS COMUNITARIOS (SUPER ADMIN)
+    // =================================================================
+
+    function renderSuperCirculosSection() {
+      const grid = document.getElementById('super-circulos-grid');
+      if (!grid) return;
+
+      const allCirculos = LunarEngine.obtenerCirculos(null, false);
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodeFilter = document.getElementById('sp-circ-node-filter') ? document.getElementById('sp-circ-node-filter').value : 'ALL';
+      const privFilter = document.getElementById('sp-circ-privacy-filter') ? document.getElementById('sp-circ-privacy-filter').value : 'ALL';
+      const search = (document.getElementById('sp-circ-search-input') ? document.getElementById('sp-circ-search-input').value : '').toLowerCase().trim();
+
+      let filtered = allCirculos;
+      if (nodeFilter !== 'ALL') {
+        filtered = filtered.filter(c => (c.nodoId || '').toLowerCase() === nodeFilter.toLowerCase());
+      }
+      if (privFilter !== 'ALL') {
+        filtered = filtered.filter(c => (c.privacidad || 'abierto') === privFilter);
+      }
+      if (search) {
+        filtered = filtered.filter(c => 
+          (c.nombre || '').toLowerCase().includes(search) || 
+          (c.anfitrion || '').toLowerCase().includes(search) ||
+          (c.whatsapp || '').includes(search)
+        );
+      }
+
+      // KPIs generales
+      let totalIntegrantes = 0;
+      let totalAhorro = 0;
+      let openCount = 0;
+
+      allCirculos.forEach(c => {
+        if (c.privacidad !== 'cerrado') openCount++;
+        const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+        totalIntegrantes += escala.integrantesCount || 1;
+        totalAhorro += escala.ahorroEstimado || 0;
+      });
+
+      const statTotalEl = document.getElementById('sp-circ-stat-total');
+      if (statTotalEl) statTotalEl.innerText = allCirculos.length;
+      const statOpenEl = document.getElementById('sp-circ-stat-open');
+      if (statOpenEl) statOpenEl.innerText = openCount;
+      const statMemEl = document.getElementById('sp-circ-stat-members');
+      if (statMemEl) statMemEl.innerText = totalIntegrantes;
+      const statSavEl = document.getElementById('sp-circ-stat-savings');
+      if (statSavEl) statSavEl.innerText = `$${totalAhorro.toLocaleString('es-AR')}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: white; border: 1px dashed var(--border-color); border-radius: var(--radius-md); color: var(--text-muted);">
+            <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+            <h4 style="font-size: 16px; color: #0F172A; margin: 0 0 4px;">No se encontraron Círculos</h4>
+            <p style="font-size: 13px; margin: 0 0 16px;">Probá cambiando los filtros o creá un nuevo círculo comunitario.</p>
+            <button class="btn-checkout-cta" style="padding: 8px 16px; font-size: 12.5px; background: #10B981;" onclick="openSuperAdminCirculoModal()">
+              + Crear Círculo
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(c => {
+        const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+        const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+        const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+        const nodoData = allNodos[c.nodoId] || { nombre: c.nodoId || 'Nodo Central' };
+        const isPriv = c.privacidad === 'cerrado';
+        const wspClean = (c.whatsapp || '').replace(/\D/g, '');
+
+        return `
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm); position: relative;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                  <span style="font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 4px; ${isPriv ? 'background: #FEF3C7; color: #92400E;' : 'background: #ECFDF5; color: #059669;'}">
+                    ${isPriv ? '🔒 PRIVADO' : '🌐 ABIERTO'}
+                  </span>
+                  <span style="font-size: 9.5px; font-weight: 800; background: #EFF6FF; color: #1D4ED8; padding: 2px 7px; border-radius: 4px;">
+                    📍 ${nodoData.nombre}
+                  </span>
+                  <span style="font-size: 9.5px; font-weight: 800; background: #F1F5F9; color: #475569; padding: 2px 7px; border-radius: 4px;">
+                    🔥 ${escala.tierNombre}
+                  </span>
+                </div>
+                <div style="display: flex; gap: 4px;">
+                  <button type="button" class="btn-action-icon" style="width: 28px; height: 28px; font-size: 11px;" onclick="openSuperAdminCirculoModal('${c.id}')" title="Editar Círculo">
+                    <i class="fas fa-edit" style="color: #2563EB;"></i>
+                  </button>
+                  <button type="button" class="btn-action-icon" style="width: 28px; height: 28px; font-size: 11px;" onclick="deleteSuperCirculo('${c.id}')" title="Eliminar Círculo">
+                    <i class="fas fa-trash-alt" style="color: #EF4444;"></i>
+                  </button>
+                </div>
+              </div>
+
+              <h4 style="font-size: 17px; font-weight: 800; color: #0F172A; margin: 0 0 4px;">${c.nombre}</h4>
+              
+              <div style="font-size: 13px; color: #334155; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <span>👑 <strong>${c.anfitrion}</strong></span>
+                ${wspClean ? `
+                  <a href="https://wa.me/${wspClean}" target="_blank" style="color: #16A34A; text-decoration: none; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; background: #F0FDF4; padding: 2px 6px; border-radius: 4px;" title="Chatear por WhatsApp">
+                    <i class="fab fa-whatsapp"></i> ${c.whatsapp}
+                  </a>
+                ` : ''}
+              </div>
+
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                ${c.direccionEntrega ? `📍 ${c.direccionEntrega}` : '📦 Retiro en sede de Nodo'}
+              </div>
+
+              <!-- Badges de WhatsApp & Métricas -->
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px; margin-bottom: 14px;">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; margin-bottom: 8px;">
+                  <div>
+                    <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Integrantes</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #0F172A;">${integrantes.length}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Unidades</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #0F172A;">${stats.unidadesTotal || 0}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Total $</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #10B981;">$${(stats.totalRecaudado || 0).toLocaleString('es-AR')}</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #CBD5E1; padding-top: 6px; font-size: 11.5px;">
+                  <span style="color: #64748B;">Grupo Wsp:</span>
+                  ${c.linkGrupoWsp ? `
+                    <a href="${c.linkGrupoWsp}" target="_blank" style="color: #059669; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                      <i class="fab fa-whatsapp"></i> Grupo Vinculado
+                    </a>
+                  ` : `<span style="color: #94A3B8; font-style: italic;">Sin grupo cargado</span>`}
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-checkout-cta" style="flex: 1; padding: 8px; font-size: 12px; background: #0F172A; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 5px;" onclick="openSuperCirculoMembersModal('${c.id}')">
+                <i class="fas fa-users"></i> Ver Integrantes (${integrantes.length})
+              </button>
+              <button type="button" class="btn-action-icon" style="width: 36px; height: 36px; border-radius: 8px; background: #F1F5F9;" onclick="navigator.clipboard.writeText(LunarEngine.generarLinkCirculo(c)); alert('¡Enlace del Círculo copiado al portapapeles!');" title="Copiar Enlace de Compra">
+                <i class="fas fa-link" style="color: #059669;"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openSuperAdminCirculoModal(circuloId = null) {
+      const modal = document.getElementById('sp-modal-circulo-edit');
+      const title = document.getElementById('sp-circ-modal-title');
+      const hiddenId = document.getElementById('sp-edit-circ-id');
+      const inpNombre = document.getElementById('sp-edit-circ-nombre');
+      const inpAnfitrion = document.getElementById('sp-edit-circ-anfitrion');
+      const inpWhatsapp = document.getElementById('sp-edit-circ-whatsapp');
+      const inpLinkGwsp = document.getElementById('sp-edit-circ-linkgwsp');
+      const selNodo = document.getElementById('sp-edit-circ-nodo');
+      const selPriv = document.getElementById('sp-edit-circ-privacidad');
+      const inpDir = document.getElementById('sp-edit-circ-direccion');
+      const inpNotas = document.getElementById('sp-edit-circ-notas');
+
+      // Cargar opciones de nodos
+      const nodos = LunarEngine.obtenerNodos();
+      let nodeOpts = '';
+      Object.keys(nodos).forEach(k => {
+        nodeOpts += `<option value="${k}">📍 ${nodos[k].nombre}</option>`;
+      });
+      selNodo.innerHTML = nodeOpts;
+
+      if (circuloId) {
+        const c = LunarEngine.obtenerCirculo(circuloId);
+        if (!c) return;
+        title.innerText = `Editar Círculo: ${c.nombre}`;
+        hiddenId.value = c.id;
+        inpNombre.value = c.nombre || '';
+        inpAnfitrion.value = c.anfitrion || '';
+        inpWhatsapp.value = c.whatsapp || '';
+        inpLinkGwsp.value = c.linkGrupoWsp || '';
+        selNodo.value = c.nodoId || 'lomaverde';
+        selPriv.value = c.privacidad || 'abierto';
+        inpDir.value = c.direccionEntrega || '';
+        inpNotas.value = c.notas || '';
+      } else {
+        title.innerText = 'Nuevo Círculo Comunitario';
+        hiddenId.value = '';
+        inpNombre.value = '';
+        inpAnfitrion.value = '';
+        inpWhatsapp.value = '';
+        inpLinkGwsp.value = '';
+        selNodo.value = 'lomaverde';
+        selPriv.value = 'abierto';
+        inpDir.value = '';
+        inpNotas.value = '';
+      }
+
+      openModal('sp-modal-circulo-edit');
+    }
+
+    function submitSuperAdminCirculo() {
+      const circId = document.getElementById('sp-edit-circ-id').value;
+      const nombre = document.getElementById('sp-edit-circ-nombre').value.trim();
+      const anfitrion = document.getElementById('sp-edit-circ-anfitrion').value.trim();
+      const whatsapp = document.getElementById('sp-edit-circ-whatsapp').value.trim();
+      const linkGrupoWsp = document.getElementById('sp-edit-circ-linkgwsp').value.trim();
+      const nodoId = document.getElementById('sp-edit-circ-nodo').value;
+      const privacidad = document.getElementById('sp-edit-circ-privacidad').value;
+      const direccionEntrega = document.getElementById('sp-edit-circ-direccion').value.trim();
+      const notas = document.getElementById('sp-edit-circ-notas').value.trim();
+
+      if (!nombre || !anfitrion || !whatsapp) {
+        alert('Por favor completá los campos obligatorios (Nombre, Anfitrión y WhatsApp).');
+        return;
+      }
+
+      if (circId) {
+        LunarEngine.actualizarCirculo(circId, {
+          nombre,
+          anfitrion,
+          whatsapp,
+          linkGrupoWsp,
+          nodoId,
+          privacidad,
+          direccionEntrega,
+          notas
+        });
+      } else {
+        LunarEngine.crearCirculo({
+          nombre,
+          anfitrion,
+          whatsapp,
+          linkGrupoWsp,
+          nodoId,
+          privacidad,
+          direccionEntrega,
+          notas
+        });
+      }
+
+      closeModal('sp-modal-circulo-edit');
+      renderSuperCirculosSection();
+    }
+
+    function openSuperCirculoMembersModal(circuloId) {
+      const c = LunarEngine.obtenerCirculo(circuloId);
+      if (!c) return;
+
+      const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+      const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+      const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoNombre = allNodos[c.nodoId]?.nombre || c.nodoId;
+
+      document.getElementById('sp-circ-m-title').innerText = `Círculo: ${c.nombre}`;
+      document.getElementById('sp-circ-m-subtitle').innerText = `Anfitrión/a: ${c.anfitrion} • Nodo: ${nodoNombre} (${c.privacidad === 'cerrado' ? '🔒 Privado' : '🌐 Abierto'})`;
+
+      document.getElementById('sp-circ-m-stat-count').innerText = integrantes.length;
+      document.getElementById('sp-circ-m-stat-units').innerText = stats.unidadesTotal || 0;
+      document.getElementById('sp-circ-m-stat-total').innerText = `$${(stats.totalRecaudado || 0).toLocaleString('es-AR')}`;
+      document.getElementById('sp-circ-m-stat-tier').innerText = escala.tierNombre;
+
+      const listEl = document.getElementById('sp-circ-m-list');
+      if (integrantes.length === 0) {
+        listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">No hay integrantes registrados en este círculo aún.</div>`;
+      } else {
+        listEl.innerHTML = integrantes.map(m => {
+          const num = (m.telefono || '').replace(/\D/g, '');
+          const chatUrl = num ? `https://wa.me/${num}?text=${encodeURIComponent(`Hola ${m.nombre}, te escribimos desde la coordinación de Vrde Club por el Círculo ${c.nombre}.`)}` : '#';
+
+          return `
+            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 38px; height: 38px; border-radius: 50%; background: ${m.esAnfitrion ? '#FEF3C7' : '#F1F5F9'}; color: ${m.esAnfitrion ? '#92400E' : '#475569'}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;">
+                  ${m.esAnfitrion ? '👑' : (m.nombre.charAt(0).toUpperCase() || '👤')}
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <strong style="font-size: 13.5px; color: #0F172A;">${m.nombre}</strong>
+                    <span style="font-size: 10px; font-weight: 700; background: ${m.esAnfitrion ? '#FEF3C7' : '#EFF6FF'}; color: ${m.esAnfitrion ? '#92400E' : '#1E40AF'}; padding: 2px 6px; border-radius: 4px;">
+                      ${m.esAnfitrion ? '👑 Anfitrión/a' : '👤 Vecino/a'}
+                    </span>
+                  </div>
+                  <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+                    ${m.pedidosCount > 0 
+                      ? `📦 ${m.pedidosCount} pedidos • ${m.unidadesTotal} unidades • Total: $${m.montoTotal.toLocaleString('es-AR')}`
+                      : '🌱 Anfitrión/a coordinador'}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                ${num ? `
+                  <a href="${chatUrl}" target="_blank" style="background: #25D366; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                    <i class="fab fa-whatsapp"></i> Chat
+                  </a>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      openModal('sp-modal-circulo-members');
+    }
+
+    function deleteSuperCirculo(circuloId) {
+      const c = LunarEngine.obtenerCirculo(circuloId);
+      if (!c) return;
+
+      if (!confirm(`¿Seguro que deseas eliminar el Círculo "${c.nombre}"?`)) return;
+
+      LunarEngine.eliminarCirculo(circuloId);
+      renderSuperCirculosSection();
     }
 
     // =================================================================

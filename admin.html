@@ -759,6 +759,11 @@
           <span>Equipo de Vrdedores</span>
         </button>
 
+        <button class="sidebar-btn" id="sbtn-circulos" onclick="switchNodeSection('circulos')">
+          <i class="fas fa-users-cog" style="color: #10B981;"></i>
+          <span>Círculos del Nodo</span>
+        </button>
+
         <button class="sidebar-btn" id="sbtn-economy" onclick="switchNodeSection('economy')">
           <i class="fas fa-chart-pie" style="color: #059669;"></i>
           <span>Balance y Ganancias</span>
@@ -975,6 +980,31 @@
           </div>
 
           <div id="ad-vrdedores-list-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+        <!-- =======================================================
+             SECCIÓN NUEVA: CÍRCULOS COMUNITARIOS DEL NODO
+             ======================================================= -->
+        <div id="sec-circulos-wrap" class="hidden" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 18px; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-users" style="color: #10B981;"></i>
+                CÍRCULOS COMUNITARIOS DE ESTE NODO
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+                Grupos barriales, edificios y compras colectivas que consolidan sus entregas en esta sede.
+              </p>
+            </div>
+
+            <button class="btn-checkout-cta" style="padding: 8px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px; background: #10B981;" onclick="openNodeCreateCirculoModal()">
+              <i class="fas fa-plus"></i> Crear Círculo en este Nodo
+            </button>
+          </div>
+
+          <div id="ad-circulos-list-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
             <!-- Inyectado por JS -->
           </div>
         </div>
@@ -1789,6 +1819,7 @@
       renderExcelLunarTabs();
       renderCompiledSection();
       renderVrdedoresSection();
+      renderNodeCirculosSection();
       renderEconomySection();
       renderOrdersList();
       renderCrmSection();
@@ -1857,6 +1888,7 @@
         info: '📊 Información General',
         compiled: '📦 Compilado y Fichas',
         vrdedores: '👥 Equipo de Vrdedores',
+        circulos: '👥 Círculos del Nodo',
         economy: '📊 Balance & Ganancias',
         orders: '📋 Pedidos y Delivery',
         crm: '📇 Base de Datos y Socios',
@@ -1873,7 +1905,7 @@
       const activeBtn = document.getElementById(`sbtn-${secId}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const allWraps = ['info', 'compiled', 'vrdedores', 'economy', 'orders', 'crm', 'broadcast', 'cycle', 'profile'];
+      const allWraps = ['info', 'compiled', 'vrdedores', 'circulos', 'economy', 'orders', 'crm', 'broadcast', 'cycle', 'profile'];
       
       allWraps.forEach(w => {
         const el = document.getElementById(`sec-${w}-wrap`);
@@ -1882,11 +1914,253 @@
         }
       });
 
+      if (secId === 'circulos') {
+        renderNodeCirculosSection();
+      }
       if (secId === 'cycle') {
         renderNodeCycleSection();
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =================================================================
+    // GESTIÓN DE CÍRCULOS DEL NODO
+    // =================================================================
+
+    function renderNodeCirculosSection() {
+      const container = document.getElementById('ad-circulos-list-container');
+      if (!container) return;
+
+      const nodoId = CURRENT_REF || 'lomaverde';
+      const circulos = LunarEngine.obtenerCirculos(nodoId, false);
+
+      if (circulos.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #F8FAFC; border: 1px dashed var(--border-color); border-radius: var(--radius-md); color: var(--text-muted);">
+            <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+            <h4 style="font-size: 16px; color: #0F172A; margin: 0 0 4px;">No hay Círculos en este Nodo</h4>
+            <p style="font-size: 13px; margin: 0 0 16px;">Creá el primer círculo vecinal para tu comunidad barrial.</p>
+            <button class="btn-checkout-cta" style="padding: 8px 16px; font-size: 12.5px; background: #10B981;" onclick="openNodeCreateCirculoModal()">
+              + Crear Círculo
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = circulos.map(c => {
+        const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+        const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+        const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+        const isPriv = c.privacidad === 'cerrado';
+        const num = (c.whatsapp || '').replace(/\D/g, '');
+
+        return `
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm);">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                  <span style="font-size: 9.5px; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${isPriv ? 'background: #FEF3C7; color: #92400E;' : 'background: #ECFDF5; color: #059669;'}">
+                    ${isPriv ? '🔒 PRIVADO' : '🌐 ABIERTO'}
+                  </span>
+                  <span style="font-size: 9.5px; font-weight: 800; background: #F1F5F9; color: #475569; padding: 2px 6px; border-radius: 4px;">
+                    🔥 ${escala.tierNombre}
+                  </span>
+                </div>
+                <div style="display: flex; gap: 4px;">
+                  <button type="button" class="btn-action-icon" style="width: 26px; height: 26px; font-size: 11px;" onclick="openNodeEditCirculoModal('${c.id}')" title="Editar">
+                    <i class="fas fa-edit" style="color: #2563EB;"></i>
+                  </button>
+                  <button type="button" class="btn-action-icon" style="width: 26px; height: 26px; font-size: 11px;" onclick="deleteNodeCirculo('${c.id}')" title="Eliminar">
+                    <i class="fas fa-trash-alt" style="color: #EF4444;"></i>
+                  </button>
+                </div>
+              </div>
+
+              <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 4px;">${c.nombre}</h4>
+              
+              <div style="font-size: 12.5px; color: #334155; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <span>👑 <strong>${c.anfitrion}</strong></span>
+                ${num ? `
+                  <a href="https://wa.me/${num}" target="_blank" style="color: #16A34A; text-decoration: none; font-size: 11.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; background: #F0FDF4; padding: 2px 6px; border-radius: 4px;">
+                    <i class="fab fa-whatsapp"></i> Chat
+                  </a>
+                ` : ''}
+              </div>
+
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px;">
+                ${c.direccionEntrega ? `📍 ${c.direccionEntrega}` : '📦 Retiro en sede'}
+              </div>
+
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fas fa-users" style="color: #10B981;"></i> <strong>${integrantes.length}</strong> integrantes</span>
+                <span style="font-weight: 700; color: #059669;">${stats.unidadesTotal || 0} u. ($${(stats.totalRecaudado || 0).toLocaleString('es-AR')})</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn-checkout-cta" style="flex: 1; padding: 7px; font-size: 11.5px; background: #0F172A; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="openNodeCirculoMembersModal('${c.id}')">
+                <i class="fas fa-users"></i> Ver Integrantes
+              </button>
+              <button type="button" class="btn-action-icon" style="width: 32px; height: 32px; border-radius: 6px; background: #F1F5F9;" onclick="navigator.clipboard.writeText(LunarEngine.generarLinkCirculo(c)); alert('¡Enlace copiado!');" title="Copiar Enlace">
+                <i class="fas fa-link" style="color: #059669;"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openNodeCreateCirculoModal() {
+      openNodeEditCirculoModal(null);
+    }
+
+    function openNodeEditCirculoModal(circuloId) {
+      const modal = document.getElementById('node-modal-circulo-edit');
+      const title = document.getElementById('node-circ-modal-title');
+      const hiddenId = document.getElementById('node-edit-circ-id');
+      const inpNombre = document.getElementById('node-edit-circ-nombre');
+      const inpAnfitrion = document.getElementById('node-edit-circ-anfitrion');
+      const inpWhatsapp = document.getElementById('node-edit-circ-whatsapp');
+      const inpLinkGwsp = document.getElementById('node-edit-circ-linkgwsp');
+      const selPriv = document.getElementById('node-edit-circ-privacidad');
+      const inpDir = document.getElementById('node-edit-circ-direccion');
+
+      if (circuloId) {
+        const c = LunarEngine.obtenerCirculo(circuloId);
+        if (!c) return;
+        title.innerText = `Editar Círculo: ${c.nombre}`;
+        hiddenId.value = c.id;
+        inpNombre.value = c.nombre || '';
+        inpAnfitrion.value = c.anfitrion || '';
+        inpWhatsapp.value = c.whatsapp || '';
+        inpLinkGwsp.value = c.linkGrupoWsp || '';
+        selPriv.value = c.privacidad || 'abierto';
+        inpDir.value = c.direccionEntrega || '';
+      } else {
+        title.innerText = 'Nuevo Círculo Comunitario';
+        hiddenId.value = '';
+        inpNombre.value = '';
+        inpAnfitrion.value = '';
+        inpWhatsapp.value = '';
+        inpLinkGwsp.value = '';
+        selPriv.value = 'abierto';
+        inpDir.value = '';
+      }
+
+      openModal('node-modal-circulo-edit');
+    }
+
+    function submitNodeCirculo() {
+      const circId = document.getElementById('node-edit-circ-id').value;
+      const nombre = document.getElementById('node-edit-circ-nombre').value.trim();
+      const anfitrion = document.getElementById('node-edit-circ-anfitrion').value.trim();
+      const whatsapp = document.getElementById('node-edit-circ-whatsapp').value.trim();
+      const linkGrupoWsp = document.getElementById('node-edit-circ-linkgwsp').value.trim();
+      const privacidad = document.getElementById('node-edit-circ-privacidad').value;
+      const direccionEntrega = document.getElementById('node-edit-circ-direccion').value.trim();
+      const nodoId = CURRENT_REF || 'lomaverde';
+
+      if (!nombre || !anfitrion || !whatsapp) {
+        alert('Por favor completá los campos obligatorios (Nombre, Anfitrión y WhatsApp).');
+        return;
+      }
+
+      if (circId) {
+        LunarEngine.actualizarCirculo(circId, {
+          nombre,
+          anfitrion,
+          whatsapp,
+          linkGrupoWsp,
+          nodoId,
+          privacidad,
+          direccionEntrega
+        });
+      } else {
+        LunarEngine.crearCirculo({
+          nombre,
+          anfitrion,
+          whatsapp,
+          linkGrupoWsp,
+          nodoId,
+          privacidad,
+          direccionEntrega
+        });
+      }
+
+      closeModal('node-modal-circulo-edit');
+      renderNodeCirculosSection();
+    }
+
+    function openNodeCirculoMembersModal(circuloId) {
+      const c = LunarEngine.obtenerCirculo(circuloId);
+      if (!c) return;
+
+      const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+      const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+      const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+
+      document.getElementById('node-circ-m-title').innerText = `Círculo: ${c.nombre}`;
+      document.getElementById('node-circ-m-subtitle').innerText = `Anfitrión/a: ${c.anfitrion} (${c.privacidad === 'cerrado' ? '🔒 Privado' : '🌐 Abierto'})`;
+
+      document.getElementById('node-circ-m-stat-count').innerText = integrantes.length;
+      document.getElementById('node-circ-m-stat-units').innerText = stats.unidadesTotal || 0;
+      document.getElementById('node-circ-m-stat-total').innerText = `$${(stats.totalRecaudado || 0).toLocaleString('es-AR')}`;
+      document.getElementById('node-circ-m-stat-tier').innerText = escala.tierNombre;
+
+      const listEl = document.getElementById('node-circ-m-list');
+      if (integrantes.length === 0) {
+        listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">No hay integrantes registrados en este círculo aún.</div>`;
+      } else {
+        listEl.innerHTML = integrantes.map(m => {
+          const num = (m.telefono || '').replace(/\D/g, '');
+          const chatUrl = num ? `https://wa.me/${num}?text=${encodeURIComponent(`Hola ${m.nombre}, te escribimos desde la coordinación del nodo por el Círculo ${c.nombre}.`)}` : '#';
+
+          return `
+            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: ${m.esAnfitrion ? '#FEF3C7' : '#F1F5F9'}; color: ${m.esAnfitrion ? '#92400E' : '#475569'}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">
+                  ${m.esAnfitrion ? '👑' : (m.nombre.charAt(0).toUpperCase() || '👤')}
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <strong style="font-size: 13px; color: #0F172A;">${m.nombre}</strong>
+                    <span style="font-size: 9.5px; font-weight: 700; background: ${m.esAnfitrion ? '#FEF3C7' : '#EFF6FF'}; color: ${m.esAnfitrion ? '#92400E' : '#1E40AF'}; padding: 1px 5px; border-radius: 4px;">
+                      ${m.esAnfitrion ? '👑 Anfitrión/a' : '👤 Vecino/a'}
+                    </span>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                    ${m.pedidosCount > 0 
+                      ? `📦 ${m.pedidosCount} pedidos • ${m.unidadesTotal} unidades • Total: $${m.montoTotal.toLocaleString('es-AR')}`
+                      : '🌱 Anfitrión/a coordinador'}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                ${num ? `
+                  <a href="${chatUrl}" target="_blank" style="background: #25D366; color: white; padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                    <i class="fab fa-whatsapp"></i> Chat
+                  </a>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      openModal('node-modal-circulo-members');
+    }
+
+    function deleteNodeCirculo(circuloId) {
+      const c = LunarEngine.obtenerCirculo(circuloId);
+      if (!c) return;
+
+      if (!confirm(`¿Seguro que deseas eliminar el Círculo "${c.nombre}"?`)) return;
+
+      LunarEngine.eliminarCirculo(circuloId);
+      renderNodeCirculosSection();
     }
 
     function renderSocialBadges(redes) {
@@ -2218,13 +2492,6 @@
       text += `\n✨ *¿Por qué elegirlo?*\n${p.tipsVrdedor || p.subtitulo || 'Directo de productores sin intermediarios.'}\n\n`;
       text += `🚚 *Entrega:* ${nodoData.diaEntrega} en ${nodoData.direccion}\n`;
       text += `🛒 *Sumate al pedido:* ${storeUrl}`;
-
-      navigator.clipboard.writeText(text).then(() => {
-        alert(`¡Ficha de venta de "${p.nombre}" copiada al portapapeles! Lista para pegar en WhatsApp.`);
-      });
-    }o?*\n${p.tipsVrdedor || p.subtitulo || 'Directo del campo sin agrotóxicos.'}\n\n`;
-      text += `🚚 *Entrega:* ${nodoData.diaEntrega} en ${nodoData.direccion}\n`;
-      text += `🛒 *Pedí acá:* ${storeUrl}`;
 
       navigator.clipboard.writeText(text).then(() => {
         alert(`¡Ficha de venta de "${p.nombre}" copiada al portapapeles! Lista para pegar en WhatsApp.`);
@@ -3340,12 +3607,96 @@
         <input type="text" id="ad-edit-socio-vrdedor" class="input-field" placeholder="Ej: Camila Rossi">
       </div>
 
+  <!-- MODAL CREAR/EDITAR CÍRCULO EN NODO -->
+  <div class="modal-overlay" id="node-modal-circulo-edit">
+    <div class="modal-card" style="max-width: 520px; text-align: left;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 18px; margin: 0; color: #0F172A;"><i class="fas fa-users" style="color: #10B981; margin-right: 6px;"></i> <span id="node-circ-modal-title">Nuevo Círculo Comunitario</span></h3>
+        <span class="modal-close-icon" onclick="closeModal('node-modal-circulo-edit')">&times;</span>
+      </div>
+      <input type="hidden" id="node-edit-circ-id">
+
+      <div class="input-field-group">
+        <label>Nombre del Círculo *</label>
+        <input type="text" id="node-edit-circ-nombre" class="input-field" placeholder="Ej: Vecinos Barrio Parque" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Nombre del Anfitrión/a *</label>
+        <input type="text" id="node-edit-circ-anfitrion" class="input-field" placeholder="Ej: Marcela Benítez" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>WhatsApp del Anfitrión *</label>
+        <input type="tel" id="node-edit-circ-whatsapp" class="input-field" placeholder="Ej: 1155443322" required>
+      </div>
+
+      <div class="input-field-group">
+        <label>Link al Grupo de WhatsApp del Círculo (Opcional)</label>
+        <input type="url" id="node-edit-circ-linkgwsp" class="input-field" placeholder="https://chat.whatsapp.com/...">
+        <p style="font-size: 11px; color: var(--text-muted); margin: 3px 0 0;">Para que los vecinos se sumen directamente.</p>
+      </div>
+
+      <div class="input-field-group">
+        <label>Privacidad *</label>
+        <select id="node-edit-circ-privacidad" class="input-field">
+          <option value="abierto">🌐 Círculo Abierto (Público en la tienda)</option>
+          <option value="cerrado">🔒 Círculo Privado (Solo con link)</option>
+        </select>
+      </div>
+
+      <div class="input-field-group">
+        <label>Punto de Entrega / Dirección (Opcional)</label>
+        <input type="text" id="node-edit-circ-direccion" class="input-field" placeholder="Ej: Mitre 120 (Hall) / Taller de Cerámica">
+      </div>
+
       <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button type="button" onclick="closeModal('modal-admin-edit-socio')" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; cursor: pointer; font-weight: 600;">
+        <button type="button" onclick="closeModal('node-modal-circulo-edit')" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; cursor: pointer; font-weight: 600;">
           Cancelar
         </button>
-        <button type="button" onclick="saveAdminEditedSocio()" class="btn-checkout-cta" style="flex: 1; padding: 12px; border-radius: var(--radius-sm);">
-          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Cambios
+        <button type="button" onclick="submitNodeCirculo()" class="btn-checkout-cta" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); background: #10B981;">
+          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Círculo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL INTEGRANTES Y PEDIDOS DEL CÍRCULO EN NODO -->
+  <div class="modal-overlay" id="node-modal-circulo-members">
+    <div class="modal-card" style="max-width: 600px; text-align: left; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header-row">
+        <div>
+          <h3 style="font-size: 18px; margin: 0; color: #0F172A;" id="node-circ-m-title">Integrantes del Círculo</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="node-circ-m-subtitle">Detalle de compras vecinales</p>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('node-modal-circulo-members')">&times;</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px; text-align: center; margin-bottom: 14px;">
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Integrantes</div>
+          <div id="node-circ-m-stat-count" style="font-size: 15px; font-weight: 800; color: #0F172A;">0</div>
+        </div>
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Unidades</div>
+          <div id="node-circ-m-stat-units" style="font-size: 15px; font-weight: 800; color: #0F172A;">0</div>
+        </div>
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Total $</div>
+          <div id="node-circ-m-stat-total" style="font-size: 15px; font-weight: 800; color: #10B981;">$0</div>
+        </div>
+        <div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Escala</div>
+          <div id="node-circ-m-stat-tier" style="font-size: 13px; font-weight: 800; color: #F59E0B;">Minorista</div>
+        </div>
+      </div>
+
+      <div style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #64748B; margin-bottom: 8px;">Listado de Participantes</div>
+      <div id="node-circ-m-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;"></div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="button" onclick="closeModal('node-modal-circulo-members')" class="btn-checkout-cta" style="padding: 9px 20px; font-size: 12.5px; background: #0F172A;">
+          Cerrar
         </button>
       </div>
     </div>

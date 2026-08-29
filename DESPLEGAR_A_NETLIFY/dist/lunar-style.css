@@ -104,10 +104,11 @@ h1, h2, h3, h4, h5, h6 {
 /* Header del Nodo */
 .shop-header {
   background: white;
-  padding: 16px 24px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   box-shadow: var(--shadow-sm);
   border-bottom: 1px solid var(--border-color);
   position: sticky;
@@ -115,31 +116,105 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 50;
 }
 
+.shop-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.btn-header-back {
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-header-back:hover {
+  background: #E2E8F0;
+}
+
 .shop-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   cursor: pointer;
+  min-width: 0;
+  flex: 1;
 }
 
 .shop-brand-logo {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(16, 163, 82, 0.1);
-  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  border: 2px solid rgba(16, 163, 82, 0.2);
+  font-size: 20px;
+  border: 2px solid var(--primary);
+  flex-shrink: 0;
+}
+
+.shop-brand-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .shop-brand-name {
-  font-size: 22px;
+  font-size: 16px;
+  font-weight: 700;
   color: #0F172A;
   margin: 0;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shop-brand-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-header-info {
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(16, 163, 82, 0.08);
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 163, 82, 0.25);
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-header-info:hover {
+  background: var(--primary);
+  color: white;
 }
 
 /* Banner de Estado Lunar & Metas */
@@ -284,7 +359,7 @@ h1, h2, h3, h4, h5, h6 {
 .product-showcase {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 16px 30px;
+  padding: 0 16px 20px;
   display: grid;
   grid-template-columns: 280px 1fr 320px;
   gap: 18px;
@@ -293,7 +368,19 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 960px) {
   .product-showcase {
     grid-template-columns: 1fr;
-    padding-bottom: 70px;
+    gap: 16px;
+    padding: 0 12px 20px;
+  }
+  .product-showcase .showcase-center {
+    order: 1 !important;
+  }
+  .product-showcase .showcase-left,
+  .product-showcase .showcase-card:first-child {
+    order: 2 !important;
+  }
+  .product-showcase .showcase-right,
+  .product-showcase .showcase-card:last-child {
+    order: 3 !important;
   }
 }
 
@@ -693,8 +780,246 @@ h1, h2, h3, h4, h5, h6 {
   min-width: 0;
   width: 100%;
 }
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .admin-main-view {
-    padding: 14px;
+    padding: 12px;
+  }
+  .shop-header {
+    padding: 10px 12px;
+  }
+  .shop-brand-name {
+    font-size: 15px;
+  }
+  .shop-brand-logo {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  .lunar-banner-card {
+    padding: 12px 14px;
+    margin: 8px auto;
+  }
+  .lunar-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .prod-main-img {
+    width: 170px;
+    height: 170px;
+  }
+  .btn-header-back {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+  .btn-header-back .btn-back-text {
+    display: none;
+  }
+  .btn-header-info {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+  .btn-header-info .btn-info-text {
+    display: none;
+  }
+  .modal-card {
+    padding: 20px 16px;
+    border-radius: var(--radius-md);
+  }
+  .floating-cart-bar {
+    padding: 10px 16px;
+  }
+  .cart-summary-total {
+    font-size: 19px;
+  }
+  .btn-checkout-cta {
+    padding: 10px 18px;
+    font-size: 13px;
   }
 }
+
+/* Opciones de Entrega en Checkout */
+.delivery-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.delivery-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 14px 10px;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  font-family: inherit;
+}
+
+.delivery-card:hover {
+  border-color: #CBD5E1;
+  background: #F1F5F9;
+}
+
+.delivery-card.active {
+  background: rgba(16, 163, 82, 0.08);
+  border-color: var(--primary);
+  box-shadow: 0 3px 12px rgba(16, 163, 82, 0.12);
+}
+
+.delivery-card i {
+  font-size: 20px;
+  color: #64748B;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.delivery-card.active i {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+.delivery-card .title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.delivery-card.active .title {
+  color: var(--primary-dark);
+}
+
+.delivery-card .sub {
+  font-size: 11px;
+  color: #64748B;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.delivery-info-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #166534;
+  margin-bottom: 14px;
+  line-height: 1.35;
+}
+
+/* ==========================================================================
+   ESTILOS GLOBALES DE SINCRONARIO LUNAR Y CALENDARIO
+   ========================================================================== */
+.lunar-calendar-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.lunar-cal-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px;
+}
+.lunar-cal-table-min {
+  min-width: 600px;
+  width: 100%;
+}
+.lunar-cal-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.lunar-cal-header-day {
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748B;
+  padding: 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.lunar-cal-day {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  min-height: 82px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.lunar-cal-day:hover {
+  border-color: #94A3B8;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+.lunar-cal-day.other-month {
+  background: #F8FAFC;
+  opacity: 0.4;
+}
+.lunar-cal-day.is-today {
+  border: 2px solid var(--primary);
+  background: #F0FDF4;
+}
+.lunar-cal-day.has-event {
+  border-color: #CBD5E1;
+}
+.lunar-phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 6px;
+  margin-top: 2px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+.lunar-phase-nueva { background: #0F172A; color: white; }
+.lunar-phase-creciente { background: #E0F2FE; color: #0369A1; }
+.lunar-phase-llena { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+.lunar-phase-menguante { background: #EDE9FE; color: #6D28D9; }
+.lunar-event-pill {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 6px;
+  line-height: 1.2;
+  margin-top: 2px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+

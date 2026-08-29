@@ -1278,6 +1278,12 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label">Link de Grupo de WhatsApp del Círculo (Opcional)</label>
+            <input type="url" id="circ-link-grupo" class="input-field" placeholder="Ej: https://chat.whatsapp.com/ABC123xyz...">
+            <p style="font-size: 11px; color: var(--text-muted); margin: 3px 0 0;">Si ya creaste un grupo de WhatsApp para tu barrio/edificio, pegá el enlace acá.</p>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">Punto de Entrega / Dirección del Grupo (Opcional)</label>
             <input type="text" id="circ-direccion" class="input-field" placeholder="Ej: Maipú 450 (Hall PB) / Taller de Cerámica">
           </div>
@@ -1323,50 +1329,96 @@
     </div>
   </div>
 
-  <!-- Modal Tablero del Anfitrión -->
+  <!-- Modal Tablero de Integrantes y Compra Comunitaria del Círculo -->
   <div class="modal-overlay" id="modal-circulo-dashboard">
-    <div class="modal-card" style="max-width: 650px;">
-      <div class="modal-header-row">
+    <div class="modal-card" style="max-width: 680px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header-row" style="margin-bottom: 12px;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 24px;">👑</span>
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 12px rgba(16,185,129,0.25); flex-shrink: 0;">
+            👥
+          </div>
           <div>
-            <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="dash-circ-title">Tablero del Círculo</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="dash-circ-subtitle">Anfitrión y liquidación de Luna Llena</p>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span id="dash-circ-priv-badge" style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">🌐 ABIERTO</span>
+              <span id="dash-circ-nodo-badge" style="font-size: 10.5px; font-weight: 700; color: #64748B;">📍 Nodo Cabecera</span>
+            </div>
+            <h3 style="font-size: 19px; font-weight: 800; color: #0F172A; margin: 2px 0 0;" id="dash-circ-title">Tablero del Círculo</h3>
+            <p style="font-size: 12px; color: #64748B; margin: 0;" id="dash-circ-subtitle">Anfitrión/a y compra vecinal</p>
           </div>
         </div>
         <span class="modal-close-icon" onclick="closeModal('modal-circulo-dashboard')">&times;</span>
       </div>
 
-      <!-- Grid de Métricas -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px;">
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px; text-align: center;">
-          <div style="font-size: 10.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Integrantes</div>
-          <div id="dash-stat-members" style="font-size: 20px; font-weight: 800; color: #0F172A; margin-top: 2px;">0</div>
-        </div>
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px; text-align: center;">
-          <div style="font-size: 10.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Unidades</div>
-          <div id="dash-stat-units" style="font-size: 20px; font-weight: 800; color: #0F172A; margin-top: 2px;">0</div>
-        </div>
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px; text-align: center;">
-          <div style="font-size: 10.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Total Grupo</div>
-          <div id="dash-stat-total" style="font-size: 20px; font-weight: 800; color: #10B981; margin-top: 2px;">$0</div>
-        </div>
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px; text-align: center;">
-          <div style="font-size: 10.5px; font-weight: 700; color: #64748B; text-transform: uppercase;">Ahorro Red</div>
-          <div id="dash-stat-savings" style="font-size: 20px; font-weight: 800; color: #F59E0B; margin-top: 2px;">$0</div>
+      <!-- 1. BLOQUE DE COMUNICACIÓN Y CHAT GRUPAL DE WHATSAPP -->
+      <div id="dash-circ-comm-box" style="background: linear-gradient(135deg, #064E3B, #0F172A); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; color: white;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #A7F3D0;">💬 Chat y Comunicación</div>
+            <div style="font-size: 13px; font-weight: 600; color: #F8FAFC; margin-top: 2px;">Coordiná la entrega y hablá con tus vecinos</div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="dash-circ-comm-buttons"></div>
         </div>
       </div>
 
-      <!-- Lista de Pedidos -->
-      <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 8px;">Pedidos de los Integrantes</div>
-      <div id="dash-circ-orders-list" style="max-height: 220px; overflow-y: auto; margin-bottom: 16px;"></div>
+      <!-- 2. PROGRESO DE ESCALA COLECTIVA Y VALOR/DESCUENTO ACCEDIDO -->
+      <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <div>
+            <span style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #64748B;">Nivel de Descuento Comunitario:</span>
+            <div id="dash-scale-tier-badge" style="font-size: 16px; font-weight: 800; color: #0F172A; margin-top: 2px;">
+              🔥 Nivel 1: Minorista
+            </div>
+          </div>
+          <div id="dash-scale-saving-pill" style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800;">
+            Ahorro: $0
+          </div>
+        </div>
 
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button type="button" onclick="copyActiveCirculoLink()" style="flex: 1; background: #FFFFFF; color: #065F46; border: 1px solid #059669; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;">
-          <i class="fas fa-link"></i> Copiar Link de Invitación
+        <!-- Barra de Progreso a Siguiente Nivel -->
+        <div style="background: #E2E8F0; border-radius: 99px; height: 8px; overflow: hidden; margin: 10px 0 6px;">
+          <div id="dash-scale-prog-bar" style="background: #10B981; height: 100%; width: 20%; border-radius: 99px; transition: width 0.4s ease;"></div>
+        </div>
+        <div id="dash-scale-prog-text" style="font-size: 12px; color: #059669; font-weight: 700;">
+          🚀 Faltan 20 unidades para Nivel Mayorista (-15% de ahorro)
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; border-top: 1px dashed #CBD5E1; padding-top: 12px; text-align: center;">
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Integrantes</div>
+            <div id="dash-stat-members" style="font-size: 18px; font-weight: 800; color: #0F172A;">0</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Unidades</div>
+            <div id="dash-stat-units" style="font-size: 18px; font-weight: 800; color: #0F172A;">0</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase;">Total Grupo</div>
+            <div id="dash-stat-total" style="font-size: 18px; font-weight: 800; color: #10B981;">$0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. LISTADO DE INTEGRANTES DEL CÍRCULO -->
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #475569; letter-spacing: 0.5px;">
+            👥 Integrantes del Círculo (<span id="dash-members-count-num">0</span>)
+          </span>
+          <span style="font-size: 11px; color: #64748B;">Contactá 1 a 1 para coordinar</span>
+        </div>
+        <div id="dash-circ-members-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; padding-right: 4px;"></div>
+      </div>
+
+      <!-- 4. BOTONES DE INVITACIÓN Y SALIR -->
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #E2E8F0; padding-top: 14px;">
+        <button type="button" onclick="copyActiveCirculoLink()" style="flex: 1; background: #FFFFFF; color: #065F46; border: 1.5px solid #059669; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;">
+          <i class="fas fa-link"></i> Copiar Enlace
         </button>
         <button type="button" onclick="shareActiveCirculoWsp()" style="flex: 1; background: #25D366; color: #FFFFFF; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-          <i class="fab fa-whatsapp"></i> Invitar por WhatsApp
+          <i class="fab fa-whatsapp"></i> Invitar Vecinos
+        </button>
+        <button type="button" id="dash-btn-leave-circulo" onclick="leaveCurrentCirculo()" style="background: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; padding: 10px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;" title="Dejar de participar en este Círculo">
+          <i class="fas fa-sign-out-alt"></i> Salir del Círculo
         </button>
       </div>
     </div>
@@ -1711,20 +1763,33 @@
                   <span style="font-size: 11px; color: #059669; font-weight: 700;">Grupo vecinal de compra</span>
                 </div>
               </div>
-              <button type="button" onclick="switchAppView('circulos')" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 800; cursor: pointer;">
-                Explorar &rarr;
-              </button>
-            </div>
-
-            ${circulo ? `
+              <button type            ${circulo ? `
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <span style="font-size: 10px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">
+                  ${circulo.privacidad === 'cerrado' ? '🔒 PRIVADO' : '🌐 ABIERTO'}
+                </span>
+                <span style="font-size: 11px; font-weight: 700; color: #10B981;">
+                  ${LunarEngine.obtenerEscalaCirculo(circulo.id || circulo.slug).tierNombre}
+                </span>
+              </div>
               <div style="font-size: 16px; font-weight: 800; color: #064E3B; margin-bottom: 2px;">${circulo.nombre}</div>
               <div style="font-size: 12px; color: #047857; margin-bottom: 10px;">👑 Anfitrión/a: <strong>${circulo.anfitrion}</strong></div>
-              <div style="display: flex; gap: 8px;">
-                <button type="button" onclick="shareActiveCirculoWsp()" style="flex: 1; background: #25D366; color: white; border: none; font-size: 11px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer;">
-                  <i class="fab fa-whatsapp"></i> Invitar Vecinos
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                <button type="button" onclick="openCirculoDashboardModal()" style="background: #F0FDF4; border: 1px solid #A7F3D0; color: #065F46; font-size: 11.5px; font-weight: 800; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                  <i class="fas fa-users"></i> Ver Integrantes
                 </button>
-                <button type="button" onclick="selectCirculo(null)" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #64748B; font-size: 11px; padding: 8px 10px; border-radius: 8px; cursor: pointer;" title="Comprar solo en el Nodo">
-                  ✕ Salir
+                <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: white; border: none; font-size: 11.5px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                  <i class="fab fa-whatsapp"></i> Invitar
+                </button>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                ${circulo.linkGrupoWsp ? `
+                  <a href="${circulo.linkGrupoWsp}" target="_blank" style="flex: 1; background: #047857; color: white; text-decoration: none; font-size: 11px; font-weight: 700; padding: 7px; border-radius: 8px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                    <i class="fab fa-whatsapp"></i> Grupo WhatsApp
+                  </a>
+                ` : ''}
+                <button type="button" onclick="leaveCurrentCirculo()" style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #B91C1C; font-size: 11px; font-weight: 700; padding: 7px 10px; border-radius: 8px; cursor: pointer;" title="Comprar individual en el Nodo">
+                  Salir del Círculo
                 </button>
               </div>
             ` : `
@@ -1795,26 +1860,40 @@
       } else {
         circulosAbiertos.forEach(c => {
           const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+          const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+          const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
           const isSelected = ACTIVE_CIRCULO && (ACTIVE_CIRCULO.id === c.id || ACTIVE_CIRCULO.slug === c.slug);
+
           cardsHtml += `
             <div style="background: white; border: 1.5px solid ${isSelected ? '#10B981' : '#E2E8F0'}; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
                   <span style="font-size: 24px;">👥</span>
-                  <span style="font-size: 10px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 8px; border-radius: 6px;">🌐 ABIERTO</span>
+                  <div style="display: flex; gap: 4px; align-items: center;">
+                    <span style="font-size: 9.5px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">🌐 ABIERTO</span>
+                    <span style="font-size: 9.5px; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">${escala.tierNombre}</span>
+                  </div>
                 </div>
                 <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${c.nombre}</h4>
-                <div style="font-size: 12.5px; color: #059669; font-weight: 700; margin-bottom: 8px;">👑 Anfitrión/a: ${c.anfitrion}</div>
-                <div style="font-size: 11.5px; color: #64748B; margin-bottom: 12px;">
-                  ${c.direccionEntrega ? `📍 Entrega en: ${c.direccionEntrega}` : '📦 Coordinan retiro conjunto en la sede del Nodo'}
+                <div style="font-size: 12.5px; color: #059669; font-weight: 700; margin-bottom: 6px;">👑 Anfitrión/a: ${c.anfitrion}</div>
+                <div style="font-size: 11.5px; color: #64748B; margin-bottom: 10px;">
+                  ${c.direccionEntrega ? `📍 Entrega: ${c.direccionEntrega}` : '📦 Retiro conjunto en la sede del Nodo'}
                 </div>
-                <div style="background: #F8FAFC; border-radius: 8px; padding: 8px 10px; font-size: 11.5px; color: #334155; margin-bottom: 14px;">
-                  <i class="fas fa-shopping-basket" style="color: #10B981;"></i> <strong>${stats.pedidos.length}</strong> pedidos acumulados (${stats.unidadesTotal || 0} u.)
+                
+                <div style="background: #F8FAFC; border-radius: 8px; padding: 8px 10px; font-size: 11.5px; color: #334155; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                  <span><i class="fas fa-users" style="color: #10B981;"></i> <strong>${integrantes.length}</strong> integrantes</span>
+                  <span style="font-weight: 700; color: #059669;">${stats.unidadesTotal || 0} u. ($${stats.totalRecaudado.toLocaleString('es-AR')})</span>
                 </div>
               </div>
-              <button type="button" onclick="selectCirculo('${c.slug || c.id}'); switchAppView('catalogo');" style="width: 100%; background: ${isSelected ? '#059669' : '#10B981'}; color: white; font-weight: 800; font-size: 12.5px; padding: 10px; border-radius: 8px; border: none; cursor: pointer;">
-                ${isSelected ? '✓ Círculo Activo (Comprando acá)' : 'Unirme y Comprar con este Círculo'}
-              </button>
+
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <button type="button" onclick="openCirculoDashboardModal('${c.slug || c.id}')" style="width: 100%; background: #F0FDF4; border: 1px solid #A7F3D0; color: #065F46; font-weight: 800; font-size: 12px; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                  <i class="fas fa-chart-pie"></i> Ver Integrantes & Tablero
+                </button>
+                <button type="button" onclick="selectCirculo('${c.slug || c.id}'); switchAppView('catalogo');" style="width: 100%; background: ${isSelected ? '#059669' : '#10B981'}; color: white; font-weight: 800; font-size: 12.5px; padding: 9px; border-radius: 8px; border: none; cursor: pointer;">
+                  ${isSelected ? '✓ Círculo Activo (Comprando acá)' : 'Unirme y Comprar acá'}
+                </button>
+              </div>
             </div>
           `;
         });
@@ -2150,6 +2229,7 @@
       const nombre = document.getElementById('circ-nombre').value.trim();
       const anfitrion = document.getElementById('circ-anfitrion').value.trim();
       const whatsapp = document.getElementById('circ-whatsapp').value.trim();
+      const linkGrupoWsp = document.getElementById('circ-link-grupo') ? document.getElementById('circ-link-grupo').value.trim() : '';
       const nodoId = document.getElementById('circ-nodo-select').value;
       const direccion = document.getElementById('circ-direccion').value.trim();
       const privacidad = document.querySelector('input[name="circ-privacidad"]:checked')?.value || 'abierto';
@@ -2163,6 +2243,7 @@
         nombre: nombre,
         anfitrion: anfitrion,
         whatsapp: whatsapp,
+        linkGrupoWsp: linkGrupoWsp,
         nodoId: nodoId,
         direccionEntrega: direccion,
         privacidad: privacidad
@@ -2170,6 +2251,14 @@
 
       ACTIVE_CIRCULO = nuevo;
       CURRENT_REF = nodoId;
+
+      // Auto-guardar en perfil del usuario
+      LunarEngine.guardarPerfilUsuario({
+        nombre: anfitrion,
+        telefono: whatsapp,
+        nodoId: nodoId,
+        circuloId: nuevo.id
+      });
 
       // Generar link universal portable (funciona en cualquier dispositivo)
       const link = LunarEngine.generarLinkCirculo(nuevo);
@@ -2237,40 +2326,185 @@
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    function openCirculoDashboardModal() {
-      if (!ACTIVE_CIRCULO) {
+    function openCirculoDashboardModal(circuloIdOrSlug = null) {
+      let target = null;
+      if (circuloIdOrSlug) {
+        target = LunarEngine.obtenerCirculo(circuloIdOrSlug);
+      }
+      if (!target) {
+        target = ACTIVE_CIRCULO;
+      }
+      if (!target) {
         openCreateCirculoModal();
         return;
       }
 
-      const stats = LunarEngine.obtenerEstadisticasCirculo(ACTIVE_CIRCULO.id || ACTIVE_CIRCULO.slug);
-      document.getElementById('dash-circ-title').innerText = `Círculo: ${ACTIVE_CIRCULO.nombre}`;
-      document.getElementById('dash-circ-subtitle').innerText = `Anfitrión/a: ${ACTIVE_CIRCULO.anfitrion} • Nodo: ${ACTIVE_CIRCULO.nodoId.toUpperCase()}`;
+      const stats = LunarEngine.obtenerEstadisticasCirculo(target.id || target.slug);
+      const escala = LunarEngine.obtenerEscalaCirculo(target.id || target.slug);
+      const integrantes = LunarEngine.obtenerIntegrantesCirculo(target.id || target.slug);
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoNombre = allNodos[target.nodoId]?.nombre || target.nodoId.toUpperCase();
+      const isPrivado = target.privacidad === 'cerrado';
 
-      document.getElementById('dash-stat-members').innerText = stats.integrantesCount || 0;
-      document.getElementById('dash-stat-units').innerText = stats.unidadesTotal || 0;
-      document.getElementById('dash-stat-total').innerText = `$${stats.totalRecaudado.toLocaleString('es-AR')}`;
-      document.getElementById('dash-stat-savings').innerText = `$${stats.ahorroEstimado.toLocaleString('es-AR')}`;
+      // Títulos y Badges
+      const titleEl = document.getElementById('dash-circ-title');
+      if (titleEl) titleEl.innerText = target.nombre;
+      const subEl = document.getElementById('dash-circ-subtitle');
+      if (subEl) subEl.innerText = `Anfitrión/a: ${target.anfitrion} • Entrega: ${target.direccionEntrega || nodoNombre}`;
 
-      const ordersList = document.getElementById('dash-circ-orders-list');
-      if (stats.pedidos.length === 0) {
-        ordersList.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 12.5px; padding: 20px;">Aún no hay pedidos en este Círculo. ¡Compartí el link para sumar a tus vecinos!</div>`;
-      } else {
-        ordersList.innerHTML = stats.pedidos.map(p => `
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; padding: 8px 10px; border-bottom: 1px dashed #E2E8F0;">
-            <div>
-              <strong>${p.nombre}</strong>
-              <div style="font-size: 11px; color: var(--text-muted);">${p.detalle || `${p.unidades} unidades`}</div>
-            </div>
-            <div style="text-align: right;">
-              <span style="font-weight: 800; color: #10B981;">$${(p.total || 0).toLocaleString('es-AR')}</span>
-              <div style="font-size: 10.5px; color: #F59E0B; font-weight: 700;">🌕 Paga al cierre</div>
-            </div>
-          </div>
-        `).join('');
+      const privBadge = document.getElementById('dash-circ-priv-badge');
+      if (privBadge) {
+        privBadge.innerText = isPrivado ? '🔒 PRIVADO' : '🌐 ABIERTO';
+        privBadge.style.background = isPrivado ? '#FEF3C7' : '#ECFDF5';
+        privBadge.style.color = isPrivado ? '#92400E' : '#059669';
+      }
+
+      const nodoBadge = document.getElementById('dash-circ-nodo-badge');
+      if (nodoBadge) nodoBadge.innerText = `📍 ${nodoNombre}`;
+
+      // Canales de Comunicación WhatsApp
+      const commBox = document.getElementById('dash-circ-comm-buttons');
+      if (commBox) {
+        let commHtml = '';
+        if (target.linkGrupoWsp && target.linkGrupoWsp.trim() !== '') {
+          commHtml += `
+            <a href="${target.linkGrupoWsp}" target="_blank" style="background: #25D366; color: white; text-decoration: none; font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(37,211,102,0.3);">
+              <i class="fab fa-whatsapp" style="font-size: 15px;"></i> Grupo WhatsApp
+            </a>
+          `;
+        }
+        if (target.whatsapp) {
+          const anfNum = target.whatsapp.replace(/\D/g, '');
+          const anfMsg = encodeURIComponent(`¡Hola ${target.anfitrion}! Te escribo por el Círculo ${target.nombre} en Vrde Club 🌿`);
+          commHtml += `
+            <a href="https://wa.me/${anfNum}?text=${anfMsg}" target="_blank" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; text-decoration: none; font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fas fa-comment-dots"></i> WhatsApp Anfitrión/a
+            </a>
+          `;
+        }
+        commBox.innerHTML = commHtml;
+      }
+
+      // Escala Colectiva y Descuento
+      const tierBadge = document.getElementById('dash-scale-tier-badge');
+      if (tierBadge) {
+        tierBadge.innerHTML = `🔥 <strong>Nivel ${escala.tier}: ${escala.tierNombre}</strong> ${escala.ahorroPorcentaje > 0 ? `<span style="background: #10B981; color: white; font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">-${escala.ahorroPorcentaje}% AHORRO</span>` : ''}`;
+      }
+
+      const savingPill = document.getElementById('dash-scale-saving-pill');
+      if (savingPill) {
+        savingPill.innerText = `Ahorro colectivo: $${escala.ahorroEstimado.toLocaleString('es-AR')}`;
+      }
+
+      const progBar = document.getElementById('dash-scale-prog-bar');
+      if (progBar) progBar.style.width = `${escala.progreso}%`;
+
+      const progText = document.getElementById('dash-scale-prog-text');
+      if (progText) {
+        progText.innerHTML = escala.faltante > 0 
+          ? `🚀 Faltan solo <strong>${escala.faltante} unidades</strong> para alcanzar <strong>${escala.siguienteTierNombre}</strong>`
+          : `🎉 <strong>¡Meta comunitaria superada!</strong> Este Círculo ya desbloqueó el mejor costo colectivo.`;
+      }
+
+      // Métricas numéricas
+      const statM = document.getElementById('dash-stat-members');
+      if (statM) statM.innerText = integrantes.length;
+      const statU = document.getElementById('dash-stat-units');
+      if (statU) statU.innerText = escala.unidadesTotal;
+      const statT = document.getElementById('dash-stat-total');
+      if (statT) statT.innerText = `$${escala.totalRecaudado.toLocaleString('es-AR')}`;
+      const countNum = document.getElementById('dash-members-count-num');
+      if (countNum) countNum.innerText = integrantes.length;
+
+      // Lista de Integrantes
+      const membersList = document.getElementById('dash-circ-members-list');
+      if (membersList) {
+        if (integrantes.length === 0) {
+          membersList.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 12.5px; padding: 16px;">Aún no hay integrantes registrados. ¡Compartí el link para sumar a tus vecinos!</div>`;
+        } else {
+          membersList.innerHTML = integrantes.map(m => {
+            const hasWsp = m.telefono && m.telefono.trim().length > 0;
+            const num = (m.telefono || '').replace(/\D/g, '');
+            const chatUrl = num ? `https://wa.me/${num}?text=${encodeURIComponent(`¡Hola ${m.nombre}! Te escribo desde el Círculo ${target.nombre} en Vrde Club 🌿`)}` : '#';
+
+            return `
+              <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: ${m.esAnfitrion ? 'linear-gradient(135deg, #F59E0B, #D97706)' : 'linear-gradient(135deg, #10B981, #059669)'}; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0;">
+                    ${m.avatar === '👑' ? '👑' : (m.nombre.charAt(0).toUpperCase() || '👤')}
+                  </div>
+                  <div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      <strong style="font-size: 13.5px; color: #0F172A;">${m.nombre}</strong>
+                      <span style="font-size: 10px; font-weight: 700; background: ${m.esAnfitrion ? '#FEF3C7' : '#F1F5F9'}; color: ${m.esAnfitrion ? '#92400E' : '#475569'}; padding: 1px 6px; border-radius: 4px;">
+                        ${m.esAnfitrion ? '👑 Anfitrión/a' : '👤 Vecino/a'}
+                      </span>
+                    </div>
+                    <div style="font-size: 11.5px; color: #64748B; margin-top: 1px;">
+                      ${m.pedidosCount > 0 
+                        ? `📦 ${m.unidadesTotal} un. acumuladas ($${m.montoTotal.toLocaleString('es-AR')})` 
+                        : '🌱 Anfitrión/a coordinador del grupo'}
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  ${hasWsp ? `
+                    <a href="${chatUrl}" target="_blank" style="background: #F0FDF4; border: 1px solid #BBF7D0; color: #16A34A; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Chatear con ${m.nombre}">
+                      <i class="fab fa-whatsapp"></i> Chat
+                    </a>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // Configurar Botón Salir / Unirse
+      const btnLeave = document.getElementById('dash-btn-leave-circulo');
+      if (btnLeave) {
+        const isCurrentActive = ACTIVE_CIRCULO && (ACTIVE_CIRCULO.id === target.id || ACTIVE_CIRCULO.slug === target.slug);
+        if (isCurrentActive) {
+          btnLeave.innerHTML = `<i class="fas fa-sign-out-alt"></i> Salir del Círculo`;
+          btnLeave.onclick = leaveCurrentCirculo;
+          btnLeave.style.display = 'block';
+          btnLeave.style.background = '#FEE2E2';
+          btnLeave.style.color = '#B91C1C';
+          btnLeave.style.borderColor = '#FCA5A5';
+        } else {
+          btnLeave.innerHTML = `<i class="fas fa-plus"></i> Unirme a este Círculo`;
+          btnLeave.onclick = () => {
+            selectCirculo(target.slug || target.id);
+            closeModal('modal-circulo-dashboard');
+            switchAppView('catalogo');
+          };
+          btnLeave.style.display = 'block';
+          btnLeave.style.background = '#ECFDF5';
+          btnLeave.style.color = '#065F46';
+          btnLeave.style.borderColor = '#A7F3D0';
+        }
       }
 
       openModal('modal-circulo-dashboard');
+    }
+
+    function leaveCurrentCirculo() {
+      if (!confirm("¿Seguro que querés salir de este Círculo y comprar de forma individual en el Nodo cabecera?")) return;
+
+      LunarEngine.desvincularCirculoActivo();
+      ACTIVE_CIRCULO = null;
+
+      const cleanUrl = `${window.location.origin}${window.location.pathname}?ref=${CURRENT_REF}`;
+      window.history.replaceState({}, '', cleanUrl);
+
+      closeModal('modal-circulo-dashboard');
+      updateCirculoActiveBanner();
+      renderSidebarUserInfo();
+      renderMiPanel();
+      if (CURRENT_APP_VIEW === 'circulos') renderCirculosView();
+      updateFloatingCart();
+      loadActiveProductView();
     }
 
     function shareProductGoalWsp(prodId) {
