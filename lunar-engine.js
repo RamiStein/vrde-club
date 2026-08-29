@@ -2524,12 +2524,12 @@ class LunarEngine {
         `"${s.telefono}"`,
         `"${s.nodo}"`,
         `"${(s.vrdedor || '').replace(/"/g, '""')}"`,
-        `"${s.tipoEntregaHabitual}"`,
+        `"${s.tipoEntregaHabitual || ''}"`,
         `"${(s.direccion || '').replace(/"/g, '""')}"`,
-        s.pedidosCount,
-        s.unidadesCount,
-        s.totalGastado,
-        `"${s.ultimaLuna}"`,
+        s.pedidosCount || 0,
+        s.unidadesCount || 0,
+        s.totalGastado || 0,
+        `"${s.ultimaLuna || ''}"`,
         s.comproEnCicloSeleccionado ? 'SI' : 'NO'
       ];
       csv += fila.join(';') + '\n';
@@ -2548,7 +2548,7 @@ class LunarEngine {
   // ==========================================
   // CÍRCULOS Y GRUPOS DE COMPRA COMUNITARIOS
   // ==========================================
-  static obtenerCirculos(nodoId = null) {
+  static obtenerCirculos(nodoId = null, soloAbiertos = false) {
     let circulos = [];
     if (typeof localStorage !== 'undefined') {
       try {
@@ -2564,8 +2564,9 @@ class LunarEngine {
           nombre: 'Vecinos Edificio Maipú',
           anfitrion: 'Ramiro Stein',
           whatsapp: '1148291029',
-          nodoId: 'escobar',
+          nodoId: 'lomaverde',
           direccionEntrega: 'Maipú 450 (Hall PB)',
+          privacidad: 'abierto',
           creadoEn: '2026-08-20',
           activo: true
         },
@@ -2577,7 +2578,20 @@ class LunarEngine {
           whatsapp: '1159203948',
           nodoId: 'lomaverde',
           direccionEntrega: 'Los Álamos 120',
+          privacidad: 'abierto',
           creadoEn: '2026-08-22',
+          activo: true
+        },
+        {
+          id: 'circulo-san-isidro-eco',
+          slug: 'vecinos-plaza-mitre',
+          nombre: 'Vecinos Plaza Mitre',
+          anfitrion: 'Esteban Paz',
+          whatsapp: '1169304123',
+          nodoId: 'vicentelopez',
+          direccionEntrega: 'Mitre 250 (Frente a la plaza)',
+          privacidad: 'abierto',
+          creadoEn: '2026-08-24',
           activo: true
         }
       ];
@@ -2585,32 +2599,90 @@ class LunarEngine {
         try { localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(circulos)); } catch(e){}
       }
     }
+
+    let resultado = circulos.filter(c => c.activo !== false);
+
     if (nodoId && nodoId !== 'ALL') {
-      return circulos.filter(c => c.nodoId === nodoId);
+      resultado = resultado.filter(c => c.nodoId === nodoId);
     }
-    return circulos;
+    if (soloAbiertos) {
+      resultado = resultado.filter(c => c.privacidad !== 'cerrado');
+    }
+    return resultado;
   }
 
-  static obtenerCirculo(idOrSlug) {
+  static obtenerCirculo(idOrSlug, fallbackParams = null) {
     if (!idOrSlug) return null;
     const lista = this.obtenerCirculos();
     const query = String(idOrSlug).toLowerCase().trim();
-    return lista.find(c => c.id === query || c.slug === query || c.id === idOrSlug) || null;
+    let encontrado = lista.find(c => c.id === query || c.slug === query || c.id === idOrSlug || (c.slug && c.slug.toLowerCase() === query));
+    
+    if (encontrado) return encontrado;
+
+    // Rescate / Auto-registro universal desde parámetros de URL para cross-device
+    let params = fallbackParams;
+    if (!params && typeof window !== 'undefined' && window.location) {
+      params = new URLSearchParams(window.location.search);
+    }
+
+    if (params) {
+      const cNom = params.get('c_nom') || params.get('circName');
+      if (cNom) {
+        const cAnf = params.get('c_anf') || params.get('circHost') || 'Anfitrión del Círculo';
+        const cWsp = params.get('c_wsp') || params.get('circWsp') || '';
+        const cRef = params.get('ref') || 'lomaverde';
+        const cTipo = params.get('c_tipo') || 'abierto';
+        const cDir = params.get('c_dir') || '';
+
+        const autoCirculo = {
+          id: 'circulo-' + query,
+          slug: query,
+          nombre: decodeURIComponent(cNom),
+          anfitrion: decodeURIComponent(cAnf),
+          whatsapp: decodeURIComponent(cWsp),
+          nodoId: cRef,
+          direccionEntrega: decodeURIComponent(cDir),
+          privacidad: cTipo,
+          creadoEn: new Date().toISOString(),
+          activo: true
+        };
+
+        lista.unshift(autoCirculo);
+        if (typeof localStorage !== 'undefined') {
+          try { localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(lista)); } catch(e){}
+        }
+
+        // Sincronizar con Firestore si está disponible
+        if (typeof window !== 'undefined' && window.vrdeFirebaseDb) {
+          try {
+            import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js").then(({ doc, setDoc }) => {
+              setDoc(doc(window.vrdeFirebaseDb, "circulos", autoCirculo.id), autoCirculo, { merge: true });
+            });
+          } catch(e){}
+        }
+
+        return autoCirculo;
+      }
+    }
+
+    return null;
   }
 
   static crearCirculo(datos) {
     const lista = this.obtenerCirculos();
-    const slug = (datos.nombre || 'circulo').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const rawNombre = datos.nombre || 'circulo';
+    const slug = rawNombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     const id = 'circulo-' + slug + '-' + Math.floor(Math.random() * 900 + 100);
 
     const nuevoCirculo = {
       id: id,
-      slug: slug,
+      slug: slug || id,
       nombre: datos.nombre,
       anfitrion: datos.anfitrion,
       whatsapp: datos.whatsapp,
-      nodoId: datos.nodoId || 'escobar',
+      nodoId: datos.nodoId || 'lomaverde',
       direccionEntrega: datos.direccionEntrega || '',
+      privacidad: datos.privacidad || 'abierto', // 'abierto' | 'cerrado'
       notas: datos.notas || '',
       creadoEn: new Date().toISOString(),
       activo: true
@@ -2618,9 +2690,35 @@ class LunarEngine {
 
     lista.unshift(nuevoCirculo);
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(lista));
+      try { localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(lista)); } catch(e){}
     }
+
+    // Sincronización en Firebase Firestore en tiempo real
+    if (typeof window !== 'undefined' && window.vrdeFirebaseDb) {
+      try {
+        import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js").then(({ doc, setDoc }) => {
+          setDoc(doc(window.vrdeFirebaseDb, "circulos", nuevoCirculo.id), nuevoCirculo, { merge: true });
+        });
+      } catch(e){
+        console.warn("Error sync Firestore al crear círculo:", e);
+      }
+    }
+
     return nuevoCirculo;
+  }
+
+  static generarLinkCirculo(circulo, baseUrl = null) {
+    if (!circulo) return '';
+    const base = baseUrl || (typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : 'https://www.vrde.club/tienda.html');
+    const params = new URLSearchParams();
+    params.set('ref', circulo.nodoId || 'lomaverde');
+    params.set('circulo', circulo.slug || circulo.id);
+    params.set('c_nom', circulo.nombre || '');
+    params.set('c_anf', circulo.anfitrion || '');
+    if (circulo.whatsapp) params.set('c_wsp', circulo.whatsapp);
+    if (circulo.privacidad) params.set('c_tipo', circulo.privacidad);
+    if (circulo.direccionEntrega) params.set('c_dir', circulo.direccionEntrega);
+    return `${base}?${params.toString()}`;
   }
 
   static obtenerPedidosCirculo(circuloId, cicloId = null) {
@@ -2671,7 +2769,7 @@ if (typeof window !== 'undefined') {
       const db = getFirestore(app);
       window.vrdeFirebaseDb = db;
 
-      // Escuchador en tiempo real de Pedidos en Firestore con Merge por ID único
+      // 1. Escuchador en tiempo real de Pedidos en Firestore con Merge por ID único
       onSnapshot(collection(db, "orders"), (snapshot) => {
         if (!snapshot.empty) {
           const remoteOrders = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -2689,6 +2787,27 @@ if (typeof window !== 'undefined') {
           const mergedOrders = Object.values(ordersMap);
           localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(mergedOrders));
           window.dispatchEvent(new CustomEvent('vrde:data-updated'));
+        }
+      });
+
+      // 2. Escuchador en tiempo real de Círculos en Firestore
+      onSnapshot(collection(db, "circulos"), (snapshot) => {
+        if (!snapshot.empty) {
+          const remoteCirculos = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+          let localCirculos = [];
+          try {
+            const stored = localStorage.getItem('VRDE_CIRCULOS');
+            if (stored) localCirculos = JSON.parse(stored);
+          } catch(e){}
+
+          const circMap = {};
+          localCirculos.forEach(c => { if (c && c.id) circMap[c.id] = c; });
+          remoteCirculos.forEach(c => { if (c && c.id) circMap[c.id] = c; });
+
+          const mergedCirculos = Object.values(circMap);
+          localStorage.setItem('VRDE_CIRCULOS', JSON.stringify(mergedCirculos));
+          window.dispatchEvent(new CustomEvent('vrde:circulos-updated'));
         }
       });
 
@@ -2714,7 +2833,7 @@ if (typeof window !== 'undefined') {
         return pedidos;
       };
 
-      console.log("x Sincronización de Firebase Firestore activa en LunarEngine");
+      console.log("🌱 Sincronización de Firebase Firestore (Pedidos y Círculos) activa en LunarEngine");
     } catch(e) {
       console.warn("Modo local sin conexión Firebase:", e);
     }
@@ -2726,5 +2845,3 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { LunarEngine, LUNAR_CONFIG };
 }
-
-

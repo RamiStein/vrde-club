@@ -276,8 +276,33 @@
 
       nodosActivos.forEach(n => {
         const safeLogo = (n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌑';
+        const circulosAbiertos = (typeof LunarEngine !== 'undefined') ? LunarEngine.obtenerCirculos(n.id, true) : [];
+
+        let circulosHtml = '';
+        if (circulosAbiertos.length > 0) {
+          circulosHtml = `
+            <div style="margin-bottom: 16px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: var(--radius-sm); padding: 10px 12px;">
+              <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fas fa-users"></i> Círculos Abiertos en este Nodo:</span>
+                <span style="background: #ECFDF5; color: #065F46; padding: 1px 6px; border-radius: 99px; font-size: 10px; font-weight: 800;">${circulosAbiertos.length}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                ${circulosAbiertos.map(c => `
+                  <a href="tienda.html?ref=${n.id}&circulo=${c.slug || c.id}" style="text-decoration: none; background: white; border: 1px solid #A7F3D0; border-radius: 8px; padding: 7px 10px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;" onmouseover="this.style.borderColor='#10B981'" onmouseout="this.style.borderColor='#A7F3D0'">
+                    <div>
+                      <div style="font-size: 12px; font-weight: 700; color: #064E3B;">👥 ${c.nombre}</div>
+                      <div style="font-size: 10.5px; color: #059669;">👑 Anfitrión/a: ${c.anfitrion}</div>
+                    </div>
+                    <span style="font-size: 11px; font-weight: 800; color: #059669;">Unirme &rarr;</span>
+                  </a>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
         html += `
-          <div class="node-portal-card">
+          <div class="node-portal-card" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
               <div class="node-header-top">
                 <div class="node-logo-circle">${safeLogo}</div>
@@ -287,20 +312,25 @@
                 </div>
               </div>
 
-              <p style="font-size: 13px; color: #475569; line-height: 1.4; margin-bottom: 16px;">
+              <p style="font-size: 13px; color: #475569; line-height: 1.4; margin-bottom: 14px;">
                 ${n.descripcion || 'Punto de acopio y distribución agroecológica comunitaria.'}
               </p>
 
-              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: #334155; margin-bottom: 20px; line-height: 1.4;">
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12.5px; color: #334155; margin-bottom: 14px; line-height: 1.4;">
                 <i class="fas fa-calendar-alt" style="color: var(--primary); margin-right: 6px;"></i>
                 <strong>Entrega:</strong> ${n.diaEntrega}
               </div>
+
+              ${circulosHtml}
             </div>
 
-            <div>
-              <a href="tienda.html?ref=${n.id}" class="btn-checkout-cta" style="width: 100%; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--radius-sm); padding: 12px; font-size: 14px;">
-                <span>Ingresar al Nodo</span>
-                <i class="fas fa-arrow-right"></i>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+              <a href="tienda.html?ref=${n.id}" class="btn-checkout-cta" style="width: 100%; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--radius-sm); padding: 11px; font-size: 13.5px;">
+                <i class="fas fa-shopping-basket"></i>
+                <span>Comprar en ${n.nombre}</span>
+              </a>
+              <a href="tienda.html?ref=${n.id}&crearCirculo=true" style="text-decoration: none; text-align: center; font-size: 12px; font-weight: 700; color: #059669; padding: 7px; background: #ECFDF5; border: 1px dashed #A7F3D0; border-radius: 8px; display: block; transition: all 0.2s;">
+                <i class="fas fa-plus-circle"></i> Abrir nuevo Círculo en este Nodo
               </a>
             </div>
           </div>

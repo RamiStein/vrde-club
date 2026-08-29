@@ -598,6 +598,9 @@
     </div>
   </div>
 
+  <!-- Estante Spotify de Círculos del Nodo -->
+  <div id="circulos-shelf-container" style="padding: 0 16px; margin-bottom: 12px;"></div>
+
   <!-- Switch de Modos de Vista: Showcase vs Modo Juego -->
   <div class="view-mode-bar-container">
     <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')">
@@ -942,15 +945,37 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Nodo Cabecera de Retiro *</label>
+            <label class="form-label">Nodo Cabecera de Retiro y Logística *</label>
             <select id="circ-nodo-select" class="input-field" style="background: #F8FAFC; font-weight: 600;">
               <!-- Inyectado por JS con los nodos activos -->
             </select>
+            <p style="font-size: 11px; color: var(--text-muted); margin: 3px 0 0;">Los pedidos del Círculo se consolidan con las rutas de este Nodo oficial.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo de Círculo / Privacidad *</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px;">
+              <label style="border: 1.5px solid #10B981; background: #ECFDF5; padding: 10px 12px; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 12.5px; color: #064E3B;">
+                  <input type="radio" name="circ-privacidad" value="abierto" checked style="accent-color: #10B981;">
+                  <span>🌐 Círculo Abierto</span>
+                </div>
+                <span style="font-size: 11px; color: #047857;">Público en la tienda para que vecinos del barrio puedan sumarse</span>
+              </label>
+
+              <label style="border: 1.5px solid #CBD5E1; background: #F8FAFC; padding: 10px 12px; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 12.5px; color: #334155;">
+                  <input type="radio" name="circ-privacidad" value="cerrado" style="accent-color: #10B981;">
+                  <span>🔒 Círculo Privado</span>
+                </div>
+                <span style="font-size: 11px; color: #64748B;">Oculto. Solo para quienes reciban el link privado de WhatsApp</span>
+              </label>
+            </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">Punto de Entrega / Dirección del Grupo (Opcional)</label>
-            <input type="text" id="circ-direccion" class="input-field" placeholder="Ej: Maipú 450 (Hall PB)">
+            <input type="text" id="circ-direccion" class="input-field" placeholder="Ej: Maipú 450 (Hall PB) / Taller de Cerámica">
           </div>
 
           <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 14px; margin-top: 10px;">
@@ -1143,9 +1168,9 @@
 
       CICLO_LUNAR = LunarEngine.obtenerCicloVigente();
 
-      // Detección de Círculo Activo
+      // Detección de Círculo Activo (incluyendo auto-rescate cross-device con parámetros portables)
       if (circuloParam) {
-        ACTIVE_CIRCULO = LunarEngine.obtenerCirculo(circuloParam);
+        ACTIVE_CIRCULO = LunarEngine.obtenerCirculo(circuloParam, urlParams);
         if (ACTIVE_CIRCULO && ACTIVE_CIRCULO.nodoId && allNodos[ACTIVE_CIRCULO.nodoId]) {
           CURRENT_REF = ACTIVE_CIRCULO.nodoId;
         }
@@ -1178,7 +1203,7 @@
       } else if (!ACTIVE_CIRCULO) {
         const activos = LunarEngine.obtenerNodos(true);
         const activeKeys = Object.keys(activos);
-        CURRENT_REF = activeKeys.length > 0 ? activeKeys[0] : (nodeKeys[0] || 'vicente_lopez');
+        CURRENT_REF = activeKeys.length > 0 ? activeKeys[0] : (nodeKeys[0] || 'lomaverde');
       }
 
       const nodoData = allNodos[CURRENT_REF] || {};
@@ -1189,8 +1214,9 @@
       document.getElementById('shop-nodo-label').innerText = nodoData.nombre || 'Almacén Agroecológico';
       document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
 
-      // Cargar Banner de Círculo Activo
+      // Cargar Banner de Círculo Activo y Estante Spotify de Círculos
       updateCirculoActiveBanner();
+      renderCirculosShelf();
 
       // Cargar Banner Lunar
       document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
@@ -1213,29 +1239,159 @@
       initTabsScrollBehavior();
     }
 
+    // ==========================================
+    // ESTANTE SPOTIFY DE CÍRCULOS DEL NODO
+    // ==========================================
+    function renderCirculosShelf() {
+      const container = document.getElementById('circulos-shelf-container');
+      if (!container) return;
+
+      const nodoId = CURRENT_REF || 'lomaverde';
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[nodoId] || {};
+      const circulosAbiertos = LunarEngine.obtenerCirculos(nodoId, true);
+
+      let html = `
+        <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border: 1px solid #334155; border-radius: 16px; padding: 16px 18px; color: white; box-shadow: 0 4px 20px rgba(0,0,0,0.12);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 20px;">👥</span>
+              <div>
+                <h3 style="font-size: 14px; font-weight: 800; margin: 0; color: #F8FAFC; display: flex; align-items: center; gap: 6px;">
+                  Círculos Comunitarios en ${nodoData.nombre || 'este Nodo'}
+                  <span style="font-size: 10px; background: #10B981; color: #064E3B; padding: 2px 8px; border-radius: 99px; font-weight: 800;">${circulosAbiertos.length} ABIERTOS</span>
+                </h3>
+                <p style="font-size: 11px; color: #94A3B8; margin: 0;">Sumate a un grupo barrial para juntar kilos o abrí el tuyo</p>
+              </div>
+            </div>
+            <button type="button" onclick="openCreateCirculoModal()" style="background: #10B981; color: #064E3B; font-weight: 800; font-size: 11px; padding: 6px 14px; border-radius: 99px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s;">
+              <i class="fas fa-plus"></i> Abrir mi Círculo
+            </button>
+          </div>
+
+          <!-- Fila Horizontal Desplazable Estilo Spotify -->
+          <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin;" class="hide-scrollbar">
+            
+            <!-- Tarjeta Compra Individual -->
+            <div onclick="selectCirculo(null)" style="min-width: 170px; max-width: 180px; flex-shrink: 0; background: ${!ACTIVE_CIRCULO ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.05)'}; border: 1.5px solid ${!ACTIVE_CIRCULO ? '#10B981' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-size: 20px; margin-bottom: 4px;">🏬</div>
+                <div style="font-size: 12px; font-weight: 800; color: #FFFFFF; line-height: 1.2;">Comprar Solo (Nodo)</div>
+                <div style="font-size: 10px; color: #94A3B8; margin-top: 3px;">Retiro personal directo en la sede</div>
+              </div>
+              <div style="margin-top: 10px;">
+                <span style="font-size: 9.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: ${!ACTIVE_CIRCULO ? '#10B981' : 'rgba(255,255,255,0.1)'}; color: ${!ACTIVE_CIRCULO ? '#064E3B' : '#CBD5E1'}; display: inline-block;">
+                  ${!ACTIVE_CIRCULO ? '✓ Activo' : 'Elegir'}
+                </span>
+              </div>
+            </div>
+      `;
+
+      circulosAbiertos.forEach(c => {
+        const isSelected = ACTIVE_CIRCULO && (ACTIVE_CIRCULO.id === c.id || ACTIVE_CIRCULO.slug === c.slug);
+        const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+        html += `
+            <!-- Tarjeta de Círculo Abierto -->
+            <div onclick="selectCirculo('${c.slug || c.id}')" style="min-width: 190px; max-width: 210px; flex-shrink: 0; background: ${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(255,255,255,0.05)'}; border: 1.5px solid ${isSelected ? '#10B981' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                  <span style="font-size: 20px;">👥</span>
+                  <span style="font-size: 9px; font-weight: 800; color: #34D399; background: rgba(52,211,153,0.15); padding: 2px 6px; border-radius: 4px;">🌐 ABIERTO</span>
+                </div>
+                <div style="font-size: 12.5px; font-weight: 800; color: #FFFFFF; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${c.nombre}">${c.nombre}</div>
+                <div style="font-size: 10.5px; color: #A7F3D0; margin-top: 2px;">👑 ${c.anfitrion}</div>
+                <div style="font-size: 10px; color: #94A3B8; margin-top: 4px;">
+                  <i class="fas fa-shopping-basket" style="font-size: 9px; color: #10B981;"></i> ${stats.pedidos.length} pedidos (${stats.unidadesTotal || 0} u.)
+                </div>
+              </div>
+              <div style="margin-top: 10px;">
+                <span style="font-size: 9.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: ${isSelected ? '#10B981' : 'rgba(255,255,255,0.1)'}; color: ${isSelected ? '#064E3B' : '#CBD5E1'}; display: inline-block;">
+                  ${isSelected ? '✓ Pedir con este Grupo' : 'Sumarme'}
+                </span>
+              </div>
+            </div>
+        `;
+      });
+
+      html += `
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function selectCirculo(slugOrId) {
+      if (!slugOrId) {
+        ACTIVE_CIRCULO = null;
+        const cleanUrl = `${window.location.origin}${window.location.pathname}?ref=${CURRENT_REF}`;
+        window.history.replaceState({}, '', cleanUrl);
+      } else {
+        ACTIVE_CIRCULO = LunarEngine.obtenerCirculo(slugOrId);
+        if (ACTIVE_CIRCULO) {
+          const link = LunarEngine.generarLinkCirculo(ACTIVE_CIRCULO);
+          window.history.replaceState({ circulo: ACTIVE_CIRCULO.slug }, '', link);
+        }
+      }
+      updateCirculoActiveBanner();
+      renderCirculosShelf();
+      updateFloatingCart();
+      loadActiveProductView();
+    }
+
     function updateCirculoActiveBanner() {
       const circuloBannerContainer = document.getElementById('circulo-active-banner-container');
       if (circuloBannerContainer) {
         if (ACTIVE_CIRCULO) {
+          const stats = LunarEngine.obtenerEstadisticasCirculo(ACTIVE_CIRCULO.id || ACTIVE_CIRCULO.slug);
+          const allNodos = LunarEngine.obtenerNodos();
+          const nodoNombre = (allNodos[ACTIVE_CIRCULO.nodoId]?.nombre) || (allNodos[CURRENT_REF]?.nombre) || 'Nodo Cabecera';
+          const isPrivado = ACTIVE_CIRCULO.privacidad === 'cerrado';
+
           circuloBannerContainer.innerHTML = `
-            <div style="background: linear-gradient(135deg, #ECFDF5, #F0FDF4); border: 1px solid #A7F3D0; border-radius: 14px; padding: 12px 18px; margin: 12px 0 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 8px rgba(16,185,129,0.08);">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 38px; height: 38px; border-radius: 50%; background: #10B981; color: white; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-                  👥
+            <div style="background: linear-gradient(135deg, #064E3B, #0F172A); border: 1.5px solid #10B981; border-radius: 16px; padding: 16px 20px; margin: 12px 0 16px; color: white; box-shadow: 0 8px 24px rgba(16,185,129,0.15);">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                
+                <!-- Left: Identity & Badges -->
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(16,185,129,0.3); flex-shrink: 0;">
+                    👥
+                  </div>
+                  <div>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                      <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; background: rgba(16,185,129,0.25); color: #6EE7B7; padding: 2px 7px; border-radius: 4px;">
+                        🟣 CÍRCULO COMUNITARIO
+                      </span>
+                      <span style="font-size: 10px; font-weight: 700; color: ${isPrivado ? '#FCD34D' : '#A7F3D0'};">
+                        ${isPrivado ? '🔒 Círculo Privado' : '🌐 Círculo Abierto'}
+                      </span>
+                    </div>
+                    <h2 style="font-size: 18px; font-weight: 800; color: #F8FAFC; margin: 0; line-height: 1.2;">
+                      ${ACTIVE_CIRCULO.nombre}
+                    </h2>
+                    <div style="font-size: 12px; color: #CBD5E1; margin-top: 3px;">
+                      👑 Anfitrión/a: <strong style="color: #FFFFFF;">${ACTIVE_CIRCULO.anfitrion}</strong> • 
+                      📍 Retiro en: <strong style="color: #A7F3D0;">${nodoNombre}</strong>
+                    </div>
+                    <div style="font-size: 11px; color: #94A3B8; margin-top: 1px;">
+                      📦 ${ACTIVE_CIRCULO.direccionEntrega ? `Punto de entrega barrial: ${ACTIVE_CIRCULO.direccionEntrega}` : 'Coordinan retiro conjunto en la sede del Nodo en Luna Llena'}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.5px;">Estás pidiendo con el Círculo Lunar:</div>
-                  <div style="font-size: 15px; font-weight: 800; color: #064E3B;">${ACTIVE_CIRCULO.nombre}</div>
-                  <div style="font-size: 12px; color: #047857;">Anfitrión/a: <strong>${ACTIVE_CIRCULO.anfitrion}</strong> • Entrega coordinada en grupo</div>
+
+                <!-- Right: Actions -->
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" onclick="openCirculoDashboardModal()" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #FFFFFF; font-weight: 700; font-size: 12px; padding: 8px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-chart-pie" style="color: #34D399;"></i> Tablero (${stats.pedidos.length} pedidos)
+                  </button>
+                  <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: #FFFFFF; font-weight: 700; font-size: 12px; padding: 8px 14px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(37,211,102,0.25);">
+                    <i class="fab fa-whatsapp"></i> Invitar Vecinos
+                  </button>
+                  <button type="button" onclick="selectCirculo(null)" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #94A3B8; font-size: 11px; padding: 8px 10px; border-radius: 10px; cursor: pointer;" title="Salir del Círculo y pedir individual en el Nodo">
+                    ✕ Comprar Solo
+                  </button>
                 </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <button type="button" onclick="openCirculoDashboardModal()" style="background: #FFFFFF; border: 1px solid #10B981; color: #059669; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer;">
-                  <i class="fas fa-users"></i> Ver Grupo
-                </button>
-                <span style="background: #10B981; color: #FFFFFF; font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 99px;">
-                  🌕 Pagás en Luna Llena
-                </span>
+
               </div>
             </div>
           `;
@@ -1273,6 +1429,7 @@
       const whatsapp = document.getElementById('circ-whatsapp').value.trim();
       const nodoId = document.getElementById('circ-nodo-select').value;
       const direccion = document.getElementById('circ-direccion').value.trim();
+      const privacidad = document.querySelector('input[name="circ-privacidad"]:checked')?.value || 'abierto';
 
       if (!nombre || !anfitrion || !whatsapp) {
         alert("Por favor completa los campos requeridos.");
@@ -1284,13 +1441,15 @@
         anfitrion: anfitrion,
         whatsapp: whatsapp,
         nodoId: nodoId,
-        direccionEntrega: direccion
+        direccionEntrega: direccion,
+        privacidad: privacidad
       });
 
       ACTIVE_CIRCULO = nuevo;
       CURRENT_REF = nodoId;
 
-      const link = `${window.location.origin}${window.location.pathname}?ref=${nodoId}&circulo=${nuevo.slug}`;
+      // Generar link universal portable (funciona en cualquier dispositivo)
+      const link = LunarEngine.generarLinkCirculo(nuevo);
       window.history.replaceState({ circulo: nuevo.slug }, '', link);
 
       // Poblar pantalla de éxito con el enlace en el modal
@@ -1301,7 +1460,7 @@
       if (succTitle) succTitle.innerText = `¡Círculo "${nuevo.nombre}" Creado!`;
 
       const succSub = document.getElementById('circ-succ-subtitle');
-      if (succSub) succSub.innerHTML = `Anfitrión/a: <strong>${nuevo.anfitrion}</strong> • Retiro en: <strong>${nodoNombre}</strong>`;
+      if (succSub) succSub.innerHTML = `Anfitrión/a: <strong>${nuevo.anfitrion}</strong> • Retiro en: <strong>${nodoNombre}</strong> (${privacidad === 'cerrado' ? '🔒 Privado' : '🌐 Abierto'})`;
 
       const linkBox = document.getElementById('circ-share-link-box');
       if (linkBox) linkBox.innerText = link;
@@ -1315,8 +1474,9 @@
       if (formStep) formStep.classList.add('hidden');
       if (shareResult) shareResult.classList.remove('hidden');
 
-      // Actualizar banner de fondo
+      // Actualizar banner y estante de fondo
       updateCirculoActiveBanner();
+      renderCirculosShelf();
       updateFloatingCart();
     }
 
@@ -1324,7 +1484,7 @@
       const box = document.getElementById('circ-share-link-box');
       let link = box ? box.innerText : '';
       if (!link && ACTIVE_CIRCULO) {
-        link = `${window.location.origin}${window.location.pathname}?ref=${ACTIVE_CIRCULO.nodoId || CURRENT_REF}&circulo=${ACTIVE_CIRCULO.slug || ACTIVE_CIRCULO.id}`;
+        link = LunarEngine.generarLinkCirculo(ACTIVE_CIRCULO);
       }
       if (link) {
         navigator.clipboard.writeText(link);
@@ -1339,13 +1499,16 @@
     function goToActiveCirculoStore() {
       closeModal('modal-crear-circulo');
       updateCirculoActiveBanner();
+      renderCirculosShelf();
       loadActiveProductView();
     }
 
     function shareActiveCirculoWsp() {
       if (!ACTIVE_CIRCULO) return;
-      const link = `${window.location.origin}${window.location.pathname}?ref=${ACTIVE_CIRCULO.nodoId || CURRENT_REF}&circulo=${ACTIVE_CIRCULO.slug || ACTIVE_CIRCULO.id}`;
-      const text = `¡Hola! Creé el Círculo de Compra Lunar "${ACTIVE_CIRCULO.nombre}" en Vrde Club 🌿.\n\nSumate al pedido comunitario para que alcancemos mejores precios y recibamos todo directo de chacra al cerrar la Luna Llena:\n${link}`;
+      const link = LunarEngine.generarLinkCirculo(ACTIVE_CIRCULO);
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoNombre = allNodos[ACTIVE_CIRCULO.nodoId]?.nombre || 'Nodo Central';
+      const text = `¡Hola! Creé el Círculo de Compra Lunar "${ACTIVE_CIRCULO.nombre}" en Vrde Club 🌿 (Cabecera: ${nodoNombre}).\n\nSumate al pedido comunitario para que alcancemos mejores precios y recibamos todo directo de chacra al cerrar la Luna Llena:\n${link}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
