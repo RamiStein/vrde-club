@@ -42,59 +42,172 @@
       line-height: 1.5;
     }
 
-    /* Grilla de Nodos */
-    .nodes-selection-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+    /* Estilos Spotify Shelf para Nodos y Círculos en lunar.html */
+    .nodes-shelves-wrapper {
       max-width: 1200px;
       margin: 0 auto 60px;
       padding: 0 20px;
-    }
-    .node-portal-card {
-      background: white;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-md);
-      padding: 24px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .node-shelf-block {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
       transition: all 0.25s ease;
     }
-    .node-portal-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-      border-color: var(--primary);
+    .node-shelf-block:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.07);
     }
-    .node-header-top {
+
+    .node-shelf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #F1F5F9;
+      margin-bottom: 20px;
+    }
+
+    .node-shelf-title-box {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 14px;
+      gap: 16px;
     }
+
     .node-logo-circle {
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       background: rgba(16, 163, 82, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
+      font-size: 28px;
       border: 2px solid rgba(16, 163, 82, 0.2);
       flex-shrink: 0;
     }
-    .node-portal-name {
-      font-size: 19px;
-      font-weight: 700;
+
+    .node-shelf-name {
+      font-size: 22px;
+      font-weight: 800;
       color: #0F172A;
-      margin: 0;
+      margin: 0 0 2px;
     }
-    .node-portal-dir {
+
+    .node-shelf-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
       font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 2px;
+      color: #475569;
+    }
+
+    .node-shelf-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* Subheader del carrusel */
+    .shelf-carousel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .shelf-carousel-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    /* Carrusel Horizontal estilo Spotify */
+    .spotify-track-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .spotify-horizontal-track {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 4px 16px 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #CBD5E1 transparent;
+    }
+
+    .spotify-horizontal-track::-webkit-scrollbar {
+      height: 6px;
+    }
+    .spotify-horizontal-track::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
+    .spotify-horizontal-track::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .spotify-card {
+      flex: 0 0 270px;
+      width: 270px;
+      max-width: 270px;
+      scroll-snap-align: start;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .spotify-card:hover {
+      transform: translateY(-4px);
+      border-color: #10B981;
+      box-shadow: 0 10px 24px rgba(16,185,129,0.12);
+      background: white;
+    }
+
+    .spotify-card-direct {
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      border-color: #334155;
+      color: white;
+    }
+    .spotify-card-direct:hover {
+      border-color: #10B981;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+    }
+
+    .spotify-card-add {
+      background: #F0FDF4;
+      border: 1.5px dashed #A7F3D0;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+    }
+    .spotify-card-add:hover {
+      border-color: #10B981;
+      background: #ECFDF5;
     }
 
     /* Explicación de Etapas Lunares */
@@ -175,31 +288,32 @@
     </div>
   </div>
 
-  <!-- Selector de Nodo (Paso 1) -->
-  <div style="padding: 50px 20px 30px; text-align: center;">
-    <h2 style="font-size: 28px; font-family: var(--font-heading); color: #0F172A; margin-bottom: 10px; font-weight: 700;">📍 Paso 1: Elige tu Nodo Almacén</h2>
-    <p style="font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto;">
-      Selecciona el punto comunitario donde retirarás o desde donde se despachará tu delivery.
+  <!-- Selector de Nodo y Círculos (Paso 1) -->
+  <div style="padding: 46px 20px 24px; text-align: center;">
+    <h2 style="font-size: 28px; font-family: var(--font-heading); color: #0F172A; margin-bottom: 8px; font-weight: 800;">📍 Nodos Almacén y Compras Abiertas</h2>
+    <p style="font-size: 15px; color: var(--text-muted); max-width: 640px; margin: 0 auto;">
+      Elegí tu nodo barrial de retiro o sumate a un círculo de compra comunitaria para desbloquear mejores precios directo de chacra.
     </p>
   </div>
 
-  <div class="nodes-selection-grid" id="nodes-grid-container">
-    <!-- Inyectado por JavaScript -->
+  <!-- Contenedor Spotify de Nodos con Carruseles Horizontales de Círculos -->
+  <div class="nodes-shelves-wrapper" id="nodes-grid-container">
+    <!-- Inyectado dinámicamente por JavaScript -->
   </div>
 
   <!-- Banner Abrir Círculo / Micro-Nodo -->
-  <div style="max-width: 900px; margin: 24px auto 0; padding: 0 20px;">
-    <div style="background: linear-gradient(135deg, #ECFDF5, #F0FDF4); border: 1px dashed #059669; border-radius: var(--radius-lg); padding: 22px 26px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="max-width: 1200px; margin: 0 auto 40px; padding: 0 20px;">
+    <div style="background: linear-gradient(135deg, #ECFDF5, #F0FDF4); border: 1px dashed #059669; border-radius: var(--radius-lg); padding: 24px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
       <div>
         <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(16,185,129,0.15); color: #065F46; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; margin-bottom: 6px;">
           <i class="fas fa-magic"></i> Micro-Nodos Barriales
         </div>
-        <h4 style="font-size: 18px; font-weight: 800; color: #064E3B; margin-bottom: 4px;">¿No tenés un nodo cerca de tu casa?</h4>
-        <p style="font-size: 13px; color: #047857; margin: 0; max-width: 540px;">
-          Creá tu propio <strong>Círculo de Compra</strong> en 15 segundos vinculado a la cabecera más próxima y centralizá los pedidos de tus vecinos o amigos con precios por bulto.
+        <h4 style="font-size: 18px; font-weight: 800; color: #064E3B; margin-bottom: 4px;">¿Querés crear un nuevo grupo en tu edificio o barrio?</h4>
+        <p style="font-size: 13.5px; color: #047857; margin: 0; max-width: 600px;">
+          Creá tu propio <strong>Círculo de Compra</strong> en 15 segundos vinculado a la cabecera más próxima y centralizá los pedidos de tus vecinos con precios por bulto.
         </p>
       </div>
-      <a href="tienda.html?crearCirculo=true" class="btn-checkout-cta" style="text-decoration: none; padding: 12px 20px; font-size: 13.5px; border-radius: var(--radius-sm); white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;">
+      <a href="tienda.html?crearCirculo=true" class="btn-checkout-cta" style="text-decoration: none; padding: 12px 22px; font-size: 13.5px; border-radius: 10px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;">
         <i class="fas fa-plus-circle"></i> Abrir Círculo / Micro-Nodo
       </a>
     </div>
@@ -245,7 +359,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="lunar-engine.js?v=5"></script>
+  <script src="lunar-engine.js?v=6"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const ciclo = LunarEngine.obtenerCicloActual();
@@ -260,12 +374,12 @@
 
     function renderNodesGrid() {
       const nodosObj = LunarEngine.obtenerNodos(true);
-      let html = '';
       const nodosActivos = Object.values(nodosObj);
+      const container = document.getElementById('nodes-grid-container');
 
       if (nodosActivos.length === 0) {
-        document.getElementById('nodes-grid-container').innerHTML = `
-          <div style="grid-column: 1 / -1; background: white; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; color: var(--text-muted);">
+        container.innerHTML = `
+          <div style="background: white; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; color: var(--text-muted);">
             <div style="font-size: 36px; margin-bottom: 8px;">🌱</div>
             <h3 style="font-size: 18px; color: #0F172A; margin-bottom: 6px;">No hay nodos activos en este momento</h3>
             <p style="font-size: 14px; margin: 0;">Pronto se abrirán nuevos puntos comunitarios de distribución.</p>
@@ -274,70 +388,169 @@
         return;
       }
 
+      let html = '';
+
       nodosActivos.forEach(n => {
         const safeLogo = (n.logo && n.logo.trim().toLowerCase() !== 'x') ? n.logo : '🌑';
         const circulosAbiertos = (typeof LunarEngine !== 'undefined') ? LunarEngine.obtenerCirculos(n.id, true) : [];
 
-        let circulosHtml = '';
-        if (circulosAbiertos.length > 0) {
-          circulosHtml = `
-            <div style="margin-bottom: 16px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: var(--radius-sm); padding: 10px 12px;">
-              <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
-                <span><i class="fas fa-users"></i> Círculos Abiertos en este Nodo:</span>
-                <span style="background: #ECFDF5; color: #065F46; padding: 1px 6px; border-radius: 99px; font-size: 10px; font-weight: 800;">${circulosAbiertos.length}</span>
+        let cardsTrackHtml = '';
+
+        // 1. Tarjeta Destacada: Compra Individual en la Sede del Nodo
+        cardsTrackHtml += `
+          <a href="tienda.html?ref=${n.id}" class="spotify-card spotify-card-direct">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.4); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                  🏬
+                </div>
+                <span style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; background: rgba(255,255,255,0.12); color: #A7F3D0; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.3px;">
+                  SEDE OFICIAL
+                </span>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 6px;">
-                ${circulosAbiertos.map(c => `
-                  <a href="tienda.html?ref=${n.id}&circulo=${c.slug || c.id}" style="text-decoration: none; background: white; border: 1px solid #A7F3D0; border-radius: 8px; padding: 7px 10px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;" onmouseover="this.style.borderColor='#10B981'" onmouseout="this.style.borderColor='#A7F3D0'">
-                    <div>
-                      <div style="font-size: 12px; font-weight: 700; color: #064E3B;">👥 ${c.nombre}</div>
-                      <div style="font-size: 10.5px; color: #059669;">👑 Anfitrión/a: ${c.anfitrion}</div>
-                    </div>
-                    <span style="font-size: 11px; font-weight: 800; color: #059669;">Unirme &rarr;</span>
-                  </a>
-                `).join('')}
+              <h4 style="font-size: 16px; font-weight: 800; color: white; margin: 0 0 4px; line-height: 1.3;">
+                Compra Individual
+              </h4>
+              <div style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">
+                Retirás personalmente en la sede de ${n.nombre}
               </div>
             </div>
-          `;
-        }
 
-        html += `
-          <div class="node-portal-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div class="node-header-top">
-                <div class="node-logo-circle">${safeLogo}</div>
-                <div>
-                  <h3 class="node-portal-name">${n.nombre}</h3>
-                  <div class="node-portal-dir"><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 4px;"></i> ${n.direccion}</div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 10px;">
+              <div style="font-size: 11px; color: #6EE7B7; font-weight: 700; margin-bottom: 8px;">
+                <i class="fas fa-calendar-alt"></i> ${n.diaEntrega || 'Entrega en Luna Llena'}
+              </div>
+              <div style="background: #10B981; color: white; font-weight: 800; font-size: 12px; padding: 8px; border-radius: 8px; text-align: center;">
+                Comprar en Sede &rarr;
+              </div>
+            </div>
+          </a>
+        `;
+
+        // 2. Tarjetas de Círculos Abiertos (Estilo Spotify Carousel)
+        circulosAbiertos.forEach(c => {
+          const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+          const escala = LunarEngine.obtenerEscalaCirculo(c.id || c.slug);
+          const integrantes = LunarEngine.obtenerIntegrantesCirculo(c.id || c.slug);
+
+          cardsTrackHtml += `
+            <a href="tienda.html?ref=${n.id}&circulo=${c.slug || c.id}" class="spotify-card">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; box-shadow: 0 2px 8px rgba(16,185,129,0.25);">
+                    ${c.nombre ? c.nombre.charAt(0).toUpperCase() : '👥'}
+                  </div>
+                  <div style="display: flex; gap: 4px; align-items: center;">
+                    <span style="font-size: 9.5px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">
+                      🌐 ABIERTO
+                    </span>
+                    <span style="font-size: 9.5px; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">
+                      ${escala.tierNombre}
+                    </span>
+                  </div>
+                </div>
+
+                <h4 style="font-size: 15.5px; font-weight: 800; color: #0F172A; margin: 0 0 2px; line-height: 1.3;">
+                  ${c.nombre}
+                </h4>
+                <div style="font-size: 12px; color: #059669; font-weight: 700; margin-bottom: 6px;">
+                  👑 Anfitrión/a: ${c.anfitrion}
+                </div>
+                <div style="font-size: 11.5px; color: #64748B; margin-bottom: 10px; line-height: 1.3;">
+                  ${c.direccionEntrega ? `📍 ${c.direccionEntrega}` : '📦 Retiro conjunto en sede'}
                 </div>
               </div>
 
-              <p style="font-size: 13px; color: #475569; line-height: 1.4; margin-bottom: 14px;">
-                ${n.descripcion || 'Punto de acopio y distribución agroecológica comunitaria.'}
-              </p>
+              <div style="border-top: 1px dashed #CBD5E1; padding-top: 8px; margin-top: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #334155; margin-bottom: 8px;">
+                  <span><i class="fas fa-users" style="color: #10B981;"></i> <strong>${integrantes.length}</strong> vecinos</span>
+                  <span style="font-weight: 700; color: #059669;">${stats.unidadesTotal || 0} un.</span>
+                </div>
+                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; color: #065F46; font-weight: 800; font-size: 11.5px; padding: 7px; border-radius: 8px; text-align: center;">
+                  Sumarme y Comprar &rarr;
+                </div>
+              </div>
+            </a>
+          `;
+        });
 
-              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12.5px; color: #334155; margin-bottom: 14px; line-height: 1.4;">
-                <i class="fas fa-calendar-alt" style="color: var(--primary); margin-right: 6px;"></i>
-                <strong>Entrega:</strong> ${n.diaEntrega}
+        // 3. Tarjeta Final: "Crear Nuevo Círculo en este Nodo"
+        cardsTrackHtml += `
+          <a href="tienda.html?ref=${n.id}&crearCirculo=true" class="spotify-card spotify-card-add">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: #ECFDF5; border: 1.5px dashed #10B981; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 10px;">
+              <i class="fas fa-plus"></i>
+            </div>
+            <h4 style="font-size: 15px; font-weight: 800; color: #064E3B; margin: 0 0 4px;">
+              Crear tu Círculo
+            </h4>
+            <p style="font-size: 11.5px; color: #047857; margin: 0 0 12px; line-height: 1.3;">
+              Armá un grupo en tu edificio o con amigos y junten kilos en <strong>${n.nombre}</strong>.
+            </p>
+            <div style="background: #10B981; color: white; font-weight: 800; font-size: 11.5px; padding: 7px 12px; border-radius: 8px; display: inline-block;">
+              + Abrir Círculo (15s)
+            </div>
+          </a>
+        `;
+
+        html += `
+          <div class="node-shelf-block">
+            <!-- Encabezado del Nodo -->
+            <div class="node-shelf-header">
+              <div class="node-shelf-title-box">
+                <div class="node-logo-circle">${safeLogo}</div>
+                <div>
+                  <h3 class="node-shelf-name">${n.nombre}</h3>
+                  <div class="node-shelf-meta">
+                    <span><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 4px;"></i> ${n.direccion}</span>
+                    <span>•</span>
+                    <span style="background: #F1F5F9; padding: 2px 8px; border-radius: 6px; font-weight: 700; color: #334155;"><i class="fas fa-calendar-alt" style="color: var(--primary); margin-right: 4px;"></i> ${n.diaEntrega}</span>
+                  </div>
+                </div>
               </div>
 
-              ${circulosHtml}
+              <div class="node-shelf-actions">
+                <a href="tienda.html?ref=${n.id}" class="btn-checkout-cta" style="text-decoration: none; padding: 9px 18px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fas fa-shopping-basket"></i> Entrar a la Tienda
+                </a>
+              </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-              <a href="tienda.html?ref=${n.id}" class="btn-checkout-cta" style="width: 100%; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--radius-sm); padding: 11px; font-size: 13.5px;">
-                <i class="fas fa-shopping-basket"></i>
-                <span>Comprar en ${n.nombre}</span>
-              </a>
-              <a href="tienda.html?ref=${n.id}&crearCirculo=true" style="text-decoration: none; text-align: center; font-size: 12px; font-weight: 700; color: #059669; padding: 7px; background: #ECFDF5; border: 1px dashed #A7F3D0; border-radius: 8px; display: block; transition: all 0.2s;">
-                <i class="fas fa-plus-circle"></i> Abrir nuevo Círculo en este Nodo
-              </a>
+            <!-- Carrusel Horizontal de Compras Abiertas & Círculos (Estilo Spotify) -->
+            <div class="shelf-carousel-header">
+              <div class="shelf-carousel-title">
+                <span>👥 Círculos Comunitarios y Compras Abiertas</span>
+                <span style="background: #ECFDF5; color: #065F46; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 99px;">
+                  ${circulosAbiertos.length} círculos activos
+                </span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 12px; color: #94A3B8; display: none; @media(min-width:640px){display:inline;}">Deslizá</span>
+                <button type="button" onclick="scrollShelf('${n.id}', -290)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #E2E8F0; background: white; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; color: #475569; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onmouseover="this.style.background='#F1F5F9'; this.style.borderColor='#CBD5E1';" onmouseout="this.style.background='white'; this.style.borderColor='#E2E8F0';" title="Desplazar a la izquierda">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button type="button" onclick="scrollShelf('${n.id}', 290)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #E2E8F0; background: white; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; color: #475569; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onmouseover="this.style.background='#F1F5F9'; this.style.borderColor='#CBD5E1';" onmouseout="this.style.background='white'; this.style.borderColor='#E2E8F0';" title="Desplazar a la derecha">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="spotify-track-container">
+              <div class="spotify-horizontal-track" id="track-${n.id}">
+                ${cardsTrackHtml}
+              </div>
             </div>
           </div>
         `;
       });
 
-      document.getElementById('nodes-grid-container').innerHTML = html;
+      container.innerHTML = html;
+    }
+
+    function scrollShelf(nodeId, distance) {
+      const track = document.getElementById(`track-${nodeId}`);
+      if (track) {
+        track.scrollBy({ left: distance, behavior: 'smooth' });
+      }
     }
   </script>
 </body>

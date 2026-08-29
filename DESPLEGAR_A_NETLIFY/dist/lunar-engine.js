@@ -2546,7 +2546,7 @@ class LunarEngine {
   }
 
   // ==========================================
-  // CÍRCULOS Y GRUPOS DE COMPRA COMUNITARIOS
+  // GESTIÓN DE CÍRCULOS Y MICRO-NODOS LUNARES
   // ==========================================
   static obtenerCirculos(nodoId = null, soloAbiertos = false) {
     let circulos = [];
@@ -2562,8 +2562,9 @@ class LunarEngine {
           id: 'circulo-maipu-101',
           slug: 'vecinos-edificio-maipu',
           nombre: 'Vecinos Edificio Maipú',
-          anfitrion: 'Ramiro Stein',
+          anfitrion: 'Carolina Gómez',
           whatsapp: '1148291029',
+          linkGrupoWsp: 'https://chat.whatsapp.com/MitreComunidadVrde',
           nodoId: 'lomaverde',
           direccionEntrega: 'Maipú 450 (Hall PB)',
           privacidad: 'abierto',
@@ -2576,6 +2577,7 @@ class LunarEngine {
           nombre: 'Familia Gómez & Amigos',
           anfitrion: 'Mariana Gómez',
           whatsapp: '1159203948',
+          linkGrupoWsp: '',
           nodoId: 'lomaverde',
           direccionEntrega: 'Los Álamos 120',
           privacidad: 'abierto',
@@ -2588,6 +2590,7 @@ class LunarEngine {
           nombre: 'Vecinos Plaza Mitre',
           anfitrion: 'Esteban Paz',
           whatsapp: '1169304123',
+          linkGrupoWsp: '',
           nodoId: 'vicentelopez',
           direccionEntrega: 'Mitre 250 (Frente a la plaza)',
           privacidad: 'abierto',
@@ -2600,10 +2603,32 @@ class LunarEngine {
       }
     }
 
-    let resultado = circulos.filter(c => c.activo !== false);
+    // Deduplicación inteligente: evitar duplicados por ID, slug o por combinación (nodoId + nombre)
+    const vistosIds = new Set();
+    const vistosNombres = new Set();
+    const circulosUnicos = [];
+
+    for (const c of circulos) {
+      if (!c || c.activo === false) continue;
+      const idKey = (c.id || '').toLowerCase().trim();
+      const slugKey = (c.slug || '').toLowerCase().trim();
+      const nomKey = `${(c.nodoId || '').toLowerCase().trim()}::${(c.nombre || '').toLowerCase().trim()}`;
+
+      if (idKey && vistosIds.has(idKey)) continue;
+      if (slugKey && vistosIds.has(slugKey)) continue;
+      if (nomKey && vistosNombres.has(nomKey)) continue;
+
+      if (idKey) vistosIds.add(idKey);
+      if (slugKey) vistosIds.add(slugKey);
+      if (nomKey) vistosNombres.add(nomKey);
+
+      circulosUnicos.push(c);
+    }
+
+    let resultado = circulosUnicos;
 
     if (nodoId && nodoId !== 'ALL') {
-      resultado = resultado.filter(c => c.nodoId === nodoId);
+      resultado = resultado.filter(c => (c.nodoId || '').toLowerCase() === nodoId.toLowerCase());
     }
     if (soloAbiertos) {
       resultado = resultado.filter(c => c.privacidad !== 'cerrado');
@@ -2615,7 +2640,7 @@ class LunarEngine {
     if (!idOrSlug) return null;
     const lista = this.obtenerCirculos();
     const query = String(idOrSlug).toLowerCase().trim();
-    let encontrado = lista.find(c => c.id === query || c.slug === query || c.id === idOrSlug || (c.slug && c.slug.toLowerCase() === query));
+    let encontrado = lista.find(c => c.id === query || c.slug === query || (c.id && c.id.toLowerCase() === query) || (c.slug && c.slug.toLowerCase() === query));
     
     if (encontrado) return encontrado;
 
@@ -2628,16 +2653,21 @@ class LunarEngine {
     if (params) {
       const cNom = params.get('c_nom') || params.get('circName');
       if (cNom) {
+        const decodedNom = decodeURIComponent(cNom);
         const cAnf = params.get('c_anf') || params.get('circHost') || 'Anfitrión del Círculo';
         const cWsp = params.get('c_wsp') || params.get('circWsp') || '';
         const cRef = params.get('ref') || 'lomaverde';
         const cTipo = params.get('c_tipo') || 'abierto';
         const cDir = params.get('c_dir') || '';
 
+        // Verificar si ya existe antes de duplicar
+        const yaExiste = lista.find(c => (c.slug === query) || (c.nombre && c.nombre.toLowerCase() === decodedNom.toLowerCase() && c.nodoId === cRef));
+        if (yaExiste) return yaExiste;
+
         const autoCirculo = {
           id: 'circulo-' + query,
           slug: query,
-          nombre: decodeURIComponent(cNom),
+          nombre: decodedNom,
           anfitrion: decodeURIComponent(cAnf),
           whatsapp: decodeURIComponent(cWsp),
           nodoId: cRef,
