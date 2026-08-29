@@ -12,34 +12,31 @@
 La funcionalidad de **Círculos / Grupos de Compra Comunitarios (Micro-Nodos)** y la mecánica de **Reserva y Pago Diferido en Luna Llena** ya se encuentran **100% integradas y activas en producción** en la web oficial:
 
 1. **Tienda Oficial (`tienda.html`)**:
-   * **Modo Estándar**: Compras individuales regulares en todos los nodos activos.
-   * **Modo Círculo Activo (`tienda.html?ref=escobar&circulo=...`)**:
-     * Banner superior con nombre del Círculo, anfitrión/a y recordatorio de *Pago en Luna Llena*.
-     * Botón de WhatsApp para invitar amigos a la meta de kilos.
-     * Tarjeta de invitación a juntar bulto para precio Distribuidor.
-     * Modal de creación en 15 segundos (`?crearCirculo=true`).
-     * Tablero del Anfitrión con métricas en tiempo real (Integrantes, Unidades, Recaudación, Ahorro).
-     * Checkout configurado como **"RESERVAR EN CÍRCULO (Pagar en Luna Llena)"**.
+   * **Jerarquía Visual Clara Nodo vs. Círculo (Estética Spotify)**:
+     * **Sede Central (Nodo)**: Identifica el punto oficial de acopio y logística.
+     * **Estante Spotify de Círculos del Nodo**: Fila horizontal interactiva donde los vecinos pueden elegir entre comprar individual en el nodo o sumarse a un Círculo Abierto.
+     * **Banner de Círculo Activo**: Muestra la insignia `🟣 CÍRCULO COMUNITARIO`, nombre del grupo, anfitrión/a, badge de privacidad (`🌐 Abierto` / `🔒 Privado`) y el Nodo cabecera de retiro.
+   * **Selector de Privacidad al Crear Círculo**:
+     * 🌐 **Círculo Abierto (Público)**: Visible en la tienda y en el portal lunar para que vecinos de la zona se sumen.
+     * 🔒 **Círculo Cerrado (Privado)**: Oculto de las listas públicas; exclusivo para quienes reciban el link por WhatsApp.
+   * **Enlaces Universales Portables (WhatsApp / Multi-dispositivo)**:
+     * Los enlaces generados incluyen metadatos de auto-rescate (`c_nom`, `c_anf`, `c_wsp`, `c_tipo`, etc.) y sincronización con Firebase Firestore. Al abrir el link en cualquier smartphone nuevo o navegador limpio, la tienda reconoce de inmediato el Círculo y a su anfitrión.
    * **Cálculo de Precios Unitarios y Totales**:
      * Determinación de precios estrictamente por escala de bulto individual con sincronización de subtotales y donación del 3%.
 
-2. **Portada Oficial (`index.html` y `app.js`)**:
-   * **Nueva Sección Dedicada `#crea-tu-nodo`**:
-     * Espacio completo con los 4 pilares de ser Nodo Almacén (*Ingresos y Work Slots, Alimentos al Costo, Software Gestor con PIN y Logística En Conjunto*).
-     * Requisitos claros de postulación y botón directo que abre el formulario online / WhatsApp.
-     * Acceso desde el menú superior de navegación (`Creá tu Nodo`).
-   * **Explorador de Nodos 100% Dinámico**:
-     * Lee en tiempo real los nodos activos desde `LunarEngine.obtenerNodos(true)`.
-     * Los nodos cerrados/pausados/eliminados (como **Escobar**) quedan automáticamente excluidos del Home.
+2. **Portal Lunar (`lunar.html`)**:
+   * Cada tarjeta de Nodo lista en vivo sus **Círculos Abiertos** con enlaces directos para unirse, además del acceso estándar al Nodo y el botón para abrir un nuevo Círculo.
 
-3. **Portal Lunar (`lunar.html`)**:
-   * Banner de Micro-Nodos barriales para personas sin un nodo físico cercano.
+3. **Portada Oficial (`index.html` y `app.js`)**:
+   * **Nueva Sección Dedicada `#crea-tu-nodo`** con los 4 pilares de ser Nodo Almacén y formulario de postulación a WhatsApp.
+   * **Explorador de Nodos Dinámico** que excluye automáticamente nodos pausados o cerrados (ej. Escobar).
 
 4. **Panel Gestor de Nodo (`admin.html`)**:
    * Detección y etiquetas de Círculos en las tarjetas de pedidos para acopio y entrega agrupada.
 
 5. **Motor Central (`lunar-engine.js`)**:
-   * Lógica completa de persistencia, cálculo de escalas y estadísticas de Círculos.
+   * Sincronización en tiempo real con Firestore de las colecciones `orders` y `circulos`.
+   * Métodos `obtenerCirculos(nodoId, soloAbiertos)`, `generarLinkCirculo(circulo)`, `crearCirculo` con soporte de privacidad.
 
 ---
 
