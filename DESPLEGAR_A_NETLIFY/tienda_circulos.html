@@ -25,6 +25,192 @@
   <style>
     :root {
       --spotify-radius: 12px;
+      --sidebar-width: 275px;
+    }
+
+    body {
+      background-color: #0B1120;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* =========================================
+       APP SHELL LAYOUT (SPOTIFY WEB APP)
+       ========================================= */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* SIDEBAR IZQUIERDO */
+    .app-sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      max-width: var(--sidebar-width);
+      background: #0F172A;
+      border-right: 1px solid #1E293B;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      color: #F8FAFC;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand-section {
+      padding: 16px 18px;
+      border-bottom: 1px solid #1E293B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-user-card {
+      margin: 12px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sidebar-user-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .sidebar-nav-menu {
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: #94A3B8;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .sidebar-nav-item:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .sidebar-nav-item.active {
+      color: #FFFFFF;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.1));
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .sidebar-nav-item.active i {
+      color: #10B981;
+    }
+
+    .sidebar-footer-widget {
+      padding: 14px;
+      border-top: 1px solid #1E293B;
+      background: #0B1120;
+    }
+
+    /* MAIN VIEWPORT */
+    .app-main-viewport {
+      flex: 1;
+      min-width: 0;
+      min-height: 100vh;
+      background: #F8FAFC;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-topbar {
+      background: #FFFFFF;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .app-view-panel {
+      display: none;
+      padding: 14px 18px 80px;
+      max-width: 1160px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+    .app-view-panel.active {
+      display: block;
+      animation: fadeInView 0.2s ease forwards;
+    }
+
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MOBILE BOTTOM NAV */
+    .app-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #0F172A;
+      border-top: 1px solid #1E293B;
+      z-index: 50;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 6px;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #94A3B8;
+      font-size: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      gap: 3px;
+      flex: 1;
+      padding: 6px 0;
+      cursor: pointer;
+    }
+    .bottom-nav-item i {
+      font-size: 17px;
+    }
+    .bottom-nav-item.active {
+      color: #10B981;
+    }
+
+    @media (max-width: 960px) {
+      .app-sidebar {
+        display: none;
+      }
+      .app-bottom-nav {
+        display: flex;
+      }
+      .app-view-panel {
+        padding: 12px 12px 90px;
+      }
     }
 
     /* Header Compacto */
@@ -529,177 +715,295 @@
 </head>
 <body>
 
-  <!-- Header del Nodo Activo -->
-  <header class="shop-header">
-    <div class="shop-header-left">
-      <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" title="Volver a la página anterior">
-        <i class="fas fa-arrow-left"></i>
-        <span class="btn-back-text">Volver</span>
-      </button>
-      <div class="shop-brand" onclick="openNodeProfile()" title="Toca para ver info completa del nodo">
-        <div class="shop-brand-logo" id="shop-logo">🌱</div>
-        <div class="shop-brand-text">
-          <h2 class="shop-brand-name" id="shop-name">Nodo Escobar</h2>
-          <div class="shop-brand-sub" id="shop-subheading">
-            <i class="fas fa-map-marker-alt" style="color: var(--primary); font-size: 10px;"></i>
-            <span>Ver dirección y entrega &rarr;</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="btn-header-info" onclick="openNodeProfile()" title="Ver datos del nodo">
-      <i class="fas fa-info-circle"></i>
-      <span class="btn-info-text">Info del Nodo</span>
-    </button>
-  </header>
+<div class="app-container">
 
-  <!-- Banner de Círculo Activo (Si entra por enlace mágico) -->
-  <div id="circulo-active-banner-container" class="hidden" style="padding: 0 16px;"></div>
-
-  <!-- Banner de Estado Lunar & Metas Colectivas -->
-  <div style="padding: 0 16px;">
-    <div class="lunar-banner-card">
-      <div class="lunar-top-row">
+  <!-- =========================================
+       1. SIDEBAR IZQUIERDO (ESTILO SPOTIFY)
+       ========================================= -->
+  <aside class="app-sidebar" id="app-sidebar">
+    <!-- Brand -->
+    <div class="sidebar-brand-section">
+      <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="location.href='index.html'">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(16,185,129,0.15); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 18px;">🌱</div>
         <div>
-          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 2px;">Ciclo Astronómico de Compra</div>
-          <h2 style="font-size: 22px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
-          <p style="font-size: 13px; color: #CBD5E1; margin-top: 2px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días (28 de Agosto)</p>
+          <h1 style="font-size: 15.5px; font-weight: 800; margin: 0; color: white; line-height: 1.1; letter-spacing: 0.5px;">VRDE.CLUB</h1>
+          <p style="font-size: 10px; color: #94A3B8; margin: 0;">Almacén Lunar Comunitario</p>
         </div>
-        <div style="text-align: right;">
-          <div class="lunar-phase-badge">
-            <span style="font-size: 14px;">🌕</span> Compra Abierta
+      </div>
+      <a href="index.html" style="color: #64748B; font-size: 13px;" title="Ir al Home"><i class="fas fa-home"></i></a>
+    </div>
+
+    <!-- Tarjeta de Usuario / Prosumidor -->
+    <div class="sidebar-user-card" onclick="openEditUserProfileModal()" id="sidebar-user-box" title="Clic para editar tus datos de comprador">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; background: #10B981; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0;" id="sidebar-user-avatar">
+          👤
+        </div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 13px; font-weight: 800; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="sidebar-user-name">Prosumidor/a</div>
+          <div style="font-size: 10.5px; color: #34D399; margin-top: 1px;" id="sidebar-user-tag">📍 Miembro de la Red</div>
+        </div>
+        <i class="fas fa-pen text-xs" style="color: #64748B;"></i>
+      </div>
+    </div>
+
+    <!-- Menú de Navegación Spotify -->
+    <nav class="sidebar-nav-menu">
+      <div class="sidebar-nav-item active" id="nav-item-catalogo" onclick="switchAppView('catalogo')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-shopping-basket"></i>
+          <span>Catálogo Lunar</span>
+        </div>
+        <span style="font-size: 10px; background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius: 4px;" id="badge-total-prods">0</span>
+      </div>
+
+      <div class="sidebar-nav-item" id="nav-item-mi-panel" onclick="switchAppView('mi-panel')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-user-circle"></i>
+          <span>Mi Panel (Compras & Pagos)</span>
+        </div>
+        <span style="font-size: 10px; background: #10B981; color: #064E3B; padding: 1px 6px; border-radius: 99px; font-weight: 800;" id="badge-panel-debt">🌕</span>
+      </div>
+
+      <div class="sidebar-nav-item" id="nav-item-circulos" onclick="switchAppView('circulos')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-users"></i>
+          <span>Círculos Comunitarios</span>
+        </div>
+        <span style="font-size: 10px; background: rgba(16,185,129,0.2); color: #34D399; padding: 1px 6px; border-radius: 4px;" id="badge-open-circulos">0</span>
+      </div>
+
+      <div class="sidebar-nav-item" id="nav-item-mi-nodo" onclick="switchAppView('mi-nodo')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-store-alt"></i>
+          <span>Mi Nodo Cabecera</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mini Widget Fase Lunar en Sidebar -->
+    <div style="margin: 0 14px 12px; background: rgba(15,23,42,0.6); border: 1px solid #1E293B; border-radius: 12px; padding: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-size: 10.5px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Ciclo Lunar Activo</span>
+        <span style="font-size: 10.5px; color: #10B981; font-weight: 800;" id="sidebar-lunar-phase">🌕 Abierto</span>
+      </div>
+      <div style="font-size: 12px; font-weight: 800; color: #FFFFFF;" id="sidebar-lunar-title">Luna Llena</div>
+      <div style="font-size: 10px; color: #64748B; margin-top: 2px;" id="sidebar-lunar-countdown">Cierra en X días</div>
+    </div>
+
+    <!-- Mini Carrito en Sidebar -->
+    <div class="sidebar-footer-widget" id="sidebar-cart-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 11.5px; color: #94A3B8; font-weight: 700;">Tu Canasta</span>
+        <span style="font-size: 13.5px; font-weight: 800; color: #10B981;" id="sidebar-cart-total">$0</span>
+      </div>
+      <button onclick="openCheckoutModal()" class="btn-checkout-cta" style="width: 100%; border-radius: 8px; padding: 9px; font-size: 12px;">
+        <i class="fas fa-shopping-bag" style="margin-right: 6px;"></i> FINALIZAR PEDIDO
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================
+       2. MAIN VIEWPORT (CONTENIDO DE APLICACIÓN)
+       ========================================= -->
+  <div class="app-main-viewport">
+    
+    <!-- Topbar Compacta para Navegación y Contexto -->
+    <div class="app-topbar">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="margin: 0; padding: 6px 10px; font-size: 11px;" title="Volver">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <h2 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;" id="topbar-nodo-title">Nodo Loma Verde</h2>
+            <button onclick="switchAppView('mi-nodo')" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 700; cursor: pointer; padding: 0 2px;" title="Ver info del nodo">(Ver info)</button>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin: 0;" id="topbar-circulo-sub">Retiro personal en sede central</p>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')" style="margin: 0;">
+          <i class="fas fa-th-large"></i> Catálogo
+        </button>
+        <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')" style="margin: 0;">
+          <i class="fas fa-gamepad"></i> 🎮
+        </button>
+      </div>
+    </div>
+
+    <!-- =========================================
+         VISTA 1: CATÁLOGO DE ALIMENTOS
+         ========================================= -->
+    <section class="app-view-panel active" id="view-catalogo">
+      <!-- Banner Compacto de Círculo (si activo) -->
+      <div id="circulo-active-banner-container" class="hidden" style="margin-bottom: 12px;"></div>
+
+      <!-- Banner de Estado Lunar & Metas Colectivas -->
+      <div class="lunar-banner-card">
+        <div class="lunar-top-row">
+          <div>
+            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 2px;">Ciclo Astronómico de Compra</div>
+            <h2 style="font-size: 20px; color: white; margin: 0;" id="shop-lunar-title">🌑 Leo Ago 2026</h2>
+            <p style="font-size: 12.5px; color: #CBD5E1; margin-top: 2px;" id="shop-lunar-desc">Apertura activa • Cierra en 12 días</p>
+          </div>
+          <div style="text-align: right;">
+            <div class="lunar-phase-badge">
+              <span style="font-size: 13px;">🌕</span> Compra Abierta
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-grid">
+          <!-- Meta del Nodo -->
+          <div class="progress-box">
+            <div class="progress-info">
+              <span class="label">Meta del <span id="shop-nodo-label">Nodo</span>:</span>
+              <span class="val" id="shop-nodo-prog-text">0 / 120 u.</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="shop-nodo-prog-bar" style="width: 40%; background: #D4F1A0;"></div>
+            </div>
+          </div>
+
+          <!-- Meta Global de la Red -->
+          <div class="progress-box">
+            <div class="progress-info">
+              <span class="label">Meta Global de la Red:</span>
+              <span class="val" id="shop-global-prog-text">0 / 500 u.</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="shop-global-prog-bar" style="width: 77%; background: #10A352;"></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="progress-grid">
-        <!-- Meta del Nodo -->
-        <div class="progress-box">
-          <div class="progress-info">
-            <span class="label">Meta del <span id="shop-nodo-label">Nodo Escobar</span>:</span>
-            <span class="val" id="shop-nodo-prog-text">48 / 120 unidades</span>
+      <!-- Categorías de Alimentos Spotify -->
+      <div class="spotify-categories-wrapper" style="margin: 0 0 10px; padding: 0;">
+        <div class="spotify-categories-grid" id="spotify-categories-container"></div>
+      </div>
+
+      <!-- Pestañas de Variedades -->
+      <div class="product-tabs-wrapper" style="margin: 0 0 12px; padding: 0;">
+        <div class="product-tabs-outer">
+          <button class="tab-nav-arrow" onclick="scrollTabs(-200)"><i class="fas fa-chevron-left"></i></button>
+          <div class="product-tabs" id="shop-product-tabs"></div>
+          <button class="tab-nav-arrow" onclick="scrollTabs(200)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Escaparate Principal de Productos -->
+      <main class="product-showcase" id="showcase-container"></main>
+
+      <!-- Modo Juego Swipe -->
+      <div id="swipe-view-container">
+        <div class="showcase-card" style="max-width: 380px; width: 100%; padding: 16px;">
+          <div style="position: relative; text-align: center;">
+            <img id="sw-img" src="" alt="Producto" style="width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+            <div class="prod-badge-unit" id="sw-badge" style="display: block; width: fit-content; margin: 8px auto 4px;">Formato</div>
+            <h3 class="prod-title" id="sw-title" style="font-size: 19px;">Producto</h3>
+            <p class="prod-subtitle" id="sw-desc" style="font-size: 12px; margin-bottom: 12px;">Descripción</p>
           </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="shop-nodo-prog-bar" style="width: 40%; background: #D4F1A0;"></div>
+
+          <!-- Presentación en Swipe -->
+          <div class="presentation-selector-box" style="margin-bottom: 10px;">
+            <div class="pres-header">
+              <span>Presentación / Peso:</span>
+            </div>
+            <div class="pres-chips-grid" id="sw-chips-grid"></div>
+          </div>
+
+          <!-- Cantidad y Precio en Swipe -->
+          <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 10px; padding: 6px 12px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 11px; font-weight: 700;">Cant:</span>
+              <div class="qty-control-box" style="margin-top: 0; padding: 2px;">
+                <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(-1)">-</button>
+                <span id="sw-qty-val" style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">1</span>
+                <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(1)">+</button>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div class="scale-tier-price" id="sw-total-val" style="color: var(--primary); font-size: 18px;">$0</div>
+              <div style="font-size: 9.5px; color: var(--text-muted);" id="sw-unit-val"></div>
+            </div>
           </div>
         </div>
 
-        <!-- Meta Global de la Red -->
-        <div class="progress-box">
-          <div class="progress-info">
-            <span class="label">Meta Colectiva de la Red:</span>
-            <span class="val" id="shop-global-prog-text">385 / 500 unidades</span>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="shop-global-prog-bar" style="width: 77%; background: #10A352;"></div>
-          </div>
+        <!-- Botones de Acción Swipe -->
+        <div class="swipe-actions-bar">
+          <button class="btn-act-circle btn-act-pass" onclick="triggerSwipeAction('left')" title="Pasar al siguiente">
+            <i class="fas fa-times"></i>
+          </button>
+          <button class="btn-act-circle btn-act-info" onclick="openProductStoryModal(ACTIVE_PRODUCT_INDEX)" title="Ver historia y mapa">
+            <i class="fas fa-info"></i>
+          </button>
+          <button class="btn-act-circle btn-act-like" onclick="triggerSwipeAction('right')" title="¡Sumar al pedido!">
+            <i class="fas fa-heart"></i>
+          </button>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Estante Spotify de Círculos del Nodo -->
-  <div id="circulos-shelf-container" style="padding: 0 16px; margin-bottom: 12px;"></div>
+    <!-- =========================================
+         VISTA 2: MI PANEL / ESPACIO DEL PROSUMIDOR
+         ========================================= -->
+    <section class="app-view-panel" id="view-mi-panel">
+      <!-- Inyectado dinámicamente por renderMiPanel() -->
+    </section>
 
-  <!-- Switch de Modos de Vista: Showcase vs Modo Juego -->
-  <div class="view-mode-bar-container">
-    <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')">
-      <i class="fas fa-th-large"></i> Formato Catálogo
-    </button>
-    <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')">
-      <i class="fas fa-gamepad"></i> Modo Juego 🎮
-    </button>
-  </div>
+    <!-- =========================================
+         VISTA 3: EXPLORADOR DE CÍRCULOS
+         ========================================= -->
+    <section class="app-view-panel" id="view-circulos">
+      <!-- Inyectado dinámicamente por renderCirculosView() -->
+    </section>
 
-  <!-- Bloques de Categorías de Alimentos (Dinámicas 4x2 en Desktop) -->
-  <div class="spotify-categories-wrapper">
-    <div class="spotify-categories-grid" id="spotify-categories-container">
-      <!-- Inyectado dinámicamente por JS desde LunarEngine.obtenerCategorias() -->
-    </div>
-  </div>
+    <!-- =========================================
+         VISTA 4: MI NODO CABECERA
+         ========================================= -->
+    <section class="app-view-panel" id="view-mi-nodo">
+      <!-- Inyectado dinámicamente por renderMiNodoView() -->
+    </section>
 
-  <!-- Pestañas de Variedades de Producto con Flechas de Desplazamiento -->
-  <div class="product-tabs-wrapper">
-    <div class="product-tabs-outer">
-      <button class="tab-nav-arrow" onclick="scrollTabs(-200)" title="Anterior"><i class="fas fa-chevron-left"></i></button>
-      <div class="product-tabs" id="shop-product-tabs">
-        <!-- Inyectado por JS -->
-      </div>
-      <button class="tab-nav-arrow" onclick="scrollTabs(200)" title="Siguiente"><i class="fas fa-chevron-right"></i></button>
-    </div>
   </div>
 
   <!-- =========================================
-       1. ESCAPARATE PRINCIPAL (3 COLUMNAS)
+       3. MOBILE BOTTOM NAVIGATION
        ========================================= -->
-  <main class="product-showcase" id="showcase-container">
-    <!-- Inyectado dinámicamente -->
-  </main>
-
-  <!-- =========================================
-       2. MODO JUEGO (SWIPE)
-       ========================================= -->
-  <div id="swipe-view-container">
-    <div class="showcase-card" style="max-width: 380px; width: 100%; padding: 16px;">
-      <div style="position: relative; text-align: center;">
-        <img id="sw-img" src="" alt="Producto" style="width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
-        <div class="prod-badge-unit" id="sw-badge" style="display: block; width: fit-content; margin: 8px auto 4px;">Formato</div>
-        <h3 class="prod-title" id="sw-title" style="font-size: 19px;">Producto</h3>
-        <p class="prod-subtitle" id="sw-desc" style="font-size: 12px; margin-bottom: 12px;">Descripción</p>
-      </div>
-
-      <!-- Presentación en Swipe -->
-      <div class="presentation-selector-box" style="margin-bottom: 10px;">
-        <div class="pres-header">
-          <span>Presentación / Peso:</span>
-        </div>
-        <div class="pres-chips-grid" id="sw-chips-grid"></div>
-      </div>
-
-      <!-- Cantidad y Precio en Swipe -->
-      <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 10px; padding: 6px 12px;">
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span style="font-size: 11px; font-weight: 700;">Cant:</span>
-          <div class="qty-control-box" style="margin-top: 0; padding: 2px;">
-            <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(-1)">-</button>
-            <span id="sw-qty-val" style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">1</span>
-            <button class="qty-btn-circle" style="width: 28px; height: 28px; font-size: 14px;" onclick="adjustSwipeQty(1)">+</button>
-          </div>
-        </div>
-        <div style="text-align: right;">
-          <div class="scale-tier-price" id="sw-total-val" style="color: var(--primary); font-size: 18px;">$0</div>
-          <div style="font-size: 9.5px; color: var(--text-muted);" id="sw-unit-val"></div>
-        </div>
-      </div>
+  <nav class="app-bottom-nav">
+    <div class="bottom-nav-item active" id="bnav-catalogo" onclick="switchAppView('catalogo')">
+      <i class="fas fa-shopping-basket"></i>
+      <span>Catálogo</span>
     </div>
-
-    <!-- Botones de Acción Swipe -->
-    <div class="swipe-actions-bar">
-      <button class="btn-act-circle btn-act-pass" onclick="triggerSwipeAction('left')" title="Pasar al siguiente">
-        <i class="fas fa-times"></i>
-      </button>
-      <button class="btn-act-circle btn-act-info" onclick="openProductStoryModal(ACTIVE_PRODUCT_INDEX)" title="Ver historia y mapa">
-        <i class="fas fa-info"></i>
-      </button>
-      <button class="btn-act-circle btn-act-like" onclick="triggerSwipeAction('right')" title="¡Sumar al pedido!">
-        <i class="fas fa-heart"></i>
-      </button>
+    <div class="bottom-nav-item" id="bnav-mi-panel" onclick="switchAppView('mi-panel')">
+      <i class="fas fa-user-circle"></i>
+      <span>Mi Panel</span>
     </div>
+    <div class="bottom-nav-item" id="bnav-circulos" onclick="switchAppView('circulos')">
+      <i class="fas fa-users"></i>
+      <span>Círculos</span>
+    </div>
+    <div class="bottom-nav-item" id="bnav-carrito" onclick="openCheckoutModal()">
+      <i class="fas fa-shopping-bag"></i>
+      <span id="bnav-cart-text">Canasta ($0)</span>
+    </div>
+  </nav>
+
+</div>
+
+<!-- Barra Flotante de Carrito (Desktop / Mobile Bottom Overlay) -->
+<div class="floating-cart-bar" id="floating-cart">
+  <div>
+    <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Total de tu pedido</div>
+    <div class="cart-summary-total" id="cart-total-text">$0</div>
   </div>
-
-  <!-- Espacio de seguridad inferior para la barra flotante -->
-  <div style="height: 60px; width: 100%; pointer-events: none;"></div>
-
-  <!-- Barra Flotante de Carrito -->
-  <div class="floating-cart-bar" id="floating-cart">
-    <div>
-      <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Total de tu pedido</div>
-      <div class="cart-summary-total" id="cart-total-text">$0</div>
-    </div>
-    <button class="btn-checkout-cta" id="btn-checkout" onclick="openCheckoutModal()">
-      FINALIZAR PEDIDO <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
-    </button>
-  </div>
+  <button class="btn-checkout-cta" id="btn-checkout" onclick="openCheckoutModal()">
+    FINALIZAR PEDIDO <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+  </button>
+</div>
 
   <!-- =========================================
        MODALES
@@ -1068,6 +1372,44 @@
     </div>
   </div>
 
+  <!-- Modal Editar Perfil Prosumidor -->
+  <div class="modal-overlay" id="modal-user-profile">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header-row">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 26px;">👤</span>
+          <div>
+            <h3 style="font-size: 18px; color: #0F172A; margin: 0;">Mi Perfil de Prosumidor</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Tus datos para pedidos, pagos y entregas</p>
+          </div>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('modal-user-profile')">&times;</span>
+      </div>
+
+      <form onsubmit="event.preventDefault(); submitUserProfile();" style="padding: 10px 0;">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Nombre y Apellido *</label>
+          <input type="text" id="prof-user-nombre" class="input-field" placeholder="Ej: Carolina Gómez" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">WhatsApp / Teléfono *</label>
+          <input type="tel" id="prof-user-telefono" class="input-field" placeholder="Ej: 11 4829 1029" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Tu Nodo Cabecera de Retiro *</label>
+          <select id="prof-user-nodo" class="input-field" style="background: #F8FAFC; font-weight: 600;"></select>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Dirección Habitual de Entrega (Opcional)</label>
+          <input type="text" id="prof-user-direccion" class="input-field" placeholder="Ej: Calle Los Tilos 120, PB">
+        </div>
+        <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 14px; margin-top: 10px;">
+          GUARDAR Y ACTUALIZAR MI PERFIL
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts del Sistema Lunar -->
   <script src="lunar-engine.js"></script>
 
@@ -1155,7 +1497,445 @@
         header.after(container);
       } else {
         document.body.prepend(container);
+    let CURRENT_APP_VIEW = 'catalogo'; // 'catalogo' | 'mi-panel' | 'circulos' | 'mi-nodo'
+
+    function switchAppView(viewName) {
+      CURRENT_APP_VIEW = viewName;
+
+      // Actualizar paneles de vista
+      const panels = document.querySelectorAll('.app-view-panel');
+      panels.forEach(p => p.classList.remove('active'));
+
+      const target = document.getElementById(`view-${viewName}`);
+      if (target) target.classList.add('active');
+
+      // Actualizar elementos del Sidebar
+      const sidebarItems = document.querySelectorAll('.sidebar-nav-item');
+      sidebarItems.forEach(i => i.classList.remove('active'));
+      const activeSidebarItem = document.getElementById(`nav-item-${viewName}`);
+      if (activeSidebarItem) activeSidebarItem.classList.add('active');
+
+      // Actualizar Bottom Nav en Mobile
+      const bottomItems = document.querySelectorAll('.bottom-nav-item');
+      bottomItems.forEach(i => i.classList.remove('active'));
+      const activeBottomItem = document.getElementById(`bnav-${viewName}`);
+      if (activeBottomItem) activeBottomItem.classList.add('active');
+
+      // Renderizar la vista específica
+      if (viewName === 'mi-panel') {
+        renderMiPanel();
+      } else if (viewName === 'circulos') {
+        renderCirculosView();
+      } else if (viewName === 'mi-nodo') {
+        renderMiNodoView();
+      } else if (viewName === 'catalogo') {
+        loadActiveProductView();
       }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderSidebarUserInfo() {
+      const resumen = LunarEngine.obtenerResumenUsuario();
+      const perfil = resumen.perfil;
+
+      const avatarBox = document.getElementById('sidebar-user-avatar');
+      const nameBox = document.getElementById('sidebar-user-name');
+      const tagBox = document.getElementById('sidebar-user-tag');
+
+      if (avatarBox) {
+        if (perfil.nombre && perfil.nombre.trim().length > 0) {
+          avatarBox.innerText = perfil.nombre.trim().charAt(0).toUpperCase();
+        } else {
+          avatarBox.innerText = '👤';
+        }
+      }
+
+      if (nameBox) {
+        nameBox.innerText = perfil.nombre || 'Identificarme';
+      }
+
+      if (tagBox) {
+        if (ACTIVE_CIRCULO) {
+          tagBox.innerHTML = `👥 ${ACTIVE_CIRCULO.nombre}`;
+        } else if (resumen.nodo && resumen.nodo.nombre) {
+          tagBox.innerHTML = `📍 ${resumen.nodo.nombre}`;
+        } else {
+          tagBox.innerText = '🌱 Prosumidor/a';
+        }
+      }
+
+      // Deuda en badge de Mi Panel
+      const debtBadge = document.getElementById('badge-panel-debt');
+      if (debtBadge) {
+        if (resumen.totalAPagar > 0) {
+          debtBadge.innerText = `$${resumen.totalAPagar.toLocaleString('es-AR')}`;
+          debtBadge.style.display = 'inline-block';
+        } else {
+          debtBadge.style.display = 'none';
+        }
+      }
+    }
+
+    function renderMiPanel() {
+      const container = document.getElementById('view-mi-panel');
+      if (!container) return;
+
+      const resumen = LunarEngine.obtenerResumenUsuario();
+      const perfil = resumen.perfil;
+      const nodo = resumen.nodo || {};
+      const circulo = ACTIVE_CIRCULO || resumen.circulo;
+      const pedidosActivos = resumen.pedidosActivos;
+      const totalAPagar = resumen.totalAPagar;
+      const ciclo = resumen.cicloVigente;
+
+      let pedidosHtml = '';
+      if (pedidosActivos.length > 0) {
+        pedidosHtml = `
+          <div style="background: white; border: 1.5px solid #10B981; border-radius: 18px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(16,185,129,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+              <div>
+                <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #059669; background: #ECFDF5; padding: 3px 8px; border-radius: 6px;">
+                  🌕 RESERVA ACTIVA • PAGO EN LUNA LLENA
+                </span>
+                <h3 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 6px 0 2px;">
+                  Total a Transferir: <span style="color: #10B981;">$${totalAPagar.toLocaleString('es-AR')}</span>
+                </h3>
+                <p style="font-size: 12.5px; color: #64748B; margin: 0;">
+                  Ciclo ${ciclo.nombre} • Cierra en <strong>${ciclo.diasRestantes} días</strong> (${ciclo.llenaFechaStr})
+                </p>
+              </div>
+              <button type="button" onclick="sendComprobanteWsp()" style="background: #25D366; color: white; border: none; font-weight: 700; font-size: 12.5px; padding: 10px 16px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                <i class="fab fa-whatsapp" style="font-size: 16px;"></i> Enviar Comprobante
+              </button>
+            </div>
+
+            <!-- Datos de CBU -->
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <div style="font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase;">Datos de Transferencia (${nodo.nombre || 'Nodo'}):</div>
+                <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Alias / CBU: <span style="color: #059669;" id="panel-cbu-text">${nodo.cbu || 'vrde.club.mp'}</span></div>
+              </div>
+              <button type="button" onclick="navigator.clipboard.writeText('${nodo.cbu || 'vrde.club.mp'}'); alert('¡Alias copiado al portapapeles!');" style="background: white; border: 1px solid #CBD5E1; color: #334155; font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-copy"></i> Copiar Alias
+              </button>
+            </div>
+
+            <!-- Desglose de Productos Reservados -->
+            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748B; margin-bottom: 8px;">Tus alimentos reservados:</div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              ${pedidosActivos.map(p => `
+                <div style="background: #F1F5F9; border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                  <div>
+                    <strong>${p.nombre || 'Pedido Comunitario'}</strong>
+                    <div style="font-size: 11.5px; color: #64748B;">${p.items ? p.items.map(i => `${i.cant}x ${i.nombre}`).join(', ') : `${p.unidades || 1} unidades`}</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-weight: 800; color: #0F172A;">$${(Number(p.total) || 0).toLocaleString('es-AR')}</div>
+                    <div style="font-size: 10.5px; color: #059669; font-weight: 700;">✓ Reservado</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        pedidosHtml = `
+          <div style="background: white; border: 1px dashed #CBD5E1; border-radius: 18px; padding: 28px 20px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 36px; margin-bottom: 8px;">🧺</div>
+            <h4 style="font-size: 17px; font-weight: 800; color: #0F172A; margin: 0 0 6px;">No tenés pedidos reservados en esta Luna</h4>
+            <p style="font-size: 13px; color: #64748B; margin: 0 auto 16px; max-width: 400px;">
+              Aprovechá la apertura del ciclo astronómico <strong>${ciclo.nombre}</strong> para sumar alimentos agroecológicos directo de chacra.
+            </p>
+            <button type="button" onclick="switchAppView('catalogo')" class="btn-checkout-cta" style="border-radius: 10px; padding: 10px 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fas fa-shopping-basket"></i> Explorar Catálogo de Alimentos
+            </button>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h2 style="font-size: 24px; font-weight: 800; color: #0F172A; margin: 0;">
+                👤 Mi Espacio Lunar
+              </h2>
+              <p style="font-size: 13.5px; color: #64748B; margin: 2px 0 0;">
+                Bienvenido/a, <strong style="color: #0F172A;">${perfil.nombre || 'Prosumidor/a'}</strong>
+              </p>
+            </div>
+            <button type="button" onclick="openEditUserProfileModal()" style="background: white; border: 1px solid #CBD5E1; color: #334155; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <i class="fas fa-user-edit"></i> Editar Mis Datos
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. HERO DE PEDIDO & PAGO DE LUNA LLENA -->
+        ${pedidosHtml}
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          
+          <!-- 2. MI NODO CABECERA -->
+          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 22px;">📍</span>
+                <div>
+                  <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Mi Nodo Cabecera</h4>
+                  <span style="font-size: 11px; color: #059669; font-weight: 700;">Punto oficial de acopio</span>
+                </div>
+              </div>
+              <button type="button" onclick="location.href='lunar.html'" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 800; cursor: pointer;">
+                Cambiar &rarr;
+              </button>
+            </div>
+            <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">${nodo.nombre || 'Nodo Almacén'}</div>
+            <div style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><i class="fas fa-map-marker-alt" style="color: #10B981; width: 16px;"></i> ${nodo.direccion || 'Consultar dirección'}</div>
+            <div style="font-size: 12.5px; color: #475569; margin-bottom: 12px;"><i class="fas fa-calendar-alt" style="color: #10B981; width: 16px;"></i> ${nodo.diaEntrega || 'Entrega en Luna Llena'}</div>
+            <button type="button" onclick="switchAppView('mi-nodo')" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; color: #334155; font-size: 12px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer;">
+              Ver ficha completa del Nodo
+            </button>
+          </div>
+
+          <!-- 3. MI CÍRCULO COMUNITARIO -->
+          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 22px;">👥</span>
+                <div>
+                  <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Mi Círculo Comunitario</h4>
+                  <span style="font-size: 11px; color: #059669; font-weight: 700;">Grupo vecinal de compra</span>
+                </div>
+              </div>
+              <button type="button" onclick="switchAppView('circulos')" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 800; cursor: pointer;">
+                Explorar &rarr;
+              </button>
+            </div>
+
+            ${circulo ? `
+              <div style="font-size: 16px; font-weight: 800; color: #064E3B; margin-bottom: 2px;">${circulo.nombre}</div>
+              <div style="font-size: 12px; color: #047857; margin-bottom: 10px;">👑 Anfitrión/a: <strong>${circulo.anfitrion}</strong></div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" onclick="shareActiveCirculoWsp()" style="flex: 1; background: #25D366; color: white; border: none; font-size: 11px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer;">
+                  <i class="fab fa-whatsapp"></i> Invitar Vecinos
+                </button>
+                <button type="button" onclick="selectCirculo(null)" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #64748B; font-size: 11px; padding: 8px 10px; border-radius: 8px; cursor: pointer;" title="Comprar solo en el Nodo">
+                  ✕ Salir
+                </button>
+              </div>
+            ` : `
+              <p style="font-size: 12.5px; color: #64748B; margin-bottom: 12px;">
+                No estás unido a ningún Círculo. Podés sumarte a uno abierto o abrir el tuyo para juntar kilos y alcanzar precio mayorista.
+              </p>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" onclick="openCreateCirculoModal()" style="flex: 1; background: #10B981; color: #064E3B; font-weight: 800; font-size: 11px; padding: 8px; border-radius: 8px; border: none; cursor: pointer;">
+                  + Abrir mi Círculo
+                </button>
+                <button type="button" onclick="switchAppView('circulos')" style="flex: 1; background: #F8FAFC; border: 1px solid #CBD5E1; font-weight: 700; font-size: 11px; padding: 8px; border-radius: 8px; cursor: pointer;">
+                  Ver Círculos
+                </button>
+              </div>
+            `}
+          </div>
+
+        </div>
+
+        <!-- 4. HISTORIAL DE PEDIDOS -->
+        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px;">
+          <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0 0 12px;">📜 Historial de Compras Lunares</h4>
+          ${resumen.historialPedidos.length > 0 ? `
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${resumen.historialPedidos.map(p => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #F1F5F9; font-size: 12.5px;">
+                  <div>
+                    <strong>${p.fecha ? new Date(p.fecha).toLocaleDateString('es-AR') : 'Ciclo Lunar'}</strong>
+                    <div style="font-size: 11px; color: #64748B;">${p.detalle || `${p.unidades || 1} unidades`} • Nodo: ${p.nodo || 'Central'}</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <strong style="color: #0F172A;">$${(Number(p.total) || 0).toLocaleString('es-AR')}</strong>
+                    <div style="font-size: 10.5px; color: #059669;">${p.estado || 'Confirmado'}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          ` : `
+            <div style="text-align: center; color: #94A3B8; font-size: 12.5px; padding: 20px;">
+              Aún no registrás compras anteriores en este navegador.
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderCirculosView() {
+      const container = document.getElementById('view-circulos');
+      if (!container) return;
+
+      const nodoId = CURRENT_REF || 'lomaverde';
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[nodoId] || {};
+      const circulosAbiertos = LunarEngine.obtenerCirculos(nodoId, true);
+
+      let cardsHtml = '';
+      if (circulosAbiertos.length === 0) {
+        cardsHtml = `
+          <div style="grid-column: 1 / -1; background: white; border: 1px dashed #CBD5E1; border-radius: 16px; padding: 30px; text-align: center; color: #64748B;">
+            <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+            <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">Aún no hay círculos abiertos en ${nodoData.nombre || 'este Nodo'}</h4>
+            <p style="font-size: 13px; margin: 0 auto 16px; max-width: 360px;">¡Sé el primero en abrir un grupo vecinal y juntar kilos para acceder a precios mayoristas!</p>
+            <button type="button" onclick="openCreateCirculoModal()" class="btn-checkout-cta" style="border-radius: 8px; padding: 10px 18px; font-size: 13px;">
+              + Abrir el primer Círculo
+            </button>
+          </div>
+        `;
+      } else {
+        circulosAbiertos.forEach(c => {
+          const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
+          const isSelected = ACTIVE_CIRCULO && (ACTIVE_CIRCULO.id === c.id || ACTIVE_CIRCULO.slug === c.slug);
+          cardsHtml += `
+            <div style="background: white; border: 1.5px solid ${isSelected ? '#10B981' : '#E2E8F0'}; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                  <span style="font-size: 24px;">👥</span>
+                  <span style="font-size: 10px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 8px; border-radius: 6px;">🌐 ABIERTO</span>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${c.nombre}</h4>
+                <div style="font-size: 12.5px; color: #059669; font-weight: 700; margin-bottom: 8px;">👑 Anfitrión/a: ${c.anfitrion}</div>
+                <div style="font-size: 11.5px; color: #64748B; margin-bottom: 12px;">
+                  ${c.direccionEntrega ? `📍 Entrega en: ${c.direccionEntrega}` : '📦 Coordinan retiro conjunto en la sede del Nodo'}
+                </div>
+                <div style="background: #F8FAFC; border-radius: 8px; padding: 8px 10px; font-size: 11.5px; color: #334155; margin-bottom: 14px;">
+                  <i class="fas fa-shopping-basket" style="color: #10B981;"></i> <strong>${stats.pedidos.length}</strong> pedidos acumulados (${stats.unidadesTotal || 0} u.)
+                </div>
+              </div>
+              <button type="button" onclick="selectCirculo('${c.slug || c.id}'); switchAppView('catalogo');" style="width: 100%; background: ${isSelected ? '#059669' : '#10B981'}; color: white; font-weight: 800; font-size: 12.5px; padding: 10px; border-radius: 8px; border: none; cursor: pointer;">
+                ${isSelected ? '✓ Círculo Activo (Comprando acá)' : 'Unirme y Comprar con este Círculo'}
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 24px; font-weight: 800; color: #0F172A; margin: 0;">👥 Círculos Comunitarios</h2>
+            <p style="font-size: 13.5px; color: #64748B; margin: 2px 0 0;">
+              Micro-nodos de compra en <strong>${nodoData.nombre || 'este Nodo'}</strong>
+            </p>
+          </div>
+          <button type="button" onclick="openCreateCirculoModal()" class="btn-checkout-cta" style="border-radius: 10px; padding: 10px 18px; font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-plus"></i> Abrir mi Círculo (15 seg)
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+          ${cardsHtml}
+        </div>
+      `;
+    }
+
+    function renderMiNodoView() {
+      const container = document.getElementById('view-mi-nodo');
+      if (!container) return;
+
+      const nodoId = CURRENT_REF || 'lomaverde';
+      const allNodos = LunarEngine.obtenerNodos();
+      const nodoData = allNodos[nodoId] || {};
+
+      container.innerHTML = `
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 24px; font-weight: 800; color: #0F172A; margin: 0;">📍 Sede Oficial: ${nodoData.nombre || 'Nodo Almacén'}</h2>
+          <p style="font-size: 13.5px; color: #64748B; margin: 2px 0 0;">Punto físico oficial de logística, acopio y distribución comunitaria</p>
+        </div>
+
+        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 18px; padding: 24px; max-width: 680px; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+            <div style="width: 56px; height: 56px; border-radius: 16px; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 28px;">
+              ${nodoData.logo || '🌱'}
+            </div>
+            <div>
+              <h3 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0;">${nodoData.nombre}</h3>
+              <span style="font-size: 12px; color: #059669; font-weight: 700;">Abierto en el ciclo lunar</span>
+            </div>
+          </div>
+
+          <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-bottom: 18px;">
+            ${nodoData.descripcion || 'Punto de acopio y distribución agroecológica comunitaria.'}
+          </p>
+
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+            <div><i class="fas fa-map-marker-alt" style="color: #10B981; width: 22px;"></i> <strong>Dirección:</strong> ${nodoData.direccion || 'Consultar sede'}</div>
+            <div><i class="fas fa-calendar-alt" style="color: #10B981; width: 22px;"></i> <strong>Día y Horario de Entrega:</strong> ${nodoData.diaEntrega || 'Luna Llena'}</div>
+            <div><i class="fas fa-user-check" style="color: #10B981; width: 22px;"></i> <strong>Responsable / Agente:</strong> ${nodoData.contacto || 'Coordinador del Nodo'}</div>
+            <div><i class="fas fa-university" style="color: #10B981; width: 22px;"></i> <strong>Alias / CBU:</strong> <strong style="color: #059669;">${nodoData.cbu || 'vrde.club.mp'}</strong></div>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" onclick="switchAppView('catalogo')" class="btn-checkout-cta" style="flex: 1; border-radius: 10px; padding: 12px; font-size: 13px;">
+              <i class="fas fa-shopping-basket"></i> Comprar en este Nodo
+            </button>
+            <a href="admin.html?ref=${CURRENT_REF}" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: 10px; border: 1px solid #CBD5E1; color: #475569; text-decoration: none; font-size: 13px; font-weight: 700; background: #F8FAFC;">
+              <i class="fas fa-lock" style="color: #10B981;"></i> Panel Gestor con PIN
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function openEditUserProfileModal() {
+      const perfil = LunarEngine.obtenerPerfilUsuario();
+      const allNodos = LunarEngine.obtenerNodos(true);
+
+      document.getElementById('prof-user-nombre').value = perfil.nombre || '';
+      document.getElementById('prof-user-telefono').value = perfil.telefono || '';
+      document.getElementById('prof-user-direccion').value = perfil.direccion || '';
+
+      const nodoSelect = document.getElementById('prof-user-nodo');
+      if (nodoSelect) {
+        nodoSelect.innerHTML = Object.keys(allNodos).map(k => `
+          <option value="${k}" ${k === (perfil.nodoId || CURRENT_REF) ? 'selected' : ''}>${allNodos[k].nombre}</option>
+        `).join('');
+      }
+
+      openModal('modal-user-profile');
+    }
+
+    function submitUserProfile() {
+      const nombre = document.getElementById('prof-user-nombre').value.trim();
+      const telefono = document.getElementById('prof-user-telefono').value.trim();
+      const nodoId = document.getElementById('prof-user-nodo').value;
+      const direccion = document.getElementById('prof-user-direccion').value.trim();
+
+      if (!nombre || !telefono) {
+        alert("Por favor completá tu nombre y teléfono.");
+        return;
+      }
+
+      LunarEngine.guardarPerfilUsuario({
+        nombre: nombre,
+        telefono: telefono,
+        nodoId: nodoId,
+        direccion: direccion
+      });
+
+      CURRENT_REF = nodoId;
+      closeModal('modal-user-profile');
+      renderSidebarUserInfo();
+      renderMiPanel();
+      initStore();
+    }
+
+    function sendComprobanteWsp() {
+      const resumen = LunarEngine.obtenerResumenUsuario();
+      const nodo = resumen.nodo || {};
+      const total = resumen.totalAPagar;
+      const nombre = resumen.perfil.nombre || 'Comprador';
+      const text = `¡Hola! Soy *${nombre}* de Vrde Club 🌿.\n\nTe envío el comprobante de transferencia de mi pedido de Luna Llena por un total de *$${total.toLocaleString('es-AR')}* para retirar en *${nodo.nombre || 'el Nodo'}*.\n\n¡Muchas gracias!`;
+      const tel = (nodo.whatsapp || '').replace(/\D/g, '');
+      const wspUrl = tel ? `https://api.whatsapp.com/send?phone=${tel}&text=${encodeURIComponent(text)}` : `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      window.open(wspUrl, '_blank');
     }
 
     function initStore() {
@@ -1201,28 +1981,50 @@
 
         CURRENT_REF = refParam;
       } else if (!ACTIVE_CIRCULO) {
-        const activos = LunarEngine.obtenerNodos(true);
-        const activeKeys = Object.keys(activos);
-        CURRENT_REF = activeKeys.length > 0 ? activeKeys[0] : (nodeKeys[0] || 'lomaverde');
+        const userProf = LunarEngine.obtenerPerfilUsuario();
+        if (userProf && userProf.nodoId && allNodos[userProf.nodoId]) {
+          CURRENT_REF = userProf.nodoId;
+        } else {
+          const activos = LunarEngine.obtenerNodos(true);
+          const activeKeys = Object.keys(activos);
+          CURRENT_REF = activeKeys.length > 0 ? activeKeys[0] : (nodeKeys[0] || 'lomaverde');
+        }
       }
 
       const nodoData = allNodos[CURRENT_REF] || {};
 
-      // Cargar Header del Nodo
-      document.getElementById('shop-name').innerText = nodoData.nombre || 'Vrde Club';
-      document.getElementById('shop-logo').innerText = nodoData.logo || '🌱';
-      document.getElementById('shop-nodo-label').innerText = nodoData.nombre || 'Almacén Agroecológico';
-      document.getElementById('prof-admin-link').href = `admin.html?ref=${CURRENT_REF}`;
+      // Cargar Header y Topbar
+      const topbarNodo = document.getElementById('topbar-nodo-title');
+      if (topbarNodo) topbarNodo.innerText = nodoData.nombre || 'Vrde Club';
+      const topbarSub = document.getElementById('topbar-circulo-sub');
+      if (topbarSub) {
+        topbarSub.innerText = ACTIVE_CIRCULO ? `👥 Círculo: ${ACTIVE_CIRCULO.nombre}` : `Retiro personal en sede central (${nodoData.direccion || ''})`;
+      }
+
+      // Cargar Sidebar info
+      const sideLunarTitle = document.getElementById('sidebar-lunar-title');
+      if (sideLunarTitle) sideLunarTitle.innerText = CICLO_LUNAR.nombre;
+      const sideLunarCount = document.getElementById('sidebar-lunar-countdown');
+      if (sideLunarCount) sideLunarCount.innerText = `Cierra en ${CICLO_LUNAR.diasRestantes} días`;
+      
+      const badgeCircs = document.getElementById('badge-open-circulos');
+      if (badgeCircs) {
+        badgeCircs.innerText = LunarEngine.obtenerCirculos(CURRENT_REF, true).length;
+      }
 
       // Cargar Banner de Círculo Activo y Estante Spotify de Círculos
       updateCirculoActiveBanner();
-      renderCirculosShelf();
+      renderSidebarUserInfo();
 
       // Cargar Banner Lunar
-      document.getElementById('shop-lunar-title').innerText = `${CICLO_LUNAR.nombre}`;
-      document.getElementById('shop-lunar-desc').innerText = CICLO_LUNAR.mensajeTienda 
-        ? `${CICLO_LUNAR.mensajeTienda} • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`
-        : `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+      const lunarTitle = document.getElementById('shop-lunar-title');
+      if (lunarTitle) lunarTitle.innerText = `${CICLO_LUNAR.nombre}`;
+      const lunarDesc = document.getElementById('shop-lunar-desc');
+      if (lunarDesc) {
+        lunarDesc.innerText = CICLO_LUNAR.mensajeTienda 
+          ? `${CICLO_LUNAR.mensajeTienda} • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`
+          : `Apertura activa • Cierra en ${CICLO_LUNAR.diasRestantes} días (${CICLO_LUNAR.llenaFechaStr})`;
+      }
 
       // Inicializar selección de variantes por defecto (índice 0)
       let allProds = LunarEngine.obtenerProductos(CURRENT_REF, true);
@@ -1233,92 +2035,13 @@
         SELECTED_VARIANT_INDEX[p.id] = 0;
       });
 
+      const badgeProds = document.getElementById('badge-total-prods');
+      if (badgeProds) badgeProds.innerText = allProds.length;
+
       updateProgressBars();
       renderSpotifyCategories();
       filterCategoryAndRender('TODOS');
       initTabsScrollBehavior();
-    }
-
-    // ==========================================
-    // ESTANTE SPOTIFY DE CÍRCULOS DEL NODO
-    // ==========================================
-    function renderCirculosShelf() {
-      const container = document.getElementById('circulos-shelf-container');
-      if (!container) return;
-
-      const nodoId = CURRENT_REF || 'lomaverde';
-      const allNodos = LunarEngine.obtenerNodos();
-      const nodoData = allNodos[nodoId] || {};
-      const circulosAbiertos = LunarEngine.obtenerCirculos(nodoId, true);
-
-      let html = `
-        <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border: 1px solid #334155; border-radius: 16px; padding: 16px 18px; color: white; box-shadow: 0 4px 20px rgba(0,0,0,0.12);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 20px;">👥</span>
-              <div>
-                <h3 style="font-size: 14px; font-weight: 800; margin: 0; color: #F8FAFC; display: flex; align-items: center; gap: 6px;">
-                  Círculos Comunitarios en ${nodoData.nombre || 'este Nodo'}
-                  <span style="font-size: 10px; background: #10B981; color: #064E3B; padding: 2px 8px; border-radius: 99px; font-weight: 800;">${circulosAbiertos.length} ABIERTOS</span>
-                </h3>
-                <p style="font-size: 11px; color: #94A3B8; margin: 0;">Sumate a un grupo barrial para juntar kilos o abrí el tuyo</p>
-              </div>
-            </div>
-            <button type="button" onclick="openCreateCirculoModal()" style="background: #10B981; color: #064E3B; font-weight: 800; font-size: 11px; padding: 6px 14px; border-radius: 99px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s;">
-              <i class="fas fa-plus"></i> Abrir mi Círculo
-            </button>
-          </div>
-
-          <!-- Fila Horizontal Desplazable Estilo Spotify -->
-          <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin;" class="hide-scrollbar">
-            
-            <!-- Tarjeta Compra Individual -->
-            <div onclick="selectCirculo(null)" style="min-width: 170px; max-width: 180px; flex-shrink: 0; background: ${!ACTIVE_CIRCULO ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.05)'}; border: 1.5px solid ${!ACTIVE_CIRCULO ? '#10B981' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
-                <div style="font-size: 20px; margin-bottom: 4px;">🏬</div>
-                <div style="font-size: 12px; font-weight: 800; color: #FFFFFF; line-height: 1.2;">Comprar Solo (Nodo)</div>
-                <div style="font-size: 10px; color: #94A3B8; margin-top: 3px;">Retiro personal directo en la sede</div>
-              </div>
-              <div style="margin-top: 10px;">
-                <span style="font-size: 9.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: ${!ACTIVE_CIRCULO ? '#10B981' : 'rgba(255,255,255,0.1)'}; color: ${!ACTIVE_CIRCULO ? '#064E3B' : '#CBD5E1'}; display: inline-block;">
-                  ${!ACTIVE_CIRCULO ? '✓ Activo' : 'Elegir'}
-                </span>
-              </div>
-            </div>
-      `;
-
-      circulosAbiertos.forEach(c => {
-        const isSelected = ACTIVE_CIRCULO && (ACTIVE_CIRCULO.id === c.id || ACTIVE_CIRCULO.slug === c.slug);
-        const stats = LunarEngine.obtenerEstadisticasCirculo(c.id || c.slug);
-        html += `
-            <!-- Tarjeta de Círculo Abierto -->
-            <div onclick="selectCirculo('${c.slug || c.id}')" style="min-width: 190px; max-width: 210px; flex-shrink: 0; background: ${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(255,255,255,0.05)'}; border: 1.5px solid ${isSelected ? '#10B981' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                  <span style="font-size: 20px;">👥</span>
-                  <span style="font-size: 9px; font-weight: 800; color: #34D399; background: rgba(52,211,153,0.15); padding: 2px 6px; border-radius: 4px;">🌐 ABIERTO</span>
-                </div>
-                <div style="font-size: 12.5px; font-weight: 800; color: #FFFFFF; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${c.nombre}">${c.nombre}</div>
-                <div style="font-size: 10.5px; color: #A7F3D0; margin-top: 2px;">👑 ${c.anfitrion}</div>
-                <div style="font-size: 10px; color: #94A3B8; margin-top: 4px;">
-                  <i class="fas fa-shopping-basket" style="font-size: 9px; color: #10B981;"></i> ${stats.pedidos.length} pedidos (${stats.unidadesTotal || 0} u.)
-                </div>
-              </div>
-              <div style="margin-top: 10px;">
-                <span style="font-size: 9.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: ${isSelected ? '#10B981' : 'rgba(255,255,255,0.1)'}; color: ${isSelected ? '#064E3B' : '#CBD5E1'}; display: inline-block;">
-                  ${isSelected ? '✓ Pedir con este Grupo' : 'Sumarme'}
-                </span>
-              </div>
-            </div>
-        `;
-      });
-
-      html += `
-          </div>
-        </div>
-      `;
-
-      container.innerHTML = html;
     }
 
     function selectCirculo(slugOrId) {
@@ -1334,7 +2057,7 @@
         }
       }
       updateCirculoActiveBanner();
-      renderCirculosShelf();
+      renderSidebarUserInfo();
       updateFloatingCart();
       loadActiveProductView();
     }
@@ -1349,46 +2072,43 @@
           const isPrivado = ACTIVE_CIRCULO.privacidad === 'cerrado';
 
           circuloBannerContainer.innerHTML = `
-            <div style="background: linear-gradient(135deg, #064E3B, #0F172A); border: 1.5px solid #10B981; border-radius: 16px; padding: 16px 20px; margin: 12px 0 16px; color: white; box-shadow: 0 8px 24px rgba(16,185,129,0.15);">
+            <div style="background: linear-gradient(135deg, #064E3B, #0F172A); border: 1.5px solid #10B981; border-radius: 16px; padding: 14px 18px; margin: 4px 0 14px; color: white; box-shadow: 0 8px 24px rgba(16,185,129,0.15);">
               <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 
                 <!-- Left: Identity & Badges -->
-                <div style="display: flex; align-items: center; gap: 14px;">
-                  <div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(16,185,129,0.3); flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(16,185,129,0.3); flex-shrink: 0;">
                     👥
                   </div>
                   <div>
                     <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
-                      <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; background: rgba(16,185,129,0.25); color: #6EE7B7; padding: 2px 7px; border-radius: 4px;">
+                      <span style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; background: rgba(16,185,129,0.25); color: #6EE7B7; padding: 2px 6px; border-radius: 4px;">
                         🟣 CÍRCULO COMUNITARIO
                       </span>
-                      <span style="font-size: 10px; font-weight: 700; color: ${isPrivado ? '#FCD34D' : '#A7F3D0'};">
-                        ${isPrivado ? '🔒 Círculo Privado' : '🌐 Círculo Abierto'}
+                      <span style="font-size: 9.5px; font-weight: 700; color: ${isPrivado ? '#FCD34D' : '#A7F3D0'};">
+                        ${isPrivado ? '🔒 Privado' : '🌐 Abierto'}
                       </span>
                     </div>
-                    <h2 style="font-size: 18px; font-weight: 800; color: #F8FAFC; margin: 0; line-height: 1.2;">
+                    <h2 style="font-size: 16px; font-weight: 800; color: #F8FAFC; margin: 0; line-height: 1.2;">
                       ${ACTIVE_CIRCULO.nombre}
                     </h2>
-                    <div style="font-size: 12px; color: #CBD5E1; margin-top: 3px;">
+                    <div style="font-size: 11.5px; color: #CBD5E1; margin-top: 2px;">
                       👑 Anfitrión/a: <strong style="color: #FFFFFF;">${ACTIVE_CIRCULO.anfitrion}</strong> • 
                       📍 Retiro en: <strong style="color: #A7F3D0;">${nodoNombre}</strong>
-                    </div>
-                    <div style="font-size: 11px; color: #94A3B8; margin-top: 1px;">
-                      📦 ${ACTIVE_CIRCULO.direccionEntrega ? `Punto de entrega barrial: ${ACTIVE_CIRCULO.direccionEntrega}` : 'Coordinan retiro conjunto en la sede del Nodo en Luna Llena'}
                     </div>
                   </div>
                 </div>
 
                 <!-- Right: Actions -->
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                  <button type="button" onclick="openCirculoDashboardModal()" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #FFFFFF; font-weight: 700; font-size: 12px; padding: 8px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                    <i class="fas fa-chart-pie" style="color: #34D399;"></i> Tablero (${stats.pedidos.length} pedidos)
+                  <button type="button" onclick="openCirculoDashboardModal()" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #FFFFFF; font-weight: 700; font-size: 11.5px; padding: 6px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-chart-pie" style="color: #34D399;"></i> Tablero (${stats.pedidos.length})
                   </button>
-                  <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: #FFFFFF; font-weight: 700; font-size: 12px; padding: 8px 14px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(37,211,102,0.25);">
-                    <i class="fab fa-whatsapp"></i> Invitar Vecinos
+                  <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: #FFFFFF; font-weight: 700; font-size: 11.5px; padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                    <i class="fab fa-whatsapp"></i> Invitar
                   </button>
-                  <button type="button" onclick="selectCirculo(null)" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #94A3B8; font-size: 11px; padding: 8px 10px; border-radius: 10px; cursor: pointer;" title="Salir del Círculo y pedir individual en el Nodo">
-                    ✕ Comprar Solo
+                  <button type="button" onclick="selectCirculo(null)" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #94A3B8; font-size: 11px; padding: 6px 8px; border-radius: 8px; cursor: pointer;" title="Salir del Círculo y pedir individual en el Nodo">
+                    ✕ Salir
                   </button>
                 </div>
 
@@ -1474,9 +2194,11 @@
       if (formStep) formStep.classList.add('hidden');
       if (shareResult) shareResult.classList.remove('hidden');
 
-      // Actualizar banner y estante de fondo
+      // Actualizar banner y vistas de fondo
       updateCirculoActiveBanner();
-      renderCirculosShelf();
+      renderSidebarUserInfo();
+      renderMiPanel();
+      renderCirculosView();
       updateFloatingCart();
     }
 
@@ -1499,7 +2221,7 @@
     function goToActiveCirculoStore() {
       closeModal('modal-crear-circulo');
       updateCirculoActiveBanner();
-      renderCirculosShelf();
+      switchAppView('catalogo');
       loadActiveProductView();
     }
 
@@ -2128,16 +2850,26 @@
         totalUnits += item.qty;
       });
 
-      document.getElementById('cart-total-text').innerText = `$${total.toLocaleString('es-AR')}`;
-      const floatingCart = document.getElementById('floating-cart');
-      floatingCart.classList.toggle('visible', totalUnits > 0);
+      const totalStr = `$${total.toLocaleString('es-AR')}`;
+      const totalEl = document.getElementById('cart-total-text');
+      if (totalEl) totalEl.innerText = totalStr;
 
-      const cartActionBtn = floatingCart.querySelector('button');
-      if (cartActionBtn) {
-        if (ACTIVE_CIRCULO) {
-          cartActionBtn.innerHTML = `<span>RESERVAR EN CÍRCULO</span> <span style="font-size: 10px; font-weight: 600; opacity: 0.9;">(Pagar en Luna Llena)</span> <i class="fas fa-arrow-right"></i>`;
-        } else {
-          cartActionBtn.innerHTML = `<span>FINALIZAR PEDIDO</span> <i class="fas fa-arrow-right"></i>`;
+      const sidebarCartTotal = document.getElementById('sidebar-cart-total');
+      if (sidebarCartTotal) sidebarCartTotal.innerText = totalStr;
+
+      const bnavCartText = document.getElementById('bnav-cart-text');
+      if (bnavCartText) bnavCartText.innerText = totalUnits > 0 ? `Canasta (${totalStr})` : 'Canasta ($0)';
+
+      const floatingCart = document.getElementById('floating-cart');
+      if (floatingCart) {
+        floatingCart.classList.toggle('visible', totalUnits > 0);
+        const cartActionBtn = floatingCart.querySelector('button');
+        if (cartActionBtn) {
+          if (ACTIVE_CIRCULO) {
+            cartActionBtn.innerHTML = `<span>RESERVAR EN CÍRCULO</span> <span style="font-size: 10px; font-weight: 600; opacity: 0.9;">(Pagar en Luna Llena)</span> <i class="fas fa-arrow-right"></i>`;
+          } else {
+            cartActionBtn.innerHTML = `<span>FINALIZAR PEDIDO</span> <i class="fas fa-arrow-right"></i>`;
+          }
         }
       }
     }
@@ -2189,7 +2921,19 @@
         });
       }
       vHtml += '<option value="Directo por la Web">🌐 Directo por la Web / Sin Vrdedor previo</option>';
-      document.getElementById('chk-vrdedor-select').innerHTML = vHtml;
+      const vSelect = document.getElementById('chk-vrdedor-select');
+      if (vSelect) vSelect.innerHTML = vHtml;
+
+      // Auto-completar datos del prosumidor si ya están guardados
+      const userProfile = LunarEngine.obtenerPerfilUsuario();
+      if (userProfile) {
+        const nomInput = document.getElementById('chk-nombre');
+        if (nomInput && !nomInput.value && userProfile.nombre) nomInput.value = userProfile.nombre;
+        const telInput = document.getElementById('chk-tel');
+        if (telInput && !telInput.value && userProfile.telefono) telInput.value = userProfile.telefono;
+        const dirInput = document.getElementById('chk-direccion-delivery');
+        if (dirInput && !dirInput.value && userProfile.direccion) dirInput.value = userProfile.direccion;
+      }
 
       setDonation('3');
       openModal('modal-checkout');
@@ -2317,6 +3061,18 @@
       // Guardar centralmente
       LunarEngine.guardarNuevoPedido(ORDER_SUCCESS_DATA);
       LunarEngine.enviarPedidoApi(ORDER_SUCCESS_DATA);
+
+      // Actualizar perfil de usuario recordado
+      LunarEngine.guardarPerfilUsuario({
+        nombre: nombre,
+        telefono: tel,
+        nodoId: CURRENT_REF,
+        circuloId: ACTIVE_CIRCULO?.id || null,
+        direccion: direccionDelivery || ''
+      });
+
+      renderSidebarUserInfo();
+      renderMiPanel();
       updateProgressBars();
 
       closeModal('modal-checkout');
@@ -2428,6 +3184,17 @@
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
       }
+    });
+
+    window.addEventListener('vrde:circulos-updated', () => {
+      renderSidebarUserInfo();
+      if (CURRENT_APP_VIEW === 'circulos') renderCirculosView();
+      if (CURRENT_APP_VIEW === 'mi-panel') renderMiPanel();
+    });
+
+    window.addEventListener('vrde:user-profile-updated', () => {
+      renderSidebarUserInfo();
+      if (CURRENT_APP_VIEW === 'mi-panel') renderMiPanel();
     });
 
     document.addEventListener('DOMContentLoaded', initStore);

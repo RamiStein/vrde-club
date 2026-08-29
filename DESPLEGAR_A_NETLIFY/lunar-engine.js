@@ -2743,6 +2743,94 @@ class LunarEngine {
       ahorroEstimado: ahorroEstimado
     };
   }
+
+  // ==========================================
+  // PERFIL DE USUARIO PROSUMIDOR Y MI PANEL
+  // ==========================================
+  static obtenerPerfilUsuario() {
+    let perfil = null;
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('VRDE_USER_PROFILE');
+        if (stored) perfil = JSON.parse(stored);
+      } catch(e){}
+    }
+    if (!perfil) {
+      perfil = {
+        nombre: '',
+        telefono: '',
+        nodoId: 'lomaverde',
+        circuloId: null,
+        direccion: '',
+        notas: '',
+        avatar: '🌱',
+        creadoEn: new Date().toISOString()
+      };
+    }
+    return perfil;
+  }
+
+  static guardarPerfilUsuario(datos) {
+    const actual = this.obtenerPerfilUsuario();
+    const actualizado = { ...actual, ...datos, actualizadoEn: new Date().toISOString() };
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('VRDE_USER_PROFILE', JSON.stringify(actualizado));
+      } catch(e){}
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:user-profile-updated', { detail: actualizado }));
+    }
+    return actualizado;
+  }
+
+  static obtenerResumenUsuario(telefonoONombre = null, cicloId = 'VIGENTE') {
+    const perfil = this.obtenerPerfilUsuario();
+    const targetTel = (telefonoONombre || perfil.telefono || '').trim().replace(/\D/g, '');
+    const targetNom = (telefonoONombre || perfil.nombre || '').toLowerCase().trim();
+
+    const todosPedidos = this.obtenerPedidos(null, 'ALL');
+    const cicloVigente = this.obtenerCicloVigente();
+
+    // Filtrar pedidos del usuario
+    const pedidosUsuario = todosPedidos.filter(p => {
+      if (!p) return false;
+      const pTel = String(p.telefono || '').replace(/\D/g, '');
+      const pNom = String(p.nombre || '').toLowerCase().trim();
+      if (targetTel && pTel && (pTel.includes(targetTel) || targetTel.includes(pTel))) return true;
+      if (targetNom && pNom && pNom.includes(targetNom)) return true;
+      return false;
+    });
+
+    // Pedidos activos de la luna actual
+    const pedidosActivos = pedidosUsuario.filter(p => {
+      return p.cicloId === cicloVigente.id || p.cicloId === 'VIGENTE' || (!p.cicloId && p.estado !== 'ENTREGADO');
+    });
+
+    const totalAPagar = pedidosActivos.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
+    const unidadesActivas = pedidosActivos.reduce((acc, p) => acc + (Number(p.unidades) || 0), 0);
+
+    const nodoId = perfil.nodoId || (pedidosActivos[0]?.nodo) || 'lomaverde';
+    const allNodos = this.obtenerNodos();
+    const nodoData = allNodos[nodoId] || allNodos['lomaverde'] || {};
+
+    const circuloId = perfil.circuloId || (pedidosActivos[0]?.circuloId || pedidosActivos[0]?.circuloSlug) || null;
+    const circuloData = circuloId ? this.obtenerCirculo(circuloId) : null;
+
+    const ahorroTotal = Math.round(pedidosUsuario.reduce((acc, p) => acc + (Number(p.total) || 0), 0) * 0.12);
+
+    return {
+      perfil: perfil,
+      nodo: nodoData,
+      circulo: circuloData,
+      pedidosActivos: pedidosActivos,
+      historialPedidos: pedidosUsuario,
+      totalAPagar: totalAPagar,
+      unidadesActivas: unidadesActivas,
+      ahorroTotal: ahorroTotal,
+      cicloVigente: cicloVigente
+    };
+  }
 }
 
 // Exportar globalmente para scripts tradicionales y módulos
