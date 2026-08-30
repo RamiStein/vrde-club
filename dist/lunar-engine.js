@@ -2144,8 +2144,8 @@ class LunarEngine {
     }
 
     pedidos.unshift(pedidoData);
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+      try { localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos)); } catch(e){}
     }
     return pedidos;
   }
@@ -2158,8 +2158,8 @@ class LunarEngine {
     const p = pedidos.find(item => item.id === pedidoId);
     if (p) {
       p.estado = nuevoEstado;
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos));
+      if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+        try { localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(pedidos)); } catch(e){}
       }
     }
     return pedidos;
@@ -2984,33 +2984,129 @@ class LunarEngine {
     return actualizado;
   }
 
+  // ==========================================
+  // FORMATEO ROBUSTO DE FECHAS DE PEDIDOS
+  // ==========================================
+  static formatearFechaPedido(fechaRaw, incluirHora = true) {
+    if (!fechaRaw) return 'Ciclo Lunar';
+
+    if (typeof fechaRaw === 'number') {
+      const d = new Date(fechaRaw);
+      if (!isNaN(d.getTime())) {
+        const fStr = d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+        const hStr = d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        return incluirHora ? `${fStr} • ${hStr} hs` : fStr;
+      }
+    }
+
+    const str = String(fechaRaw).trim();
+
+    // Si viene en formato local DD/MM/YYYY o DD/MM/YYYY, HH:mm
+    const matchSlash = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[,\s]+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+    if (matchSlash) {
+      const dia = parseInt(matchSlash[1], 10);
+      const mes = parseInt(matchSlash[2], 10) - 1;
+      const anio = parseInt(matchSlash[3], 10);
+      const hora = matchSlash[4] ? parseInt(matchSlash[4], 10) : 12;
+      const min = matchSlash[5] ? parseInt(matchSlash[5], 10) : 0;
+      const d = new Date(anio, mes, dia, hora, min);
+      if (!isNaN(d.getTime())) {
+        const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        const fStr = `${dia} de ${meses[mes]} ${anio}`;
+        const hStr = `${String(hora).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+        return incluirHora ? `${fStr} • ${hStr} hs` : fStr;
+      }
+    }
+
+    // Intentar parse estándar ISO
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) {
+      const fStr = d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+      const hStr = d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      return incluirHora ? `${fStr} • ${hStr} hs` : fStr;
+    }
+
+    return str;
+  }
+
+  static registrarPedidoLocalUsuario(pedidoId) {
+    if (typeof localStorage === 'undefined' || !pedidoId) return;
+    try {
+      let ids = JSON.parse(localStorage.getItem('VRDE_MIS_PEDIDOS_IDS') || '[]');
+      const strId = String(pedidoId);
+      if (!ids.includes(strId)) {
+        ids.push(strId);
+        localStorage.setItem('VRDE_MIS_PEDIDOS_IDS', JSON.stringify(ids));
+      }
+    } catch(e){}
+  }
+
+  static desvincularPedidoLocalUsuario(pedidoId) {
+    if (typeof localStorage === 'undefined' || !pedidoId) return;
+    try {
+      let ids = JSON.parse(localStorage.getItem('VRDE_MIS_PEDIDOS_IDS') || '[]');
+      const strId = String(pedidoId);
+      ids = ids.filter(id => id !== strId);
+      localStorage.setItem('VRDE_MIS_PEDIDOS_IDS', JSON.stringify(ids));
+    } catch(e){}
+  }
+
+  static cancelarPedidoUsuario(pedidoId) {
+    const ok = this.eliminarPedido(pedidoId);
+    this.desvincularPedidoLocalUsuario(pedidoId);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:pedidos-updated'));
+    }
+    return ok;
+  }
+
   static obtenerResumenUsuario(telefonoONombre = null, cicloId = 'VIGENTE') {
     const perfil = this.obtenerPerfilUsuario();
     const targetTel = (telefonoONombre || perfil.telefono || '').trim().replace(/\D/g, '');
     const targetNom = (telefonoONombre || perfil.nombre || '').toLowerCase().trim();
 
+    let misPedidosIds = [];
+    if (typeof localStorage !== 'undefined') {
+      try {
+        misPedidosIds = JSON.parse(localStorage.getItem('VRDE_MIS_PEDIDOS_IDS') || '[]');
+      } catch(e){}
+    }
+
     const todosPedidos = this.obtenerPedidos(null, 'ALL');
     const cicloVigente = this.obtenerCicloVigente();
 
-    // Filtrar pedidos del usuario
+    // Filtrar pedidos estrictamente del usuario
     const pedidosUsuario = todosPedidos.filter(p => {
       if (!p) return false;
+      const pId = String(p.id || '');
       const pTel = String(p.telefono || '').replace(/\D/g, '');
       const pNom = String(p.nombre || '').toLowerCase().trim();
-      if (targetTel && pTel && (pTel.includes(targetTel) || targetTel.includes(pTel))) return true;
-      if (targetNom && pNom && pNom.includes(targetNom)) return true;
+
+      // 1. Coincidencia por ID de pedido originado en este dispositivo/sesión
+      if (pId && misPedidosIds.includes(pId)) return true;
+
+      // 2. Coincidencia estricta por teléfono (al menos 6 dígitos para evitar falsos positivos)
+      if (targetTel.length >= 6 && pTel.length >= 6) {
+        if (pTel === targetTel || pTel.endsWith(targetTel) || targetTel.endsWith(pTel)) return true;
+      }
+
+      // 3. Coincidencia estricta por nombre (mínimo 3 caracteres, match exacto)
+      if (targetNom.length >= 3 && pNom.length >= 3) {
+        if (pNom === targetNom) return true;
+      }
+
       return false;
     });
 
     // Pedidos activos de la luna actual
     const pedidosActivos = pedidosUsuario.filter(p => {
-      return p.cicloId === cicloVigente.id || p.cicloId === 'VIGENTE' || (!p.cicloId && p.estado !== 'ENTREGADO');
+      return (p.cicloId === cicloVigente.id || p.cicloId === 'VIGENTE' || (!p.cicloId && p.estado !== 'Entregado' && p.estado !== 'Archivado')) && p.estado !== 'Cancelado';
     });
 
     const totalAPagar = pedidosActivos.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
     const unidadesActivas = pedidosActivos.reduce((acc, p) => acc + (Number(p.unidades) || 0), 0);
 
-    const nodoId = perfil.nodoId || (pedidosActivos[0]?.nodo) || 'lomaverde';
+    const nodoId = perfil.nodoId || (pedidosActivos[0]?.nodoId || pedidosActivos[0]?.nodo) || 'lomaverde';
     const allNodos = this.obtenerNodos();
     const nodoData = allNodos[nodoId] || allNodos['lomaverde'] || {};
 

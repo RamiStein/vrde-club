@@ -1677,20 +1677,36 @@
             </div>
 
             <!-- Desglose de Productos Reservados -->
-            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748B; margin-bottom: 8px;">Tus alimentos reservados:</div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              ${pedidosActivos.map(p => `
-                <div style="background: #F1F5F9; border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
-                  <div>
-                    <strong>${p.nombre || 'Pedido Comunitario'}</strong>
-                    <div style="font-size: 11.5px; color: #64748B;">${p.items ? p.items.map(i => `${i.cant}x ${i.nombre}`).join(', ') : `${p.unidades || 1} unidades`}</div>
+            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748B; margin-bottom: 10px;">Tus alimentos reservados en este ciclo:</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${pedidosActivos.map(p => {
+                const fechaStr = LunarEngine.formatearFechaPedido(p.fecha || p.creadoEn || p.timestamp, true);
+                const circName = p.circuloNombre || (p.circuloId ? 'Círculo Comunitario' : null);
+                return `
+                  <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                        <strong style="color: #0F172A; font-size: 13.5px;">${p.nombre || 'Reserva Comunitaria'}</strong>
+                        <span style="font-size: 10.5px; color: #64748B;">• 📅 ${fechaStr}</span>
+                        ${circName ? `<span style="font-size: 10px; font-weight: 800; background: #ECFDF5; color: #065F46; padding: 1px 6px; border-radius: 4px;">👥 ${circName}</span>` : `<span style="font-size: 10px; font-weight: 700; background: #F1F5F9; color: #475569; padding: 1px 6px; border-radius: 4px;">🏪 En Sede</span>`}
+                      </div>
+                      <div style="font-size: 12px; color: #475569; margin-bottom: 2px;">
+                        ${p.items ? p.items.map(i => `<strong>${i.cant}x</strong> ${i.nombre} (${i.variante || i.unidad || ''})`).join(', ') : (p.detalle || `${p.unidades || 1} unidades`)}
+                      </div>
+                      ${p.direccionEntrega ? `<div style="font-size: 11px; color: #64748B;"><i class="fas fa-map-marker-alt" style="color: #10B981;"></i> ${p.direccionEntrega}</div>` : ''}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                      <div style="text-align: right;">
+                        <div style="font-weight: 800; font-size: 15px; color: #0F172A;">$${(Number(p.total) || 0).toLocaleString('es-AR')}</div>
+                        <div style="font-size: 10.5px; color: #059669; font-weight: 700;">✓ Reservado</div>
+                      </div>
+                      <button type="button" onclick="cancelarReservaUsuario('${p.id}')" style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #B91C1C; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="Cancelar esta reserva">
+                        <i class="fas fa-trash-alt"></i> Cancelar
+                      </button>
+                    </div>
                   </div>
-                  <div style="text-align: right;">
-                    <div style="font-weight: 800; color: #0F172A;">$${(Number(p.total) || 0).toLocaleString('es-AR')}</div>
-                    <div style="font-size: 10.5px; color: #059669; font-weight: 700;">✓ Reservado</div>
-                  </div>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
             </div>
           </div>
         `;
@@ -1732,103 +1748,144 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
           
           <!-- 2. MI NODO CABECERA -->
-          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 22px;">📍</span>
-                <div>
-                  <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Mi Nodo Cabecera</h4>
-                  <span style="font-size: 11px; color: #059669; font-weight: 700;">Punto oficial de acopio</span>
+          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">📍</span>
+                  <div>
+                    <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;">Mi Nodo Cabecera</h4>
+                    <span style="font-size: 11.5px; color: #059669; font-weight: 700;">Punto oficial de acopio</span>
+                  </div>
                 </div>
+                <button type="button" onclick="location.href='lunar.html'" style="background: none; border: none; color: #059669; font-size: 12px; font-weight: 800; cursor: pointer;">
+                  Cambiar &rarr;
+                </button>
               </div>
-              <button type="button" onclick="location.href='lunar.html'" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 800; cursor: pointer;">
-                Cambiar &rarr;
-              </button>
+              <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">${nodo.nombre || 'Nodo Almacén'}</div>
+              <div style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><i class="fas fa-map-marker-alt" style="color: #10B981; width: 16px;"></i> ${nodo.direccion || 'Consultar dirección'}</div>
+              <div style="font-size: 12.5px; color: #475569; margin-bottom: 14px;"><i class="fas fa-calendar-alt" style="color: #10B981; width: 16px;"></i> ${nodo.diaEntrega || 'Entrega en Luna Llena'}</div>
             </div>
-            <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">${nodo.nombre || 'Nodo Almacén'}</div>
-            <div style="font-size: 12.5px; color: #475569; margin-bottom: 6px;"><i class="fas fa-map-marker-alt" style="color: #10B981; width: 16px;"></i> ${nodo.direccion || 'Consultar dirección'}</div>
-            <div style="font-size: 12.5px; color: #475569; margin-bottom: 12px;"><i class="fas fa-calendar-alt" style="color: #10B981; width: 16px;"></i> ${nodo.diaEntrega || 'Entrega en Luna Llena'}</div>
-            <button type="button" onclick="switchAppView('mi-nodo')" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; color: #334155; font-size: 12px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer;">
+            <button type="button" onclick="switchAppView('mi-nodo')" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; color: #334155; font-size: 12px; font-weight: 700; padding: 9px; border-radius: 8px; cursor: pointer;">
               Ver ficha completa del Nodo
             </button>
           </div>
 
           <!-- 3. MI CÍRCULO COMUNITARIO -->
-          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 22px;">👥</span>
-                <div>
-                  <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Mi Círculo Comunitario</h4>
-                  <span style="font-size: 11px; color: #059669; font-weight: 700;">Grupo vecinal de compra</span>
+          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">👥</span>
+                  <div>
+                    <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;">Mi Círculo Comunitario</h4>
+                    <span style="font-size: 11.5px; color: #059669; font-weight: 700;">Grupo vecinal de compra</span>
+                  </div>
                 </div>
-              </div>
-              <button type            ${circulo ? `
-              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span style="font-size: 10px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">
-                  ${circulo.privacidad === 'cerrado' ? '🔒 PRIVADO' : '🌐 ABIERTO'}
-                </span>
-                <span style="font-size: 11px; font-weight: 700; color: #10B981;">
-                  ${LunarEngine.obtenerEscalaCirculo(circulo.id || circulo.slug).tierNombre}
-                </span>
-              </div>
-              <div style="font-size: 16px; font-weight: 800; color: #064E3B; margin-bottom: 2px;">${circulo.nombre}</div>
-              <div style="font-size: 12px; color: #047857; margin-bottom: 10px;">👑 Anfitrión/a: <strong>${circulo.anfitrion}</strong></div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
-                <button type="button" onclick="openCirculoDashboardModal()" style="background: #F0FDF4; border: 1px solid #A7F3D0; color: #065F46; font-size: 11.5px; font-weight: 800; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                  <i class="fas fa-users"></i> Ver Integrantes
-                </button>
-                <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: white; border: none; font-size: 11.5px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                  <i class="fab fa-whatsapp"></i> Invitar
-                </button>
-              </div>
-              <div style="display: flex; gap: 8px;">
-                ${circulo.linkGrupoWsp ? `
-                  <a href="${circulo.linkGrupoWsp}" target="_blank" style="flex: 1; background: #047857; color: white; text-decoration: none; font-size: 11px; font-weight: 700; padding: 7px; border-radius: 8px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-                    <i class="fab fa-whatsapp"></i> Grupo WhatsApp
-                  </a>
+                ${circulo ? `
+                  <div style="display: flex; gap: 4px; align-items: center;">
+                    <span style="font-size: 9.5px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 6px; border-radius: 4px;">
+                      ${circulo.privacidad === 'cerrado' ? '🔒 PRIVADO' : '🌐 ABIERTO'}
+                    </span>
+                    <span style="font-size: 9.5px; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">
+                      ${LunarEngine.obtenerEscalaCirculo(circulo.id || circulo.slug).tierNombre}
+                    </span>
+                  </div>
                 ` : ''}
-                <button type="button" onclick="leaveCurrentCirculo()" style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #B91C1C; font-size: 11px; font-weight: 700; padding: 7px 10px; border-radius: 8px; cursor: pointer;" title="Comprar individual en el Nodo">
-                  Salir del Círculo
-                </button>
               </div>
-            ` : `
-              <p style="font-size: 12.5px; color: #64748B; margin-bottom: 12px;">
-                No estás unido a ningún Círculo. Podés sumarte a uno abierto o abrir el tuyo para juntar kilos y alcanzar precio mayorista.
-              </p>
-              <div style="display: flex; gap: 8px;">
-                <button type="button" onclick="openCreateCirculoModal()" style="flex: 1; background: #10B981; color: #064E3B; font-weight: 800; font-size: 11px; padding: 8px; border-radius: 8px; border: none; cursor: pointer;">
-                  + Abrir mi Círculo
-                </button>
-                <button type="button" onclick="switchAppView('circulos')" style="flex: 1; background: #F8FAFC; border: 1px solid #CBD5E1; font-weight: 700; font-size: 11px; padding: 8px; border-radius: 8px; cursor: pointer;">
-                  Ver Círculos
-                </button>
-              </div>
-            `}
+
+              ${circulo ? `
+                <div style="font-size: 16px; font-weight: 800; color: #064E3B; margin-bottom: 4px;">${circulo.nombre}</div>
+                <div style="font-size: 12.5px; color: #047857; margin-bottom: 12px;">👑 Anfitrión/a: <strong>${circulo.anfitrion}</strong></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                  <button type="button" onclick="openCirculoDashboardModal()" style="background: #F0FDF4; border: 1px solid #A7F3D0; color: #065F46; font-size: 11.5px; font-weight: 800; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <i class="fas fa-users"></i> Ver Integrantes
+                  </button>
+                  <button type="button" onclick="shareActiveCirculoWsp()" style="background: #25D366; color: white; border: none; font-size: 11.5px; font-weight: 700; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <i class="fab fa-whatsapp"></i> Invitar
+                  </button>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  ${circulo.linkGrupoWsp ? `
+                    <a href="${circulo.linkGrupoWsp}" target="_blank" style="flex: 1; background: #047857; color: white; text-decoration: none; font-size: 11px; font-weight: 700; padding: 8px; border-radius: 8px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                      <i class="fab fa-whatsapp"></i> Grupo WhatsApp
+                    </a>
+                  ` : ''}
+                  <button type="button" onclick="leaveCurrentCirculo()" style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #B91C1C; font-size: 11px; font-weight: 700; padding: 8px 12px; border-radius: 8px; cursor: pointer;" title="Comprar individual en el Nodo">
+                    Salir del Círculo
+                  </button>
+                </div>
+              ` : `
+                <p style="font-size: 13px; color: #64748B; margin: 0 0 16px; line-height: 1.4;">
+                  No estás unido a ningún Círculo en este momento. Podés sumarte a un grupo abierto o abrir el tuyo para juntar kilos con tus vecinos y alcanzar precio mayorista.
+                </p>
+                <div style="display: flex; gap: 10px;">
+                  <button type="button" onclick="openCreateCirculoModal()" style="flex: 1; background: #10B981; color: white; font-weight: 800; font-size: 12px; padding: 10px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <i class="fas fa-plus-circle"></i> Abrir mi Círculo
+                  </button>
+                  <button type="button" onclick="switchAppView('circulos')" style="flex: 1; background: #F8FAFC; border: 1px solid #CBD5E1; color: #334155; font-weight: 700; font-size: 12px; padding: 10px; border-radius: 8px; cursor: pointer;">
+                    Ver Círculos
+                  </button>
+                </div>
+              `}
+            </div>
           </div>
 
         </div>
 
         <!-- 4. HISTORIAL DE PEDIDOS -->
-        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px;">
-          <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0 0 12px;">📜 Historial de Compras Lunares</h4>
+        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h4 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;">📜 Historial de Compras Lunares</h4>
+            <span style="font-size: 12px; color: #64748B; font-weight: 600;">${resumen.historialPedidos.length} compras registradas</span>
+          </div>
+
           ${resumen.historialPedidos.length > 0 ? `
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              ${resumen.historialPedidos.map(p => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #F1F5F9; font-size: 12.5px;">
-                  <div>
-                    <strong>${p.fecha ? new Date(p.fecha).toLocaleDateString('es-AR') : 'Ciclo Lunar'}</strong>
-                    <div style="font-size: 11px; color: #64748B;">${p.detalle || `${p.unidades || 1} unidades`} • Nodo: ${p.nodo || 'Central'}</div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              ${resumen.historialPedidos.map(p => {
+                const fechaStr = LunarEngine.formatearFechaPedido(p.fecha || p.creadoEn || p.timestamp, true);
+                const circName = p.circuloNombre || (p.circuloId ? 'Círculo Comunitario' : null);
+                const estadoColor = p.estado === 'Pagado' || p.estado === 'Entregado' ? '#059669' : '#D97706';
+                const estadoBg = p.estado === 'Pagado' || p.estado === 'Entregado' ? '#ECFDF5' : '#FEF3C7';
+
+                return `
+                  <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                    <div style="flex: 1; min-width: 240px;">
+                      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                        <strong style="color: #0F172A; font-size: 14px;">📅 ${fechaStr}</strong>
+                        <span style="font-size: 10.5px; font-weight: 800; background: ${estadoBg}; color: ${estadoColor}; padding: 2px 7px; border-radius: 5px;">
+                          ${p.estado || 'Pendiente'}
+                        </span>
+                        <span style="font-size: 11px; color: #64748B;">• 🌑 ${p.ciclo || 'Ciclo Lunar'}</span>
+                      </div>
+
+                      <div style="font-size: 12px; color: #475569; margin-bottom: 6px;">
+                        <strong>📍 ${p.nodo || 'Nodo Almacén'}</strong>
+                        ${circName ? ` • 👥 <strong>${circName}</strong>` : ' • 🏪 Compra Individual'}
+                        ${p.tipoEntrega === 'Delivery' ? ` • 🛵 Delivery: ${p.direccionEntrega || 'A domicilio'}` : ' • 📦 Retiro en sede'}
+                      </div>
+
+                      <div style="font-size: 12.5px; color: #334155; line-height: 1.4;">
+                        ${p.items ? p.items.map(i => `<strong>${i.cant}x</strong> ${i.nombre} (${i.variante || i.unidad || ''})`).join(', ') : (p.detalle || `${p.unidades || 1} unidades`)}
+                      </div>
+                    </div>
+
+                    <div style="text-align: right; min-width: 110px;">
+                      <div style="font-size: 17px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
+                        $${(Number(p.total) || 0).toLocaleString('es-AR')}
+                      </div>
+                      ${p.wsp ? `
+                        <a href="https://wa.me/${p.wsp.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola, te escribo por mi pedido ${p.id} de $${p.total} en Vrde Club.`)}" target="_blank" style="font-size: 11px; font-weight: 700; color: #16A34A; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: #F0FDF4; padding: 4px 8px; border-radius: 6px; border: 1px solid #BBF7D0;">
+                          <i class="fab fa-whatsapp"></i> Consultar
+                        </a>
+                      ` : ''}
+                    </div>
                   </div>
-                  <div style="text-align: right;">
-                    <strong style="color: #0F172A;">$${(Number(p.total) || 0).toLocaleString('es-AR')}</strong>
-                    <div style="font-size: 10.5px; color: #059669;">${p.estado || 'Confirmado'}</div>
-                  </div>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
             </div>
           ` : `
-            <div style="text-align: center; color: #94A3B8; font-size: 12.5px; padding: 20px;">
+            <div style="text-align: center; color: #94A3B8; font-size: 13px; padding: 24px; background: #F8FAFC; border-radius: 12px; border: 1px dashed #E2E8F0;">
               Aún no registrás compras anteriores en este navegador.
             </div>
           `}
@@ -2492,8 +2549,31 @@
     function leaveCurrentCirculo() {
       if (!confirm("¿Seguro que querés salir de este Círculo y comprar de forma individual en el Nodo cabecera?")) return;
 
+      const oldCirculoId = ACTIVE_CIRCULO?.id || ACTIVE_CIRCULO?.slug;
+
       LunarEngine.desvincularCirculoActivo();
       ACTIVE_CIRCULO = null;
+
+      // Desvincular pedidos activos del usuario del círculo anterior (pasan a ser compra individual en el Nodo)
+      if (oldCirculoId) {
+        const resumen = LunarEngine.obtenerResumenUsuario();
+        if (resumen.pedidosActivos && resumen.pedidosActivos.length > 0) {
+          let todos = LunarEngine.obtenerPedidos(null, 'ALL');
+          let modified = false;
+          todos.forEach(p => {
+            if (p && (p.circuloId === oldCirculoId || p.circuloSlug === oldCirculoId) && resumen.pedidosActivos.some(mp => mp.id === p.id)) {
+              p.circuloId = null;
+              p.circuloSlug = null;
+              p.circuloNombre = null;
+              p.circuloAnfitrion = null;
+              modified = true;
+            }
+          });
+          if (modified && typeof localStorage !== 'undefined') {
+            try { localStorage.setItem('VRDE_PEDIDOS', JSON.stringify(todos)); } catch(e){}
+          }
+        }
+      }
 
       const cleanUrl = `${window.location.origin}${window.location.pathname}?ref=${CURRENT_REF}`;
       window.history.replaceState({}, '', cleanUrl);
@@ -2505,6 +2585,15 @@
       if (CURRENT_APP_VIEW === 'circulos') renderCirculosView();
       updateFloatingCart();
       loadActiveProductView();
+    }
+
+    function cancelarReservaUsuario(pedidoId) {
+      if (!confirm("¿Seguro que deseas cancelar esta reserva de alimentos?")) return;
+      LunarEngine.cancelarPedidoUsuario(pedidoId);
+      renderMiPanel();
+      renderSidebarUserInfo();
+      updateFloatingCart();
+      updateProgressBars();
     }
 
     function shareProductGoalWsp(prodId) {
@@ -3266,7 +3355,9 @@
 
       ORDER_SUCCESS_DATA = {
         id: orderId,
-        fecha: new Date().toLocaleString('es-AR'),
+        fecha: new Date().toISOString(),
+        creadoEn: new Date().toISOString(),
+        timestamp: Date.now(),
         cicloId: CICLO_LUNAR.id,
         ciclo: CICLO_LUNAR.nombre,
         nombre: nombre,
@@ -3295,8 +3386,9 @@
         ORDER_SUCCESS_DATA.pagoEnLunaLlena = true;
       }
 
-      // Guardar centralmente
+      // Guardar centralmente y registrar en el dispositivo del usuario
       LunarEngine.guardarNuevoPedido(ORDER_SUCCESS_DATA);
+      LunarEngine.registrarPedidoLocalUsuario(orderId);
       LunarEngine.enviarPedidoApi(ORDER_SUCCESS_DATA);
 
       // Actualizar perfil de usuario recordado
