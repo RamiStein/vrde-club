@@ -830,6 +830,10 @@
         <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')" style="margin: 0;">
           <i class="fas fa-gamepad"></i> 🎮
         </button>
+        <button id="btn-topbar-user-auth" onclick="openAuthModal()" style="background: white; border: 1px solid #CBD5E1; color: #0F172A; font-weight: 700; font-size: 11.5px; padding: 7px 12px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" title="Mi Cuenta / Iniciar Sesión">
+          <span id="topbar-user-avatar">👤</span>
+          <span id="topbar-user-label">Ingresar</span>
+        </button>
       </div>
     </div>
 
@@ -1424,41 +1428,108 @@
     </div>
   </div>
 
-  <!-- Modal Editar Perfil Prosumidor -->
+  <!-- Modal Acceso y Perfil de Usuario Prosumidor -->
   <div class="modal-overlay" id="modal-user-profile">
     <div class="modal-card" style="max-width: 480px;">
       <div class="modal-header-row">
         <div style="display: flex; align-items: center; gap: 10px;">
           <span style="font-size: 26px;">👤</span>
           <div>
-            <h3 style="font-size: 18px; color: #0F172A; margin: 0;">Mi Perfil de Prosumidor</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Tus datos para pedidos, pagos y entregas</p>
+            <h3 style="font-size: 18px; color: #0F172A; margin: 0;" id="auth-modal-title">Acceso de Prosumidor/a</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="auth-modal-sub">Tu cuenta comunitaria en Vrde Club</p>
           </div>
         </div>
         <span class="modal-close-icon" onclick="closeModal('modal-user-profile')">&times;</span>
       </div>
 
-      <form onsubmit="event.preventDefault(); submitUserProfile();" style="padding: 10px 0;">
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label">Nombre y Apellido *</label>
-          <input type="text" id="prof-user-nombre" class="input-field" placeholder="Ej: Carolina Gómez" required>
-        </div>
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label">WhatsApp / Teléfono *</label>
-          <input type="tel" id="prof-user-telefono" class="input-field" placeholder="Ej: 11 4829 1029" required>
-        </div>
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label">Tu Nodo Cabecera de Retiro *</label>
-          <select id="prof-user-nodo" class="input-field" style="background: #F8FAFC; font-weight: 600;"></select>
-        </div>
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label">Dirección Habitual de Entrega (Opcional)</label>
-          <input type="text" id="prof-user-direccion" class="input-field" placeholder="Ej: Calle Los Tilos 120, PB">
-        </div>
-        <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 14px; font-size: 14px; margin-top: 10px;">
-          GUARDAR Y ACTUALIZAR MI PERFIL
+      <!-- Pestañas de Navegación del Modal -->
+      <div id="auth-tabs-row" style="display: flex; gap: 8px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px; margin-bottom: 16px;">
+        <button type="button" id="tab-btn-login" onclick="switchAuthTab('login')" style="flex: 1; padding: 8px; border-radius: 8px; border: none; background: #ECFDF5; color: #065F46; font-weight: 800; font-size: 12.5px; cursor: pointer;">
+          <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
         </button>
-      </form>
+        <button type="button" id="tab-btn-register" onclick="switchAuthTab('register')" style="flex: 1; padding: 8px; border-radius: 8px; border: none; background: #F8FAFC; color: #64748B; font-weight: 700; font-size: 12.5px; cursor: pointer;">
+          <i class="fas fa-user-plus"></i> Crear / Editar Perfil
+        </button>
+      </div>
+
+      <!-- TAB 1: INICIAR SESIÓN CON WHATSAPP -->
+      <div id="auth-view-login">
+        <form onsubmit="event.preventDefault(); submitUserQuickLogin();" style="padding: 4px 0;">
+          <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 12px; margin-bottom: 16px;">
+            <p style="font-size: 12.5px; color: #166534; margin: 0; line-height: 1.4;">
+              💡 <strong>Ingreso directo:</strong> Ingresá tu número de WhatsApp para sincronizar tus pedidos, compras reservadas y tu círculo barrial de inmediato.
+            </p>
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label class="form-label">WhatsApp o Teléfono Celular *</label>
+            <input type="tel" id="login-user-tel" class="input-field" placeholder="Ej: 11 4829 1029" required style="font-size: 15px; font-weight: 700; letter-spacing: 0.5px;">
+          </div>
+          <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 13px; font-size: 14px;">
+            <i class="fas fa-arrow-right"></i> INGRESAR A MI CUENTA
+          </button>
+          <div style="text-align: center; margin-top: 14px;">
+            <button type="button" onclick="switchAuthTab('register')" style="background: none; border: none; color: #059669; font-size: 12px; font-weight: 700; cursor: pointer;">
+              ¿Primera vez en Vrde Club? Creá tu perfil acá &rarr;
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 2: REGISTRO / EDICIÓN COMPLETA DE PERFIL -->
+      <div id="auth-view-register" class="hidden">
+        <form onsubmit="event.preventDefault(); submitUserProfile();" style="padding: 4px 0;">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Nombre y Apellido *</label>
+            <input type="text" id="prof-user-nombre" class="input-field" placeholder="Ej: Carolina Gómez" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">WhatsApp / Teléfono *</label>
+            <input type="tel" id="prof-user-telefono" class="input-field" placeholder="Ej: 11 4829 1029" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Tu Nodo Cabecera de Retiro *</label>
+            <select id="prof-user-nodo" class="input-field" style="background: #F8FAFC; font-weight: 600;"></select>
+          </div>
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label">Dirección Habitual de Entrega (Opcional)</label>
+            <input type="text" id="prof-user-direccion" class="input-field" placeholder="Ej: Calle Los Tilos 120, PB">
+          </div>
+          <button type="submit" class="btn-checkout-cta" style="width: 100%; border-radius: var(--radius-md); padding: 13px; font-size: 14px;">
+            GUARDAR Y VINCULAR CUENTA
+          </button>
+        </form>
+      </div>
+
+      <!-- TAB 3: CUENTA ACTIVA (SESIÓN INICIADA) -->
+      <div id="auth-view-active" class="hidden">
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: #10B981; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px;" id="auth-active-avatar">
+              👤
+            </div>
+            <div>
+              <h4 style="margin: 0; font-size: 16px; font-weight: 800; color: #0F172A;" id="auth-active-name">Prosumidor</h4>
+              <div style="font-size: 12px; color: #64748B;" id="auth-active-tel">11 4829 1029</div>
+            </div>
+          </div>
+          <div style="font-size: 12.5px; color: #475569; padding-top: 8px; border-top: 1px solid #E2E8F0;" id="auth-active-nodo">
+            📍 Nodo Cabecera: Loma Verde
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button type="button" onclick="closeModal('modal-user-profile'); switchAppView('mi-panel');" style="width: 100%; background: #10B981; color: white; border: none; font-weight: 800; font-size: 13px; padding: 11px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fas fa-user-circle"></i> Ir a Mi Espacio Lunar & Compras
+          </button>
+          <button type="button" onclick="switchAuthTab('register')" style="width: 100%; background: white; border: 1px solid #CBD5E1; color: #334155; font-weight: 700; font-size: 12.5px; padding: 10px; border-radius: 8px; cursor: pointer;">
+            <i class="fas fa-user-edit"></i> Modificar Mis Datos
+          </button>
+          <button type="button" onclick="logoutUser()" style="width: 100%; background: #FEE2E2; border: 1px solid #FCA5A5; color: #B91C1C; font-weight: 700; font-size: 12px; padding: 10px; border-radius: 8px; cursor: pointer;">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión / Cambiar de Usuario
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1593,30 +1664,50 @@
     function renderSidebarUserInfo() {
       const resumen = LunarEngine.obtenerResumenUsuario();
       const perfil = resumen.perfil;
+      const isLogged = LunarEngine.estaUsuarioLogueado();
 
       const avatarBox = document.getElementById('sidebar-user-avatar');
       const nameBox = document.getElementById('sidebar-user-name');
       const tagBox = document.getElementById('sidebar-user-tag');
 
       if (avatarBox) {
-        if (perfil.nombre && perfil.nombre.trim().length > 0) {
+        if (isLogged && perfil.nombre && perfil.nombre.trim().length > 0) {
           avatarBox.innerText = perfil.nombre.trim().charAt(0).toUpperCase();
+          avatarBox.style.background = '#10B981';
         } else {
-          avatarBox.innerText = '👤';
+          avatarBox.innerText = '🔑';
+          avatarBox.style.background = 'rgba(255,255,255,0.18)';
         }
       }
 
       if (nameBox) {
-        nameBox.innerText = perfil.nombre || 'Identificarme';
+        nameBox.innerText = isLogged ? (perfil.nombre || 'Prosumidor/a') : 'Iniciar Sesión';
       }
 
       if (tagBox) {
-        if (ACTIVE_CIRCULO) {
-          tagBox.innerHTML = `👥 ${ACTIVE_CIRCULO.nombre}`;
-        } else if (resumen.nodo && resumen.nodo.nombre) {
-          tagBox.innerHTML = `📍 ${resumen.nodo.nombre}`;
+        if (isLogged) {
+          if (ACTIVE_CIRCULO) {
+            tagBox.innerHTML = `👥 ${ACTIVE_CIRCULO.nombre}`;
+          } else if (resumen.nodo && resumen.nodo.nombre) {
+            tagBox.innerHTML = `📍 ${resumen.nodo.nombre}`;
+          } else {
+            tagBox.innerText = '🌱 Prosumidor/a';
+          }
         } else {
-          tagBox.innerText = '🌱 Prosumidor/a';
+          tagBox.innerText = 'Accedé con tu WhatsApp';
+        }
+      }
+
+      // Actualizar botón de usuario en la barra superior
+      const topbarAvatar = document.getElementById('topbar-user-avatar');
+      const topbarLabel = document.getElementById('topbar-user-label');
+      if (topbarLabel) {
+        if (isLogged && perfil.nombre) {
+          topbarLabel.innerText = perfil.nombre.split(' ')[0];
+          if (topbarAvatar) topbarAvatar.innerText = '👤';
+        } else {
+          topbarLabel.innerText = 'Ingresar';
+          if (topbarAvatar) topbarAvatar.innerText = '🔑';
         }
       }
 
@@ -2023,22 +2114,113 @@
       `;
     }
 
-    function openEditUserProfileModal() {
+    function openAuthModal(targetTab = null) {
+      const isLogged = LunarEngine.estaUsuarioLogueado();
       const perfil = LunarEngine.obtenerPerfilUsuario();
       const allNodos = LunarEngine.obtenerNodos(true);
 
-      document.getElementById('prof-user-nombre').value = perfil.nombre || '';
-      document.getElementById('prof-user-telefono').value = perfil.telefono || '';
-      document.getElementById('prof-user-direccion').value = perfil.direccion || '';
-
+      // Poblar campos de registro
+      const nombreInput = document.getElementById('prof-user-nombre');
+      const telInput = document.getElementById('prof-user-telefono');
+      const dirInput = document.getElementById('prof-user-direccion');
       const nodoSelect = document.getElementById('prof-user-nodo');
+      const loginTelInput = document.getElementById('login-user-tel');
+
+      if (nombreInput) nombreInput.value = perfil.nombre || '';
+      if (telInput) telInput.value = perfil.telefono || '';
+      if (dirInput) dirInput.value = perfil.direccion || '';
+      if (loginTelInput) loginTelInput.value = perfil.telefono || '';
+
       if (nodoSelect) {
         nodoSelect.innerHTML = Object.keys(allNodos).map(k => `
           <option value="${k}" ${k === (perfil.nodoId || CURRENT_REF) ? 'selected' : ''}>${allNodos[k].nombre}</option>
         `).join('');
       }
 
+      // Configurar vista activa
+      if (targetTab) {
+        switchAuthTab(targetTab);
+      } else if (isLogged) {
+        switchAuthTab('active');
+      } else {
+        switchAuthTab('login');
+      }
+
       openModal('modal-user-profile');
+    }
+
+    function openEditUserProfileModal() {
+      openAuthModal();
+    }
+
+    function switchAuthTab(tab) {
+      const tabLoginBtn = document.getElementById('tab-btn-login');
+      const tabRegBtn = document.getElementById('tab-btn-register');
+      const viewLogin = document.getElementById('auth-view-login');
+      const viewRegister = document.getElementById('auth-view-register');
+      const viewActive = document.getElementById('auth-view-active');
+      const tabsRow = document.getElementById('auth-tabs-row');
+
+      if (tab === 'active') {
+        if (tabsRow) tabsRow.style.display = 'none';
+        if (viewLogin) viewLogin.classList.add('hidden');
+        if (viewRegister) viewRegister.classList.add('hidden');
+        if (viewActive) {
+          viewActive.classList.remove('hidden');
+          const perfil = LunarEngine.obtenerPerfilUsuario();
+          const allNodos = LunarEngine.obtenerNodos();
+          const nodoName = allNodos[perfil.nodoId]?.nombre || 'Nodo Central';
+          const nameEl = document.getElementById('auth-active-name');
+          const telEl = document.getElementById('auth-active-tel');
+          const nodoEl = document.getElementById('auth-active-nodo');
+          const avatarEl = document.getElementById('auth-active-avatar');
+          if (nameEl) nameEl.innerText = perfil.nombre || 'Prosumidor/a';
+          if (telEl) telEl.innerText = `📱 ${perfil.telefono}`;
+          if (nodoEl) nodoEl.innerHTML = `📍 <strong>Nodo Cabecera:</strong> ${nodoName}${perfil.circuloId ? ' • 👥 Círculo activo' : ''}`;
+          if (avatarEl) avatarEl.innerText = perfil.nombre ? perfil.nombre.trim().charAt(0).toUpperCase() : '👤';
+        }
+        return;
+      }
+
+      if (tabsRow) tabsRow.style.display = 'flex';
+      if (viewActive) viewActive.classList.add('hidden');
+
+      if (tab === 'login') {
+        if (tabLoginBtn) { tabLoginBtn.style.background = '#ECFDF5'; tabLoginBtn.style.color = '#065F46'; tabLoginBtn.style.fontWeight = '800'; }
+        if (tabRegBtn) { tabRegBtn.style.background = '#F8FAFC'; tabRegBtn.style.color = '#64748B'; tabRegBtn.style.fontWeight = '700'; }
+        if (viewLogin) viewLogin.classList.remove('hidden');
+        if (viewRegister) viewRegister.classList.add('hidden');
+      } else {
+        if (tabRegBtn) { tabRegBtn.style.background = '#ECFDF5'; tabRegBtn.style.color = '#065F46'; tabRegBtn.style.fontWeight = '800'; }
+        if (tabLoginBtn) { tabLoginBtn.style.background = '#F8FAFC'; tabLoginBtn.style.color = '#64748B'; tabLoginBtn.style.fontWeight = '700'; }
+        if (viewRegister) viewRegister.classList.remove('hidden');
+        if (viewLogin) viewLogin.classList.add('hidden');
+      }
+    }
+
+    function submitUserQuickLogin() {
+      const tel = document.getElementById('login-user-tel').value.trim();
+      if (!tel) {
+        alert("Por favor ingresá tu número de teléfono o WhatsApp.");
+        return;
+      }
+
+      const res = LunarEngine.iniciarSesionUsuario(tel);
+      if (!res.ok) {
+        alert(res.mensaje);
+        return;
+      }
+
+      if (res.esUsuarioExistente && res.perfil.nombre) {
+        alert(`¡Bienvenido/a de vuelta, ${res.perfil.nombre}! Se sincronizaron tus ${res.pedidosEncontrados} pedidos anteriores.`);
+      } else {
+        alert("¡Teléfono registrado! Te invitamos a completar tu nombre en tu perfil.");
+      }
+
+      closeModal('modal-user-profile');
+      renderSidebarUserInfo();
+      renderMiPanel();
+      initStore();
     }
 
     function submitUserProfile() {
@@ -2052,18 +2234,24 @@
         return;
       }
 
-      LunarEngine.guardarPerfilUsuario({
-        nombre: nombre,
-        telefono: telefono,
-        nodoId: nodoId,
-        direccion: direccion
-      });
+      LunarEngine.iniciarSesionUsuario(telefono, nombre, nodoId);
+      LunarEngine.guardarPerfilUsuario({ direccion: direccion });
 
       CURRENT_REF = nodoId;
       closeModal('modal-user-profile');
       renderSidebarUserInfo();
       renderMiPanel();
       initStore();
+      alert("¡Perfil guardado e identificado con éxito!");
+    }
+
+    function logoutUser() {
+      if (!confirm("¿Deseás cerrar sesión en este dispositivo?")) return;
+      LunarEngine.cerrarSesionUsuario();
+      closeModal('modal-user-profile');
+      renderSidebarUserInfo();
+      renderMiPanel();
+      alert("Has cerrado sesión.");
     }
 
     function sendComprobanteWsp() {
@@ -2099,6 +2287,14 @@
         const cleanUrl = window.location.origin + window.location.pathname + (refParam ? `?ref=${refParam}` : '');
         window.history.replaceState({}, '', cleanUrl);
         setTimeout(() => { openCreateCirculoModal(); }, 300);
+      }
+
+      if (urlParams.get('login') === 'true') {
+        const cleanUrl = window.location.origin + window.location.pathname + (refParam ? `?ref=${refParam}` : '');
+        window.history.replaceState({}, '', cleanUrl);
+        setTimeout(() => { openAuthModal('login'); }, 300);
+      } else if (urlParams.get('view')) {
+        setTimeout(() => { switchAppView(urlParams.get('view')); }, 100);
       }
 
       if (refParam && (!ACTIVE_CIRCULO || !ACTIVE_CIRCULO.nodoId)) {

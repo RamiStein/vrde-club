@@ -2984,6 +2984,79 @@ class LunarEngine {
     return actualizado;
   }
 
+  static estaUsuarioLogueado() {
+    const perfil = this.obtenerPerfilUsuario();
+    return Boolean(perfil && perfil.logueado && perfil.telefono && perfil.telefono.trim().length >= 6);
+  }
+
+  static iniciarSesionUsuario(telefono, nombre = '', nodoId = null) {
+    if (!telefono) return { ok: false, mensaje: 'Por favor ingresá un número de teléfono o WhatsApp.' };
+
+    const cleanTel = String(telefono).trim().replace(/\D/g, '');
+    if (cleanTel.length < 6) {
+      return { ok: false, mensaje: 'El número de teléfono debe tener al menos 6 dígitos.' };
+    }
+
+    // Buscar pedidos previos de este número para recuperar información histórica
+    const todosPedidos = this.obtenerPedidos(null, 'ALL');
+    const misPedidos = todosPedidos.filter(p => {
+      if (!p) return false;
+      const pTel = String(p.telefono || '').replace(/\D/g, '');
+      return pTel && (pTel === cleanTel || pTel.endsWith(cleanTel) || cleanTel.endsWith(pTel));
+    });
+
+    // Registrar los IDs de sus pedidos en el dispositivo actual
+    misPedidos.forEach(p => {
+      if (p.id) this.registrarPedidoLocalUsuario(p.id);
+    });
+
+    const primerPedido = misPedidos[0];
+    const nombreFinal = (nombre || (primerPedido ? primerPedido.nombre : '') || '').trim();
+    const nodoFinal = nodoId || (primerPedido ? (primerPedido.nodoId || primerPedido.nodo) : null) || 'lomaverde';
+    const circuloFinal = (primerPedido ? (primerPedido.circuloId || primerPedido.circuloSlug) : null) || null;
+
+    const perfil = this.guardarPerfilUsuario({
+      nombre: nombreFinal,
+      telefono: cleanTel,
+      nodoId: nodoFinal,
+      circuloId: circuloFinal,
+      logueado: true,
+      ultimoAcceso: new Date().toISOString()
+    });
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:user-login', { detail: perfil }));
+    }
+
+    return {
+      ok: true,
+      esUsuarioExistente: misPedidos.length > 0,
+      pedidosEncontrados: misPedidos.length,
+      perfil: perfil
+    };
+  }
+
+  static cerrarSesionUsuario() {
+    const perfil = this.guardarPerfilUsuario({
+      nombre: '',
+      telefono: '',
+      circuloId: null,
+      logueado: false
+    });
+
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.removeItem('VRDE_MIS_PEDIDOS_IDS');
+      } catch(e){}
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:user-logout', { detail: perfil }));
+    }
+
+    return perfil;
+  }
+
   // ==========================================
   // FORMATEO ROBUSTO DE FECHAS DE PEDIDOS
   // ==========================================
