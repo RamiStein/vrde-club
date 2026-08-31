@@ -66,10 +66,12 @@
     <!-- Navegación -->
     <nav id="navbar" class="fixed w-full z-50 bg-white/80 backdrop-blur-lg border-b border-vrde-brand/10 shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center md:pl-28">
-            <!-- Tipografía simulada del logo VRDE .CLUB -->
-            <div class="flex flex-col leading-none cursor-pointer">
-                <span class="font-pixel text-vrde-brand text-4xl font-bold tracking-widest uppercase" style="line-height: 0.8;">VRDE</span>
-                <span class="text-[0.6rem] tracking-[0.4em] font-sans text-vrde-brand uppercase mt-1 font-semibold">.Club</span>
+            <div class="flex items-center gap-3 cursor-pointer" onclick="location.href='index.html'">
+                <img src="assets/favicon.png" alt="Vrde Club" class="w-10 h-10 rounded-xl object-contain bg-white p-1 border border-emerald-100 shadow-sm">
+                <div class="flex flex-col leading-none">
+                    <span class="font-pixel text-vrde-brand text-3xl font-bold tracking-widest uppercase" style="line-height: 0.8;">VRDE</span>
+                    <span class="text-[0.6rem] tracking-[0.4em] font-sans text-vrde-brand uppercase mt-1 font-semibold">.Club</span>
+                </div>
             </div>
             
             <div class="hidden lg:flex gap-8 font-sans font-medium text-sm text-gray-600 items-center">
@@ -81,7 +83,6 @@
                 <a href="lunar.html" class="nav-link text-vrde-brand font-bold bg-vrde-brand/10 px-4 py-2 rounded-full hover:bg-vrde-brand hover:text-white transition-all flex items-center gap-2">
                     <i class="fas fa-moon text-xs"></i> Compra Lunar
                 </a>
-                <a href="#sumate" class="nav-link text-gray-700 font-semibold hover:text-vrde-brand transition-all">Sumate</a>
             </div>
             
             <!-- Mobile menu button -->
@@ -103,12 +104,10 @@
         
         <div class="z-10 max-w-4xl mx-auto flex flex-col items-center">
             
-            <!-- Logo "V" orgánico -->
-            <!-- NOTA: Aquí colocamos un placeholder estilizado que será reemplazado por la imagen real del cliente -->
-            
+            <!-- Logo Oficial "V" con huerta orgánica -->
             <div class="logo-v-container fade-up mb-6 relative flex justify-center">
-                <div class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-2xl">
-                    <i class="fas fa-seedling text-4xl text-vrde-light"></i>
+                <div class="w-24 h-24 bg-white/95 backdrop-blur-md rounded-3xl flex items-center justify-center border border-white/40 shadow-2xl p-2.5">
+                    <img src="assets/favicon.png" alt="Vrde Club" class="w-full h-full object-contain">
                 </div>
             </div>
 
