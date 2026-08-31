@@ -66,9 +66,53 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    window.addEventListener('scroll', updateTimeline);
-    window.addEventListener('resize', updateTimeline);
-    setTimeout(updateTimeline, 100);
+    // --- 2.1 ADAPTACIÓN DINÁMICA DEL NAVBAR (HERO TRANSLÚCIDO VS SECCIONES CLARAS) ---
+    const navbarEl = document.getElementById('navbar');
+    const navTitleEl = document.getElementById('nav-brand-title');
+    const navSubEl = document.getElementById('nav-brand-sub');
+    const navLinksBox = document.getElementById('nav-links-container');
+
+    function updateNavbarTransition() {
+        const scrollY = window.scrollY;
+        if (scrollY > 70) {
+            if (navbarEl) {
+                navbarEl.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbarEl.style.borderBottom = '1px solid #E2E8F0';
+                navbarEl.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)';
+            }
+            if (navTitleEl) navTitleEl.style.color = '#10A352';
+            if (navSubEl) navSubEl.style.color = '#10A352';
+            if (navLinksBox) {
+                navLinksBox.classList.remove('text-gray-200');
+                navLinksBox.classList.add('text-gray-700');
+            }
+        } else {
+            if (navbarEl) {
+                navbarEl.style.background = 'rgba(11, 17, 32, 0.75)';
+                navbarEl.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+                navbarEl.style.boxShadow = 'none';
+            }
+            if (navTitleEl) navTitleEl.style.color = '#FFFFFF';
+            if (navSubEl) navSubEl.style.color = '#34D399';
+            if (navLinksBox) {
+                navLinksBox.classList.remove('text-gray-700');
+                navLinksBox.classList.add('text-gray-200');
+            }
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        updateTimeline();
+        updateNavbarTransition();
+    });
+    window.addEventListener('resize', () => {
+        updateTimeline();
+        updateNavbarTransition();
+    });
+    setTimeout(() => {
+        updateTimeline();
+        updateNavbarTransition();
+    }, 50);
 
 
     // --- 3. EXPLORADOR DE NODOS INTERACTIVO (DINÁMICO CON LUNAR ENGINE) ---

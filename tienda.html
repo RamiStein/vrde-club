@@ -152,6 +152,37 @@
       position: sticky;
       top: 0;
       z-index: 30;
+      gap: 12px;
+    }
+
+    .topbar-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar-view-mode-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .app-topbar {
+        padding: 8px 12px 6px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .topbar-view-mode-row {
+        justify-content: center;
+        width: 100%;
+        margin-top: 2px;
+      }
     }
 
     .app-view-panel {
@@ -824,33 +855,42 @@
        ========================================= -->
   <div class="app-main-viewport">
     
-    <!-- Topbar Compacta para Navegación y Contexto -->
+    <!-- Topbar Compacta y Espaciosa para Mobile & Desktop -->
     <div class="app-topbar">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="margin: 0; padding: 6px 10px; font-size: 11px;" title="Volver">
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <img src="assets/favicon.png?v=4" onclick="location.href='index.html'" style="width: 34px; height: 34px; border-radius: 8px; object-fit: contain; cursor: pointer; background: #FFFFFF; padding: 2px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); flex-shrink: 0;" alt="Vrde Club" title="Vrde Club - Ir a Portada">
-        <div>
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <h2 style="font-size: 14.5px; font-weight: 800; color: #0F172A; margin: 0; line-height: 1.2;" id="topbar-nodo-title">Nodo Loma Verde</h2>
-            <button onclick="switchAppView('mi-nodo')" style="background: none; border: none; color: #059669; font-size: 11px; font-weight: 700; cursor: pointer; padding: 0 2px;" title="Ver info del nodo">(Ver info)</button>
+      <!-- Fila Principal: Volver + Logo + Info del Nodo + Botón Usuario -->
+      <div class="topbar-main-row">
+        <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+          <button class="btn-header-back" onclick="if(window.history.length > 1) { window.history.back() } else { location.href='lunar.html' }" style="margin: 0; padding: 6px 9px; font-size: 11px; flex-shrink: 0;" title="Volver">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <img src="assets/favicon.png?v=4" onclick="location.href='index.html'" style="width: 32px; height: 32px; border-radius: 8px; object-fit: contain; cursor: pointer; background: #FFFFFF; padding: 2px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); flex-shrink: 0;" alt="Vrde Club" title="Vrde Club - Ir a Portada">
+          <div style="min-width: 0; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <h2 style="font-size: 13.5px; font-weight: 800; color: #0F172A; margin: 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="topbar-nodo-title">Nodo Loma Verde</h2>
+              <button onclick="switchAppView('mi-nodo')" style="background: none; border: none; color: #059669; font-size: 10.5px; font-weight: 700; cursor: pointer; padding: 0 2px; flex-shrink: 0;" title="Ver info del nodo">(Info)</button>
+            </div>
+            <p style="font-size: 10px; color: var(--text-muted); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="topbar-circulo-sub">Retiro personal en sede central</p>
           </div>
-          <p style="font-size: 11px; color: var(--text-muted); margin: 0;" id="topbar-circulo-sub">Retiro personal en sede central</p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+          <button id="btn-topbar-user-auth" onclick="openAuthModal()" style="background: #F8FAFC; border: 1px solid #CBD5E1; color: #0F172A; font-weight: 700; font-size: 11px; padding: 6px 10px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="Mi Cuenta / Iniciar Sesión">
+            <span id="topbar-user-avatar">👤</span>
+            <span id="topbar-user-label">Ingresar</span>
+          </button>
         </div>
       </div>
 
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')" style="margin: 0;">
-          <i class="fas fa-th-large"></i> Catálogo
-        </button>
-        <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')" style="margin: 0;">
-          <i class="fas fa-gamepad"></i> 🎮
-        </button>
-        <button id="btn-topbar-user-auth" onclick="openAuthModal()" style="background: white; border: 1px solid #CBD5E1; color: #0F172A; font-weight: 700; font-size: 11.5px; padding: 7px 12px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" title="Mi Cuenta / Iniciar Sesión">
-          <span id="topbar-user-avatar">👤</span>
-          <span id="topbar-user-label">Ingresar</span>
-        </button>
+      <!-- Fila de Modos de Vista (Catálogo / Swipe) -->
+      <div class="topbar-view-mode-row">
+        <div style="display: inline-flex; background: #F1F5F9; padding: 3px; border-radius: 10px; border: 1px solid #E2E8F0;">
+          <button class="view-mode-pill-btn active" id="btn-view-showcase" onclick="switchStoreView('showcase')" style="margin: 0; padding: 5px 12px; font-size: 11px; border-radius: 7px; border: none;">
+            <i class="fas fa-th-large"></i> Catálogo
+          </button>
+          <button class="view-mode-pill-btn" id="btn-view-swipe" onclick="switchStoreView('swipe')" style="margin: 0; padding: 5px 12px; font-size: 11px; border-radius: 7px; border: none;">
+            <i class="fas fa-gamepad"></i> 🎮 Swipe
+          </button>
+        </div>
       </div>
     </div>
 

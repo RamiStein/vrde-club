@@ -63,31 +63,31 @@
         </div>
     </div>
 
-    <!-- Navegación -->
-    <nav id="navbar" class="fixed w-full z-50 bg-white/80 backdrop-blur-lg border-b border-vrde-brand/10 shadow-sm transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center md:pl-28">
+    <!-- Navegación Adaptativa -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300" style="background: rgba(11, 17, 32, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center md:pl-28">
             <div class="flex items-center gap-3 cursor-pointer" onclick="location.href='index.html'">
-                <img src="assets/favicon.png" alt="Vrde Club" class="w-10 h-10 rounded-xl object-contain bg-white p-1 border border-emerald-100 shadow-sm">
+                <img src="assets/favicon.png?v=4" alt="Vrde Club" class="w-9 h-9 rounded-xl object-contain bg-white p-1 border border-white/20 shadow-md">
                 <div class="flex flex-col leading-none">
-                    <span class="font-pixel text-vrde-brand text-3xl font-bold tracking-widest uppercase" style="line-height: 0.8;">VRDE</span>
-                    <span class="text-[0.6rem] tracking-[0.4em] font-sans text-vrde-brand uppercase mt-1 font-semibold">.Club</span>
+                    <span id="nav-brand-title" class="font-pixel text-white text-3xl font-bold tracking-widest uppercase transition-colors" style="line-height: 0.8;">VRDE</span>
+                    <span id="nav-brand-sub" class="text-[0.6rem] tracking-[0.4em] font-sans text-emerald-400 uppercase mt-1 font-semibold transition-colors">.Club</span>
                 </div>
             </div>
             
-            <div class="hidden lg:flex gap-8 font-sans font-medium text-sm text-gray-600 items-center">
-                <a href="#origen" class="nav-link hover:text-vrde-brand transition-colors">El Origen</a>
-                <a href="#ecosistema" class="nav-link hover:text-vrde-brand transition-colors">Ecosistema</a>
-                <a href="#nodos" class="nav-link hover:text-vrde-brand transition-colors">Labor y Nodos</a>
-                <a href="#crea-tu-nodo" class="nav-link hover:text-vrde-brand transition-colors font-semibold text-emerald-700">Creá tu Nodo</a>
-                <a href="#economia" class="nav-link hover:text-vrde-brand transition-colors">Economía</a>
-                <a href="lunar.html" class="nav-link text-vrde-brand font-bold bg-vrde-brand/10 px-4 py-2 rounded-full hover:bg-vrde-brand hover:text-white transition-all flex items-center gap-2">
-                    <i class="fas fa-moon text-xs"></i> Compra Lunar
+            <div class="hidden lg:flex gap-8 font-sans font-medium text-sm text-gray-200 items-center transition-colors" id="nav-links-container">
+                <a href="#origen" class="nav-link hover:text-emerald-400 transition-colors">El Origen</a>
+                <a href="#ecosistema" class="nav-link hover:text-emerald-400 transition-colors">Ecosistema</a>
+                <a href="#nodos" class="nav-link hover:text-emerald-400 transition-colors">Labor y Nodos</a>
+                <a href="#crea-tu-nodo" class="nav-link hover:text-emerald-400 transition-colors font-semibold text-emerald-300">Creá tu Nodo</a>
+                <a href="#economia" class="nav-link hover:text-emerald-400 transition-colors">Economía</a>
+                <a href="lunar.html" class="nav-link text-white font-bold bg-emerald-600/40 hover:bg-emerald-600 px-4 py-2 rounded-full border border-emerald-400/40 transition-all flex items-center gap-2">
+                    <i class="fas fa-moon text-xs text-yellow-300"></i> Compra Lunar
                 </a>
             </div>
             
-            <!-- Mobile menu button -->
-            <button class="lg:hidden text-vrde-brand text-2xl" onclick="window.location.href='lunar.html'">
-                <i class="fas fa-moon"></i>
+            <!-- Mobile moon button -->
+            <button class="lg:hidden text-white bg-white/10 p-2.5 rounded-full border border-white/20 text-base flex items-center justify-center hover:bg-white/20 transition-all" onclick="window.location.href='lunar.html'" title="Entrar a la Compra Lunar">
+                <i class="fas fa-moon text-yellow-300"></i>
             </button>
         </div>
     </nav>
