@@ -10,7 +10,15 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png?v=3">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=3">
   <link rel="shortcut icon" href="favicon.ico?v=3">
-  <link rel="apple-touch-icon" href="assets/favicon.png?v=3">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10B981">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vrde Club">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -575,6 +583,15 @@
       if (track) {
         track.scrollBy({ left: distance, behavior: 'smooth' });
       }
+    }
+
+    // Registro PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('🌿 [PWA] Service Worker registrado en portal:', reg.scope))
+          .catch(err => console.warn('⚠️ [PWA] Error al registrar Service Worker:', err));
+      });
     }
   </script>
 </body>

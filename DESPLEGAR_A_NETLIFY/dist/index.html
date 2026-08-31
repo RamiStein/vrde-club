@@ -11,7 +11,15 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png?v=3">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=3">
   <link rel="shortcut icon" href="favicon.ico?v=3">
-  <link rel="apple-touch-icon" href="assets/favicon.png?v=3">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10B981">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vrde Club">
     
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -499,5 +507,14 @@
     <!-- SCRIPT PRINCIPAL -->
     <script src="lunar-engine.js"></script>
     <script src="app.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('🌿 [PWA] Service Worker registrado en Home:', reg.scope))
+            .catch(err => console.warn('⚠️ [PWA] Error al registrar Service Worker:', err));
+        });
+      }
+    </script>
 </body>
 </html>

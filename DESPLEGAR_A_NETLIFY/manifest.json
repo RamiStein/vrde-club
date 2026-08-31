@@ -1,0 +1,87 @@
+{
+  "name": "Vrde Club • Almacén Lunar",
+  "short_name": "Vrde Club",
+  "description": "Red de compra comunitaria de alimentos agroecológicos directo de chacras y soberanía alimentaria.",
+  "start_url": "./tienda.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0B1120",
+  "theme_color": "#10B981",
+  "orientation": "portrait-primary",
+  "categories": [
+    "shopping",
+    "food",
+    "lifestyle"
+  ],
+  "lang": "es-AR",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/favicon.png",
+      "sizes": "192x192 512x512 1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "180x180 512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Catálogo de Alimentos",
+      "short_name": "Catálogo",
+      "description": "Ver alimentos agroecológicos directo de chacra",
+      "url": "./tienda.html?view=catalogo",
+      "icons": [
+        {
+          "src": "assets/favicon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Mi Espacio Lunar",
+      "short_name": "Mi Panel",
+      "description": "Ver mis pedidos, reservas y pagos",
+      "url": "./tienda.html?view=mi-panel",
+      "icons": [
+        {
+          "src": "assets/favicon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Círculos Comunitarios",
+      "short_name": "Círculos",
+      "description": "Ver círculos abiertos en tu nodo",
+      "url": "./tienda.html?view=circulos",
+      "icons": [
+        {
+          "src": "assets/favicon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Nodos Almacén",
+      "short_name": "Nodos",
+      "description": "Ver sedes oficiales de acopio",
+      "url": "./lunar.html",
+      "icons": [
+        {
+          "src": "assets/favicon.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

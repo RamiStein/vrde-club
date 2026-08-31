@@ -11,7 +11,15 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png?v=3">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=3">
   <link rel="shortcut icon" href="favicon.ico?v=3">
-  <link rel="apple-touch-icon" href="assets/favicon.png?v=3">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10B981">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vrde Club">
 
   <!-- Tipografías -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -778,6 +786,14 @@
           <i class="fas fa-store-alt"></i>
           <span>Mi Nodo Cabecera</span>
         </div>
+      </div>
+
+      <div class="sidebar-nav-item" id="nav-item-install-pwa" onclick="triggerPWAInstall()" style="display: none; background: rgba(16,185,129,0.12); border: 1px dashed rgba(16,185,129,0.4); color: #34D399; margin-top: 4px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-mobile-alt"></i>
+          <span>Instalar App PWA</span>
+        </div>
+        <span style="font-size: 10px; background: #10B981; color: #064E3B; font-weight: 800; padding: 1px 6px; border-radius: 4px;">📲</span>
       </div>
     </nav>
 
@@ -3722,7 +3738,87 @@
       if (CURRENT_APP_VIEW === 'mi-panel') renderMiPanel();
     });
 
+    // ==========================================
+    // PWA SERVICE WORKER & INSTALACIÓN NATIVA
+    // ==========================================
+    let deferredPWAInstallPrompt = null;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('🌿 [PWA] Service Worker registrado:', reg.scope))
+          .catch(err => console.warn('⚠️ [PWA] Error al registrar Service Worker:', err));
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPWAInstallPrompt = e;
+
+      // Mostrar botón en el sidebar
+      const sideInstallBtn = document.getElementById('nav-item-install-pwa');
+      if (sideInstallBtn) sideInstallBtn.style.display = 'flex';
+
+      // Mostrar banner flotante si no fue cerrado previamente en esta sesión
+      if (!sessionStorage.getItem('vrde_pwa_dismissed')) {
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) banner.style.display = 'block';
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('🎉 [PWA] Vrde Club instalado con éxito');
+      deferredPWAInstallPrompt = null;
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'none';
+      const sideInstallBtn = document.getElementById('nav-item-install-pwa');
+      if (sideInstallBtn) sideInstallBtn.style.display = 'none';
+    });
+
+    function triggerPWAInstall() {
+      if (deferredPWAInstallPrompt) {
+        deferredPWAInstallPrompt.prompt();
+        deferredPWAInstallPrompt.userChoice.then(choice => {
+          if (choice.outcome === 'accepted') {
+            console.log('El usuario aceptó instalar la PWA');
+          }
+          deferredPWAInstallPrompt = null;
+          dismissPWABanner();
+        });
+      } else {
+        alert("📲 Para instalar Vrde Club en tu pantalla principal:\n\n1. En iPhone (Safari): tocá el botón 'Compartir' ⬆️ y elegí 'Agregar a Inicio'.\n2. En Android (Chrome): tocá los tres puntos ⋮ y elegí 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
+      }
+    }
+
+    function dismissPWABanner() {
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'none';
+      sessionStorage.setItem('vrde_pwa_dismissed', 'true');
+    }
+
     document.addEventListener('DOMContentLoaded', initStore);
   </script>
+
+  <!-- Banner Flotante de Instalación PWA -->
+  <div id="pwa-install-banner" style="display: none; position: fixed; bottom: 85px; left: 16px; right: 16px; max-width: 440px; margin: 0 auto; background: #0F172A; border: 1.5px solid #10B981; border-radius: 16px; padding: 14px 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999;">
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+      <div style="width: 40px; height: 40px; border-radius: 10px; background: #10B981; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+        🌱
+      </div>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-size: 14px; font-weight: 800; color: white;">Instalar App de Vrde Club</div>
+        <div style="font-size: 11.5px; color: #94A3B8;">Acceso rápido, alertas de Luna Llena y compras sin conexión.</div>
+      </div>
+      <span onclick="dismissPWABanner()" style="color: #64748B; cursor: pointer; font-size: 20px; padding: 2px 6px;">&times;</span>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button onclick="triggerPWAInstall()" style="flex: 1; background: #10B981; color: white; border: none; font-weight: 800; font-size: 12px; padding: 9px; border-radius: 8px; cursor: pointer;">
+        📲 Instalar en mi Celular
+      </button>
+      <button onclick="dismissPWABanner()" style="background: rgba(255,255,255,0.08); color: #CBD5E1; border: none; font-weight: 600; font-size: 12px; padding: 9px 14px; border-radius: 8px; cursor: pointer;">
+        Ahora no
+      </button>
+    </div>
+  </div>
 </body>
 </html>
