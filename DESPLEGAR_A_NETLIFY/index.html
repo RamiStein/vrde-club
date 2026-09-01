@@ -85,10 +85,15 @@
                 </a>
             </div>
             
-            <!-- Mobile moon button -->
-            <button class="lg:hidden text-white bg-white/10 p-2.5 rounded-full border border-white/20 text-base flex items-center justify-center hover:bg-white/20 transition-all" onclick="window.location.href='lunar.html'" title="Entrar a la Compra Lunar">
-                <i class="fas fa-moon text-yellow-300"></i>
-            </button>
+            <!-- Mobile buttons: App + Lunar -->
+            <div class="flex lg:hidden items-center gap-2">
+                <button id="btn-home-mobile-install-pwa" class="text-xs font-bold bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 px-2.5 py-1.5 rounded-full hover:bg-emerald-600 transition-all flex items-center gap-1" onclick="triggerHomePWAInstall()" title="Instalar App">
+                    <span>📲</span> <span>App</span>
+                </button>
+                <button class="text-white bg-white/10 p-2.5 rounded-full border border-white/20 text-base flex items-center justify-center hover:bg-white/20 transition-all" onclick="window.location.href='lunar.html'" title="Entrar a la Compra Lunar">
+                    <i class="fas fa-moon text-yellow-300"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -507,6 +512,30 @@
     <script src="lunar-engine.js"></script>
     <script src="app.js"></script>
     <script>
+      let deferredHomePWA = null;
+      const isStandaloneHome = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+      if (isStandaloneHome) {
+        const btnMobile = document.getElementById('btn-home-mobile-install-pwa');
+        if (btnMobile) btnMobile.style.display = 'none';
+      }
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredHomePWA = e;
+        const btnMobile = document.getElementById('btn-home-mobile-install-pwa');
+        if (btnMobile && !isStandaloneHome) btnMobile.style.display = 'inline-flex';
+      });
+
+      function triggerHomePWAInstall() {
+        if (deferredHomePWA) {
+          deferredHomePWA.prompt();
+          deferredHomePWA.userChoice.then(() => { deferredHomePWA = null; });
+        } else {
+          location.href = 'tienda.html';
+        }
+      }
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js')

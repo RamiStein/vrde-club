@@ -874,6 +874,10 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+          <button id="btn-topbar-install-pwa" onclick="triggerPWAInstall()" style="background: #ECFDF5; border: 1.5px solid #10B981; color: #065F46; font-weight: 800; font-size: 11px; padding: 5px 9px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(16,185,129,0.15);" title="Instalar App de Vrde Club en este celular">
+            <span style="font-size: 12px;">📲</span>
+            <span>App</span>
+          </button>
           <button id="btn-topbar-user-auth" onclick="openAuthModal()" style="background: #F8FAFC; border: 1px solid #CBD5E1; color: #0F172A; font-weight: 700; font-size: 11px; padding: 6px 10px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="Mi Cuenta / Iniciar Sesión">
             <span id="topbar-user-avatar">👤</span>
             <span id="topbar-user-label">Ingresar</span>
@@ -1590,6 +1594,59 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Modal de Guía de Instalación PWA Permanente -->
+  <div class="modal-overlay" id="modal-install-pwa-guide" onclick="if(event.target === this) closeModal('modal-install-pwa-guide')">
+    <div class="modal-card" style="max-width: 440px; padding: 22px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="assets/favicon.png?v=4" alt="Vrde Club" style="width: 42px; height: 42px; border-radius: 10px; object-fit: contain; background: white; padding: 2px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div>
+            <h3 style="font-size: 16.5px; font-weight: 800; color: #0F172A; margin: 0;">Instalar Vrde Club</h3>
+            <span style="font-size: 11.5px; color: #059669; font-weight: 800; text-transform: uppercase;">Aplicación Oficial PWA</span>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-install-pwa-guide')" style="font-size: 22px; line-height: 1; padding: 0 4px;">&times;</button>
+      </div>
+
+      <p style="font-size: 12.5px; color: #475569; margin: 0 0 14px; line-height: 1.4;">
+        Instalá la app para acceder directo desde tu pantalla de inicio, recibir avisos de Luna Llena y comprar sin conexión a internet.
+      </p>
+
+      <!-- Instrucciones para Android -->
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;">
+        <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <i class="fab fa-android" style="color: #10B981; font-size: 16px;"></i> En Android (Google Chrome):
+        </div>
+        <ol style="font-size: 12px; color: #334155; margin: 0; padding-left: 18px; line-height: 1.45;">
+          <li>Tocá los <strong>tres puntos ⋮</strong> arriba a la derecha en Chrome.</li>
+          <li>Elegí <strong>"Instalar aplicación"</strong> (o "Agregar a la pantalla principal").</li>
+          <li>Tocá <strong>"Instalar"</strong> y listo.</li>
+        </ol>
+      </div>
+
+      <!-- Instrucciones para iPhone -->
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
+        <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <i class="fab fa-apple" style="color: #64748B; font-size: 16px;"></i> En iPhone / iPad (Safari):
+        </div>
+        <ol style="font-size: 12px; color: #334155; margin: 0; padding-left: 18px; line-height: 1.45;">
+          <li>Tocá el botón de Compartir <strong>⬆️</strong> (abajo al centro en Safari).</li>
+          <li>Deslizá hacia abajo y elegí <strong>"Agregar a Inicio"</strong> ➕.</li>
+          <li>Tocá <strong>"Agregar"</strong> arriba a la derecha.</li>
+        </ol>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button type="button" onclick="executeNativeInstallFromModal()" class="btn-checkout-cta" style="flex: 1; border-radius: 10px; padding: 11px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+          <i class="fas fa-download"></i> Instalar Directo
+        </button>
+        <button type="button" onclick="closeModal('modal-install-pwa-guide')" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569; font-weight: 700; font-size: 12px; padding: 11px 16px; border-radius: 10px; cursor: pointer;">
+          Entendido
+        </button>
+      </div>
     </div>
   </div>
 
@@ -3812,19 +3869,39 @@
       });
     }
 
+    const isRunningAsStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    function initPWAButtons() {
+      if (isRunningAsStandaloneApp) {
+        // Ya está instalado y corriendo como app nativa
+        const topbarBtn = document.getElementById('btn-topbar-install-pwa');
+        if (topbarBtn) topbarBtn.style.display = 'none';
+        const sideBtn = document.getElementById('nav-item-install-pwa');
+        if (sideBtn) sideBtn.style.display = 'none';
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) banner.style.display = 'none';
+      } else {
+        // En navegador móvil o desktop: mostrar botón permanente en la barra superior
+        const topbarBtn = document.getElementById('btn-topbar-install-pwa');
+        if (topbarBtn) topbarBtn.style.display = 'inline-flex';
+        const sideBtn = document.getElementById('nav-item-install-pwa');
+        if (sideBtn) sideBtn.style.display = 'flex';
+
+        // Mostrar banner flotante si no fue pospuesto recientemente
+        const dismissedUntil = parseInt(sessionStorage.getItem('vrde_pwa_dismissed_until') || '0', 10);
+        if (Date.now() > dismissedUntil) {
+          setTimeout(() => {
+            const banner = document.getElementById('pwa-install-banner');
+            if (banner) banner.style.display = 'block';
+          }, 1500);
+        }
+      }
+    }
+
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       deferredPWAInstallPrompt = e;
-
-      // Mostrar botón en el sidebar
-      const sideInstallBtn = document.getElementById('nav-item-install-pwa');
-      if (sideInstallBtn) sideInstallBtn.style.display = 'flex';
-
-      // Mostrar banner flotante si no fue cerrado previamente en esta sesión
-      if (!sessionStorage.getItem('vrde_pwa_dismissed')) {
-        const banner = document.getElementById('pwa-install-banner');
-        if (banner) banner.style.display = 'block';
-      }
+      initPWAButtons();
     });
 
     window.addEventListener('appinstalled', () => {
@@ -3834,6 +3911,8 @@
       if (banner) banner.style.display = 'none';
       const sideInstallBtn = document.getElementById('nav-item-install-pwa');
       if (sideInstallBtn) sideInstallBtn.style.display = 'none';
+      const topbarBtn = document.getElementById('btn-topbar-install-pwa');
+      if (topbarBtn) topbarBtn.style.display = 'none';
     });
 
     function triggerPWAInstall() {
@@ -3842,20 +3921,34 @@
         deferredPWAInstallPrompt.userChoice.then(choice => {
           if (choice.outcome === 'accepted') {
             console.log('El usuario aceptó instalar la PWA');
+            dismissPWABanner();
           }
           deferredPWAInstallPrompt = null;
-          dismissPWABanner();
         });
       } else {
-        alert("📲 Para instalar Vrde Club en tu pantalla principal:\n\n1. En iPhone (Safari): tocá el botón 'Compartir' ⬆️ y elegí 'Agregar a Inicio'.\n2. En Android (Chrome): tocá los tres puntos ⋮ y elegí 'Instalar aplicación' o 'Agregar a la pantalla principal'.");
+        openModal('modal-install-pwa-guide');
+      }
+    }
+
+    function executeNativeInstallFromModal() {
+      if (deferredPWAInstallPrompt) {
+        triggerPWAInstall();
+        closeModal('modal-install-pwa-guide');
+      } else {
+        alert("📲 Seguí los pasos indicados arriba en tu navegador (en Android tocá los tres puntos ⋮ arriba a la derecha y luego 'Instalar Aplicación').");
       }
     }
 
     function dismissPWABanner() {
       const banner = document.getElementById('pwa-install-banner');
       if (banner) banner.style.display = 'none';
-      sessionStorage.setItem('vrde_pwa_dismissed', 'true');
+      // Pausar el banner flotante por 15 minutos (el botón [📲 App] en la barra superior sigue siempre visible)
+      sessionStorage.setItem('vrde_pwa_dismissed_until', Date.now() + 15 * 60 * 1000);
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initPWAButtons();
+    });
 
     document.addEventListener('DOMContentLoaded', initStore);
   </script>
