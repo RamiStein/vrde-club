@@ -363,13 +363,58 @@ const modalData = {
             </form>
         `
     },
+    'productor': {
+        title: 'Sumarme como Productor / Vendedor',
+        icon: 'fa-tractor',
+        color: 'text-emerald-600',
+        content: `
+            <p class="text-gray-600 mb-6 text-sm">Ofrecé tus alimentos agroecológicos directo a nuestra red de nodos barriales y compras comunitarias sin intermediarios.</p>
+            <form class="space-y-4 text-left" onsubmit="event.preventDefault(); submitPostulacionProductor(this);">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Nombre del Productor / Proyecto *</label>
+                    <input type="text" id="post-prod-nombre" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: Finca Las Acacias / Molino San José" required>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">WhatsApp de Contacto *</label>
+                        <input type="tel" id="post-prod-tel" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: 11 4829 1029" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Ubicación / Provincia *</label>
+                        <input type="text" id="post-prod-loc" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: San Pedro, Bs. As. / Misiones" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Tipo de Alimentos que Producís *</label>
+                    <input type="text" id="post-prod-alimentos" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Ej: Harinas biodinámicas, yerba orgánica, legumbres, miel" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Prácticas Productivas</label>
+                    <select id="post-prod-tipo" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm bg-white">
+                        <option value="Agroecológico sin químicos">Agroecológico sin químicos</option>
+                        <option value="Orgánico Certificado">Orgánico Certificado</option>
+                        <option value="Biodinámico / Regenerativo">Biodinámico / Regenerativo</option>
+                        <option value="En transición agroecológica">En transición agroecológica</option>
+                        <option value="Artesanal / Cooperativa familiar">Artesanal / Cooperativa familiar</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Detalles de Producción y Volúmenes</label>
+                    <textarea id="post-prod-notas" rows="2" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-vrde-brand outline-none text-sm" placeholder="Contanos sobre tu escala de cosecha, empaque y disponibilidad de acopio"></textarea>
+                </div>
+                <button type="submit" class="w-full btn-primary bg-emerald-600 hover:bg-emerald-700 border-none py-3.5 rounded-xl font-bold text-white shadow-lg shadow-emerald-600/20 text-sm flex items-center justify-center gap-2 mt-4">
+                    <i class="fab fa-whatsapp text-lg"></i> ENVIAR PROPUESTA PRODUCTIVA
+                </button>
+            </form>
+        `
+    },
     'transporte': {
         title: 'Ofrecer Transporte',
         icon: 'fa-truck',
         color: 'text-purple-600',
         content: `
-            <p class="text-gray-600 mb-6">Integra tu vehículo a la red logística En Conjunto y genera un impacto positivo.</p>
-            <form class="space-y-4" onsubmit="event.preventDefault(); alert('Gracias por sumar tu vehículo a la red.'); closeModal();">
+            <p class="text-gray-600 mb-6 text-sm">Integrá tu vehículo a la red logística En Conjunto y generá un impacto positivo.</p>
+            <form class="space-y-4" onsubmit="event.preventDefault(); alert('Gracias por sumar tu vehículo a la red. Nos pondremos en contacto.'); closeModal();">
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">Tipo de Vehículo</label>
                     <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-vrde-brand outline-none">
@@ -387,7 +432,7 @@ const modalData = {
         icon: 'fa-bullhorn',
         color: 'text-vrde-brand',
         content: `
-            <p class="text-gray-600 mb-6">Ayuda a expandir la red organizando y comunicando las compras en tu comunidad.</p>
+            <p class="text-gray-600 mb-6 text-sm">Ayudá a expandir la red organizando y comunicando las compras en tu comunidad.</p>
             <form class="space-y-4" onsubmit="event.preventDefault(); alert('¡Bienvenido al equipo de difusión!'); closeModal();">
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">Nombre de Organización o Familia</label>
@@ -397,6 +442,123 @@ const modalData = {
             </form>
         `
     }
+};
+
+// Postulaciones por WhatsApp
+window.submitPostulacionNodo = function(form) {
+    const nombre = document.getElementById('post-nodo-nombre')?.value || '';
+    const tel = document.getElementById('post-nodo-tel')?.value || '';
+    const barrio = document.getElementById('post-nodo-barrio')?.value || '';
+    const dir = document.getElementById('post-nodo-dir')?.value || '';
+    const tipo = document.getElementById('post-nodo-tipo')?.value || '';
+    const m2 = document.getElementById('post-nodo-m2')?.value || '';
+    const notas = document.getElementById('post-nodo-notas')?.value || '';
+
+    const msg = `🌿 *POSTULACIÓN NODO ALMACÉN - VRDE CLUB*\n\n` +
+                `👤 *Nombre:* ${nombre}\n` +
+                `📱 *WhatsApp:* ${tel}\n` +
+                `📍 *Barrio/Localidad:* ${barrio}\n` +
+                `🏠 *Dirección:* ${dir || 'A convenir'}\n` +
+                `📐 *Espacio:* ${tipo} (~${m2 || '15'} m²)\n` +
+                `💬 *Motivación:* ${notas || 'Quiero abrir un nodo en mi barrio.'}\n\n` +
+                `_Enviado desde el portal Vrde Club_`;
+
+    const wspUrl = `https://wa.me/5491127452476?text=${encodeURIComponent(msg)}`;
+    window.open(wspUrl, '_blank');
+    closeModal();
+};
+
+window.submitPostulacionProductor = function(form) {
+    const nombre = document.getElementById('post-prod-nombre')?.value || '';
+    const tel = document.getElementById('post-prod-tel')?.value || '';
+    const loc = document.getElementById('post-prod-loc')?.value || '';
+    const alimentos = document.getElementById('post-prod-alimentos')?.value || '';
+    const tipo = document.getElementById('post-prod-tipo')?.value || '';
+    const notas = document.getElementById('post-prod-notas')?.value || '';
+
+    const msg = `🚜 *POSTULACIÓN PRODUCTOR/VENDEDOR - VRDE CLUB*\n\n` +
+                `🌱 *Proyecto:* ${nombre}\n` +
+                `📱 *WhatsApp:* ${tel}\n` +
+                `📍 *Ubicación:* ${loc}\n` +
+                `🌾 *Alimentos:* ${alimentos}\n` +
+                `🍃 *Prácticas:* ${tipo}\n` +
+                `📦 *Detalles:* ${notas || 'Quiero comercializar en la red lunar.'}\n\n` +
+                `_Enviado desde el portal Vrde Club_`;
+
+    const wspUrl = `https://wa.me/5491127452476?text=${encodeURIComponent(msg)}`;
+    window.open(wspUrl, '_blank');
+    closeModal();
+};
+
+// --- ONBOARDING Y ACCESO A LA COMPRA LUNAR ---
+window.handleIngresoCompraLunar = function() {
+    if (typeof LunarEngine !== 'undefined') {
+        const destino = LunarEngine.obtenerDestinoCompraLunar();
+        if (destino.logueado) {
+            if (destino.tieneNodo && destino.nodoId) {
+                window.location.href = `tienda.html?ref=${encodeURIComponent(destino.nodoId)}`;
+            } else {
+                window.location.href = 'lunar.html';
+            }
+            return;
+        }
+    }
+    openOnboardingModal();
+};
+
+window.openOnboardingModal = function() {
+    const modalEl = document.getElementById('modal-onboarding-login');
+    if (!modalEl) {
+        window.location.href = 'lunar.html';
+        return;
+    }
+    modalEl.classList.remove('hidden');
+    modalEl.classList.add('flex');
+    setTimeout(() => {
+        modalEl.classList.remove('opacity-0');
+        const inputNombre = document.getElementById('onboarding-user-nombre');
+        if (inputNombre) inputNombre.focus();
+    }, 10);
+};
+
+window.closeOnboardingModal = function() {
+    const modalEl = document.getElementById('modal-onboarding-login');
+    if (!modalEl) return;
+    modalEl.classList.add('opacity-0');
+    setTimeout(() => {
+        modalEl.classList.add('hidden');
+        modalEl.classList.remove('flex');
+    }, 250);
+};
+
+window.submitOnboardingLogin = function() {
+    const nombreInput = document.getElementById('onboarding-user-nombre');
+    const telInput = document.getElementById('onboarding-user-tel');
+    const nombre = nombreInput ? nombreInput.value.trim() : '';
+    const tel = telInput ? telInput.value.trim() : '';
+
+    if (!tel || tel.replace(/\D/g, '').length < 6) {
+        alert('Por favor ingresá un número de teléfono o WhatsApp válido.');
+        return;
+    }
+
+    if (typeof LunarEngine !== 'undefined') {
+        const res = LunarEngine.iniciarSesionUsuario(tel, nombre);
+        if (res.ok) {
+            closeOnboardingModal();
+            if (res.tieneNodo && res.perfil.nodoId) {
+                window.location.href = `tienda.html?ref=${encodeURIComponent(res.perfil.nodoId)}`;
+            } else {
+                window.location.href = 'lunar.html';
+            }
+            return;
+        } else {
+            alert(res.mensaje || 'Error al ingresar.');
+            return;
+        }
+    }
+
+    window.location.href = 'lunar.html';
 };
 
 window.openModal = function(type) {
@@ -412,13 +574,12 @@ window.openModal = function(type) {
     `;
 
     modal.classList.remove('hidden');
-    // Trigger animation
     setTimeout(() => {
         modal.classList.remove('opacity-0');
         modalContent.classList.remove('scale-95');
         modalContent.classList.add('scale-100');
     }, 10);
-}
+};
 
 window.closeModal = function() {
     modal.classList.add('opacity-0');
@@ -428,6 +589,7 @@ window.closeModal = function() {
     setTimeout(() => {
         modal.classList.add('hidden');
     }, 300);
+};
 }
 
 // Close on backdrop click

@@ -2460,6 +2460,13 @@
         }
       }
 
+      if (CURRENT_REF && typeof LunarEngine !== 'undefined') {
+        const profActual = LunarEngine.obtenerPerfilUsuario();
+        if (profActual && profActual.logueado && profActual.nodoId !== CURRENT_REF) {
+          LunarEngine.asignarNodoUsuario(CURRENT_REF);
+        }
+      }
+
       const nodoData = allNodos[CURRENT_REF] || {};
 
       // Cargar Header y Topbar

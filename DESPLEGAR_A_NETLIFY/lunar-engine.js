@@ -2959,11 +2959,12 @@ class LunarEngine {
       perfil = {
         nombre: '',
         telefono: '',
-        nodoId: 'lomaverde',
+        nodoId: null,
         circuloId: null,
         direccion: '',
         notas: '',
         avatar: '🌱',
+        logueado: false,
         creadoEn: new Date().toISOString()
       };
     }
@@ -3012,7 +3013,8 @@ class LunarEngine {
 
     const primerPedido = misPedidos[0];
     const nombreFinal = (nombre || (primerPedido ? primerPedido.nombre : '') || '').trim();
-    const nodoFinal = nodoId || (primerPedido ? (primerPedido.nodoId || primerPedido.nodo) : null) || 'lomaverde';
+    // Si ya tenía nodo asignado o pedidos previos, preservarlo; si es nuevo, queda en null para seleccionar
+    const nodoFinal = nodoId || (primerPedido ? (primerPedido.nodoId || primerPedido.nodo) : null) || null;
     const circuloFinal = (primerPedido ? (primerPedido.circuloId || primerPedido.circuloSlug) : null) || null;
 
     const perfil = this.guardarPerfilUsuario({
@@ -3032,7 +3034,54 @@ class LunarEngine {
       ok: true,
       esUsuarioExistente: misPedidos.length > 0,
       pedidosEncontrados: misPedidos.length,
+      tieneNodo: Boolean(nodoFinal),
       perfil: perfil
+    };
+  }
+
+  static asignarNodoUsuario(nodoId) {
+    if (!nodoId) return null;
+    const perfil = this.guardarPerfilUsuario({
+      nodoId: nodoId
+    });
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('vrde:user-node-assigned', { detail: { nodoId, perfil } }));
+    }
+    return perfil;
+  }
+
+  static obtenerDestinoCompraLunar() {
+    const isLogged = this.estaUsuarioLogueado();
+    const perfil = this.obtenerPerfilUsuario();
+    const todosNodos = this.obtenerNodos(true);
+
+    if (!isLogged) {
+      return {
+        logueado: false,
+        tieneNodo: false,
+        nodoId: null,
+        urlDestino: null,
+        accion: 'requiere_login'
+      };
+    }
+
+    const nodoValido = perfil.nodoId && todosNodos[perfil.nodoId];
+    if (!nodoValido) {
+      return {
+        logueado: true,
+        tieneNodo: false,
+        nodoId: null,
+        urlDestino: 'lunar.html',
+        accion: 'seleccionar_nodo'
+      };
+    }
+
+    return {
+      logueado: true,
+      tieneNodo: true,
+      nodoId: perfil.nodoId,
+      urlDestino: `tienda.html?ref=${encodeURIComponent(perfil.nodoId)}`,
+      accion: 'ir_a_tienda'
     };
   }
 
@@ -3040,6 +3089,7 @@ class LunarEngine {
     const perfil = this.guardarPerfilUsuario({
       nombre: '',
       telefono: '',
+      nodoId: null,
       circuloId: null,
       logueado: false
     });
