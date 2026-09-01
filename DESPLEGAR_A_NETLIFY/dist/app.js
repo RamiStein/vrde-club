@@ -20,99 +20,123 @@ document.addEventListener("DOMContentLoaded", () => {
     fadeElements.forEach(el => observer.observe(el));
 
 
-    // --- 2. LÍNEA DE TIEMPO (TIMELINE) ---
+    // --- 2. LÍNEA DE TIEMPO Y NAVEGACIÓN ADAPTATIVA (OPTIMIZADO CON RAF Y CACHE) ---
     const nave = document.getElementById('timeline-nave');
     const progress = document.getElementById('timeline-progress');
-    const sections = document.querySelectorAll('section');
+    const sections = Array.from(document.querySelectorAll('section'));
     const navLinks = document.querySelectorAll('.nav-link');
-
-    function updateTimeline() {
-        const scrollTop = window.scrollY;
-        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        
-        if (scrollHeight <= 0) return;
-
-        let scrollPercent = (scrollTop / scrollHeight) * 100;
-        scrollPercent = Math.max(0, Math.min(scrollPercent, 98));
-        
-        progress.style.height = `${scrollPercent}%`;
-        nave.style.top = `${scrollPercent}%`;
-
-        // Efecto final de la nave
-        if(scrollPercent > 90) {
-            nave.style.backgroundColor = '#FFF';
-            nave.style.color = '#10A352';
-            nave.style.borderColor = '#10A352';
-        } else {
-            nave.style.backgroundColor = '#10A352';
-            nave.style.color = '#FFF';
-            nave.style.borderColor = '#FFF';
-        }
-
-        // Resaltado del menú
-        let currentSectionId = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 150; // offset
-            if (scrollTop >= sectionTop) {
-                currentSectionId = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('text-vrde-brand', 'font-bold');
-            if (link.getAttribute('href') === `#${currentSectionId}` && currentSectionId !== 'sumate') {
-                link.classList.add('text-vrde-brand', 'font-bold');
-            }
-        });
-    }
-
-    // --- 2.1 ADAPTACIÓN DINÁMICA DEL NAVBAR (HERO TRANSLÚCIDO VS SECCIONES CLARAS) ---
     const navbarEl = document.getElementById('navbar');
     const navTitleEl = document.getElementById('nav-brand-title');
     const navSubEl = document.getElementById('nav-brand-sub');
     const navLinksBox = document.getElementById('nav-links-container');
 
-    function updateNavbarTransition() {
-        const scrollY = window.scrollY;
-        if (scrollY > 70) {
-            if (navbarEl) {
-                navbarEl.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbarEl.style.borderBottom = '1px solid #E2E8F0';
-                navbarEl.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)';
+    let sectionOffsets = [];
+    let isNavbarScrolled = null; // evita forzar repaints si el estado no cambió
+    let currentActiveNavId = '';
+
+    function cacheSectionOffsets() {
+        sectionOffsets = sections.map(sec => ({
+            id: sec.getAttribute('id'),
+            top: sec.offsetTop - 180
+        }));
+    }
+    cacheSectionOffsets();
+
+    function onScrollFrame() {
+        const scrollTop = window.scrollY || window.pageYOffset;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+        // 1. Timeline
+        if (scrollHeight > 0 && progress && nave) {
+            let scrollPercent = (scrollTop / scrollHeight) * 100;
+            scrollPercent = Math.max(0, Math.min(scrollPercent, 98));
+            progress.style.height = `${scrollPercent}%`;
+            nave.style.top = `${scrollPercent}%`;
+
+            if (scrollPercent > 90) {
+                nave.style.backgroundColor = '#FFF';
+                nave.style.color = '#10A352';
+                nave.style.borderColor = '#10A352';
+            } else {
+                nave.style.backgroundColor = '#10A352';
+                nave.style.color = '#FFF';
+                nave.style.borderColor = '#FFF';
             }
-            if (navTitleEl) navTitleEl.style.color = '#10A352';
-            if (navSubEl) navSubEl.style.color = '#10A352';
-            if (navLinksBox) {
-                navLinksBox.classList.remove('text-gray-200');
-                navLinksBox.classList.add('text-gray-700');
+        }
+
+        // 2. Resaltado de menú activo (usando cache sin layout thrashing)
+        let activeId = '';
+        for (let i = sectionOffsets.length - 1; i >= 0; i--) {
+            if (scrollTop >= sectionOffsets[i].top) {
+                activeId = sectionOffsets[i].id;
+                break;
             }
-        } else {
-            if (navbarEl) {
-                navbarEl.style.background = 'rgba(11, 17, 32, 0.75)';
-                navbarEl.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
-                navbarEl.style.boxShadow = 'none';
-            }
-            if (navTitleEl) navTitleEl.style.color = '#FFFFFF';
-            if (navSubEl) navSubEl.style.color = '#34D399';
-            if (navLinksBox) {
-                navLinksBox.classList.remove('text-gray-700');
-                navLinksBox.classList.add('text-gray-200');
+        }
+
+        if (activeId !== currentActiveNavId) {
+            currentActiveNavId = activeId;
+            navLinks.forEach(link => {
+                const target = link.getAttribute('href');
+                if (target === `#${activeId}` && activeId !== 'sumate') {
+                    link.classList.add('text-vrde-brand', 'font-bold');
+                } else {
+                    link.classList.remove('text-vrde-brand', 'font-bold');
+                }
+            });
+        }
+
+        // 3. Navbar adaptativo (solo muta el DOM cuando cruza el umbral)
+        const shouldBeScrolled = scrollTop > 70;
+        if (shouldBeScrolled !== isNavbarScrolled) {
+            isNavbarScrolled = shouldBeScrolled;
+            if (shouldBeScrolled) {
+                if (navbarEl) {
+                    navbarEl.style.background = 'rgba(255, 255, 255, 0.95)';
+                    navbarEl.style.borderBottom = '1px solid #E2E8F0';
+                    navbarEl.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)';
+                }
+                if (navTitleEl) navTitleEl.style.color = '#10A352';
+                if (navSubEl) navSubEl.style.color = '#10A352';
+                if (navLinksBox) {
+                    navLinksBox.classList.remove('text-gray-200');
+                    navLinksBox.classList.add('text-gray-700');
+                }
+            } else {
+                if (navbarEl) {
+                    navbarEl.style.background = 'rgba(11, 17, 32, 0.75)';
+                    navbarEl.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+                    navbarEl.style.boxShadow = 'none';
+                }
+                if (navTitleEl) navTitleEl.style.color = '#FFFFFF';
+                if (navSubEl) navSubEl.style.color = '#34D399';
+                if (navLinksBox) {
+                    navLinksBox.classList.remove('text-gray-700');
+                    navLinksBox.classList.add('text-gray-200');
+                }
             }
         }
     }
 
-    window.addEventListener('scroll', () => {
-        updateTimeline();
-        updateNavbarTransition();
-    });
+    let isTicking = false;
+    function requestTick() {
+        if (!isTicking) {
+            window.requestAnimationFrame(() => {
+                onScrollFrame();
+                isTicking = false;
+            });
+            isTicking = true;
+        }
+    }
+
+    window.addEventListener('scroll', requestTick, { passive: true });
     window.addEventListener('resize', () => {
-        updateTimeline();
-        updateNavbarTransition();
-    });
+        cacheSectionOffsets();
+        requestTick();
+    }, { passive: true });
     setTimeout(() => {
-        updateTimeline();
-        updateNavbarTransition();
-    }, 50);
+        cacheSectionOffsets();
+        onScrollFrame();
+    }, 100);
 
 
     // --- 3. EXPLORADOR DE NODOS INTERACTIVO (DINÁMICO CON LUNAR ENGINE) ---
