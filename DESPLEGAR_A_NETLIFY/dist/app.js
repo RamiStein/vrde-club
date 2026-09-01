@@ -1,23 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- 1. ANIMACIONES FADE-IN (INTERSECTION OBSERVER) ---
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.15
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target); 
-            }
-        });
-    }, observerOptions);
-
+    // --- 1. ANIMACIONES DE APARICIÓN (OPTIMIZADAS: INMEDIATAS EN MOBILE, PRECARGADAS EN DESKTOP) ---
     const fadeElements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
-    fadeElements.forEach(el => observer.observe(el));
+    const isMobileViewport = window.innerWidth <= 768;
+
+    if (isMobileViewport) {
+        // En celulares todo visible de inmediato: 0 lag y 0 recuadros en blanco
+        fadeElements.forEach(el => el.classList.add('visible'));
+    } else {
+        const observerOptions = {
+            root: null,
+            rootMargin: '200px 0px', // Precargar con 200px de anticipación
+            threshold: 0.05
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    obs.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        fadeElements.forEach(el => observer.observe(el));
+    }
 
 
     // --- 2. LÍNEA DE TIEMPO Y NAVEGACIÓN ADAPTATIVA (OPTIMIZADO CON RAF Y CACHE) ---

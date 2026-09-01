@@ -81,31 +81,42 @@ body {
     transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
 }
 
-/* === ANIMACIONES DE SCROLL (OPTIMIZADAS SIN VRAM LEAKS) === */
-.fade-up {
-    opacity: 0;
-    transform: translateY(25px);
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.fade-left {
-    opacity: 0;
-    transform: translateX(25px);
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.fade-right {
-    opacity: 0;
-    transform: translateX(-25px);
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+/* === ANIMACIONES DE SCROLL (SIN LAG NI RECUADROS BLANCOS) === */
+@media (min-width: 769px) {
+    .fade-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+    }
+    .fade-left {
+        opacity: 0;
+        transform: translateX(20px);
+        transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+    }
+    .fade-right {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+    }
+
+    .fade-up.visible, .fade-left.visible, .fade-right.visible {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
 }
 
-.fade-up.visible, .fade-left.visible, .fade-right.visible {
-    opacity: 1;
-    transform: translate(0, 0);
+@media (max-width: 768px) {
+    /* En celulares: contenido 100% visible de inmediato para erradicar cualquier recuadro blanco o parpadeo */
+    .fade-up, .fade-left, .fade-right {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
 }
 
-.delay-100 { transition-delay: 100ms; }
-.delay-200 { transition-delay: 200ms; }
-.delay-300 { transition-delay: 300ms; }
+.delay-100 { transition-delay: 80ms; }
+.delay-200 { transition-delay: 160ms; }
+.delay-300 { transition-delay: 240ms; }
 
 /* === COMPONENTES UI === */
 .btn-primary {
@@ -143,13 +154,21 @@ body {
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 1.5rem;
-    padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+@media (min-width: 1024px) {
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        padding: 2.5rem;
+    }
 }
 
 .hover-lift {

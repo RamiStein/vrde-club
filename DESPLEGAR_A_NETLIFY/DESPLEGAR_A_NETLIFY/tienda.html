@@ -3238,7 +3238,7 @@
         <!-- COLUMNA CENTRAL: FOTO PROTAGONISTA Y DETALLE -->
         <div class="showcase-card showcase-center">
           <div style="position: relative;">
-            <img src="${currentV.img || p.img}" alt="${p.nombre}" class="prod-main-img" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})">
+            <img src="${currentV.img || p.img}" alt="${p.nombre}" class="prod-main-img" onclick="openProductStoryModal(${ACTIVE_PRODUCT_INDEX})" loading="lazy" decoding="async">
           </div>
           <div>
             <div class="prod-badge-unit">${currentV.unidad || p.unidad}</div>
