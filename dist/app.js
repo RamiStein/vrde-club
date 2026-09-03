@@ -1,13 +1,20 @@
-document.addEventListener("DOMContentLoaded", () => {
-    
-    // --- 1. ANIMACIONES DE APARICIÓN (OPTIMIZADAS: INMEDIATAS EN MOBILE, PRECARGADAS EN DESKTOP) ---
+function initApp() {
+    // --- 1. ANIMACIONES DE APARICIÓN (OPTIMIZADAS: INMEDIATAS EN MOBILE Y VIEWPORT INICIAL) ---
     const fadeElements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
     const isMobileViewport = window.innerWidth <= 768;
 
-    if (isMobileViewport) {
-        // En celulares todo visible de inmediato: 0 lag y 0 recuadros en blanco
+    if (isMobileViewport || !('IntersectionObserver' in window)) {
+        // En celulares o navegadores sin observer: todo visible de inmediato (0 lag, 0 parpadeos)
         fadeElements.forEach(el => el.classList.add('visible'));
     } else {
+        // En desktop: inmediatamente hacer visibles los elementos que ya están en el viewport inicial (o cerca)
+        fadeElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight + 300) {
+                el.classList.add('visible');
+            }
+        });
+
         const observerOptions = {
             root: null,
             rootMargin: '200px 0px', // Precargar con 200px de anticipación
@@ -23,7 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }, observerOptions);
 
-        fadeElements.forEach(el => observer.observe(el));
+        fadeElements.forEach(el => {
+            if (!el.classList.contains('visible')) {
+                observer.observe(el);
+            }
+        });
     }
 
 
@@ -286,9 +297,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-    updateMoonPhase();
+}
 
-});
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
 
 // --- 6. MANEJO DE MODALES GLOBAL Y POSTULACIONES ---
 const modal = document.getElementById('action-modal');
@@ -590,11 +605,12 @@ window.closeModal = function() {
         modal.classList.add('hidden');
     }, 300);
 };
-}
 
 // Close on backdrop click
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        closeModal();
-    }
-});
+if (modal) {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+}

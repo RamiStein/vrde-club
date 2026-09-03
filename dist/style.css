@@ -82,26 +82,35 @@ body {
 }
 
 /* === ANIMACIONES DE SCROLL (SIN LAG NI RECUADROS BLANCOS) === */
+/* Hero (#inicio): Siempre 100% visible de inmediato en cualquier resolución */
+#inicio .fade-up, 
+#inicio .fade-left, 
+#inicio .fade-right {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
 @media (min-width: 769px) {
     .fade-up {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
         transition: opacity 0.35s ease-out, transform 0.35s ease-out;
     }
     .fade-left {
         opacity: 0;
-        transform: translateX(20px);
+        transform: translateX(16px);
         transition: opacity 0.35s ease-out, transform 0.35s ease-out;
     }
     .fade-right {
         opacity: 0;
-        transform: translateX(-20px);
+        transform: translateX(-16px);
         transition: opacity 0.35s ease-out, transform 0.35s ease-out;
     }
 
     .fade-up.visible, .fade-left.visible, .fade-right.visible {
-        opacity: 1;
-        transform: translate(0, 0);
+        opacity: 1 !important;
+        transform: translate(0, 0) !important;
     }
 }
 
