@@ -1,5 +1,5 @@
-// Vrde Club Service Worker (PWA v1.0)
-const CACHE_NAME = 'vrde-lunar-v4';
+// Vrde Club Service Worker (PWA v1.1.0)
+const CACHE_NAME = 'vrde-lunar-v10';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,8 @@ const STATIC_ASSETS = [
   './lunar.html',
   './admin.html',
   './superadmin.html',
+  './app.js',
+  './style.css',
   './lunar-engine.js',
   './lunar-style.css',
   './manifest.json',
@@ -27,14 +29,14 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activación: Limpieza de cachés antiguas
+// Activación: Limpieza total e inmediata de cachés antiguas
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
           if (cache !== CACHE_NAME) {
-            console.log('[VRDE SW] Limpiando caché antigua:', cache);
+            console.log('[VRDE SW] Eliminando caché antigua obsoleta:', cache);
             return caches.delete(cache);
           }
         })
@@ -43,7 +45,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Estrategia de Fetch: Network-first con fallback a Caché para datos dinámicos, y Cache-first para estáticos
+// Estrategia de Fetch: Network-first para HTML, JS y CSS para evitar quedar atrapado en versiones antiguas
 self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
@@ -53,7 +55,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Network-First para páginas HTML (siempre intenta traer la última versión web, si está offline usa la caché)
+  // 1. Network-First para páginas HTML
   if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
       fetch(req)
@@ -71,18 +73,26 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Cache-First para recursos estáticos (CSS, JS, imágenes locales, fuentes)
+  // 2. Network-First para scripts JS y estilos CSS (asegura que las correcciones lleguen de inmediato)
+  if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || req.destination === 'script' || req.destination === 'style') {
+    event.respondWith(
+      fetch(req)
+        .then(networkRes => {
+          if (networkRes && networkRes.status === 200) {
+            const resClone = networkRes.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(req, resClone));
+          }
+          return networkRes;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // 3. Cache-First para imágenes y fuentes estáticas
   event.respondWith(
     caches.match(req).then(cachedRes => {
-      if (cachedRes) {
-        // En segundo plano busca actualizar la caché si hay internet
-        fetch(req).then(networkRes => {
-          if (networkRes && networkRes.status === 200) {
-            caches.open(CACHE_NAME).then(cache => cache.put(req, networkRes));
-          }
-        }).catch(() => {});
-        return cachedRes;
-      }
+      if (cachedRes) return cachedRes;
 
       return fetch(req).then(networkRes => {
         if (networkRes && networkRes.status === 200) {

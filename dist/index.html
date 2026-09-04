@@ -30,7 +30,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260904_2">
     <script>
         tailwind.config = {
             theme: {
@@ -80,7 +80,7 @@
                 <a href="#circulos" class="nav-link hover:text-emerald-400 transition-colors">Círculos Vecinales</a>
                 <a href="#productores" class="nav-link hover:text-emerald-400 transition-colors">Productores</a>
                 <a href="#crea-tu-nodo" class="nav-link hover:text-emerald-400 transition-colors font-semibold text-emerald-300">Abrir Nodo</a>
-                <button onclick="handleIngresoCompraLunar()" class="text-white font-bold bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-full border border-emerald-400/40 shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
+                <button onclick="if(typeof handleIngresoCompraLunar==='function'){handleIngresoCompraLunar();}else{location.href='tienda.html';}" class="text-white font-bold bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-full border border-emerald-400/40 shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
                     <i class="fas fa-moon text-xs text-yellow-300"></i> Ingresar a la Compra Lunar
                 </button>
             </div>
@@ -90,7 +90,7 @@
                 <button id="btn-home-mobile-install-pwa" class="text-xs font-bold bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 px-2.5 py-1.5 rounded-full hover:bg-emerald-600 transition-all flex items-center gap-1" onclick="triggerHomePWAInstall()" title="Instalar App">
                     <span>📲</span> <span>App</span>
                 </button>
-                <button class="text-white font-bold text-xs bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-full border border-emerald-400/40 flex items-center gap-1.5 shadow-md" onclick="handleIngresoCompraLunar()" title="Ingresar a la Compra Lunar">
+                <button class="text-white font-bold text-xs bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-full border border-emerald-400/40 flex items-center gap-1.5 shadow-md" onclick="if(typeof handleIngresoCompraLunar==='function'){handleIngresoCompraLunar();}else{location.href='tienda.html';}" title="Ingresar a la Compra Lunar">
                     <i class="fas fa-moon text-yellow-300 text-xs"></i> <span>Entrar</span>
                 </button>
             </div>
@@ -110,7 +110,7 @@
         <div class="z-10 max-w-4xl mx-auto flex flex-col items-center">
             
             <!-- Logo Oficial "V" con huerta orgánica -->
-            <div class="logo-v-container fade-up mb-6 relative flex justify-center">
+            <div class="logo-v-container mb-6 relative flex justify-center">
                 <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center border border-white/30 shadow-xl p-2.5">
                     <img src="assets/favicon.png" alt="Vrde Club" class="w-full h-full object-contain" decoding="async">
                 </div>
@@ -120,16 +120,16 @@
                 🌱 Soberanía Alimentaria & Red Fractal
             </div>
 
-            <h1 class="font-tech text-4xl sm:text-6xl md:text-7xl mb-6 leading-[1.15] font-bold text-white fade-up delay-100 drop-shadow-lg">
+            <h1 class="font-tech text-4xl sm:text-6xl md:text-7xl mb-6 leading-[1.15] font-bold text-white drop-shadow-lg">
                 El club que sostiene <br/>
                 <span class="text-vrde-light">la naturaleza.</span>
             </h1>
-            <p class="text-lg sm:text-xl md:text-2xl text-white/90 max-w-2xl mb-8 fade-up delay-200 font-sans font-light leading-relaxed">
+            <p class="text-lg sm:text-xl md:text-2xl text-white/90 max-w-2xl mb-8 font-sans font-light leading-relaxed">
                 Somos una cooperativa acuariana que organiza compras colectivas directas de chacra para llevar alimentos agroecológicos a precio de productor hasta tu barrio.
             </p>
 
-            <div class="flex flex-col sm:flex-row gap-4 mb-8 fade-up delay-300 w-full sm:w-auto justify-center">
-                <button onclick="handleIngresoCompraLunar()" class="btn-primary bg-vrde-brand hover:bg-vrde-dark text-white px-8 py-4 rounded-full font-bold shadow-xl shadow-vrde-brand/30 flex items-center justify-center gap-3 text-lg transition-transform hover:scale-105">
+            <div class="flex flex-col sm:flex-row gap-4 mb-8 w-full sm:w-auto justify-center">
+                <button onclick="if(typeof handleIngresoCompraLunar==='function'){handleIngresoCompraLunar();}else{location.href='tienda.html';}" class="btn-primary bg-vrde-brand hover:bg-vrde-dark text-white px-8 py-4 rounded-full font-bold shadow-xl shadow-vrde-brand/30 flex items-center justify-center gap-3 text-lg transition-transform hover:scale-105">
                     <i class="fas fa-moon text-yellow-300"></i> Ingresar a la Compra Lunar
                 </button>
                 <a href="#compra-lunar" class="px-6 py-4 rounded-full font-semibold border border-white/30 hover:bg-white/10 text-white transition-all flex items-center justify-center">
@@ -137,7 +137,7 @@
                 </a>
             </div>
             
-            <a href="#compra-lunar" class="animate-bounce mt-4 text-white/50 hover:text-white transition-colors z-10 fade-up delay-300">
+            <a href="#compra-lunar" class="animate-bounce mt-4 text-white/50 hover:text-white transition-colors z-10">
                 <i class="fas fa-chevron-down text-3xl"></i>
             </a>
         </div>
@@ -606,8 +606,8 @@
     </div>
 
     <!-- SCRIPT PRINCIPAL -->
-    <script src="lunar-engine.js"></script>
-    <script src="app.js"></script>
+    <script src="lunar-engine.js?v=20260904_2"></script>
+    <script src="app.js?v=20260904_2"></script>
     <script>
       let deferredHomePWA = null;
       const isStandaloneHome = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -635,8 +635,11 @@
 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('🌿 [PWA] Service Worker registrado en Home:', reg.scope))
+          navigator.serviceWorker.register('./sw.js?v=20260904_2')
+            .then(reg => {
+              console.log('🌿 [PWA] Service Worker registrado en Home:', reg.scope);
+              reg.update();
+            })
             .catch(err => console.warn('⚠️ [PWA] Error al registrar Service Worker:', err));
         });
       }
