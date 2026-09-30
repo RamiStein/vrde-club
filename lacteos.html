@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vrde Club - Media Kit Mayorista Lácteos</title>
+    <meta name="description" content="Propuesta mayorista de lácteos agroecológicos. Conoce a nuestros productores y accede a las listas de precios.">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos base heredados -->
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vrde-brand': '#10A352', 
+                        'vrde-dark': '#0B7339',
+                        'vrde-light': '#D4F1A0',
+                        'vrde-bg': '#F8F9FA',
+                        'vrde-accent': '#E76F51',
+                    },
+                    fontFamily: {
+                        'sans': ['Outfit', 'sans-serif'],
+                        'tech': ['Space Grotesk', 'sans-serif'],
+                        'pixel': ['VT323', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .producer-card {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .producer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+        .img-zoom-hover img {
+            transition: transform 0.6s ease;
+        }
+        .producer-card:hover .img-zoom-hover img {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-vrde-bg font-sans antialiased text-gray-800">
+
+    <!-- Navegación Simplificada -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="flex flex-col leading-none hover:opacity-80 transition-opacity">
+                <span class="font-pixel text-vrde-brand text-3xl md:text-4xl font-bold tracking-widest uppercase" style="line-height: 0.8;">VRDE</span>
+                <span class="text-[0.6rem] tracking-[0.4em] font-sans text-gray-500 uppercase mt-1 font-semibold">.Club</span>
+            </a>
+            
+            <div class="flex items-center gap-4">
+                <span class="hidden md:inline-block font-tech text-sm font-bold text-gray-400 tracking-widest uppercase">Distribución Mayorista</span>
+                <a href="/" class="text-sm font-medium text-gray-500 hover:text-vrde-brand transition-colors"><i class="fas fa-home mr-1"></i> Volver al Inicio</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER / HERO -->
+    <header class="relative pt-32 pb-20 md:pt-40 md:pb-32 px-6 overflow-hidden bg-gray-900">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img src="assets/lacteos_hero.jpg" alt="Lácteos Agroecológicos" class="w-full h-full object-cover opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/80 to-transparent"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="badge-tech border-white/20 text-vrde-light bg-vrde-brand/20 mb-6 inline-flex backdrop-blur-sm px-4 py-2 rounded-full border">
+                <i class="fas fa-cheese mr-2"></i> Media Kit
+            </div>
+            <h1 class="font-tech text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                Catálogo Mayorista <br>
+                <span class="text-vrde-light">Lácteos de Origen.</span>
+            </h1>
+            <p class="text-xl text-gray-300 max-w-2xl mb-12 font-light">
+                Conectamos tu comercio o emprendimiento directamente con los mejores tambos agroecológicos, pastoriles y familiares del país. Sin intermediarios especulativos, cuidando la calidad y el precio.
+            </p>
+
+            <!-- Condiciones Comerciales -->
+            <div class="grid md:grid-cols-3 gap-6 mt-8">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-white shadow-xl">
+                    <i class="far fa-calendar-check text-3xl text-vrde-light mb-4"></i>
+                    <h3 class="font-tech text-xl font-bold mb-2">Días de Entrega</h3>
+                    <p class="text-sm text-gray-300">Entregas programadas semanales según la ruta de cada productor en el AMBA.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-white shadow-xl">
+                    <i class="fas fa-weight-hanging text-3xl text-vrde-light mb-4"></i>
+                    <h3 class="font-tech text-xl font-bold mb-2">Compras Mínimas</h3>
+                    <p class="text-sm text-gray-300">Adaptadas para pequeños comercios y nodos. Medidas en Kgs de producto o volumen nominal mensual.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-white shadow-xl">
+                    <i class="fas fa-truck text-3xl text-vrde-light mb-4"></i>
+                    <h3 class="font-tech text-xl font-bold mb-2">Logística y Envío</h3>
+                    <p class="text-sm text-gray-300">Logística unificada refrigerada de Vrde Club o despacho directo desde la tranquera a tu local.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NUESTROS PRODUCTORES -->
+    <section class="py-24 px-6 relative">
+        <div class="pattern-bits bg-opacity-pattern z-0"></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+            
+            <div class="text-center mb-16">
+                <h2 class="font-tech text-4xl md:text-5xl font-bold text-gray-900 mb-4">Los Productores</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Conoce las historias y propuestas de cada chacra y tambo que conforma nuestra red mayorista.
+                </p>
+            </div>
+
+            <!-- Grid de Productores -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Productor 1: Santo Padre -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative img-zoom-hover">
+                        <img src="assets/farm_cow.jpg" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">Santo Padre</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <p class="text-sm text-gray-600 mb-6 flex-grow">
+                            Tambo 100% orgánico certificado. Producen quesos de alta humedad, dulce de leche premium y mantecas bajo estrictas normas de bienestar animal y pastoreo rotativo.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
+                            <a href="https://www.instagram.com/santopadreorganico" target="_blank" class="text-gray-400 hover:text-pink-600 transition-colors" title="Ver Instagram"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-900 text-white font-tech font-bold py-3 rounded-xl hover:bg-vrde-brand transition-colors cursor-pointer">
+                            Ver Lista de Precios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productor 2: Lácteos La Delfina -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative img-zoom-hover">
+                        <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">La Delfina</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <p class="text-sm text-gray-600 mb-6 flex-grow">
+                            Especialistas en quesos de pasta dura y semidura. Elaboración artesanal con leche de vacas de pastoreo libre. Maduraciones lentas que garantizan sabores intensos y reales.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
+                            <a href="https://www.instagram.com/lacteosladelfina" target="_blank" class="text-gray-400 hover:text-pink-600 transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-900 text-white font-tech font-bold py-3 rounded-xl hover:bg-vrde-brand transition-colors cursor-pointer">
+                            Ver Lista de Precios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productor 3: La Verdecita -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative img-zoom-hover">
+                        <img src="assets/farm_cow.jpg" class="w-full h-full object-cover" style="object-position: center bottom; transform: scaleX(-1);">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">La Verdecita</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <p class="text-sm text-gray-600 mb-6 flex-grow">
+                            Granja familiar agroecológica. Respeto profundo por la tierra y el alimento. Lácteos frescos, yogures naturales y leches con toda su integridad nutricional.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
+                            <a href="https://www.instagram.com/laverdecita.granjafamiliar" target="_blank" class="text-gray-400 hover:text-pink-600 transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-900 text-white font-tech font-bold py-3 rounded-xl hover:bg-vrde-brand transition-colors cursor-pointer">
+                            Ver Lista de Precios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productor 4: Granja La Recría -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative img-zoom-hover">
+                        <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover" style="object-position: top right;">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">La Recría</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <p class="text-sm text-gray-600 mb-6 flex-grow">
+                            Productores enfocados en la calidad y frescura desde el ordeñe hasta la mesa. Excelentes opciones de quesos blandos, sardo y ricota de campo sin aditivos ni conservantes.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
+                            <a href="https://www.instagram.com/granjalarecria" target="_blank" class="text-gray-400 hover:text-pink-600 transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-900 text-white font-tech font-bold py-3 rounded-xl hover:bg-vrde-brand transition-colors cursor-pointer">
+                            Ver Lista de Precios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productor 5: Las Luciérnagas -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative img-zoom-hover">
+                        <img src="assets/farm_cow.jpg" class="w-full h-full object-cover" style="object-position: right center;">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">Las Luciérnagas</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <p class="text-sm text-gray-600 mb-6 flex-grow">
+                            Agroecología pura. Prácticas regenerativas que cuidan el suelo y brindan lácteos excepcionales. Quesos con identidad territorial y un sabor incomparable.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
+                            <a href="https://www.instagram.com/agroecologialasluciernagas" target="_blank" class="text-gray-400 hover:text-pink-600 transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-900 text-white font-tech font-bold py-3 rounded-xl hover:bg-vrde-brand transition-colors cursor-pointer">
+                            Ver Lista de Precios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productor 6: Lácteos Agroecológicos (Los Cerezos / El Abascay) -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative img-zoom-hover">
+                        <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover" style="object-position: top center;">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">Lácteos Agroecológicos</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <p class="text-sm text-gray-600 mb-6 flex-grow">
+                            Red de tambos cooperativos que agrupa productos de Los Cerezos y El Abascay. Variedad de quesos y dulce de leche que defienden el comercio justo y el precio digno para el tambero.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
+                            <a href="https://www.instagram.com/lacteosagroecologicos" target="_blank" class="text-gray-400 hover:text-pink-600 transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-900 text-white font-tech font-bold py-3 rounded-xl hover:bg-vrde-brand transition-colors cursor-pointer">
+                            Ver Lista de Precios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productores Adicionales sin link -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-tractor text-5xl text-gray-300"></i>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-center">
+                        <h3 class="font-tech text-xl font-bold text-gray-800 mb-2">Más Productores Aliados</h3>
+                        <p class="text-sm text-gray-600 mb-4 flex-grow">
+                            También somos canal mayorista de <strong>La Choza</strong> y de tambos de la localidad de <strong>Lobos</strong>. 
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-orange-600 bg-orange-100 px-3 py-1 rounded-full"><i class="fas fa-hourglass-half mr-1"></i> Preparando Catálogo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-leaf text-5xl text-gray-300"></i>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-center">
+                        <h3 class="font-tech text-xl font-bold text-gray-800 mb-2">Naturaleza Viva</h3>
+                        <p class="text-sm text-gray-600 mb-4 flex-grow">
+                            Pioneros de la biodinámica y la agricultura familiar integral. Un tambo histórico que representa el paradigma de la abundancia viva.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full"><i class="fas fa-clock mr-1"></i> Lista Próximamente</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-950 text-gray-400 py-12 px-6 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+            <div>
+                <div class="flex flex-col leading-none opacity-50 hover:opacity-100 transition-opacity mb-2">
+                    <span class="font-pixel text-gray-300 text-3xl font-bold tracking-widest uppercase" style="line-height: 0.8;">VRDE</span>
+                    <span class="text-[0.6rem] tracking-[0.4em] font-sans text-gray-400 uppercase mt-1 font-semibold">.Club</span>
+                </div>
+                <p class="text-xs max-w-xs text-gray-500">Logística de Alimentos y Red Fractal. <br>Media Kit Comercial para Lácteos.</p>
+            </div>
+            
+            <div class="text-xs opacity-50">
+                &copy; 2026 Vrde Club. Cooperativa Acuariana.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
