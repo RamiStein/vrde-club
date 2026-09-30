@@ -233,16 +233,37 @@
                     </div>
                 </div>
 
-                <!-- Productor 6: Lácteos Agroecológicos (Los Cerezos / El Abascay) -->
+                <!-- Productor 6: El Abascay -->
                 <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
                     <div class="h-48 overflow-hidden relative img-zoom-hover">
-                        <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover" style="object-position: top center;">
+                        <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover" style="object-position: center;">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">Lácteos Agroecológicos</div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">El Abascay</div>
                     </div>
                     <div class="p-6 flex flex-col flex-grow">
                         <p class="text-sm text-gray-600 mb-6 flex-grow">
-                            Red de tambos cooperativos que agrupa productos de Los Cerezos y El Abascay. Variedad de quesos y dulce de leche que defienden el comercio justo y el precio digno para el tambero.
+                            Tambo ubicado en Brandsen con certificación agroecológica. Ofrecen una excelente línea de quesos orgánicos (Gouda, Tybo, Sardo, Cremoso), manteca, ricotta y un premiado dulce de leche.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
+                            <a href="https://www.instagram.com/elabascaybrandsen" target="_blank" class="text-gray-400 hover:text-pink-600 transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                        <button onclick="openModal('abascay')" class="w-full mt-4 bg-gray-900 text-white font-tech font-bold py-3 rounded-xl hover:bg-vrde-brand transition-colors cursor-pointer">
+                            Ver Lista de Precios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productor 7: Los Cerezos -->
+                <div class="producer-card bg-white rounded-3xl overflow-hidden border border-gray-200 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden relative img-zoom-hover">
+                        <img src="assets/farm_cow.jpg" class="w-full h-full object-cover" style="object-position: left center; transform: scaleX(-1);">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white font-tech font-bold text-2xl drop-shadow-md">Los Cerezos</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <p class="text-sm text-gray-600 mb-6 flex-grow">
+                            Tambo agroecológico que defiende el comercio justo. Producción transparente de quesos nobles, trabajando con ritmos naturales y cuidado intensivo de las pasturas.
                         </p>
                         <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
                             <span class="text-xs font-bold text-vrde-brand bg-vrde-brand/10 px-3 py-1 rounded-full"><i class="fas fa-check-circle mr-1"></i> Lista Disponible</span>
@@ -306,5 +327,126 @@
         </div>
     </footer>
 
+    <!-- MODAL GLOBAL LISTA DE PRECIOS -->
+    <div id="price-modal" class="fixed inset-0 z-[100] bg-gray-900/80 backdrop-blur-sm hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl transform scale-95 transition-transform duration-300 mx-4 relative" id="modal-content">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <div>
+                    <h2 class="font-tech text-3xl font-bold text-gray-800" id="modal-title">Lista de Precios</h2>
+                    <p class="text-sm text-gray-500 font-sans mt-1" id="modal-subtitle">Precios sugeridos. Sujetos a modificaciones por volumen.</p>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-800 text-2xl z-10 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Body Modal (Scrollable) -->
+            <div id="modal-body" class="p-6 md:p-8 overflow-y-auto flex-grow">
+                <!-- Llenado por JS -->
+            </div>
+            
+            <!-- Footer Modal -->
+            <div class="p-6 border-t border-gray-100 bg-gray-50 rounded-b-3xl flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2 rounded-xl text-gray-600 font-bold hover:bg-gray-200 transition-colors mr-2">Cerrar</button>
+                <button onclick="alert('Funcionalidad de pedido en desarrollo.')" class="px-6 py-2 rounded-xl bg-vrde-brand text-white font-bold font-tech shadow-lg shadow-vrde-brand/30 hover:bg-vrde-dark transition-colors"><i class="fab fa-whatsapp mr-2"></i> Solicitar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const priceLists = {
+            'abascay': {
+                title: 'El Abascay',
+                subtitle: 'Lista Vigente - Orgánicos / Sin Tacc',
+                categories: [
+                    {
+                        name: 'Manteca y Ricotta',
+                        items: [
+                            { name: 'Manteca fraccionada (Orgánico/Sin Tacc)', desc: '150g aprox', price: '$4.413' },
+                            { name: 'Manteca x pilón (Orgánico/Sin Tacc)', desc: '1 kg aprox', price: '$40.892' },
+                            { name: 'Ricotta x 500g (Orgánico/Sin Tacc)', desc: 'Unidad al vacío', price: '$5.553' },
+                            { name: 'Queso Crema x 500g (Orgánico/Sin Tacc)', desc: 'Envase PET', price: '$8.840' },
+                            { name: 'Cottage x 325g (Orgánico/Sin Tacc)', desc: 'Frasco de vidrio', price: '$12.690' }
+                        ]
+                    },
+                    {
+                        name: 'Quesos Fraccionados (x Kg)',
+                        items: [
+                            { name: 'Queso Cremoso (Orgánico/Sin Tacc)', desc: 'Hormas de 500g', price: '$23.399 /kg' },
+                            { name: 'Port Salut Descremado (Org/Sin Tacc)', desc: 'Hormas de 500g', price: '$23.835 /kg' },
+                            { name: 'Cuartirolo Porteño (Sin Tacc)', desc: 'Hormas de 350g', price: '$24.533 /kg' },
+                            { name: 'Gouda / Tybo (Orgánico/Sin Tacc)', desc: 'Hormas de 300g', price: '$29.799 /kg' },
+                            { name: 'Sardo (Orgánico/Sin Tacc)', desc: 'Hormas de 300g', price: '$38.314 /kg' },
+                            { name: 'Provoleta (Orgánico/Sin Tacc)', desc: 'Hormas de 300g', price: '$31.590 /kg' }
+                        ]
+                    },
+                    {
+                        name: 'Dulces y Miel (Unidades)',
+                        items: [
+                            { name: 'Dulce de Leche x 500g (Sin Tacc)', desc: 'Envase de cartón', price: '$9.554' },
+                            { name: 'Dulce de Leche x 1kg (Sin Tacc)', desc: 'Envase de cartón', price: '$14.532' },
+                            { name: 'Miel x 500g', desc: 'Frasco de vidrio', price: '$9.686' }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const modal = document.getElementById('price-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalBody = document.getElementById('modal-body');
+        const modalTitle = document.getElementById('modal-title');
+        const modalSubtitle = document.getElementById('modal-subtitle');
+
+        function openModal(producerId) {
+            const data = priceLists[producerId];
+            if (!data) return;
+
+            modalTitle.textContent = data.title;
+            modalSubtitle.textContent = data.subtitle;
+
+            let html = '';
+            data.categories.forEach(cat => {
+                html += `
+                    <div class="mb-8 last:mb-0">
+                        <h3 class="font-tech font-bold text-xl text-vrde-brand mb-4 border-b border-vrde-brand/20 pb-2">${cat.name}</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                `;
+                
+                cat.items.forEach(item => {
+                    html += `
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex justify-between items-center hover:bg-gray-100 transition-colors">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">${item.name}</h4>
+                                <p class="text-xs text-gray-500">${item.desc}</p>
+                            </div>
+                            <div class="font-tech font-bold text-lg text-gray-900 ml-4">${item.price}</div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div></div>`;
+            });
+
+            modalBody.innerHTML = html;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+    </script>
 </body>
 </html>
