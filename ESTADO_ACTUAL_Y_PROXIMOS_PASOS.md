@@ -1,9 +1,11 @@
 # 📌 ESTADO ACTUAL Y PRÓXIMOS PASOS — VRDE CLUB
 
-> **Archivo de Sincronización entre Computadoras**
-> **Fecha de Actualización**: 28 de Agosto de 2026
-> **Repositorio**: `https://github.com/RamiStein/vrde-club` (Rama `main` / `master` / `eter`)
-> **Sitio Web Oficial en Producción**: `https://www.vrde.club`
+> **Archivo de Sincronización entre Computadoras y Conversaciones**
+> **Fecha de Actualización**: 30 de Septiembre de 2026
+> **Documento Maestro**: Ver [CONTEXTO_Y_ESTADO_SISTEMA.md](CONTEXTO_Y_ESTADO_SISTEMA.md) para el detalle completo y prompt de inicio rápido.
+> **Repositorio**: `https://github.com/RamiStein/vrde-club` (Ramas `main` / `master` / `eter`)
+> **Hosting Oficial en Producción**: **Vercel** (`https://vrde.club`)
+> *(Netlify ya no está en uso)*
 
 ---
 
