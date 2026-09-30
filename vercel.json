@@ -62,6 +62,7 @@
     { "source": "/lunar", "destination": "/lunar.html" },
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/superadmin", "destination": "/superadmin.html" },
-    { "source": "/lacteos", "destination": "/lacteos.html" }
+    { "source": "/lacteos", "destination": "/lacteos.html" },
+    { "source": "/elabascay", "destination": "/elabascay.html" }
   ]
 }

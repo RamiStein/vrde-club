@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Abascay - Vrde Club Mayorista</title>
+    <meta name="description" content="Catálogo mayorista de El Abascay. Lácteos 100% orgánicos desde Brandsen.">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vrde-brand': '#10A352', 
+                        'vrde-dark': '#0B7339',
+                        'vrde-light': '#D4F1A0',
+                        'vrde-bg': '#F8F9FA',
+                    },
+                    fontFamily: {
+                        'sans': ['Outfit', 'sans-serif'],
+                        'tech': ['Space Grotesk', 'sans-serif'],
+                        'pixel': ['VT323', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-vrde-bg font-sans antialiased text-gray-800">
+
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/lacteos" class="flex items-center gap-2 text-gray-600 hover:text-vrde-brand transition-colors font-medium">
+                <i class="fas fa-arrow-left"></i> Volver a Productores
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <span class="font-tech font-bold text-gray-900 tracking-wider">EL ABASCAY</span>
+                <span class="text-xs bg-vrde-brand/10 text-vrde-brand px-2 py-1 rounded-full font-bold">Catálogo</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO PRODUCTOR -->
+    <header class="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 overflow-hidden bg-gray-900">
+        <div class="absolute inset-0 z-0">
+            <img src="assets/farm_cow.jpg" class="w-full h-full object-cover opacity-50" style="object-position: center 30%;">
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/60 to-transparent"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-end justify-between gap-8">
+            <div class="max-w-2xl">
+                <div class="badge-tech border-white/20 text-white bg-white/10 mb-4 inline-flex backdrop-blur-sm px-4 py-2 rounded-full border">
+                    <i class="fas fa-map-marker-alt mr-2 text-vrde-light"></i> Brandsen, Buenos Aires
+                </div>
+                <h1 class="font-tech text-5xl md:text-7xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+                    El Abascay
+                </h1>
+                <p class="text-xl text-gray-300 font-light mb-6">
+                    Tambo 100% orgánico certificado. Bienestar animal y pastoreo rotativo. Lácteos puros, sin conservantes ni aditivos.
+                </p>
+                <div class="flex gap-4">
+                    <a href="https://www.instagram.com/elabascaybrandsen" target="_blank" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-5 py-2 rounded-full backdrop-blur-md transition-colors border border-white/10">
+                        <i class="fab fa-instagram text-xl"></i> @elabascaybrandsen
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Info Resumen -->
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 text-white w-full md:w-80 shadow-2xl">
+                <h3 class="font-tech font-bold text-lg mb-4 text-vrde-light">Condiciones</h3>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-leaf mt-1 text-vrde-brand"></i>
+                        <span>Certificación Orgánica y Libre de Gluten (Sin TACC).</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-box mt-1 text-vrde-brand"></i>
+                        <span>Pedidos por horma o fraccionados al vacío.</span>
+                    </li>
+                </ul>
+                <button onclick="window.scrollTo({top: document.getElementById('catalogo').offsetTop - 100, behavior: 'smooth'})" class="w-full mt-6 bg-vrde-brand text-white font-bold py-3 rounded-xl hover:bg-vrde-dark transition-colors">
+                    Ver Catálogo
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CATÁLOGO -->
+    <section id="catalogo" class="py-20 px-6 relative">
+        <div class="pattern-bits bg-opacity-pattern z-0"></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+            
+            <div class="mb-12">
+                <h2 class="font-tech text-3xl font-bold text-gray-900">Lista de Precios Vigente</h2>
+                <p class="text-gray-500">Valores por kilo o unidad con IVA incluido.</p>
+            </div>
+
+            <!-- Categoría: Quesos -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-tech font-bold text-vrde-brand mb-6 border-b border-gray-200 pb-2">Quesos Orgánicos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Producto -->
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-gray-100">
+                            <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-gray-900 text-lg">Queso Cremoso</h4>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-4">Fraccionado 500g al vacío. Orgánico / Sin Tacc.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$23.399 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-gray-100">
+                            <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: bottom;">
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Port Salut</h4>
+                            <p class="text-xs text-gray-500 mb-4">Descremado (con o sin sal). Fraccionado 500g.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$23.835 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-gray-100">
+                            <img src="assets/lacteos_hero.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: left bottom;">
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Gouda / Tybo</h4>
+                            <p class="text-xs text-gray-500 mb-4">Pasta semidura. Fraccionado 300g al vacío.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$29.799 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-gray-100">
+                            <img src="assets/lacteos_hero.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: right top;">
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Sardo</h4>
+                            <p class="text-xs text-gray-500 mb-4">Pasta dura intensa. Fraccionado 300g al vacío.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$38.314 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Categoría: Manteca y Ricotta -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-tech font-bold text-vrde-brand mb-6 border-b border-gray-200 pb-2">Lácteos Frescos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-gray-100">
+                            <img src="assets/lacteos_hero.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: center bottom;">
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Manteca</h4>
+                            <p class="text-xs text-gray-500 mb-4">Fraccionada 150g en papel antigrasa.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$4.413 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-gray-100 flex items-center justify-center">
+                            <i class="fas fa-jar text-5xl text-gray-300"></i>
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Ricotta Fresca</h4>
+                            <p class="text-xs text-gray-500 mb-4">Unidad de 500g al vacío.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$5.553 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-gray-100 flex items-center justify-center">
+                            <i class="fas fa-prescription-bottle text-5xl text-gray-300"></i>
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Cottage</h4>
+                            <p class="text-xs text-gray-500 mb-4">Novedad. Frasco de vidrio 325g.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$12.690 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Categoría: Dulces -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-tech font-bold text-orange-500 mb-6 border-b border-gray-200 pb-2">Dulces y Mieles</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-orange-50 flex items-center justify-center">
+                            <i class="fas fa-spoon text-5xl text-orange-200"></i>
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Dulce de Leche</h4>
+                            <p class="text-xs text-gray-500 mb-4">Tradicional, sin TACC. Envase de 500g.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$9.554 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
+                        <div class="h-40 overflow-hidden bg-orange-50 flex items-center justify-center">
+                            <i class="fas fa-archive text-5xl text-orange-200"></i>
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Dulce de Leche (1 Kg)</h4>
+                            <p class="text-xs text-gray-500 mb-4">Formato familiar. Envase de cartón.</p>
+                            <div class="font-tech text-2xl font-bold text-gray-900">$14.532 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="py-16 px-6 bg-vrde-brand text-white text-center">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="font-tech text-3xl font-bold mb-4">¿Te interesa comercializar los productos de El Abascay?</h2>
+            <p class="text-white/80 mb-8">Escríbenos para recibir condiciones detalladas, armar tu primer pedido o solicitar degustación.</p>
+            <button class="bg-white text-vrde-brand font-tech font-bold text-xl px-8 py-4 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                <i class="fab fa-whatsapp mr-2"></i> Iniciar Pedido Mayorista
+            </button>
+        </div>
+    </section>
+
+</body>
+</html>
