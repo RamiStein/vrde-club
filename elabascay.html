@@ -96,139 +96,214 @@
         </div>
     </header>
 
-    <!-- CATÁLOGO -->
+    <!-- CATÁLOGO COMPLETO -->
     <section id="catalogo" class="py-20 px-6 relative">
         <div class="pattern-bits bg-opacity-pattern z-0"></div>
-        <div class="max-w-7xl mx-auto relative z-10">
+        <div class="max-w-5xl mx-auto relative z-10">
             
-            <div class="mb-12">
-                <h2 class="font-tech text-3xl font-bold text-gray-900">Lista de Precios Vigente</h2>
-                <p class="text-gray-500">Valores por kilo o unidad con IVA incluido.</p>
+            <div class="mb-12 text-center">
+                <h2 class="font-tech text-3xl font-bold text-gray-900">Lista de Precios Oficial</h2>
+                <p class="text-gray-500">Valores con IVA incluido (Sujetos a modificaciones).</p>
             </div>
 
-            <!-- Categoría: Quesos -->
-            <div class="mb-16">
-                <h3 class="text-2xl font-tech font-bold text-vrde-brand mb-6 border-b border-gray-200 pb-2">Quesos Orgánicos</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- TABLA 1: MANTECA Y RICOTTA -->
+            <div class="mb-16 bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100">
+                <div class="bg-vrde-brand/10 px-8 py-6 border-b border-vrde-brand/20 flex items-center gap-4">
+                    <i class="fas fa-jar text-3xl text-vrde-brand"></i>
+                    <h3 class="text-2xl font-tech font-bold text-vrde-brand">Lácteos Frescos (Manteca y Ricotta)</h3>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Manteca fraccionada</h4><p class="text-sm text-gray-500">150g aprox - Papel antigrasa (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$44.131 <span class="text-xs text-gray-400 font-normal block">/ kg</span></div>
+                    </div>
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Manteca x pilón</h4><p class="text-sm text-gray-500">1 kg aprox - Papel antigrasa (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$40.892 <span class="text-xs text-gray-400 font-normal block">/ kg</span></div>
+                    </div>
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Ricotta x 500 g</h4><p class="text-sm text-gray-500">Envasado al vacío (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$5.553 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
+                    </div>
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Ricotta x 1 kg</h4><p class="text-sm text-gray-500">Envasado al vacío (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$8.025 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
+                    </div>
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Queso crema x 500 g</h4><p class="text-sm text-gray-500">Envase PET (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$8.840 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
+                    </div>
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-vrde-light/20 bg-vrde-brand/5 transition-colors">
+                        <div>
+                            <span class="bg-vrde-brand text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest mb-1 inline-block">Nuevo</span>
+                            <h4 class="font-bold text-gray-800">Cottage x 325 g</h4>
+                            <p class="text-sm text-gray-500">Frasco de vidrio (Orgánico / Sin Tacc)</p>
+                        </div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$12.690 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA 2: QUESOS FRACCIONADOS -->
+            <div class="mb-16 bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100">
+                <div class="bg-gray-900 px-8 py-6 border-b border-gray-800 flex items-center gap-4">
+                    <i class="fas fa-cheese text-3xl text-gray-100"></i>
+                    <div>
+                        <h3 class="text-2xl font-tech font-bold text-white">Quesos Fraccionados</h3>
+                        <p class="text-sm text-gray-400">Precios por KG - Pesos estimados por unidad (al vacío)</p>
+                    </div>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Queso Cremoso</h4><p class="text-xs text-gray-500">500 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$23.399 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Port Salut descremado</h4><p class="text-xs text-gray-500">500 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$23.835 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Port Salut SIN SAL</h4><p class="text-xs text-gray-500">500 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$23.835 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Cuartirolo Porteño</h4><p class="text-xs text-gray-500">350 g aprox (Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$24.533 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Tybo</h4><p class="text-xs text-gray-500">300 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$29.799 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Campeche / Gouda</h4><p class="text-xs text-gray-500">300 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$29.799 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Fondue (Unidad)</h4><p class="text-xs text-gray-500">800 g aprox (Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$22.885 <span class="text-[10px] text-gray-400 font-normal">/un</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Moro</h4><p class="text-xs text-gray-500">300 g aprox (Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$32.897 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Queso en Flor</h4><p class="text-xs text-gray-500">300 g aprox (Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$42.838 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Saborizados (Orégano/Pimienta/Ají)</h4><p class="text-xs text-gray-500">300 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$29.496 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Sardo</h4><p class="text-xs text-gray-500">300 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$38.314 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Provoleta</h4><p class="text-xs text-gray-500">300 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$31.590 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Tala</h4><p class="text-xs text-gray-500">800 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$25.819 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                    <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                        <div><h4 class="font-bold text-gray-800">Brandsen</h4><p class="text-xs text-gray-500">300 g aprox (Orgánico / Sin Tacc)</p></div>
+                        <div class="font-tech text-lg font-bold text-gray-900">$46.859 <span class="text-[10px] text-gray-400 font-normal">/kg</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA 3: QUESOS POR HORMA Y MEDIAS HORMAS -->
+            <div class="mb-16 bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100">
+                <div class="bg-gray-100 px-8 py-6 border-b border-gray-200 flex items-center gap-4">
+                    <i class="fas fa-box-open text-3xl text-gray-500"></i>
+                    <div>
+                        <h3 class="text-2xl font-tech font-bold text-gray-800">Quesos por Horma (y Medias)</h3>
+                        <p class="text-sm text-gray-500">Ideal para compras por volumen. Precios por KG.</p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
                     
-                    <!-- Producto -->
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-gray-100">
-                            <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <!-- Hormas Enteras -->
+                    <div class="divide-y divide-gray-100">
+                        <div class="bg-gray-50 px-8 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Hormas Enteras</div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Cremoso</h4><p class="text-[11px] text-gray-500">4 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$20.097 <span class="text-[10px] font-normal">/kg</span></div>
                         </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="font-bold text-gray-900 text-lg">Queso Cremoso</h4>
-                            </div>
-                            <p class="text-xs text-gray-500 mb-4">Fraccionado 500g al vacío. Orgánico / Sin Tacc.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$23.399 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Cuartirolo Porteño</h4><p class="text-[11px] text-gray-500">4 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$23.575 <span class="text-[10px] font-normal">/kg</span></div>
+                        </div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Port Salut / Halloumi</h4><p class="text-[11px] text-gray-500">4 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$22.643 <span class="text-[10px] font-normal">/kg</span></div>
+                        </div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Tybo</h4><p class="text-[11px] text-gray-500">4 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$24.624 <span class="text-[10px] font-normal">/kg</span></div>
+                        </div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Campeche / Gouda</h4><p class="text-[11px] text-gray-500">3 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$27.217 <span class="text-[10px] font-normal">/kg</span></div>
+                        </div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Sardo (8 meses)</h4><p class="text-[11px] text-gray-500">3 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$34.147 <span class="text-[10px] font-normal">/kg</span></div>
+                        </div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Provoleta cilindro</h4><p class="text-[11px] text-gray-500">2 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$29.475 <span class="text-[10px] font-normal">/kg</span></div>
+                        </div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Brandsen</h4><p class="text-[11px] text-gray-500">3 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$44.703 <span class="text-[10px] font-normal">/kg</span></div>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-gray-100">
-                            <img src="assets/artisan_cheese.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: bottom;">
+                    <!-- Medias Hormas -->
+                    <div class="divide-y divide-gray-100">
+                        <div class="bg-gray-50 px-8 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Medias Hormas (Vacío)</div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Halloumi</h4><p class="text-[11px] text-gray-500">1.5 - 2 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$23.312 <span class="text-[10px] font-normal">/kg</span></div>
                         </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Port Salut</h4>
-                            <p class="text-xs text-gray-500 mb-4">Descremado (con o sin sal). Fraccionado 500g.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$23.835 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Gouda</h4><p class="text-[11px] text-gray-500">1.6 - 1.8 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$28.578 <span class="text-[10px] font-normal">/kg</span></div>
                         </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-gray-100">
-                            <img src="assets/lacteos_hero.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: left bottom;">
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Gouda / Tybo</h4>
-                            <p class="text-xs text-gray-500 mb-4">Pasta semidura. Fraccionado 300g al vacío.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$29.799 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-gray-100">
-                            <img src="assets/lacteos_hero.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: right top;">
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Sardo</h4>
-                            <p class="text-xs text-gray-500 mb-4">Pasta dura intensa. Fraccionado 300g al vacío.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$38.314 <span class="text-sm font-sans text-gray-400 font-normal">/kg</span></div>
+                        <div class="px-8 py-3 flex justify-between items-center hover:bg-gray-50">
+                            <div><h4 class="font-bold text-gray-800 text-sm">Sardo</h4><p class="text-[11px] text-gray-500">1.5 kg</p></div>
+                            <div class="font-tech font-bold text-gray-900">$35.854 <span class="text-[10px] font-normal">/kg</span></div>
                         </div>
                     </div>
 
                 </div>
             </div>
 
-            <!-- Categoría: Manteca y Ricotta -->
-            <div class="mb-16">
-                <h3 class="text-2xl font-tech font-bold text-vrde-brand mb-6 border-b border-gray-200 pb-2">Lácteos Frescos</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-gray-100">
-                            <img src="assets/lacteos_hero.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="object-position: center bottom;">
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Manteca</h4>
-                            <p class="text-xs text-gray-500 mb-4">Fraccionada 150g en papel antigrasa.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$4.413 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-gray-100 flex items-center justify-center">
-                            <i class="fas fa-jar text-5xl text-gray-300"></i>
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Ricotta Fresca</h4>
-                            <p class="text-xs text-gray-500 mb-4">Unidad de 500g al vacío.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$5.553 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-gray-100 flex items-center justify-center">
-                            <i class="fas fa-prescription-bottle text-5xl text-gray-300"></i>
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Cottage</h4>
-                            <p class="text-xs text-gray-500 mb-4">Novedad. Frasco de vidrio 325g.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$12.690 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
-                        </div>
-                    </div>
-
+            <!-- TABLA 4: DULCE Y MIEL -->
+            <div class="mb-16 bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100">
+                <div class="bg-orange-50 px-8 py-6 border-b border-orange-100 flex items-center gap-4">
+                    <i class="fas fa-spoon text-3xl text-orange-400"></i>
+                    <h3 class="text-2xl font-tech font-bold text-orange-600">Dulce de Leche y Miel</h3>
                 </div>
-            </div>
-
-            <!-- Categoría: Dulces -->
-            <div class="mb-16">
-                <h3 class="text-2xl font-tech font-bold text-orange-500 mb-6 border-b border-gray-200 pb-2">Dulces y Mieles</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-orange-50 flex items-center justify-center">
-                            <i class="fas fa-spoon text-5xl text-orange-200"></i>
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Dulce de Leche</h4>
-                            <p class="text-xs text-gray-500 mb-4">Tradicional, sin TACC. Envase de 500g.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$9.554 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
-                        </div>
+                <div class="divide-y divide-gray-100">
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Dulce de leche x 500g</h4><p class="text-sm text-gray-500">Envase de cartón (Sin Tacc)</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$9.554 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
                     </div>
-
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-shadow group">
-                        <div class="h-40 overflow-hidden bg-orange-50 flex items-center justify-center">
-                            <i class="fas fa-archive text-5xl text-orange-200"></i>
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-900 text-lg mb-2">Dulce de Leche (1 Kg)</h4>
-                            <p class="text-xs text-gray-500 mb-4">Formato familiar. Envase de cartón.</p>
-                            <div class="font-tech text-2xl font-bold text-gray-900">$14.532 <span class="text-sm font-sans text-gray-400 font-normal">/un</span></div>
-                        </div>
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Dulce de leche x 1 kg</h4><p class="text-sm text-gray-500">Envase de cartón (Sin Tacc)</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$14.532 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
                     </div>
-
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Miel x 500 g</h4><p class="text-sm text-gray-500">Frasco de vidrio</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$9.686 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
+                    </div>
+                    <div class="px-8 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                        <div><h4 class="font-bold text-gray-800">Miel x 10 kg</h4><p class="text-sm text-gray-500">Envase de plástico (balde) - Ideal gastronomía</p></div>
+                        <div class="font-tech text-xl font-bold text-gray-900 text-right whitespace-nowrap">$96.985 <span class="text-xs text-gray-400 font-normal block">/ un</span></div>
+                    </div>
                 </div>
             </div>
 
