@@ -71,14 +71,8 @@
 
                 <div class="mb-5">
                     <label class="block text-sm font-bold text-gray-700 mb-2">Categoría</label>
-                    <select id="p-categoria" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all">
-                        <option value="Verduras y Frutas">Verduras y Frutas</option>
-                        <option value="Lácteos">Lácteos</option>
-                        <option value="Almacén Seco">Almacén Seco (Harinas, Legumbres)</option>
-                        <option value="Conservas y Mermeladas">Conservas y Mermeladas</option>
-                        <option value="Panificados">Panificados</option>
-                        <option value="Cosmética Natural">Cosmética Natural</option>
-                        <option value="Otro">Otro</option>
+                    <select id="p-categoria" onchange="checkNewCategory(this)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all">
+                        <!-- Renderizado por JS -->
                     </select>
                 </div>
 
@@ -134,12 +128,49 @@
         // Lógica de base de datos local
         let db = JSON.parse(localStorage.getItem('vrde_productores_feria')) || [];
         let currentImageBase64 = null;
+        
+        // Categorías personalizadas
+        let customCategories = JSON.parse(localStorage.getItem('vrde_categorias_feria')) || [
+            "Verduras y Frutas",
+            "Lácteos",
+            "Almacén Seco",
+            "Conservas y Mermeladas",
+            "Panificados",
+            "Cosmética Natural",
+            "Otro"
+        ];
 
         // Iniciar
         document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
             updateBadge();
             renderDB();
         });
+
+        // Renderizar Categorías
+        function renderCategories() {
+            const select = document.getElementById('p-categoria');
+            select.innerHTML = '';
+            customCategories.forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+            select.innerHTML += `<option value="__ADD_NEW__" class="font-bold text-vrde-brand">➕ Agregar nueva categoría...</option>`;
+        }
+
+        // Agregar Nueva Categoría
+        function checkNewCategory(selectObj) {
+            if (selectObj.value === '__ADD_NEW__') {
+                const newCat = prompt('Escribe el nombre de la nueva categoría:');
+                if (newCat && newCat.trim() !== '') {
+                    customCategories.push(newCat.trim());
+                    localStorage.setItem('vrde_categorias_feria', JSON.stringify(customCategories));
+                    renderCategories();
+                    selectObj.value = newCat.trim();
+                } else {
+                    selectObj.selectedIndex = 0;
+                }
+            }
+        }
 
         // Tabs
         function switchTab(tabId) {
