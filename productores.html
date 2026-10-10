@@ -140,9 +140,14 @@
     </main>
 
     <script>
-        // Lógica de base de datos local
+        // Lógica de base de datos local y Firebase
         let db = JSON.parse(localStorage.getItem('vrde_productores_feria')) || [];
         let currentImageBase64 = null;
+        
+        let vrdeFirestore = null;
+        let setDocFn = null;
+        let deleteDocFn = null;
+        let docFn = null;
         
         // Categorías personalizadas
         let customCategories = JSON.parse(localStorage.getItem('vrde_categorias_feria')) || [
@@ -160,7 +165,55 @@
             renderCategories();
             updateBadge();
             renderDB();
+            initFirebase();
         });
+
+        async function initFirebase() {
+            try {
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js");
+                const { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js");
+                
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCOqV_ktDmgMw4SQEq1U3omo-faPG0BwyA",
+                    authDomain: "vrde-club-ee9e2.firebaseapp.com",
+                    projectId: "vrde-club-ee9e2",
+                    storageBucket: "vrde-club-ee9e2.firebasestorage.app",
+                    messagingSenderId: "347690183351",
+                    appId: "1:347690183351:web:15740a62f1b0b6976a3b32"
+                };
+                
+                const app = initializeApp(firebaseConfig);
+                vrdeFirestore = getFirestore(app);
+                setDocFn = setDoc;
+                deleteDocFn = deleteDoc;
+                docFn = doc;
+
+                onSnapshot(collection(vrdeFirestore, "productores"), (snapshot) => {
+                    let serverDb = [];
+                    snapshot.forEach(docSnap => serverDb.push(docSnap.data()));
+                    
+                    const serverIds = new Set(serverDb.map(p => p.id));
+                    let changed = false;
+
+                    // Si hay productores en local que NO están en la nube (ej: guardados antes de esta actu), subirlos
+                    db.forEach(localProd => {
+                        if (!serverIds.has(localProd.id)) {
+                            setDocFn(docFn(vrdeFirestore, "productores", localProd.id), localProd).catch(e=>console.log(e));
+                            serverDb.push(localProd);
+                            changed = true;
+                        }
+                    });
+
+                    serverDb.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    db = serverDb;
+                    localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                    updateBadge();
+                    renderDB();
+                });
+            } catch (error) {
+                console.error("Firebase sync disabled/error: ", error);
+            }
+        }
 
         // Renderizar Categorías
         function renderCategories() {
@@ -210,7 +263,6 @@
                     preview.src = currentImageBase64;
                     preview.classList.remove('hidden');
                 };
-                // Resize image to save space (opcional, pero recomendado para localStorage)
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -237,6 +289,10 @@
             db.unshift(newProducer);
             localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
             
+            if (vrdeFirestore && setDocFn && docFn) {
+                setDocFn(docFn(vrdeFirestore, "productores", newProducer.id), newProducer).catch(e => console.log(e));
+            }
+            
             // Reset form
             document.getElementById('producer-form').reset();
             currentImageBase64 = null;
@@ -247,7 +303,6 @@
             updateBadge();
             renderDB();
             
-            // Feedback
             alert('¡Productor guardado con éxito!');
             switchTab('base');
         }
@@ -264,7 +319,6 @@
             
             if (db.length === 0) {
                 emptyState.style.display = 'block';
-                // Borrar los demas si hay
                 Array.from(listContainer.children).forEach(child => {
                     if (child.id !== 'db-empty') child.remove();
                 });
@@ -312,7 +366,7 @@
             });
             
             listContainer.innerHTML = html;
-            listContainer.appendChild(emptyState); // keep it at bottom just in case
+            listContainer.appendChild(emptyState);
         }
 
         // Borrar productor
@@ -320,6 +374,11 @@
             if(confirm('¿Seguro que deseas eliminar esta ficha?')) {
                 db = db.filter(p => p.id !== id);
                 localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                
+                if (vrdeFirestore && deleteDocFn && docFn) {
+                    deleteDocFn(docFn(vrdeFirestore, "productores", id)).catch(e => console.log(e));
+                }
+                
                 updateBadge();
                 renderDB();
             }
@@ -333,7 +392,7 @@
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href",     dataStr);
             downloadAnchorNode.setAttribute("download", "vrde_productores_" + new Date().getTime() + ".json");
-            document.body.appendChild(downloadAnchorNode); // required for firefox
+            document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
         }
