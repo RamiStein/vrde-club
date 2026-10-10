@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cazador de Productores - Vrde Club</title>
+    <meta name="description" content="Registro rápido de productores en ferias y eventos.">
+    <meta name="theme-color" content="#10A352">
+    
+    <!-- Fuentes y Tailwind -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vrde-brand': '#10A352', 
+                        'vrde-dark': '#0B7339',
+                    },
+                    fontFamily: {
+                        'sans': ['Outfit', 'sans-serif'],
+                        'tech': ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; }
+        .tab-active { border-bottom: 2px solid #10A352; color: #10A352; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 pb-20">
+
+    <!-- Header -->
+    <header class="bg-vrde-brand text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="flex justify-between items-center max-w-lg mx-auto">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-seedling text-xl"></i>
+                <h1 class="font-tech font-bold text-xl">Cazador Vrde</h1>
+            </div>
+            <span class="bg-white/20 px-2 py-1 rounded text-xs font-bold" id="counter-badge">0 Registros</span>
+        </div>
+    </header>
+
+    <!-- Navegación Tabs -->
+    <div class="bg-white shadow-sm sticky top-[60px] z-40">
+        <div class="flex max-w-lg mx-auto">
+            <button onclick="switchTab('registro')" id="tab-registro" class="flex-1 py-3 text-center text-sm tab-active transition-colors"><i class="fas fa-plus mr-1"></i> Nuevo</button>
+            <button onclick="switchTab('base')" id="tab-base" class="flex-1 py-3 text-center text-sm text-gray-500 transition-colors"><i class="fas fa-database mr-1"></i> Base de Datos</button>
+        </div>
+    </div>
+
+    <!-- VISTA: REGISTRO -->
+    <main id="view-registro" class="max-w-lg mx-auto p-4 block">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <form id="producer-form" onsubmit="saveProducer(event)">
+                
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Nombre del Emprendimiento *</label>
+                    <input type="text" id="p-empresa" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="Ej: Finca La Abundancia">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Nombres de quienes emprenden</label>
+                    <input type="text" id="p-nombres" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="Ej: Juan y María">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Categoría</label>
+                    <select id="p-categoria" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all">
+                        <option value="Verduras y Frutas">Verduras y Frutas</option>
+                        <option value="Lácteos">Lácteos</option>
+                        <option value="Almacén Seco">Almacén Seco (Harinas, Legumbres)</option>
+                        <option value="Conservas y Mermeladas">Conservas y Mermeladas</option>
+                        <option value="Panificados">Panificados</option>
+                        <option value="Cosmética Natural">Cosmética Natural</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Contacto (Instagram / Teléfono)</label>
+                    <input type="text" id="p-contacto" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="@instagram o +54 9...">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Ficha Técnica / Notas Rápidas</label>
+                    <textarea id="p-notas" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="Tienen certificación orgánica, hacen envíos a capital, etc..."></textarea>
+                </div>
+
+                <!-- Foto (Cámara) -->
+                <div class="mb-8">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Foto del Producto / Puesto</label>
+                    <div class="relative overflow-hidden">
+                        <input type="file" id="p-foto" accept="image/*" capture="environment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewImage(this)">
+                        <div id="foto-placeholder" class="w-full h-32 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400">
+                            <i class="fas fa-camera text-3xl mb-2"></i>
+                            <span class="text-sm font-medium">Tocar para tomar foto</span>
+                        </div>
+                        <img id="foto-preview" src="" class="w-full h-48 object-cover rounded-xl hidden">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-vrde-brand text-white font-tech font-bold text-lg py-4 rounded-xl shadow-lg shadow-vrde-brand/30 hover:bg-vrde-dark transition-colors active:scale-95">
+                    <i class="fas fa-save mr-2"></i> Guardar Ficha
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- VISTA: BASE DE DATOS -->
+    <main id="view-base" class="max-w-lg mx-auto p-4 hidden">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-tech text-xl font-bold text-gray-800">Productores Guardados</h2>
+            <button onclick="exportData()" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg font-bold transition-colors">
+                <i class="fas fa-download mr-1"></i> Exportar JSON
+            </button>
+        </div>
+
+        <div id="db-list" class="space-y-4">
+            <!-- Renderizado por JS -->
+            <div class="text-center text-gray-400 py-10" id="db-empty">
+                <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                <p>No hay productores registrados aún.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Lógica de base de datos local
+        let db = JSON.parse(localStorage.getItem('vrde_productores_feria')) || [];
+        let currentImageBase64 = null;
+
+        // Iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBadge();
+            renderDB();
+        });
+
+        // Tabs
+        function switchTab(tabId) {
+            document.getElementById('view-registro').classList.toggle('hidden', tabId !== 'registro');
+            document.getElementById('view-base').classList.toggle('hidden', tabId !== 'base');
+            
+            document.getElementById('tab-registro').classList.toggle('tab-active', tabId === 'registro');
+            document.getElementById('tab-registro').classList.toggle('text-gray-500', tabId !== 'registro');
+            
+            document.getElementById('tab-base').classList.toggle('tab-active', tabId === 'base');
+            document.getElementById('tab-base').classList.toggle('text-gray-500', tabId !== 'base');
+        }
+
+        // Preview Foto a Base64
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImageBase64 = e.target.result;
+                    document.getElementById('foto-placeholder').classList.add('hidden');
+                    const preview = document.getElementById('foto-preview');
+                    preview.src = currentImageBase64;
+                    preview.classList.remove('hidden');
+                };
+                // Resize image to save space (opcional, pero recomendado para localStorage)
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Guardar Productor
+        function saveProducer(e) {
+            e.preventDefault();
+            
+            const newProducer = {
+                id: Date.now().toString(),
+                fecha: new Date().toISOString(),
+                empresa: document.getElementById('p-empresa').value,
+                nombres: document.getElementById('p-nombres').value,
+                categoria: document.getElementById('p-categoria').value,
+                contacto: document.getElementById('p-contacto').value,
+                notas: document.getElementById('p-notas').value,
+                foto: currentImageBase64
+            };
+
+            db.unshift(newProducer);
+            localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+            
+            // Reset form
+            document.getElementById('producer-form').reset();
+            currentImageBase64 = null;
+            document.getElementById('foto-preview').classList.add('hidden');
+            document.getElementById('foto-preview').src = '';
+            document.getElementById('foto-placeholder').classList.remove('hidden');
+            
+            updateBadge();
+            renderDB();
+            
+            // Feedback
+            alert('¡Productor guardado con éxito!');
+            switchTab('base');
+        }
+
+        // Actualizar contador
+        function updateBadge() {
+            document.getElementById('counter-badge').innerText = `${db.length} Registros`;
+        }
+
+        // Renderizar Lista
+        function renderDB() {
+            const listContainer = document.getElementById('db-list');
+            const emptyState = document.getElementById('db-empty');
+            
+            if (db.length === 0) {
+                emptyState.style.display = 'block';
+                // Borrar los demas si hay
+                Array.from(listContainer.children).forEach(child => {
+                    if (child.id !== 'db-empty') child.remove();
+                });
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            let html = '';
+            
+            db.forEach(prod => {
+                const fechaFormat = new Date(prod.fecha).toLocaleDateString('es-AR', {day: '2-digit', month: 'short', hour:'2-digit', minute:'2-digit'});
+                
+                html += `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative">
+                        <div class="absolute top-2 right-2 flex gap-2">
+                            <button onclick="deleteProducer('${prod.id}')" class="bg-red-50 text-red-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-100"><i class="fas fa-trash text-xs"></i></button>
+                        </div>
+                        
+                        ${prod.foto ? `<img src="${prod.foto}" class="w-full h-32 object-cover">` : `<div class="w-full h-8 bg-vrde-brand/10"></div>`}
+                        
+                        <div class="p-4">
+                            <div class="text-xs text-vrde-brand font-bold uppercase mb-1">${prod.categoria}</div>
+                            <h3 class="font-tech text-lg font-bold text-gray-900 leading-tight">${prod.empresa}</h3>
+                            <p class="text-sm text-gray-500 mb-3"><i class="fas fa-user text-xs mr-1"></i> ${prod.nombres || 'Sin nombre'}</p>
+                            
+                            <div class="bg-gray-50 p-3 rounded-lg text-sm text-gray-700 mb-3 border border-gray-100">
+                                ${prod.notas || 'Sin notas añadidas.'}
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-xs text-gray-500">
+                                <span class="font-medium text-gray-700"><i class="fas fa-address-book mr-1"></i> ${prod.contacto || '-'}</span>
+                                <span>${fechaFormat}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listContainer.innerHTML = html;
+            listContainer.appendChild(emptyState); // keep it at bottom just in case
+        }
+
+        // Borrar productor
+        function deleteProducer(id) {
+            if(confirm('¿Seguro que deseas eliminar esta ficha?')) {
+                db = db.filter(p => p.id !== id);
+                localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                updateBadge();
+                renderDB();
+            }
+        }
+
+        // Exportar Data
+        function exportData() {
+            if(db.length === 0) return alert('No hay datos para exportar.');
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", "vrde_productores_" + new Date().getTime() + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+    </script>
+</body>
+</html>

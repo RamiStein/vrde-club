@@ -63,6 +63,7 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/superadmin", "destination": "/superadmin.html" },
     { "source": "/lacteos", "destination": "/lacteos.html" },
-    { "source": "/elabascay", "destination": "/elabascay.html" }
+    { "source": "/elabascay", "destination": "/elabascay.html" },
+    { "source": "/feria", "destination": "/feria.html" }
   ]
 }
