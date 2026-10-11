@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Base de Productores - Vrde Club</title>
+    <meta name="description" content="Registro rápido de productores en ferias y eventos.">
+    <meta name="theme-color" content="#10A352">
+    
+    <!-- Fuentes y Tailwind -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vrde-brand': '#10A352', 
+                        'vrde-dark': '#0B7339',
+                    },
+                    fontFamily: {
+                        'sans': ['Outfit', 'sans-serif'],
+                        'tech': ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; }
+        .tab-active { border-bottom: 2px solid #10A352; color: #10A352; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 pb-20">
+
+    <!-- Header -->
+    <header class="bg-vrde-brand text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="flex justify-between items-center max-w-lg mx-auto">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-seedling text-xl"></i>
+                <h1 class="font-tech font-bold text-xl">Base de Productores</h1>
+            </div>
+            <span class="bg-white/20 px-2 py-1 rounded text-xs font-bold" id="counter-badge">0 Registros</span>
+        </div>
+    </header>
+
+    <!-- Navegación Tabs -->
+    <div class="bg-white shadow-sm sticky top-[60px] z-40">
+        <div class="flex max-w-lg mx-auto">
+            <button onclick="switchTab('registro')" id="tab-registro" class="flex-1 py-3 text-center text-sm tab-active transition-colors"><i class="fas fa-plus mr-1"></i> Nuevo</button>
+            <button onclick="switchTab('base')" id="tab-base" class="flex-1 py-3 text-center text-sm text-gray-500 transition-colors"><i class="fas fa-database mr-1"></i> Base de Datos</button>
+        </div>
+    </div>
+
+    <!-- VISTA: REGISTRO -->
+    <main id="view-registro" class="max-w-lg mx-auto p-4 block">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <form id="producer-form" onsubmit="saveProducer(event)">
+                
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Nombre del Emprendimiento *</label>
+                    <input type="text" id="p-empresa" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="Ej: Finca La Abundancia">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Nombres de quienes emprenden</label>
+                    <input type="text" id="p-nombres" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="Ej: Juan y María">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Categoría</label>
+                    <select id="p-categoria" onchange="checkNewCategory(this)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all">
+                        <!-- Renderizado por JS -->
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Instagram</label>
+                        <input type="text" id="p-instagram" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="@usuario">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Teléfono</label>
+                        <input type="text" id="p-telefono" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="+54 9...">
+                    </div>
+                </div>
+
+                <div class="mb-5 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <label class="block text-sm font-bold text-gray-700 mb-3"><i class="fas fa-map-marker-alt mr-1 text-vrde-brand"></i> Ubicación</label>
+                    <div class="grid grid-cols-1 gap-3">
+                        <input type="text" id="p-provincia" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-vrde-brand transition-all" placeholder="Provincia">
+                        <input type="text" id="p-ciudad" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-vrde-brand transition-all" placeholder="Ciudad">
+                        <input type="text" id="p-pueblo" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-vrde-brand transition-all" placeholder="Pueblo / Localidad (Opcional)">
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Ficha Técnica / Notas Rápidas</label>
+                    <textarea id="p-notas" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="Tienen certificación orgánica, hacen envíos a capital, etc..."></textarea>
+                </div>
+
+                <!-- Foto (Cámara) -->
+                <div class="mb-8">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Foto del Producto / Puesto</label>
+                    <div class="relative overflow-hidden">
+                        <input type="file" id="p-foto" accept="image/*" capture="environment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewImage(this)">
+                        <div id="foto-placeholder" class="w-full h-32 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400">
+                            <i class="fas fa-camera text-3xl mb-2"></i>
+                            <span class="text-sm font-medium">Tocar para tomar foto</span>
+                        </div>
+                        <img id="foto-preview" src="" class="w-full h-48 object-cover rounded-xl hidden">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-vrde-brand text-white font-tech font-bold text-lg py-4 rounded-xl shadow-lg shadow-vrde-brand/30 hover:bg-vrde-dark transition-colors active:scale-95">
+                    <i class="fas fa-save mr-2"></i> Guardar Ficha
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- VISTA: BASE DE DATOS -->
+    <main id="view-base" class="max-w-lg mx-auto p-4 hidden">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+            <h2 class="font-tech text-xl font-bold text-gray-800">Productores Guardados</h2>
+            <div class="flex items-center gap-2 flex-wrap">
+                <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="handleImportFile(this)">
+                <button onclick="document.getElementById('import-file-input').click()" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Importar archivo JSON desde tu celular u otra compu">
+                    <i class="fas fa-file-import mr-1"></i> Importar JSON
+                </button>
+                <button onclick="exportData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 px-3 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Descargar copia de seguridad en tu dispositivo">
+                    <i class="fas fa-download mr-1"></i> Exportar JSON
+                </button>
+                <button onclick="copyDataToClipboard()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Copiar texto de backup">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+                <button onclick="pasteData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Pegar texto de backup">
+                    <i class="fas fa-paste"></i> Pegar
+                </button>
+            </div>
+        </div>
+
+        <!-- Banner informativo de sincronización local -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-900 flex items-start gap-2 shadow-sm">
+            <i class="fas fa-shield-alt text-amber-600 text-base mt-0.5"></i>
+            <div>
+                <p class="font-bold mb-0.5">Almacenamiento Local Seguro</p>
+                <p class="text-amber-800 leading-relaxed">Tus registros se guardan en la memoria de este dispositivo (sin riesgo de desconexión). Para ver en la compu lo cargado en el celular: toca <b>Exportar JSON</b> o <b>Copiar</b> en el celular, envíatelo por WhatsApp y usa <b>Importar</b> o <b>Pegar</b> aquí.</p>
+            </div>
+        </div>
+
+        <div id="db-list" class="space-y-4">
+            <!-- Renderizado por JS -->
+            <div class="text-center text-gray-400 py-10" id="db-empty">
+                <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                <p>No hay productores registrados aún.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Lógica de base de datos local y Firebase
+        let db = JSON.parse(localStorage.getItem('vrde_productores_feria')) || [];
+        let currentImageBase64 = null;
+        
+        let vrdeFirestore = null;
+        let setDocFn = null;
+        let deleteDocFn = null;
+        let docFn = null;
+        
+        // Categorías personalizadas
+        let customCategories = JSON.parse(localStorage.getItem('vrde_categorias_feria')) || [
+            "Verduras y Frutas",
+            "Lácteos",
+            "Almacén Seco",
+            "Conservas y Mermeladas",
+            "Panificados",
+            "Cosmética Natural",
+            "Otro"
+        ];
+
+        // Iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            updateBadge();
+            renderDB();
+            initFirebase();
+        });
+
+        async function initFirebase() {
+            try {
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js");
+                const { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js");
+                
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCOqV_ktDmgMw4SQEq1U3omo-faPG0BwyA",
+                    authDomain: "vrde-club-ee9e2.firebaseapp.com",
+                    projectId: "vrde-club-ee9e2",
+                    storageBucket: "vrde-club-ee9e2.firebasestorage.app",
+                    messagingSenderId: "347690183351",
+                    appId: "1:347690183351:web:15740a62f1b0b6976a3b32"
+                };
+                
+                const app = initializeApp(firebaseConfig);
+                vrdeFirestore = getFirestore(app);
+                setDocFn = setDoc;
+                deleteDocFn = deleteDoc;
+                docFn = doc;
+
+                onSnapshot(collection(vrdeFirestore, "productores"), (snapshot) => {
+                    let serverDb = [];
+                    snapshot.forEach(docSnap => serverDb.push(docSnap.data()));
+                    
+                    const serverIds = new Set(serverDb.map(p => p.id));
+                    let changed = false;
+
+                    // Si hay productores en local que NO están en la nube (ej: guardados antes de esta actu), subirlos
+                    db.forEach(localProd => {
+                        if (!serverIds.has(localProd.id)) {
+                            setDocFn(docFn(vrdeFirestore, "productores", localProd.id), localProd).catch(e=>console.log(e));
+                            serverDb.push(localProd);
+                            changed = true;
+                        }
+                    });
+
+                    serverDb.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    db = serverDb;
+                    localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                    updateBadge();
+                    renderDB();
+                });
+            } catch (error) {
+                console.error("Firebase sync disabled/error: ", error);
+            }
+        }
+
+        // Renderizar Categorías
+        function renderCategories() {
+            const select = document.getElementById('p-categoria');
+            select.innerHTML = '';
+            customCategories.forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+            select.innerHTML += `<option value="__ADD_NEW__" class="font-bold text-vrde-brand">➕ Agregar nueva categoría...</option>`;
+        }
+
+        // Agregar Nueva Categoría
+        function checkNewCategory(selectObj) {
+            if (selectObj.value === '__ADD_NEW__') {
+                const newCat = prompt('Escribe el nombre de la nueva categoría:');
+                if (newCat && newCat.trim() !== '') {
+                    customCategories.push(newCat.trim());
+                    localStorage.setItem('vrde_categorias_feria', JSON.stringify(customCategories));
+                    renderCategories();
+                    selectObj.value = newCat.trim();
+                } else {
+                    selectObj.selectedIndex = 0;
+                }
+            }
+        }
+
+        // Tabs
+        function switchTab(tabId) {
+            document.getElementById('view-registro').classList.toggle('hidden', tabId !== 'registro');
+            document.getElementById('view-base').classList.toggle('hidden', tabId !== 'base');
+            
+            document.getElementById('tab-registro').classList.toggle('tab-active', tabId === 'registro');
+            document.getElementById('tab-registro').classList.toggle('text-gray-500', tabId !== 'registro');
+            
+            document.getElementById('tab-base').classList.toggle('tab-active', tabId === 'base');
+            document.getElementById('tab-base').classList.toggle('text-gray-500', tabId !== 'base');
+        }
+
+        // Preview Foto con compresión para ahorro de memoria
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 800;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) {
+                            if (width > maxDim) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            }
+                        } else {
+                            if (height > maxDim) {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        currentImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('foto-placeholder').classList.add('hidden');
+                        const preview = document.getElementById('foto-preview');
+                        preview.src = currentImageBase64;
+                        preview.classList.remove('hidden');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Guardar Productor
+        function saveProducer(e) {
+            e.preventDefault();
+            
+            const newProducer = {
+                id: Date.now().toString(),
+                fecha: new Date().toISOString(),
+                empresa: document.getElementById('p-empresa').value,
+                nombres: document.getElementById('p-nombres').value,
+                categoria: document.getElementById('p-categoria').value,
+                instagram: document.getElementById('p-instagram').value,
+                telefono: document.getElementById('p-telefono').value,
+                provincia: document.getElementById('p-provincia').value,
+                ciudad: document.getElementById('p-ciudad').value,
+                pueblo: document.getElementById('p-pueblo').value,
+                notas: document.getElementById('p-notas').value,
+                foto: currentImageBase64
+            };
+
+            db.unshift(newProducer);
+            localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+            
+            if (vrdeFirestore && setDocFn && docFn) {
+                setDocFn(docFn(vrdeFirestore, "productores", newProducer.id), newProducer).catch(e => console.log(e));
+            }
+            
+            // Reset form
+            document.getElementById('producer-form').reset();
+            currentImageBase64 = null;
+            document.getElementById('foto-preview').classList.add('hidden');
+            document.getElementById('foto-preview').src = '';
+            document.getElementById('foto-placeholder').classList.remove('hidden');
+            
+            updateBadge();
+            renderDB();
+            
+            alert('¡Productor guardado con éxito!');
+            switchTab('base');
+        }
+
+        // Actualizar contador
+        function updateBadge() {
+            document.getElementById('counter-badge').innerText = `${db.length} Registros`;
+        }
+
+        // Renderizar Lista
+        function renderDB() {
+            const listContainer = document.getElementById('db-list');
+            const emptyState = document.getElementById('db-empty');
+            
+            if (db.length === 0) {
+                emptyState.style.display = 'block';
+                Array.from(listContainer.children).forEach(child => {
+                    if (child.id !== 'db-empty') child.remove();
+                });
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            let html = '';
+            
+            db.forEach(prod => {
+                const fechaFormat = new Date(prod.fecha).toLocaleDateString('es-AR', {day: '2-digit', month: 'short', hour:'2-digit', minute:'2-digit'});
+                
+                html += `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative">
+                        <div class="absolute top-2 right-2 flex gap-2">
+                            <button onclick="deleteProducer('${prod.id}')" class="bg-red-50 text-red-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-100"><i class="fas fa-trash text-xs"></i></button>
+                        </div>
+                        
+                        ${prod.foto ? `<img src="${prod.foto}" class="w-full h-32 object-cover">` : `<div class="w-full h-8 bg-vrde-brand/10"></div>`}
+                        
+                        <div class="p-4">
+                            <div class="text-xs text-vrde-brand font-bold uppercase mb-1">${prod.categoria}</div>
+                            <h3 class="font-tech text-lg font-bold text-gray-900 leading-tight">${prod.empresa}</h3>
+                            <p class="text-sm text-gray-500 mb-3"><i class="fas fa-user text-xs mr-1"></i> ${prod.nombres || 'Sin nombre'}</p>
+                            
+                            <div class="bg-gray-50 p-3 rounded-lg text-sm text-gray-700 mb-3 border border-gray-100">
+                                ${prod.notas || 'Sin notas añadidas.'}
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-xs text-gray-500">
+                                <span class="font-medium text-gray-700 flex gap-3">
+                                    ${prod.instagram ? `<a href="https://instagram.com/${prod.instagram.replace('@','')}" target="_blank" class="text-pink-600"><i class="fab fa-instagram"></i> ${prod.instagram}</a>` : ''}
+                                    ${prod.telefono ? `<a href="tel:${prod.telefono}" class="text-green-600"><i class="fas fa-phone"></i> ${prod.telefono}</a>` : ''}
+                                </span>
+                                <span>${fechaFormat}</span>
+                            </div>
+                            ${(prod.provincia || prod.ciudad || prod.pueblo) ? `
+                            <div class="mt-2 text-xs text-gray-500 flex items-center gap-1 border-t border-gray-100 pt-2">
+                                <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                <span>${[prod.pueblo, prod.ciudad, prod.provincia].filter(Boolean).join(', ')}</span>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listContainer.innerHTML = html;
+            listContainer.appendChild(emptyState);
+        }
+
+        // Borrar productor
+        function deleteProducer(id) {
+            if(confirm('¿Seguro que deseas eliminar esta ficha?')) {
+                db = db.filter(p => p.id !== id);
+                localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                
+                if (vrdeFirestore && deleteDocFn && docFn) {
+                    deleteDocFn(docFn(vrdeFirestore, "productores", id)).catch(e => console.log(e));
+                }
+                
+                updateBadge();
+                renderDB();
+            }
+        }
+
+        // Exportar Data
+        function exportData() {
+            if(db.length === 0) return alert('No hay datos para exportar.');
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", "vrde_productores_" + new Date().getTime() + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        // Importar Archivo JSON
+        function handleImportFile(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) {
+                        alert('El archivo no contiene un formato de lista válido.');
+                        return;
+                    }
+                    const existingIds = new Set(db.map(p => p.id));
+                    let addedCount = 0;
+                    imported.forEach(item => {
+                        if (!existingIds.has(item.id)) {
+                            db.push(item);
+                            addedCount++;
+                        }
+                    });
+                    db.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                    updateBadge();
+                    renderDB();
+                    alert(`¡Éxito! Se importaron ${addedCount} productores.`);
+                } catch(err) {
+                    alert('Error al leer el archivo JSON: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        // Copiar Backup al portapapeles
+        function copyDataToClipboard() {
+            if (db.length === 0) return alert('No hay productores guardados para copiar.');
+            const dataStr = JSON.stringify(db);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(dataStr).then(() => {
+                    alert('¡Copia realizada! El texto del backup fue copiado al portapapeles. Pégalo en WhatsApp o un bloc de notas.');
+                }).catch(() => {
+                    prompt('Copia este código de backup:', dataStr);
+                });
+            } else {
+                prompt('Copia este código de backup:', dataStr);
+            }
+        }
+
+        // Pegar Backup desde texto
+        function pasteData() {
+            const pasted = prompt('Pega aquí el código de backup JSON que copiaste del celular:');
+            if (!pasted || !pasted.trim()) return;
+            try {
+                const imported = JSON.parse(pasted.trim());
+                if (!Array.isArray(imported)) return alert('El contenido no es una lista válida.');
+                const existingIds = new Set(db.map(p => p.id));
+                let addedCount = 0;
+                imported.forEach(item => {
+                    if (!existingIds.has(item.id)) {
+                        db.push(item);
+                        addedCount++;
+                    }
+                });
+                db.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                updateBadge();
+                renderDB();
+                alert(`¡Se sincronizaron ${addedCount} productores correctamente!`);
+            } catch(e) {
+                alert('El texto pegado no es un JSON válido: ' + e.message);
+            }
+        }
+    </script>
+</body>
+</html>

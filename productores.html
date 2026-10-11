@@ -123,11 +123,32 @@
 
     <!-- VISTA: BASE DE DATOS -->
     <main id="view-base" class="max-w-lg mx-auto p-4 hidden">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
             <h2 class="font-tech text-xl font-bold text-gray-800">Productores Guardados</h2>
-            <button onclick="exportData()" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg font-bold transition-colors">
-                <i class="fas fa-download mr-1"></i> Exportar JSON
-            </button>
+            <div class="flex items-center gap-2 flex-wrap">
+                <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="handleImportFile(this)">
+                <button onclick="document.getElementById('import-file-input').click()" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Importar archivo JSON desde tu celular u otra compu">
+                    <i class="fas fa-file-import mr-1"></i> Importar JSON
+                </button>
+                <button onclick="exportData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 px-3 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Descargar copia de seguridad en tu dispositivo">
+                    <i class="fas fa-download mr-1"></i> Exportar JSON
+                </button>
+                <button onclick="copyDataToClipboard()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Copiar texto de backup">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+                <button onclick="pasteData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Pegar texto de backup">
+                    <i class="fas fa-paste"></i> Pegar
+                </button>
+            </div>
+        </div>
+
+        <!-- Banner informativo de sincronización local -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-900 flex items-start gap-2 shadow-sm">
+            <i class="fas fa-shield-alt text-amber-600 text-base mt-0.5"></i>
+            <div>
+                <p class="font-bold mb-0.5">Almacenamiento Local Seguro</p>
+                <p class="text-amber-800 leading-relaxed">Tus registros se guardan en la memoria de este dispositivo (sin riesgo de desconexión). Para ver en la compu lo cargado en el celular: toca <b>Exportar JSON</b> o <b>Copiar</b> en el celular, envíatelo por WhatsApp y usa <b>Importar</b> o <b>Pegar</b> aquí.</p>
+            </div>
         </div>
 
         <div id="db-list" class="space-y-4">
@@ -252,18 +273,42 @@
             document.getElementById('tab-base').classList.toggle('text-gray-500', tabId !== 'base');
         }
 
-        // Preview Foto a Base64
+        // Preview Foto con compresión para ahorro de memoria
         function previewImage(input) {
             if (input.files && input.files[0]) {
+                const file = input.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    currentImageBase64 = e.target.result;
-                    document.getElementById('foto-placeholder').classList.add('hidden');
-                    const preview = document.getElementById('foto-preview');
-                    preview.src = currentImageBase64;
-                    preview.classList.remove('hidden');
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 800;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) {
+                            if (width > maxDim) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            }
+                        } else {
+                            if (height > maxDim) {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        currentImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('foto-placeholder').classList.add('hidden');
+                        const preview = document.getElementById('foto-preview');
+                        preview.src = currentImageBase64;
+                        preview.classList.remove('hidden');
+                    };
+                    img.src = e.target.result;
                 };
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
@@ -395,6 +440,79 @@
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
+        }
+
+        // Importar Archivo JSON
+        function handleImportFile(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) {
+                        alert('El archivo no contiene un formato de lista válido.');
+                        return;
+                    }
+                    const existingIds = new Set(db.map(p => p.id));
+                    let addedCount = 0;
+                    imported.forEach(item => {
+                        if (!existingIds.has(item.id)) {
+                            db.push(item);
+                            addedCount++;
+                        }
+                    });
+                    db.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                    updateBadge();
+                    renderDB();
+                    alert(`¡Éxito! Se importaron ${addedCount} productores.`);
+                } catch(err) {
+                    alert('Error al leer el archivo JSON: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        // Copiar Backup al portapapeles
+        function copyDataToClipboard() {
+            if (db.length === 0) return alert('No hay productores guardados para copiar.');
+            const dataStr = JSON.stringify(db);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(dataStr).then(() => {
+                    alert('¡Copia realizada! El texto del backup fue copiado al portapapeles. Pégalo en WhatsApp o un bloc de notas.');
+                }).catch(() => {
+                    prompt('Copia este código de backup:', dataStr);
+                });
+            } else {
+                prompt('Copia este código de backup:', dataStr);
+            }
+        }
+
+        // Pegar Backup desde texto
+        function pasteData() {
+            const pasted = prompt('Pega aquí el código de backup JSON que copiaste del celular:');
+            if (!pasted || !pasted.trim()) return;
+            try {
+                const imported = JSON.parse(pasted.trim());
+                if (!Array.isArray(imported)) return alert('El contenido no es una lista válida.');
+                const existingIds = new Set(db.map(p => p.id));
+                let addedCount = 0;
+                imported.forEach(item => {
+                    if (!existingIds.has(item.id)) {
+                        db.push(item);
+                        addedCount++;
+                    }
+                });
+                db.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                updateBadge();
+                renderDB();
+                alert(`¡Se sincronizaron ${addedCount} productores correctamente!`);
+            } catch(e) {
+                alert('El texto pegado no es un JSON válido: ' + e.message);
+            }
         }
     </script>
 </body>
