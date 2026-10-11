@@ -648,6 +648,11 @@
           <span>Base de Datos Red (CRM)</span>
         </button>
 
+        <button class="sidebar-btn" id="sp-sbtn-productores" onclick="switchSuperTab('productores')">
+          <i class="fas fa-seedling" style="color: #10A352;"></i>
+          <span>Base de Productores (Ferias)</span>
+        </button>
+
         <button class="sidebar-btn" id="sp-sbtn-finances" onclick="switchSuperTab('finances')">
           <i class="fas fa-chart-pie" style="color: #059669;"></i>
           <span>Finanzas y Balance 33.3%</span>
@@ -1563,6 +1568,76 @@
         </div>
       </div>
 
+      <!-- =========================================================
+           SECCIÓN 11: BASE DE PRODUCTORES (FERIAS & CAMPO)
+           ========================================================= -->
+      <div id="super-section-productores" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 20px; color: #0F172A; margin: 0;">🌱 Base de Productores (Ferias & Relevamiento de Campo)</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+              Relevamiento centralizado de productores agroecológicos, lácteos y artesanías conocidos en ferias.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="productores.html" target="_blank" class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: #0F172A; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fas fa-mobile-alt"></i> Abrir App Móvil
+            </a>
+            <input type="file" id="sp-import-prods-file" accept=".json" class="hidden" onchange="superImportProductoresFile(this)">
+            <button class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: #059669; display: inline-flex; align-items: center; gap: 6px;" onclick="document.getElementById('sp-import-prods-file').click()">
+              <i class="fas fa-file-import"></i> Importar JSON
+            </button>
+            <button class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: #334155; display: inline-flex; align-items: center; gap: 6px;" onclick="superExportProductores()">
+              <i class="fas fa-download"></i> Exportar Backup
+            </button>
+            <button class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: var(--primary); display: inline-flex; align-items: center; gap: 6px;" onclick="openCreateProductorModal()">
+              <i class="fas fa-plus"></i> + Nuevo Productor
+            </button>
+          </div>
+        </div>
+
+        <!-- KPIs / Métricas Rápidas -->
+        <div class="admin-metrics-grid" style="margin-bottom: 20px;">
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-prods-total" style="color: var(--primary);">0</div>
+            <div class="metric-desc">Productores Registrados</div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-prods-categorias" style="color: #2563EB;">0</div>
+            <div class="metric-desc">Categorías Activas</div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-prods-con-foto" style="color: #EC4899;">0</div>
+            <div class="metric-desc">Fichas con Foto</div>
+          </div>
+          <div class="metric-card-clean">
+            <div class="metric-num" id="sp-prods-con-contacto" style="color: #059669;">0</div>
+            <div class="metric-desc">Con Teléfono / Instagram</div>
+          </div>
+        </div>
+
+        <!-- Filtros y Búsqueda -->
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; min-width: 280px;">
+            <div style="position: relative; flex: 1; min-width: 200px;">
+              <i class="fas fa-search" style="position: absolute; left: 12px; top: 12px; color: var(--text-muted); font-size: 13px;"></i>
+              <input type="text" id="sp-prods-search" class="input-field" style="padding-left: 34px; font-size: 13px;" placeholder="Buscar por emprendimiento, personas o notas..." oninput="filterSuperProductores()">
+            </div>
+            <select id="sp-prods-filter-cat" class="input-field" style="max-width: 220px; font-size: 13px;" onchange="filterSuperProductores()">
+              <option value="">Todas las Categorías</option>
+            </select>
+          </div>
+          <div style="font-size: 12.5px; color: var(--text-muted); font-weight: 600;" id="sp-prods-counter-label">
+            Mostrando 0 productores
+          </div>
+        </div>
+
+        <!-- Grilla de Tarjetas de Productores -->
+        <div id="super-productores-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px;">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+
       <div style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 40px; padding-bottom: 30px;">
         Vrde Club • Panel de Control Maestro Central 🥕
       </div>
@@ -2430,6 +2505,7 @@
         circulos: '👥 Círculos Comunitarios',
         teams: '👥 Equipos Vrdedores',
         crm: '📇 Base de Datos & Socios',
+        productores: '🌱 Base de Productores (Ferias)',
         finances: '💰 Finanzas & Balances',
         cycle: '🌑 Sincronario Lunar',
         media: '📁 Difusión y Redes (Drive)',
@@ -2451,6 +2527,7 @@
       document.getElementById('super-section-circulos').classList.toggle('hidden', tabId !== 'circulos');
       document.getElementById('super-section-teams').classList.toggle('hidden', tabId !== 'teams');
       document.getElementById('super-section-crm').classList.toggle('hidden', tabId !== 'crm');
+      document.getElementById('super-section-productores').classList.toggle('hidden', tabId !== 'productores');
       document.getElementById('super-section-finances').classList.toggle('hidden', tabId !== 'finances');
       document.getElementById('super-section-cycle').classList.toggle('hidden', tabId !== 'cycle');
       document.getElementById('super-section-security').classList.toggle('hidden', tabId !== 'security');
@@ -2460,12 +2537,212 @@
       if (tabId === 'circulos') renderSuperCirculosSection();
       if (tabId === 'teams') renderTeamsSection();
       if (tabId === 'crm') renderSuperCrmSection();
+      if (tabId === 'productores') renderSuperProductoresSection();
       if (tabId === 'finances') renderFinancesSection();
       if (tabId === 'cycle') renderLunarSynchronary();
       if (tabId === 'security') renderSecuritySection();
       if (tabId === 'media') renderMediaSection();
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =================================================================
+    // GESTIÓN CENTRAL DE BASE DE PRODUCTORES (SUPER ADMIN)
+    // =================================================================
+
+    function getSuperProductoresData() {
+      try {
+        return JSON.parse(localStorage.getItem('vrde_productores_feria')) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveSuperProductoresData(data) {
+      localStorage.setItem('vrde_productores_feria', JSON.stringify(data));
+    }
+
+    function renderSuperProductoresSection() {
+      const prods = getSuperProductoresData();
+      
+      const totalEl = document.getElementById('sp-prods-total');
+      const catsEl = document.getElementById('sp-prods-categorias');
+      const fotoEl = document.getElementById('sp-prods-con-foto');
+      const contactoEl = document.getElementById('sp-prods-con-contacto');
+
+      const uniqueCats = new Set(prods.map(p => p.categoria).filter(Boolean));
+      const withPhoto = prods.filter(p => !!p.foto).length;
+      const withContact = prods.filter(p => !!(p.telefono || p.instagram)).length;
+
+      if (totalEl) totalEl.innerText = prods.length;
+      if (catsEl) catsEl.innerText = uniqueCats.size;
+      if (fotoEl) fotoEl.innerText = withPhoto;
+      if (contactoEl) contactoEl.innerText = withContact;
+
+      const catSelect = document.getElementById('sp-prods-filter-cat');
+      if (catSelect) {
+        const currentVal = catSelect.value;
+        catSelect.innerHTML = '<option value="">Todas las Categorías</option>';
+        Array.from(uniqueCats).sort().forEach(cat => {
+          catSelect.innerHTML += `<option value="${cat}" ${currentVal === cat ? 'selected' : ''}>${cat}</option>`;
+        });
+      }
+
+      filterSuperProductores();
+    }
+
+    function filterSuperProductores() {
+      const prods = getSuperProductoresData();
+      const search = (document.getElementById('sp-prods-search')?.value || '').toLowerCase().trim();
+      const catFilter = document.getElementById('sp-prods-filter-cat')?.value || '';
+      const grid = document.getElementById('super-productores-grid');
+      const counterLabel = document.getElementById('sp-prods-counter-label');
+      if (!grid) return;
+
+      let filtered = prods.filter(p => {
+        const matchSearch = !search || 
+          (p.empresa || '').toLowerCase().includes(search) ||
+          (p.nombres || '').toLowerCase().includes(search) ||
+          (p.notas || '').toLowerCase().includes(search) ||
+          (p.ciudad || '').toLowerCase().includes(search) ||
+          (p.provincia || '').toLowerCase().includes(search);
+        const matchCat = !catFilter || p.categoria === catFilter;
+        return matchSearch && matchCat;
+      });
+
+      if (counterLabel) {
+        counterLabel.innerText = `Mostrando ${filtered.length} de ${prods.length} productores`;
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; background: white; border: 1px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px; text-align: center; color: var(--text-muted);">
+            <i class="fas fa-seedling" style="font-size: 36px; color: #CBD5E1; margin-bottom: 12px; display: block;"></i>
+            <h4 style="margin: 0 0 6px; color: #334155;">No se encontraron productores</h4>
+            <p style="margin: 0; font-size: 13px;">Registra nuevos contactos desde la app móvil <a href="productores.html" target="_blank" style="color: var(--primary); font-weight: 700;">vrde.club/productores</a> o usa el botón "+ Nuevo Productor".</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(p => {
+        const fechaFormat = p.fecha ? new Date(p.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+        const cleanTel = (p.telefono || '').replace(/[^0-9]/g, '');
+        const wspLink = cleanTel ? `https://wa.me/${cleanTel}` : null;
+        const igUser = (p.instagram || '').replace('@', '').trim();
+        const igLink = igUser ? `https://instagram.com/${igUser}` : null;
+        const ubicacion = [p.pueblo, p.ciudad, p.provincia].filter(Boolean).join(', ');
+
+        html += `
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column;">
+            ${p.foto ? `
+              <div style="height: 160px; width: 100%; overflow: hidden; background: #0F172A; position: relative;">
+                <img src="${p.foto}" style="width: 100%; height: 100%; object-fit: cover;" alt="${p.empresa}">
+                <span style="position: absolute; top: 10px; right: 10px; background: rgba(15,23,42,0.75); color: white; backdrop-filter: blur(4px); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">${p.categoria || 'Sin categoría'}</span>
+              </div>
+            ` : `
+              <div style="height: 60px; background: linear-gradient(135deg, rgba(16,163,82,0.15) 0%, rgba(212,241,160,0.3) 100%); display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase;">${p.categoria || 'Productor'}</span>
+                <span style="font-size: 11px; color: var(--text-muted);">${fechaFormat}</span>
+              </div>
+            `}
+
+            <div style="padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <h4 style="font-size: 17px; font-weight: 700; color: #0F172A; margin: 0 0 4px; line-height: 1.2;">${p.empresa || 'Sin nombre'}</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 12px;"><i class="fas fa-user" style="font-size: 11px; margin-right: 4px;"></i> ${p.nombres || 'Fundador no especificado'}</p>
+
+                ${ubicacion ? `
+                  <div style="font-size: 12px; color: #475569; margin-bottom: 10px; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-map-marker-alt" style="color: #2563EB;"></i>
+                    <span>${ubicacion}</span>
+                  </div>
+                ` : ''}
+
+                ${p.notas ? `
+                  <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #334155; line-height: 1.4; margin-bottom: 14px;">
+                    ${p.notas}
+                  </div>
+                ` : ''}
+              </div>
+
+              <div style="border-top: 1px solid #F1F5F9; padding-top: 12px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                <div style="display: flex; gap: 6px;">
+                  ${igLink ? `
+                    <a href="${igLink}" target="_blank" class="btn-action-icon" style="color: #EC4899; text-decoration: none;" title="Abrir Instagram @${igUser}">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  ` : ''}
+                  ${wspLink ? `
+                    <a href="${wspLink}" target="_blank" class="btn-action-icon" style="color: #059669; text-decoration: none;" title="Abrir WhatsApp ${cleanTel}">
+                      <i class="fab fa-whatsapp"></i>
+                    </a>
+                  ` : ''}
+                </div>
+
+                <button class="btn-action-icon" style="color: #DC2626;" onclick="deleteSuperProductor('${p.id}')" title="Eliminar productor">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+    }
+
+    function deleteSuperProductor(id) {
+      if (!confirm('¿Seguro que deseas eliminar la ficha de este productor?')) return;
+      let prods = getSuperProductoresData();
+      prods = prods.filter(p => p.id !== id);
+      saveSuperProductoresData(prods);
+      renderSuperProductoresSection();
+    }
+
+    function superExportProductores() {
+      const prods = getSuperProductoresData();
+      if (prods.length === 0) return alert('No hay productores para exportar.');
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(prods, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "vrde_productores_backup_" + Date.now() + ".json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function superImportProductoresFile(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!Array.isArray(imported)) return alert('Formato de archivo inválido.');
+          const current = getSuperProductoresData();
+          const existingIds = new Set(current.map(p => p.id));
+          let count = 0;
+          imported.forEach(item => {
+            if (!existingIds.has(item.id)) {
+              current.unshift(item);
+              count++;
+            }
+          });
+          saveSuperProductoresData(current);
+          renderSuperProductoresSection();
+          alert(`¡Se importaron ${count} productores correctamente!`);
+        } catch(err) {
+          alert('Error al leer el archivo JSON: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      input.value = '';
+    }
+
+    function openCreateProductorModal() {
+      window.open('productores.html', '_blank');
     }
 
     // =================================================================
