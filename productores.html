@@ -127,6 +127,9 @@
             <h2 class="font-tech text-xl font-bold text-gray-800">Productores Guardados</h2>
             <div class="flex items-center gap-2 flex-wrap">
                 <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="handleImportFile(this)">
+                <button onclick="manualSyncWithFeedback()" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-bold transition-colors shadow-sm flex items-center gap-1.5" title="Subir todos los registros de este teléfono a la nube de Firebase">
+                    <i class="fas fa-cloud-upload-alt"></i> Sincronizar Nube
+                </button>
                 <button onclick="shareOrExportData()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg font-bold transition-colors shadow-sm flex items-center gap-1.5" title="Compartir archivo o enviar a WhatsApp">
                     <i class="fab fa-whatsapp text-sm"></i> Compartir / WhatsApp
                 </button>
@@ -256,10 +259,15 @@
                     const serverIds = new Set(serverDb.map(p => p.id));
                     let changed = false;
 
-                    // Si hay productores en local que NO están en la nube (ej: guardados antes de esta actu), subirlos
-                    db.forEach(localProd => {
+                    // Si hay productores en local que NO están en la nube, subirlos con compresión
+                    db.forEach(async (localProd) => {
                         if (!serverIds.has(localProd.id)) {
-                            setDocFn(docFn(vrdeFirestore, "productores", localProd.id), localProd).catch(e=>console.log(e));
+                            let prodToUpload = { ...localProd };
+                            if (prodToUpload.foto && prodToUpload.foto.length > 250000) {
+                                prodToUpload.foto = await compressBase64(prodToUpload.foto);
+                            }
+                            setDocFn(docFn(vrdeFirestore, "productores", prodToUpload.id), prodToUpload, { merge: true })
+                                .catch(e => console.error("Error subiendo local a nube:", e));
                             serverDb.push(localProd);
                             changed = true;
                         }
@@ -270,9 +278,64 @@
                     localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
                     updateBadge();
                     renderDB();
+                }, (err) => {
+                    console.error("Firestore onSnapshot error:", err);
                 });
             } catch (error) {
                 console.error("Firebase sync disabled/error: ", error);
+            }
+        }
+
+        async function compressBase64(base64Str, maxDim = 800, quality = 0.6) {
+            if (!base64Str || typeof base64Str !== 'string' || base64Str.length < 250000) return base64Str;
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width;
+                    let h = img.height;
+                    if (w > h) {
+                        if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+                    } else {
+                        if (h > maxDim) { h = Math.round((h * maxDim) / h); h = maxDim; }
+                    }
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.onerror = () => resolve(base64Str);
+                img.src = base64Str;
+            });
+        }
+
+        async function manualSyncWithFeedback() {
+            if (!vrdeFirestore || !setDocFn || !docFn) {
+                return alert('Conectando a la base de datos... Espera 2 segundos y vuelve a presionar.');
+            }
+            if (db.length === 0) {
+                return alert('No hay productores en este dispositivo para subir.');
+            }
+            let uploaded = 0;
+            let errors = 0;
+            for (let localProd of db) {
+                try {
+                    let prodCopy = { ...localProd };
+                    if (prodCopy.foto && prodCopy.foto.length > 250000) {
+                        prodCopy.foto = await compressBase64(prodCopy.foto, 700, 0.6);
+                    }
+                    await setDocFn(docFn(vrdeFirestore, "productores", prodCopy.id), prodCopy, { merge: true });
+                    uploaded++;
+                } catch (e) {
+                    console.error('Error subiendo productor:', e);
+                    errors++;
+                }
+            }
+            if (errors > 0) {
+                alert(`Se subieron ${uploaded} productores. Hubo problemas con ${errors}.`);
+            } else {
+                alert(`¡Éxito! Se sincronizaron ${uploaded} productores a la base de datos oficial.`);
             }
         }
 
