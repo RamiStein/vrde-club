@@ -176,6 +176,99 @@
         </div>
     </main>
 
+    <!-- MODAL: SELECTOR DE WHATSAPP / CONTACTO -->
+    <div id="modal-whatsapp-choice" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity" onclick="if(event.target === this) closeWhatsAppModal()">
+        <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full p-6 shadow-2xl animate-in slide-in-from-bottom duration-200" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-4 pb-3 border-b border-gray-100">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                        <i class="fab fa-whatsapp"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-tech font-bold text-lg text-gray-900 leading-tight" id="wsp-choice-empresa">Emprendimiento</h3>
+                        <p class="text-xs text-gray-500" id="wsp-choice-nombres"><i class="fas fa-user text-[10px] mr-1"></i>Contacto</p>
+                    </div>
+                </div>
+                <button onclick="closeWhatsAppModal()" class="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 text-xl font-bold">&times;</button>
+            </div>
+
+            <!-- Número info -->
+            <div class="bg-emerald-50/70 border border-emerald-100 rounded-xl p-3 mb-4 flex items-center justify-between">
+                <div>
+                    <span class="text-[11px] text-emerald-800 font-semibold uppercase tracking-wider block">Número de contacto</span>
+                    <span class="font-mono font-bold text-gray-900 text-base" id="wsp-choice-num-display">11 3798 4015</span>
+                </div>
+                <button onclick="copyWspChoiceNumber()" class="text-emerald-700 hover:text-emerald-900 bg-white border border-emerald-200 px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow-2xs active:scale-95 transition-all cursor-pointer">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+            </div>
+
+            <p class="text-xs text-gray-600 font-semibold mb-3">¿Con qué aplicación deseas chatear?</p>
+
+            <!-- Opciones de WhatsApp -->
+            <div class="space-y-2.5 mb-4">
+                <!-- Opción 1: WhatsApp Business -->
+                <button type="button" onclick="executeWhatsAppLaunch('business')" class="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-teal-800 to-emerald-900 hover:from-teal-900 hover:to-emerald-950 text-white rounded-xl shadow-md active:scale-[0.98] transition-all text-left cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-2xl text-white shrink-0">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-sm">WhatsApp Business</span>
+                                <span class="bg-amber-400 text-teal-950 text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-xs">EMPRESA</span>
+                            </div>
+                            <span class="text-xs text-teal-100/90 block">Abrir desde tu app WhatsApp Business</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-teal-200 text-xs"></i>
+                </button>
+
+                <!-- Opción 2: WhatsApp Común / Personal -->
+                <button type="button" onclick="executeWhatsAppLaunch('personal')" class="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl shadow-md active:scale-[0.98] transition-all text-left cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-2xl text-white shrink-0">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-sm">WhatsApp Normal (Común)</span>
+                                <span class="bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">PERSONAL</span>
+                            </div>
+                            <span class="text-xs text-green-100/90 block">Abrir desde tu app clásica de WhatsApp</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-green-100 text-xs"></i>
+                </button>
+
+                <!-- Opción 3: Enlace Universal wa.me -->
+                <button type="button" onclick="executeWhatsAppLaunch('universal')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-800 rounded-xl active:scale-[0.98] transition-all text-left cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center text-sm shrink-0">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-xs text-gray-900 block">Enlace Web Directo (wa.me)</span>
+                            <span class="text-[11px] text-gray-500 block">Dejar que el celular elija la aplicación</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Botones secundarios -->
+            <div class="flex gap-2 pt-2 border-t border-gray-100">
+                <button type="button" onclick="executeWhatsAppLaunch('call')" class="flex-1 py-2.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                    <i class="fas fa-phone text-xs"></i> Llamada tradicional
+                </button>
+                <button type="button" onclick="closeWhatsAppModal()" class="flex-1 py-2.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-xs font-bold transition-colors cursor-pointer">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: VER / COPIAR BACKUP -->
     <div id="modal-copy-backup" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
@@ -596,11 +689,19 @@
                                 ${prod.notas || 'Sin notas añadidas.'}
                             </div>
                             
-                            <div class="flex justify-between items-center text-xs text-gray-500">
-                                <span class="font-medium text-gray-700 flex gap-3">
-                                    ${prod.instagram ? `<a href="https://instagram.com/${prod.instagram.replace('@','')}" target="_blank" class="text-pink-600"><i class="fab fa-instagram"></i> ${prod.instagram}</a>` : ''}
-                                    ${prod.telefono ? `<a href="tel:${prod.telefono}" class="text-green-600"><i class="fas fa-phone"></i> ${prod.telefono}</a>` : ''}
-                                </span>
+                            <div class="flex justify-between items-center text-xs text-gray-500 flex-wrap gap-2 pt-2 border-t border-gray-100">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    ${prod.instagram ? `
+                                        <a href="https://instagram.com/${prod.instagram.replace('@','')}" target="_blank" class="text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 bg-pink-50 hover:bg-pink-100 px-2.5 py-1 rounded-lg border border-pink-200 transition-colors" title="Ver Instagram">
+                                            <i class="fab fa-instagram text-sm"></i> ${prod.instagram.startsWith('@') ? prod.instagram : '@' + prod.instagram}
+                                        </a>
+                                    ` : ''}
+                                    ${prod.telefono ? `
+                                        <button type="button" onclick="openWhatsAppModal('${prod.id}')" class="text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-200 shadow-2xs active:scale-95 transition-all cursor-pointer" title="Contactar por WhatsApp (Business o Normal)">
+                                            <i class="fab fa-whatsapp text-emerald-600 text-sm"></i> ${prod.telefono}
+                                        </button>
+                                    ` : ''}
+                                </div>
                                 <span>${fechaFormat}</span>
                             </div>
                             ${(prod.provincia || prod.ciudad || prod.pueblo) ? `
@@ -779,6 +880,139 @@
                 alert(`¡Se importaron ${addedCount} productores correctamente!`);
             } catch(e) {
                 alert('Error al leer el código pegado: ' + e.message);
+            }
+        }
+
+        // =============================================================
+        // SELECTOR INTELIGENTE DE WHATSAPP (BUSINESS VS NORMAL)
+        // =============================================================
+        let currentWspTarget = {
+            id: null,
+            empresa: '',
+            nombres: '',
+            rawPhone: '',
+            formattedPhone: ''
+        };
+
+        function formatArgentinePhoneForWhatsApp(raw) {
+            if (!raw) return '';
+            let digits = raw.replace(/\D/g, '');
+            if (!digits) return '';
+
+            // Si ya tiene el 549 internacional
+            if (digits.startsWith('549')) return digits;
+
+            // Si tiene 54 pero le falta el 9 móvil (ej: 5411...)
+            if (digits.startsWith('54') && !digits.startsWith('549')) {
+                return '549' + digits.slice(2);
+            }
+
+            // Quitar 0 inicial si lo tiene (ej: 011...)
+            if (digits.startsWith('0')) {
+                digits = digits.slice(1);
+            }
+
+            // Quitar 15 si está después del código de área de AMBA (ej: 11 15 xxxx xxxx)
+            if (digits.startsWith('1115') && digits.length === 12) {
+                digits = '11' + digits.slice(4);
+            }
+
+            // Si solo ingresaron 8 dígitos (número local sin código de área)
+            if (digits.length === 8) {
+                return '54911' + digits;
+            }
+
+            // Número argentino de 10 dígitos (área + número local)
+            if (digits.length === 10) {
+                return '549' + digits;
+            }
+
+            // Fallback general si no arranca con código de país
+            if (!digits.startsWith('54')) {
+                return '549' + digits;
+            }
+            return digits;
+        }
+
+        function openWhatsAppModal(id) {
+            const prod = db.find(p => p.id === id);
+            if (!prod || !prod.telefono) {
+                alert('Este productor no tiene número de teléfono registrado.');
+                return;
+            }
+
+            const formatted = formatArgentinePhoneForWhatsApp(prod.telefono);
+            currentWspTarget = {
+                id: prod.id,
+                empresa: prod.empresa || 'Productor',
+                nombres: prod.nombres || '',
+                rawPhone: prod.telefono,
+                formattedPhone: formatted
+            };
+
+            const empresaEl = document.getElementById('wsp-choice-empresa');
+            const nombresEl = document.getElementById('wsp-choice-nombres');
+            const numEl = document.getElementById('wsp-choice-num-display');
+
+            if (empresaEl) empresaEl.innerText = currentWspTarget.empresa;
+            if (nombresEl) {
+                nombresEl.innerHTML = currentWspTarget.nombres ? `<i class="fas fa-user text-[10px] mr-1"></i>${currentWspTarget.nombres}` : '';
+            }
+            if (numEl) numEl.innerText = currentWspTarget.rawPhone;
+
+            const modal = document.getElementById('modal-whatsapp-choice');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeWhatsAppModal() {
+            const modal = document.getElementById('modal-whatsapp-choice');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function executeWhatsAppLaunch(type) {
+            const phone = currentWspTarget.formattedPhone;
+            const raw = currentWspTarget.rawPhone;
+            if (!phone) {
+                alert('Número no válido para WhatsApp.');
+                return;
+            }
+
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const fallbackUrl = encodeURIComponent(`https://wa.me/${phone}`);
+
+            if (type === 'business') {
+                if (isAndroid) {
+                    // En Android lanza directamente el intent para WhatsApp Business (com.whatsapp.w4b)
+                    window.location.href = `intent://api.whatsapp.com/send?phone=${phone}#Intent;package=com.whatsapp.w4b;scheme=https;S.browser_fallback_url=${fallbackUrl};end`;
+                } else {
+                    window.open(`https://wa.me/${phone}`, '_blank');
+                }
+            } else if (type === 'personal') {
+                if (isAndroid) {
+                    // En Android lanza directamente el intent para WhatsApp estándar (com.whatsapp)
+                    window.location.href = `intent://api.whatsapp.com/send?phone=${phone}#Intent;package=com.whatsapp;scheme=https;S.browser_fallback_url=${fallbackUrl};end`;
+                } else {
+                    window.open(`https://wa.me/${phone}`, '_blank');
+                }
+            } else if (type === 'universal') {
+                window.open(`https://wa.me/${phone}`, '_blank');
+            } else if (type === 'call') {
+                window.location.href = `tel:${raw}`;
+            }
+
+            closeWhatsAppModal();
+        }
+
+        function copyWspChoiceNumber() {
+            const textToCopy = currentWspTarget.rawPhone || currentWspTarget.formattedPhone;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert(`📋 Número ${textToCopy} copiado al portapapeles.`);
+                }).catch(() => {
+                    prompt('Copia el número:', textToCopy);
+                });
+            } else {
+                prompt('Copia el número:', textToCopy);
             }
         }
     </script>

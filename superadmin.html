@@ -2501,6 +2501,84 @@
     </div>
   </div>
 
+  <!-- MODAL: SELECTOR DE WHATSAPP PRODUCTOR (SUPER ADMIN) -->
+  <div class="modal-overlay" id="modal-super-whatsapp-choice">
+    <div class="modal-card" style="max-width: 440px; width: 95%;">
+      <div class="modal-header-row" style="margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 36px; height: 36px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+            <i class="fab fa-whatsapp"></i>
+          </span>
+          <div>
+            <h3 style="font-size: 17px; margin: 0; color: #0F172A;" id="sp-wsp-empresa">Emprendimiento</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="sp-wsp-contacto">Contacto</p>
+          </div>
+        </div>
+        <span class="modal-close-icon" onclick="closeModal('modal-super-whatsapp-choice')">&times;</span>
+      </div>
+
+      <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span style="font-size: 10.5px; color: #166534; font-weight: 700; text-transform: uppercase;">Número de teléfono</span>
+          <div style="font-size: 15px; font-weight: 800; color: #0F172A; font-family: monospace;" id="sp-wsp-num">11 3798 4015</div>
+        </div>
+        <button type="button" class="btn-action-icon" style="width: auto; padding: 6px 12px; font-size: 11.5px; border-radius: 6px; background: white; border: 1px solid #CBD5E1; color: #0F172A;" onclick="copySuperWspNumber()">
+          <i class="fas fa-copy" style="margin-right: 4px;"></i> Copiar
+        </button>
+      </div>
+
+      <p style="font-size: 12px; color: #64748B; font-weight: 600; margin-bottom: 12px;">¿Cómo deseas abrir la conversación?</p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+        <!-- WhatsApp Business -->
+        <button type="button" onclick="executeSuperWhatsAppLaunch('business')" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: linear-gradient(135deg, #115E59 0%, #064E3B 100%); color: white; border: none; border-radius: 10px; cursor: pointer; text-align: left;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 22px;"><i class="fab fa-whatsapp"></i></span>
+            <div>
+              <div style="font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                WhatsApp Business <span style="background: #F59E0B; color: #78350F; font-size: 9.5px; font-weight: 800; padding: 2px 5px; border-radius: 4px;">EMPRESA</span>
+              </div>
+              <div style="font-size: 11px; color: #99F6E4;">Abrir en app WhatsApp Business</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right" style="font-size: 11px; opacity: 0.7;"></i>
+        </button>
+
+        <!-- WhatsApp Común / Personal -->
+        <button type="button" onclick="executeSuperWhatsAppLaunch('personal')" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; border: none; border-radius: 10px; cursor: pointer; text-align: left;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 22px;"><i class="fab fa-whatsapp"></i></span>
+            <div>
+              <div style="font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                WhatsApp Normal <span style="background: rgba(255,255,255,0.25); color: white; font-size: 9.5px; font-weight: 700; padding: 2px 5px; border-radius: 4px;">PERSONAL</span>
+              </div>
+              <div style="font-size: 11px; color: #D1FAE5;">Abrir en app clásica de WhatsApp</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right" style="font-size: 11px; opacity: 0.7;"></i>
+        </button>
+
+        <!-- Enlace Web Universal (wa.me) -->
+        <button type="button" onclick="executeSuperWhatsAppLaunch('universal')" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; color: #334155; border-radius: 10px; cursor: pointer; text-align: left;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 16px; color: #64748B;"><i class="fas fa-globe"></i></span>
+            <div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #1E293B;">Enlace Web Universal (wa.me)</div>
+              <div style="font-size: 10.5px; color: #64748B;">Para WhatsApp Web en PC o selector del celular</div>
+            </div>
+          </div>
+          <i class="fas fa-external-link-alt" style="font-size: 11px; color: #94A3B8;"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+        <button type="button" class="btn-action-icon" style="width: auto; padding: 0 16px; border-radius: 6px; background: #F1F5F9; color: #475569;" onclick="closeModal('modal-super-whatsapp-choice')">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="lunar-engine.js?v=6"></script>
   <script>
@@ -2875,10 +2953,10 @@
                       <i class="fab fa-instagram"></i>
                     </a>
                   ` : ''}
-                  ${wspLink ? `
-                    <a href="${wspLink}" target="_blank" class="btn-action-icon" style="color: #059669; text-decoration: none;" title="Abrir WhatsApp ${cleanTel}">
+                  ${p.telefono ? `
+                    <button type="button" class="btn-action-icon" style="color: #059669;" onclick="openSuperWhatsAppModal('${p.id}')" title="Contactar por WhatsApp (Business o Normal)">
                       <i class="fab fa-whatsapp"></i>
-                    </a>
+                    </button>
                   ` : ''}
                 </div>
 
@@ -3123,6 +3201,106 @@
 
     function openCreateProductorModal() {
       openEditSuperProductorModal(null);
+    }
+
+    // Selector Inteligente de WhatsApp (Super Admin)
+    let spCurrentWspTarget = {
+      id: null,
+      empresa: '',
+      nombres: '',
+      rawPhone: '',
+      formattedPhone: ''
+    };
+
+    function formatArgentinePhoneForWhatsApp(raw) {
+      if (!raw) return '';
+      let digits = raw.replace(/\D/g, '');
+      if (!digits) return '';
+
+      if (digits.startsWith('549')) return digits;
+      if (digits.startsWith('54') && !digits.startsWith('549')) {
+        return '549' + digits.slice(2);
+      }
+      if (digits.startsWith('0')) {
+        digits = digits.slice(1);
+      }
+      if (digits.startsWith('1115') && digits.length === 12) {
+        digits = '11' + digits.slice(4);
+      }
+      if (digits.length === 8) {
+        return '54911' + digits;
+      }
+      if (digits.length === 10) {
+        return '549' + digits;
+      }
+      if (!digits.startsWith('54')) {
+        return '549' + digits;
+      }
+      return digits;
+    }
+
+    function openSuperWhatsAppModal(id) {
+      const prods = getSuperProductoresData();
+      const p = prods.find(item => item.id === id);
+      if (!p || !p.telefono) return alert('No hay teléfono registrado para este productor.');
+
+      const formatted = formatArgentinePhoneForWhatsApp(p.telefono);
+      spCurrentWspTarget = {
+        id: p.id,
+        empresa: p.empresa || 'Productor',
+        nombres: p.nombres || '',
+        rawPhone: p.telefono,
+        formattedPhone: formatted
+      };
+
+      const empEl = document.getElementById('sp-wsp-empresa');
+      const contEl = document.getElementById('sp-wsp-contacto');
+      const numEl = document.getElementById('sp-wsp-num');
+
+      if (empEl) empEl.innerText = spCurrentWspTarget.empresa;
+      if (contEl) contEl.innerText = spCurrentWspTarget.nombres ? `Persona: ${spCurrentWspTarget.nombres}` : 'Ficha de productor';
+      if (numEl) numEl.innerText = spCurrentWspTarget.rawPhone;
+
+      openModal('modal-super-whatsapp-choice');
+    }
+
+    function executeSuperWhatsAppLaunch(type) {
+      const phone = spCurrentWspTarget.formattedPhone;
+      if (!phone) return alert('Número no válido.');
+
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const fallbackUrl = encodeURIComponent(`https://wa.me/${phone}`);
+
+      if (type === 'business') {
+        if (isAndroid) {
+          window.location.href = `intent://api.whatsapp.com/send?phone=${phone}#Intent;package=com.whatsapp.w4b;scheme=https;S.browser_fallback_url=${fallbackUrl};end`;
+        } else {
+          window.open(`https://wa.me/${phone}`, '_blank');
+        }
+      } else if (type === 'personal') {
+        if (isAndroid) {
+          window.location.href = `intent://api.whatsapp.com/send?phone=${phone}#Intent;package=com.whatsapp;scheme=https;S.browser_fallback_url=${fallbackUrl};end`;
+        } else {
+          window.open(`https://wa.me/${phone}`, '_blank');
+        }
+      } else {
+        window.open(`https://wa.me/${phone}`, '_blank');
+      }
+
+      closeModal('modal-super-whatsapp-choice');
+    }
+
+    function copySuperWspNumber() {
+      const textToCopy = spCurrentWspTarget.rawPhone || spCurrentWspTarget.formattedPhone;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          alert(`📋 Número ${textToCopy} copiado al portapapeles.`);
+        }).catch(() => {
+          prompt('Copiar número:', textToCopy);
+        });
+      } else {
+        prompt('Copiar número:', textToCopy);
+      }
     }
 
     // =================================================================
