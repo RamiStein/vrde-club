@@ -57,7 +57,15 @@
     <!-- VISTA: REGISTRO -->
     <main id="view-registro" class="max-w-lg mx-auto p-4 block">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <div id="editing-banner" class="hidden mb-4 p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs text-blue-900 font-bold">
+                    <i class="fas fa-pen text-blue-600"></i>
+                    <span>Modo Edición: <span id="editing-target-name" class="underline"></span></span>
+                </div>
+                <button type="button" onclick="cancelEditProducer()" class="text-xs text-red-500 font-bold hover:underline">Cancelar</button>
+            </div>
             <form id="producer-form" onsubmit="saveProducer(event)">
+                <input type="hidden" id="p-editing-id" value="">
                 
                 <div class="mb-5">
                     <label class="block text-sm font-bold text-gray-700 mb-2">Nombre del Emprendimiento *</label>
@@ -114,9 +122,14 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-vrde-brand text-white font-tech font-bold text-lg py-4 rounded-xl shadow-lg shadow-vrde-brand/30 hover:bg-vrde-dark transition-colors active:scale-95">
-                    <i class="fas fa-save mr-2"></i> Guardar Ficha
-                </button>
+                <div class="flex gap-2">
+                    <button type="button" id="btn-cancel-edit" onclick="cancelEditProducer()" class="hidden px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-tech font-bold text-base py-4 rounded-xl transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-submit-form" class="flex-1 bg-vrde-brand text-white font-tech font-bold text-lg py-4 rounded-xl shadow-lg shadow-vrde-brand/30 hover:bg-vrde-dark transition-colors active:scale-95">
+                        <i class="fas fa-save mr-2"></i> <span id="btn-submit-text">Guardar Ficha</span>
+                    </button>
+                </div>
             </form>
         </div>
     </main>
@@ -415,44 +428,130 @@
             }
         }
 
-        // Guardar Productor
-        function saveProducer(e) {
+        // Guardar o Actualizar Productor
+        async function saveProducer(e) {
             e.preventDefault();
             
-            const newProducer = {
-                id: Date.now().toString(),
-                fecha: new Date().toISOString(),
-                empresa: document.getElementById('p-empresa').value,
-                nombres: document.getElementById('p-nombres').value,
-                categoria: document.getElementById('p-categoria').value,
-                instagram: document.getElementById('p-instagram').value,
-                telefono: document.getElementById('p-telefono').value,
-                provincia: document.getElementById('p-provincia').value,
-                ciudad: document.getElementById('p-ciudad').value,
-                pueblo: document.getElementById('p-pueblo').value,
-                notas: document.getElementById('p-notas').value,
-                foto: currentImageBase64
-            };
+            const editingId = document.getElementById('p-editing-id').value;
+            let currentFoto = currentImageBase64;
+            if (currentFoto && currentFoto.length > 250000) {
+                currentFoto = await compressBase64(currentFoto, 700, 0.6);
+            }
 
-            db.unshift(newProducer);
-            localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
-            
-            if (vrdeFirestore && setDocFn && docFn) {
-                setDocFn(docFn(vrdeFirestore, "productores", newProducer.id), newProducer).catch(e => console.log(e));
+            if (editingId) {
+                // Modo EDICIÓN
+                const idx = db.findIndex(p => p.id === editingId);
+                if (idx !== -1) {
+                    const updated = {
+                        ...db[idx],
+                        empresa: document.getElementById('p-empresa').value,
+                        nombres: document.getElementById('p-nombres').value,
+                        categoria: document.getElementById('p-categoria').value,
+                        instagram: document.getElementById('p-instagram').value,
+                        telefono: document.getElementById('p-telefono').value,
+                        provincia: document.getElementById('p-provincia').value,
+                        ciudad: document.getElementById('p-ciudad').value,
+                        pueblo: document.getElementById('p-pueblo').value,
+                        notas: document.getElementById('p-notas').value,
+                        foto: currentFoto !== null ? currentFoto : db[idx].foto,
+                        fechaActualizacion: new Date().toISOString()
+                    };
+                    db[idx] = updated;
+                    localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+
+                    if (vrdeFirestore && setDocFn && docFn) {
+                        setDocFn(docFn(vrdeFirestore, "productores", editingId), updated, { merge: true }).catch(err => console.log(err));
+                    }
+                    alert('¡Ficha de productor actualizada con éxito!');
+                }
+                cancelEditProducer();
+            } else {
+                // Modo NUEVO
+                const newProducer = {
+                    id: Date.now().toString(),
+                    fecha: new Date().toISOString(),
+                    empresa: document.getElementById('p-empresa').value,
+                    nombres: document.getElementById('p-nombres').value,
+                    categoria: document.getElementById('p-categoria').value,
+                    instagram: document.getElementById('p-instagram').value,
+                    telefono: document.getElementById('p-telefono').value,
+                    provincia: document.getElementById('p-provincia').value,
+                    ciudad: document.getElementById('p-ciudad').value,
+                    pueblo: document.getElementById('p-pueblo').value,
+                    notas: document.getElementById('p-notas').value,
+                    foto: currentFoto
+                };
+
+                db.unshift(newProducer);
+                localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
+                
+                if (vrdeFirestore && setDocFn && docFn) {
+                    setDocFn(docFn(vrdeFirestore, "productores", newProducer.id), newProducer).catch(e => console.log(e));
+                }
+
+                // Reset form
+                document.getElementById('producer-form').reset();
+                currentImageBase64 = null;
+                document.getElementById('foto-preview').classList.add('hidden');
+                document.getElementById('foto-preview').src = '';
+                document.getElementById('foto-placeholder').classList.remove('hidden');
+                alert('¡Productor guardado con éxito!');
             }
             
-            // Reset form
+            updateBadge();
+            renderDB();
+            switchTab('base');
+        }
+
+        // Iniciar edición de un productor
+        function editProducer(id) {
+            const prod = db.find(p => p.id === id);
+            if (!prod) return;
+
+            document.getElementById('p-editing-id').value = prod.id;
+            document.getElementById('p-empresa').value = prod.empresa || '';
+            document.getElementById('p-nombres').value = prod.nombres || '';
+            document.getElementById('p-categoria').value = prod.categoria || '';
+            document.getElementById('p-instagram').value = prod.instagram || '';
+            document.getElementById('p-telefono').value = prod.telefono || '';
+            document.getElementById('p-provincia').value = prod.provincia || '';
+            document.getElementById('p-ciudad').value = prod.ciudad || '';
+            document.getElementById('p-pueblo').value = prod.pueblo || '';
+            document.getElementById('p-notas').value = prod.notas || '';
+
+            if (prod.foto) {
+                currentImageBase64 = prod.foto;
+                const preview = document.getElementById('foto-preview');
+                preview.src = prod.foto;
+                preview.classList.remove('hidden');
+                document.getElementById('foto-placeholder').classList.add('hidden');
+            } else {
+                currentImageBase64 = null;
+                document.getElementById('foto-preview').classList.add('hidden');
+                document.getElementById('foto-preview').src = '';
+                document.getElementById('foto-placeholder').classList.remove('hidden');
+            }
+
+            document.getElementById('editing-target-name').innerText = prod.empresa;
+            document.getElementById('editing-banner').classList.remove('hidden');
+            document.getElementById('btn-cancel-edit').classList.remove('hidden');
+            document.getElementById('btn-submit-text').innerText = 'Guardar Cambios';
+
+            switchTab('registro');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Cancelar edición
+        function cancelEditProducer() {
+            document.getElementById('p-editing-id').value = '';
             document.getElementById('producer-form').reset();
             currentImageBase64 = null;
             document.getElementById('foto-preview').classList.add('hidden');
             document.getElementById('foto-preview').src = '';
             document.getElementById('foto-placeholder').classList.remove('hidden');
-            
-            updateBadge();
-            renderDB();
-            
-            alert('¡Productor guardado con éxito!');
-            switchTab('base');
+            document.getElementById('editing-banner').classList.add('hidden');
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
+            document.getElementById('btn-submit-text').innerText = 'Guardar Ficha';
         }
 
         // Actualizar contador
@@ -481,8 +580,9 @@
                 
                 html += `
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative">
-                        <div class="absolute top-2 right-2 flex gap-2">
-                            <button onclick="deleteProducer('${prod.id}')" class="bg-red-50 text-red-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-100"><i class="fas fa-trash text-xs"></i></button>
+                        <div class="absolute top-2 right-2 flex gap-1.5 z-10">
+                            <button onclick="editProducer('${prod.id}')" class="bg-white/95 shadow-sm text-blue-600 hover:text-blue-800 w-8 h-8 rounded-full flex items-center justify-center border border-gray-200 transition-transform active:scale-90" title="Editar Ficha"><i class="fas fa-pen text-xs"></i></button>
+                            <button onclick="deleteProducer('${prod.id}')" class="bg-white/95 shadow-sm text-red-500 hover:text-red-700 w-8 h-8 rounded-full flex items-center justify-center border border-gray-200 transition-transform active:scale-90" title="Eliminar"><i class="fas fa-trash text-xs"></i></button>
                         </div>
                         
                         ${prod.foto ? `<img src="${prod.foto}" class="w-full h-32 object-cover">` : `<div class="w-full h-8 bg-vrde-brand/10"></div>`}

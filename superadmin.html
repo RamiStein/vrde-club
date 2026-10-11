@@ -1583,6 +1583,9 @@
             <a href="productores.html" target="_blank" class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: #0F172A; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
               <i class="fas fa-mobile-alt"></i> Abrir App Móvil
             </a>
+            <button class="btn-checkout-cta" id="btn-sp-sync-cloud" style="padding: 9px 16px; font-size: 12.5px; background: #4F46E5; display: inline-flex; align-items: center; gap: 6px;" onclick="syncSuperProductoresCloud()" title="Sincronizar y forzar actualización con la nube de Firebase">
+              <i class="fas fa-cloud-download-alt"></i> Sincronizar Nube
+            </button>
             <input type="file" id="sp-import-prods-file" accept=".json" class="hidden" onchange="superImportProductoresFile(this)">
             <button class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: #059669; display: inline-flex; align-items: center; gap: 6px;" onclick="document.getElementById('sp-import-prods-file').click()">
               <i class="fas fa-file-import"></i> Importar JSON
@@ -1590,7 +1593,7 @@
             <button class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: #334155; display: inline-flex; align-items: center; gap: 6px;" onclick="superExportProductores()">
               <i class="fas fa-download"></i> Exportar Backup
             </button>
-            <button class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: var(--primary); display: inline-flex; align-items: center; gap: 6px;" onclick="openCreateProductorModal()">
+            <button class="btn-checkout-cta" style="padding: 9px 16px; font-size: 12.5px; background: var(--primary); display: inline-flex; align-items: center; gap: 6px;" onclick="openEditSuperProductorModal(null)">
               <i class="fas fa-plus"></i> + Nuevo Productor
             </button>
           </div>
@@ -2408,6 +2411,96 @@
     </div>
   </div>
 
+  <!-- MODAL: EDITAR / CREAR PRODUCTOR (FERIAS) -->
+  <div class="modal-overlay" id="modal-super-edit-productor">
+    <div class="modal-card" style="max-width: 620px; width: 95%; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header-row">
+        <h3 style="font-size: 19px; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-seedling" style="color: var(--primary);"></i>
+          <span id="sp-prod-modal-title">Editar Productor</span>
+        </h3>
+        <span class="modal-close-icon" onclick="closeModal('modal-super-edit-productor')">&times;</span>
+      </div>
+
+      <input type="hidden" id="sp-edit-prod-id">
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px;">
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Nombre del Emprendimiento / Finca *</label>
+          <input type="text" id="sp-edit-prod-empresa" class="input-field" placeholder="Ej: Huerta El Sol" required>
+        </div>
+
+        <div class="input-field-group">
+          <label>Nombre de la Persona / Fundador</label>
+          <input type="text" id="sp-edit-prod-nombres" class="input-field" placeholder="Ej: Roberto Gómez">
+        </div>
+
+        <div class="input-field-group">
+          <label>Categoría</label>
+          <input type="text" id="sp-edit-prod-categoria" class="input-field" placeholder="Ej: Huerta Agroecológica, Quesos...">
+        </div>
+
+        <div class="input-field-group">
+          <label>Teléfono / WhatsApp</label>
+          <input type="tel" id="sp-edit-prod-telefono" class="input-field" placeholder="Ej: 11 1234 5678">
+        </div>
+
+        <div class="input-field-group">
+          <label>Instagram</label>
+          <input type="text" id="sp-edit-prod-instagram" class="input-field" placeholder="Ej: @huertalsol">
+        </div>
+
+        <div class="input-field-group">
+          <label>Provincia</label>
+          <input type="text" id="sp-edit-prod-provincia" class="input-field" placeholder="Ej: Buenos Aires">
+        </div>
+
+        <div class="input-field-group">
+          <label>Ciudad / Partido</label>
+          <input type="text" id="sp-edit-prod-ciudad" class="input-field" placeholder="Ej: Tigre">
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Pueblo / Paraje / Dirección de Finca</label>
+          <input type="text" id="sp-edit-prod-pueblo" class="input-field" placeholder="Ej: Rincón de Milberg, Km 42">
+        </div>
+
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Notas / Productos / Resumen</label>
+          <textarea id="sp-edit-prod-notas" class="input-field" rows="3" placeholder="Qué producen, precios aproximados, disponibilidad..."></textarea>
+        </div>
+
+        <!-- Foto del productor / Stand -->
+        <div class="input-field-group" style="grid-column: 1 / -1;">
+          <label>Foto de la Finca / Stand / Producto</label>
+          <div style="display: flex; gap: 14px; align-items: center; margin-top: 6px;">
+            <div id="sp-edit-prod-preview-box" style="width: 90px; height: 90px; border-radius: 8px; border: 2px dashed #CBD5E1; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #F8FAFC; flex-shrink: 0;">
+              <img id="sp-edit-prod-foto-preview" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+              <i id="sp-edit-prod-foto-icon" class="fas fa-camera" style="font-size: 24px; color: #94A3B8;"></i>
+            </div>
+            <div style="flex: 1;">
+              <input type="file" id="sp-edit-prod-foto-file" accept="image/*" class="input-field" style="font-size: 12px; padding: 6px;" onchange="previewSuperProductorFile(this)">
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <button type="button" class="btn-action-icon" style="font-size: 11px; width: auto; padding: 4px 10px; border-radius: 4px; background: #FEE2E2; color: #DC2626;" onclick="removeSuperProductorPhoto()">
+                  <i class="fas fa-trash-alt" style="margin-right: 4px;"></i> Quitar Foto
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+        <button type="button" class="btn-action-icon" style="width: auto; padding: 0 16px; border-radius: 6px; background: #F1F5F9; color: #475569;" onclick="closeModal('modal-super-edit-productor')">
+          Cancelar
+        </button>
+        <button type="button" class="btn-checkout-cta" style="padding: 10px 24px; font-size: 13px;" onclick="saveSuperProductorModal()">
+          <i class="fas fa-save" style="margin-right: 6px;"></i> Guardar Datos
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="lunar-engine.js?v=6"></script>
   <script>
@@ -2474,6 +2567,8 @@
       renderLunarSynchronary();
       renderSecuritySection();
       renderMediaSection();
+      renderSuperProductoresSection();
+      initSuperProductoresFirebase();
     }
 
     function toggleMobileSuperSidebar(open) {
@@ -2549,6 +2644,112 @@
     // =================================================================
     // GESTIÓN CENTRAL DE BASE DE PRODUCTORES (SUPER ADMIN)
     // =================================================================
+
+    let superFirestore = null;
+    let superSetDoc = null;
+    let superDeleteDoc = null;
+    let superDoc = null;
+    let superFirebaseInited = false;
+    let spCurrentProdPhoto = null;
+
+    async function initSuperProductoresFirebase() {
+      if (superFirebaseInited) return;
+      try {
+        const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js");
+        const { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js");
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCOqV_ktDmgMw4SQEq1U3omo-faPG0BwyA",
+          authDomain: "vrde-club-ee9e2.firebaseapp.com",
+          projectId: "vrde-club-ee9e2",
+          storageBucket: "vrde-club-ee9e2.firebasestorage.app",
+          messagingSenderId: "347690183351",
+          appId: "1:347690183351:web:15740a62f1b0b6976a3b32"
+        };
+
+        const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+        superFirestore = getFirestore(app);
+        superSetDoc = setDoc;
+        superDeleteDoc = deleteDoc;
+        superDoc = doc;
+        superFirebaseInited = true;
+
+        // Escucha en tiempo real de Firestore para que celular y desktop estén siempre sincronizados
+        onSnapshot(collection(superFirestore, "productores"), (snapshot) => {
+          let serverDb = [];
+          snapshot.forEach(docSnap => serverDb.push(docSnap.data()));
+          
+          if (serverDb.length > 0) {
+            serverDb.sort((a, b) => new Date(b.fecha || 0) - new Date(a.fecha || 0));
+            saveSuperProductoresData(serverDb);
+            renderSuperProductoresSection();
+          }
+        }, (err) => {
+          console.warn("Firestore sync warning in SuperAdmin:", err);
+        });
+      } catch (err) {
+        console.warn("No se pudo iniciar Firebase en SuperAdmin:", err);
+      }
+    }
+
+    // Auto-iniciar Firebase en segundo plano
+    if (typeof window !== 'undefined') {
+      setTimeout(initSuperProductoresFirebase, 800);
+    }
+
+    async function syncSuperProductoresCloud() {
+      const btn = document.getElementById('btn-sp-sync-cloud');
+      if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
+      try {
+        if (!superFirebaseInited) {
+          await initSuperProductoresFirebase();
+        }
+        if (superFirestore) {
+          const { getDocs, collection } = await import("https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js");
+          const snap = await getDocs(collection(superFirestore, "productores"));
+          let list = [];
+          snap.forEach(d => list.push(d.data()));
+          if (list.length > 0) {
+            list.sort((a, b) => new Date(b.fecha || 0) - new Date(a.fecha || 0));
+            saveSuperProductoresData(list);
+            renderSuperProductoresSection();
+            alert(`✅ Sincronización exitosa: Se cargaron ${list.length} productores desde la nube de Firebase.`);
+          } else {
+            alert('Conexión establecida con la nube (0 registros en la colección).');
+          }
+        } else {
+          alert('No se pudo establecer conexión con Firebase. Revisa tu conexión a internet.');
+        }
+      } catch (err) {
+        alert('Error al sincronizar con la nube: ' + err.message);
+      } finally {
+        if (btn) btn.innerHTML = '<i class="fas fa-cloud-download-alt"></i> Sincronizar Nube';
+      }
+    }
+
+    async function compressBase64(base64Str, maxDim = 800, quality = 0.6) {
+      if (!base64Str || typeof base64Str !== 'string' || base64Str.length < 250000) return base64Str;
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width;
+          let h = img.height;
+          if (w > h) {
+            if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          } else {
+            if (h > maxDim) { h = Math.round((h * maxDim) / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(base64Str);
+        img.src = base64Str;
+      });
+    }
 
     function getSuperProductoresData() {
       try {
@@ -2681,9 +2882,14 @@
                   ` : ''}
                 </div>
 
-                <button class="btn-action-icon" style="color: #DC2626;" onclick="deleteSuperProductor('${p.id}')" title="Eliminar productor">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
+                <div style="display: flex; gap: 6px;">
+                  <button class="btn-action-icon" style="color: #2563EB;" onclick="openEditSuperProductorModal('${p.id}')" title="Editar ficha del productor">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button class="btn-action-icon" style="color: #DC2626;" onclick="deleteSuperProductor('${p.id}')" title="Eliminar productor">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2693,11 +2899,178 @@
       grid.innerHTML = html;
     }
 
+    function openEditSuperProductorModal(id) {
+      const titleEl = document.getElementById('sp-prod-modal-title');
+      const idInput = document.getElementById('sp-edit-prod-id');
+      const previewImg = document.getElementById('sp-edit-prod-foto-preview');
+      const iconEl = document.getElementById('sp-edit-prod-foto-icon');
+      const fileInput = document.getElementById('sp-edit-prod-foto-file');
+      if (fileInput) fileInput.value = '';
+
+      if (id) {
+        const prods = getSuperProductoresData();
+        const prod = prods.find(p => p.id === id);
+        if (!prod) return;
+
+        if (titleEl) titleEl.innerText = `Editar: ${prod.empresa || 'Productor'}`;
+        if (idInput) idInput.value = prod.id;
+
+        document.getElementById('sp-edit-prod-empresa').value = prod.empresa || '';
+        document.getElementById('sp-edit-prod-nombres').value = prod.nombres || '';
+        document.getElementById('sp-edit-prod-categoria').value = prod.categoria || '';
+        document.getElementById('sp-edit-prod-telefono').value = prod.telefono || '';
+        document.getElementById('sp-edit-prod-instagram').value = prod.instagram || '';
+        document.getElementById('sp-edit-prod-provincia').value = prod.provincia || '';
+        document.getElementById('sp-edit-prod-ciudad').value = prod.ciudad || '';
+        document.getElementById('sp-edit-prod-pueblo').value = prod.pueblo || '';
+        document.getElementById('sp-edit-prod-notas').value = prod.notas || '';
+
+        if (prod.foto) {
+          spCurrentProdPhoto = prod.foto;
+          if (previewImg) { previewImg.src = prod.foto; previewImg.style.display = 'block'; }
+          if (iconEl) iconEl.style.display = 'none';
+        } else {
+          spCurrentProdPhoto = null;
+          if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+          if (iconEl) iconEl.style.display = 'block';
+        }
+      } else {
+        if (titleEl) titleEl.innerText = 'Nuevo Productor (Feria / Relevamiento)';
+        if (idInput) idInput.value = '';
+
+        document.getElementById('sp-edit-prod-empresa').value = '';
+        document.getElementById('sp-edit-prod-nombres').value = '';
+        document.getElementById('sp-edit-prod-categoria').value = '';
+        document.getElementById('sp-edit-prod-telefono').value = '';
+        document.getElementById('sp-edit-prod-instagram').value = '';
+        document.getElementById('sp-edit-prod-provincia').value = '';
+        document.getElementById('sp-edit-prod-ciudad').value = '';
+        document.getElementById('sp-edit-prod-pueblo').value = '';
+        document.getElementById('sp-edit-prod-notas').value = '';
+
+        spCurrentProdPhoto = null;
+        if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+        if (iconEl) iconEl.style.display = 'block';
+      }
+
+      openModal('modal-super-edit-productor');
+    }
+
+    function previewSuperProductorFile(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const compressed = await compressBase64(e.target.result, 800, 0.7);
+          spCurrentProdPhoto = compressed;
+          const previewImg = document.getElementById('sp-edit-prod-foto-preview');
+          const iconEl = document.getElementById('sp-edit-prod-foto-icon');
+          if (previewImg) { previewImg.src = compressed; previewImg.style.display = 'block'; }
+          if (iconEl) iconEl.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function removeSuperProductorPhoto() {
+      spCurrentProdPhoto = '';
+      const previewImg = document.getElementById('sp-edit-prod-foto-preview');
+      const iconEl = document.getElementById('sp-edit-prod-foto-icon');
+      const fileInput = document.getElementById('sp-edit-prod-foto-file');
+      if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+      if (iconEl) iconEl.style.display = 'block';
+      if (fileInput) fileInput.value = '';
+    }
+
+    async function saveSuperProductorModal() {
+      const empresa = (document.getElementById('sp-edit-prod-empresa')?.value || '').trim();
+      if (!empresa) {
+        alert('Por favor completa al menos el Nombre del Emprendimiento / Finca.');
+        return;
+      }
+
+      const id = document.getElementById('sp-edit-prod-id')?.value;
+      const nombres = (document.getElementById('sp-edit-prod-nombres')?.value || '').trim();
+      const categoria = (document.getElementById('sp-edit-prod-categoria')?.value || '').trim();
+      const telefono = (document.getElementById('sp-edit-prod-telefono')?.value || '').trim();
+      const instagram = (document.getElementById('sp-edit-prod-instagram')?.value || '').trim();
+      const provincia = (document.getElementById('sp-edit-prod-provincia')?.value || '').trim();
+      const ciudad = (document.getElementById('sp-edit-prod-ciudad')?.value || '').trim();
+      const pueblo = (document.getElementById('sp-edit-prod-pueblo')?.value || '').trim();
+      const notas = (document.getElementById('sp-edit-prod-notas')?.value || '').trim();
+
+      let prods = getSuperProductoresData();
+
+      if (id) {
+        // EDICIÓN
+        const idx = prods.findIndex(p => p.id === id);
+        if (idx !== -1) {
+          const existing = prods[idx];
+          const updated = {
+            ...existing,
+            empresa,
+            nombres,
+            categoria,
+            telefono,
+            instagram,
+            provincia,
+            ciudad,
+            pueblo,
+            notas,
+            foto: spCurrentProdPhoto !== null ? (spCurrentProdPhoto || null) : existing.foto,
+            fechaActualizacion: new Date().toISOString()
+          };
+          prods[idx] = updated;
+          saveSuperProductoresData(prods);
+
+          if (superFirestore && superSetDoc && superDoc) {
+            superSetDoc(superDoc(superFirestore, "productores", id), updated, { merge: true })
+              .catch(err => console.error("Error actualizando en Firestore:", err));
+          }
+          alert(`¡Ficha de "${empresa}" actualizada correctamente!`);
+        }
+      } else {
+        // CREACIÓN NUEVA
+        const newId = Date.now().toString();
+        const newProd = {
+          id: newId,
+          fecha: new Date().toISOString(),
+          empresa,
+          nombres,
+          categoria,
+          telefono,
+          instagram,
+          provincia,
+          ciudad,
+          pueblo,
+          notas,
+          foto: spCurrentProdPhoto || null
+        };
+        prods.unshift(newProd);
+        saveSuperProductoresData(prods);
+
+        if (superFirestore && superSetDoc && superDoc) {
+          superSetDoc(superDoc(superFirestore, "productores", newId), newProd)
+            .catch(err => console.error("Error guardando nuevo en Firestore:", err));
+        }
+        alert(`¡Productor "${empresa}" registrado correctamente!`);
+      }
+
+      closeModal('modal-super-edit-productor');
+      renderSuperProductoresSection();
+    }
+
     function deleteSuperProductor(id) {
       if (!confirm('¿Seguro que deseas eliminar la ficha de este productor?')) return;
       let prods = getSuperProductoresData();
       prods = prods.filter(p => p.id !== id);
       saveSuperProductoresData(prods);
+
+      if (superFirestore && superDeleteDoc && superDoc) {
+        superDeleteDoc(superDoc(superFirestore, "productores", id))
+          .catch(err => console.error("Error borrando en Firestore:", err));
+      }
+
       renderSuperProductoresSection();
     }
 
@@ -2717,19 +3090,26 @@
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = async function(e) {
         try {
           const imported = JSON.parse(e.target.result);
           if (!Array.isArray(imported)) return alert('Formato de archivo inválido.');
           const current = getSuperProductoresData();
           const existingIds = new Set(current.map(p => p.id));
           let count = 0;
-          imported.forEach(item => {
+          for (let item of imported) {
             if (!existingIds.has(item.id)) {
+              if (item.foto && item.foto.length > 250000) {
+                item.foto = await compressBase64(item.foto);
+              }
               current.unshift(item);
+              if (superFirestore && superSetDoc && superDoc) {
+                superSetDoc(superDoc(superFirestore, "productores", item.id), item, { merge: true })
+                  .catch(e => console.error(e));
+              }
               count++;
             }
-          });
+          }
           saveSuperProductoresData(current);
           renderSuperProductoresSection();
           alert(`¡Se importaron ${count} productores correctamente!`);
@@ -2742,7 +3122,7 @@
     }
 
     function openCreateProductorModal() {
-      window.open('productores.html', '_blank');
+      openEditSuperProductorModal(null);
     }
 
     // =================================================================
