@@ -3318,6 +3318,24 @@ if (typeof window !== 'undefined') {
         }
       });
 
+      // 3. Escuchador en tiempo real de Productores en Firestore
+      onSnapshot(collection(db, "productores"), (snapshot) => {
+        const remoteProductores = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (remoteProductores.length > 0) {
+          remoteProductores.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+          localStorage.setItem('vrde_productores_feria', JSON.stringify(remoteProductores));
+          if (typeof renderSuperProductoresSection === 'function') {
+            renderSuperProductoresSection();
+          }
+          if (typeof renderDB === 'function') {
+            renderDB();
+          }
+          window.dispatchEvent(new CustomEvent('vrde:productores-updated'));
+        }
+      }, (err) => {
+        console.warn("Firestore productores sync:", err.message);
+      });
+
       // Sobrescribir guardarNuevoPedido para guardar en Firebase
       const originalGuardarNuevoPedido = LunarEngine.guardarNuevoPedido.bind(LunarEngine);
       LunarEngine.guardarNuevoPedido = function(pedidoData) {
