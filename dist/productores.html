@@ -109,16 +109,52 @@
                     <textarea id="p-notas" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-vrde-brand focus:ring-1 focus:ring-vrde-brand transition-all" placeholder="Tienen certificación orgánica, hacen envíos a capital, etc..."></textarea>
                 </div>
 
-                <!-- Foto (Cámara) -->
+                <!-- Foto del Productor (Galería o Cámara) -->
                 <div class="mb-8">
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Foto del Producto / Puesto</label>
-                    <div class="relative overflow-hidden">
-                        <input type="file" id="p-foto" accept="image/*" capture="environment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewImage(this)">
-                        <div id="foto-placeholder" class="w-full h-32 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400">
-                            <i class="fas fa-camera text-3xl mb-2"></i>
-                            <span class="text-sm font-medium">Tocar para tomar foto</span>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        <i class="fas fa-image mr-1 text-vrde-brand"></i> Foto del Producto, Puesto o Finca
+                    </label>
+
+                    <!-- Inputs ocultos para seleccionar cámara o galería -->
+                    <input type="file" id="p-foto-galeria" accept="image/*" class="hidden" onchange="previewImage(this)">
+                    <input type="file" id="p-foto-camara" accept="image/*" capture="environment" class="hidden" onchange="previewImage(this)">
+
+                    <!-- Selector visual cuando NO hay foto cargada -->
+                    <div id="foto-placeholder" class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-2xl p-5 text-center transition-all hover:border-vrde-brand">
+                        <div class="text-gray-400 mb-3">
+                            <i class="fas fa-camera-retro text-3xl text-gray-400 mb-1"></i>
+                            <p class="text-xs text-gray-500 font-medium">Carga una foto desde tu galería o toma una nueva con la cámara</p>
                         </div>
-                        <img id="foto-preview" src="" class="w-full h-48 object-cover rounded-xl hidden">
+                        <div class="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+                            <button type="button" onclick="document.getElementById('p-foto-galeria').click()" class="bg-white hover:bg-emerald-50 text-emerald-800 border-2 border-emerald-500 font-bold py-3 px-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs transition-all active:scale-95 cursor-pointer">
+                                <i class="fas fa-images text-base text-emerald-600"></i> Galería / Archivos
+                            </button>
+                            <button type="button" onclick="document.getElementById('p-foto-camara').click()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs transition-all active:scale-95 cursor-pointer">
+                                <i class="fas fa-camera text-base"></i> Tomar Foto
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contenedor con preview y botones de acción cuando SÍ hay foto -->
+                    <div id="foto-preview-container" class="hidden">
+                        <div class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-md bg-gray-900">
+                            <img id="foto-preview" src="" class="w-full h-52 sm:h-60 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent pointer-events-none"></div>
+                            
+                            <div class="absolute bottom-3 left-3 right-3 flex justify-between items-center gap-2">
+                                <div class="flex gap-2">
+                                    <button type="button" onclick="document.getElementById('p-foto-galeria').click()" class="bg-white/95 hover:bg-white text-gray-800 text-xs font-bold py-2 px-3 rounded-lg shadow-sm flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" title="Cambiar por imagen de la galería">
+                                        <i class="fas fa-images text-emerald-600"></i> Galería
+                                    </button>
+                                    <button type="button" onclick="document.getElementById('p-foto-camara').click()" class="bg-white/95 hover:bg-white text-gray-800 text-xs font-bold py-2 px-3 rounded-lg shadow-sm flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" title="Tomar nueva foto con cámara">
+                                        <i class="fas fa-camera text-emerald-600"></i> Cámara
+                                    </button>
+                                </div>
+                                <button type="button" onclick="removeImage()" class="bg-red-500/90 hover:bg-red-600 text-white text-xs font-bold py-2 px-3 rounded-lg shadow-sm flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" title="Quitar foto">
+                                    <i class="fas fa-trash-alt"></i> Quitar
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -510,15 +546,31 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         currentImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
                         document.getElementById('foto-placeholder').classList.add('hidden');
+                        const previewContainer = document.getElementById('foto-preview-container');
                         const preview = document.getElementById('foto-preview');
-                        preview.src = currentImageBase64;
-                        preview.classList.remove('hidden');
+                        if (preview) preview.src = currentImageBase64;
+                        if (previewContainer) previewContainer.classList.remove('hidden');
                     };
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
+        }
+
+        function removeImage() {
+            currentImageBase64 = '';
+            const preview = document.getElementById('foto-preview');
+            if (preview) preview.src = '';
+            const previewContainer = document.getElementById('foto-preview-container');
+            if (previewContainer) previewContainer.classList.add('hidden');
+            const placeholder = document.getElementById('foto-placeholder');
+            if (placeholder) placeholder.classList.remove('hidden');
+            const camInput = document.getElementById('p-foto-camara');
+            if (camInput) camInput.value = '';
+            const galInput = document.getElementById('p-foto-galeria');
+            if (galInput) galInput.value = '';
         }
 
         // Guardar o Actualizar Productor
@@ -584,10 +636,7 @@
 
                 // Reset form
                 document.getElementById('producer-form').reset();
-                currentImageBase64 = null;
-                document.getElementById('foto-preview').classList.add('hidden');
-                document.getElementById('foto-preview').src = '';
-                document.getElementById('foto-placeholder').classList.remove('hidden');
+                removeImage();
                 alert('¡Productor guardado con éxito!');
             }
             
@@ -615,14 +664,12 @@
             if (prod.foto) {
                 currentImageBase64 = prod.foto;
                 const preview = document.getElementById('foto-preview');
-                preview.src = prod.foto;
-                preview.classList.remove('hidden');
+                const previewContainer = document.getElementById('foto-preview-container');
+                if (preview) preview.src = prod.foto;
+                if (previewContainer) previewContainer.classList.remove('hidden');
                 document.getElementById('foto-placeholder').classList.add('hidden');
             } else {
-                currentImageBase64 = null;
-                document.getElementById('foto-preview').classList.add('hidden');
-                document.getElementById('foto-preview').src = '';
-                document.getElementById('foto-placeholder').classList.remove('hidden');
+                removeImage();
             }
 
             document.getElementById('editing-target-name').innerText = prod.empresa;
@@ -638,10 +685,7 @@
         function cancelEditProducer() {
             document.getElementById('p-editing-id').value = '';
             document.getElementById('producer-form').reset();
-            currentImageBase64 = null;
-            document.getElementById('foto-preview').classList.add('hidden');
-            document.getElementById('foto-preview').src = '';
-            document.getElementById('foto-placeholder').classList.remove('hidden');
+            removeImage();
             document.getElementById('editing-banner').classList.add('hidden');
             document.getElementById('btn-cancel-edit').classList.add('hidden');
             document.getElementById('btn-submit-text').innerText = 'Guardar Ficha';
