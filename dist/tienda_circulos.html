@@ -2339,7 +2339,7 @@
         return;
       }
 
-      const res = LunarEngine.iniciarSesionUsuario(tel);
+      const res = LunarEngine.iniciarSesionUsuario(tel, '', CURRENT_REF);
       if (!res.ok) {
         alert(res.mensaje);
         return;

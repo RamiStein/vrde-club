@@ -1,5 +1,5 @@
-// Vrde Club Service Worker (PWA v1.1.0)
-const CACHE_NAME = 'vrde-lunar-v10';
+// Vrde Club Service Worker (PWA v1.1.1)
+const CACHE_NAME = 'vrde-lunar-v11';
 const STATIC_ASSETS = [
   './',
   './index.html',

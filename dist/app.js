@@ -505,19 +505,8 @@ window.submitPostulacionProductor = function(form) {
     closeModal();
 };
 
-// --- ONBOARDING Y ACCESO A LA COMPRA LUNAR ---
+// --- ONBOARDING Y ACCESO A LA COMPRA LUNAR (LOGIN PARA NODOS) ---
 window.handleIngresoCompraLunar = function() {
-    if (typeof LunarEngine !== 'undefined') {
-        const destino = LunarEngine.obtenerDestinoCompraLunar();
-        if (destino.logueado) {
-            if (destino.tieneNodo && destino.nodoId) {
-                window.location.href = `tienda.html?ref=${encodeURIComponent(destino.nodoId)}`;
-            } else {
-                window.location.href = 'lunar.html';
-            }
-            return;
-        }
-    }
     openOnboardingModal();
 };
 
@@ -527,13 +516,110 @@ window.openOnboardingModal = function() {
         window.location.href = 'lunar.html';
         return;
     }
+
+    // Poblar selector de nodos
+    poblarSelectorNodosOnboarding();
+
+    // Determinar si hay sesión previa activa
+    const isLogged = (typeof LunarEngine !== 'undefined') && LunarEngine.estaUsuarioLogueado();
+    const perfil = (typeof LunarEngine !== 'undefined') ? LunarEngine.obtenerPerfilUsuario() : null;
+
+    const viewActive = document.getElementById('onboarding-view-sesion-activa');
+    const viewForm = document.getElementById('onboarding-view-form');
+
+    if (isLogged && perfil && perfil.telefono) {
+        if (viewActive) viewActive.classList.remove('hidden');
+        if (viewForm) viewForm.classList.add('hidden');
+
+        const activeName = document.getElementById('onboarding-active-user-nombre');
+        const activeTel = document.getElementById('onboarding-active-user-tel');
+        const activeNodo = document.getElementById('onboarding-active-nodo-nombre');
+        const btnContinue = document.getElementById('btn-onboarding-continue-active');
+
+        const allNodos = (typeof LunarEngine !== 'undefined') ? LunarEngine.obtenerNodos(true) : {};
+        const nodoData = (perfil.nodoId && allNodos[perfil.nodoId]) ? allNodos[perfil.nodoId] : (allNodos['lomaverde'] || {});
+
+        if (activeName) activeName.innerText = perfil.nombre || 'Prosumidor/a';
+        if (activeTel) activeTel.innerText = `📱 ${perfil.telefono}`;
+        if (activeNodo) activeNodo.innerText = nodoData.nombre || 'Nodo Comunitario';
+        if (btnContinue) {
+            btnContinue.innerHTML = `<span>Ingresar a la Tienda de ${nodoData.nombre || 'tu Nodo'}</span> <i class="fas fa-arrow-right"></i>`;
+            btnContinue.onclick = function() {
+                const targetNodo = perfil.nodoId || 'lomaverde';
+                window.location.href = `tienda.html?ref=${encodeURIComponent(targetNodo)}`;
+            };
+        }
+    } else {
+        if (viewActive) viewActive.classList.add('hidden');
+        if (viewForm) viewForm.classList.remove('hidden');
+
+        if (perfil) {
+            const inputNombre = document.getElementById('onboarding-user-nombre');
+            const inputTel = document.getElementById('onboarding-user-tel');
+            const selectNodo = document.getElementById('onboarding-user-nodo');
+            if (inputNombre && perfil.nombre) inputNombre.value = perfil.nombre;
+            if (inputTel && perfil.telefono) inputTel.value = perfil.telefono;
+            if (selectNodo && perfil.nodoId) selectNodo.value = perfil.nodoId;
+        }
+    }
+
     modalEl.classList.remove('hidden');
     modalEl.classList.add('flex');
     setTimeout(() => {
         modalEl.classList.remove('opacity-0');
         const inputNombre = document.getElementById('onboarding-user-nombre');
-        if (inputNombre) inputNombre.focus();
+        if (inputNombre && (!viewActive || viewActive.classList.contains('hidden'))) {
+            inputNombre.focus();
+        }
     }, 10);
+};
+
+window.poblarSelectorNodosOnboarding = function() {
+    const select = document.getElementById('onboarding-user-nodo');
+    if (!select) return;
+
+    const nodos = (typeof LunarEngine !== 'undefined') ? LunarEngine.obtenerNodos(true) : {
+        'lomaverde': { nombre: 'Nodo Loma Verde', direccion: 'Escobar Rural' },
+        'vicentelopez': { nombre: 'Nodo Vicente López', direccion: 'Zona Norte' },
+        'lalucila': { nombre: 'Nodo La Lucila', direccion: 'Vicente López' },
+        'escobar': { nombre: 'Nodo Escobar', direccion: 'Centro' }
+    };
+
+    const perfil = (typeof LunarEngine !== 'undefined') ? LunarEngine.obtenerPerfilUsuario() : null;
+    const nodoActualId = perfil ? perfil.nodoId : null;
+
+    let html = '<option value="" disabled ' + (!nodoActualId ? 'selected' : '') + '>-- Seleccioná tu Nodo de retiro barrial --</option>';
+    Object.keys(nodos).forEach(id => {
+        const n = nodos[id];
+        const zonaLabel = n.direccion || n.zona || 'Punto Barrial';
+        const isSelected = (id === nodoActualId) ? 'selected' : '';
+        html += `<option value="${id}" ${isSelected}>📍 ${n.nombre} (${zonaLabel})</option>`;
+    });
+    select.innerHTML = html;
+};
+
+window.mostrarFormularioOnboardingLogin = function() {
+    const viewActive = document.getElementById('onboarding-view-sesion-activa');
+    const viewForm = document.getElementById('onboarding-view-form');
+    if (viewActive) viewActive.classList.add('hidden');
+    if (viewForm) viewForm.classList.remove('hidden');
+
+    const inputNombre = document.getElementById('onboarding-user-nombre');
+    if (inputNombre) inputNombre.focus();
+};
+
+window.cerrarSesionOnboarding = function() {
+    if (typeof LunarEngine !== 'undefined') {
+        LunarEngine.cerrarSesionUsuario();
+    }
+    const inputNombre = document.getElementById('onboarding-user-nombre');
+    const inputTel = document.getElementById('onboarding-user-tel');
+    const selectNodo = document.getElementById('onboarding-user-nodo');
+    if (inputNombre) inputNombre.value = '';
+    if (inputTel) inputTel.value = '';
+    if (selectNodo) selectNodo.selectedIndex = 0;
+
+    mostrarFormularioOnboardingLogin();
 };
 
 window.closeOnboardingModal = function() {
@@ -549,31 +635,39 @@ window.closeOnboardingModal = function() {
 window.submitOnboardingLogin = function() {
     const nombreInput = document.getElementById('onboarding-user-nombre');
     const telInput = document.getElementById('onboarding-user-tel');
+    const nodoSelect = document.getElementById('onboarding-user-nodo');
+
     const nombre = nombreInput ? nombreInput.value.trim() : '';
     const tel = telInput ? telInput.value.trim() : '';
+    const nodoId = nodoSelect ? nodoSelect.value.trim() : '';
+
+    if (!nombre || nombre.length < 2) {
+        alert('Por favor ingresá tu nombre y apellido.');
+        if (nombreInput) nombreInput.focus();
+        return;
+    }
 
     if (!tel || tel.replace(/\D/g, '').length < 6) {
         alert('Por favor ingresá un número de teléfono o WhatsApp válido.');
+        if (telInput) telInput.focus();
+        return;
+    }
+
+    if (!nodoId) {
+        alert('Por favor seleccioná tu Nodo de referencia para retirar tus alimentos.');
+        if (nodoSelect) nodoSelect.focus();
         return;
     }
 
     if (typeof LunarEngine !== 'undefined') {
-        const res = LunarEngine.iniciarSesionUsuario(tel, nombre);
-        if (res.ok) {
-            closeOnboardingModal();
-            if (res.tieneNodo && res.perfil.nodoId) {
-                window.location.href = `tienda.html?ref=${encodeURIComponent(res.perfil.nodoId)}`;
-            } else {
-                window.location.href = 'lunar.html';
-            }
-            return;
-        } else {
-            alert(res.mensaje || 'Error al ingresar.');
-            return;
-        }
+        const res = LunarEngine.iniciarSesionUsuario(tel, nombre, nodoId);
+        LunarEngine.asignarNodoUsuario(nodoId);
+        closeOnboardingModal();
+        window.location.href = `tienda.html?ref=${encodeURIComponent(nodoId)}`;
+        return;
     }
 
-    window.location.href = 'lunar.html';
+    window.location.href = `tienda.html?ref=${encodeURIComponent(nodoId || 'lomaverde')}`;
 };
 
 window.openModal = function(type) {

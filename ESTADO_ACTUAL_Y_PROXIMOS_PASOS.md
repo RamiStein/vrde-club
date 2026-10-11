@@ -13,7 +13,13 @@
 
 La funcionalidad de **Círculos / Grupos de Compra Comunitarios (Micro-Nodos)** y la mecánica de **Reserva y Pago Diferido en Luna Llena** ya se encuentran **100% integradas y activas en producción** en la web oficial:
 
-1. **Tienda Oficial (`tienda.html`)**:
+1. **Flujo de Acceso: Login para Nodos (`index.html` y `app.js`)**:
+   * Al hacer clic en **"Ingresar a la Compra Lunar"** (navbar, hero o secciones), se presenta en primer plano el **Login para Nodos**.
+   * **Sin Auto-login silencioso**: No salta directamente a la tienda con usuarios de prueba o sesiones previas sin confirmar.
+   * **Formulario completo**: Pide Nombre y Apellido, WhatsApp/Celular y un selector desplegable con todos los **Nodos Barriales Activos** (Loma Verde, Vicente López, La Lucila, Escobar, etc.).
+   * **Gestión de Sesión Activa**: Si el dispositivo ya cuenta con un usuario guardado, el modal muestra quién está conectado, su nodo de retiro y botones para ingresar directo, cambiar de nodo o cerrar sesión para ingresar con otro número.
+
+2. **Tienda Oficial (`tienda.html` y `tienda_circulos.html`)**:
    * **Jerarquía Visual Clara Nodo vs. Círculo (Estética Spotify)**:
      * **Sede Central (Nodo)**: Identifica el punto oficial de acopio y logística.
      * **Estante Spotify de Círculos del Nodo**: Fila horizontal interactiva donde los vecinos pueden elegir entre comprar individual en el nodo o sumarse a un Círculo Abierto.
@@ -26,19 +32,20 @@ La funcionalidad de **Círculos / Grupos de Compra Comunitarios (Micro-Nodos)** 
    * **Cálculo de Precios Unitarios y Totales**:
      * Determinación de precios estrictamente por escala de bulto individual con sincronización de subtotales y donación del 3%.
 
-2. **Portal Lunar (`lunar.html`)**:
+3. **Portal Lunar (`lunar.html`)**:
    * Cada tarjeta de Nodo lista en vivo sus **Círculos Abiertos** con enlaces directos para unirse, además del acceso estándar al Nodo y el botón para abrir un nuevo Círculo.
 
-3. **Portada Oficial (`index.html` y `app.js`)**:
+4. **Portada Oficial (`index.html` y `app.js`)**:
    * **Nueva Sección Dedicada `#crea-tu-nodo`** con los 4 pilares de ser Nodo Almacén y formulario de postulación a WhatsApp.
-   * **Explorador de Nodos Dinámico** que excluye automáticamente nodos pausados o cerrados (ej. Escobar).
+   * **Explorador de Nodos Dinámico** que excluye automáticamente nodos pausados o cerrados.
 
-4. **Panel Gestor de Nodo (`admin.html`)**:
+5. **Panel Gestor de Nodo (`admin.html`)**:
    * Detección y etiquetas de Círculos en las tarjetas de pedidos para acopio y entrega agrupada.
 
-5. **Motor Central (`lunar-engine.js`)**:
+6. **Motor Central (`lunar-engine.js`)**:
    * Sincronización en tiempo real con Firestore de las colecciones `orders` y `circulos`.
    * Métodos `obtenerCirculos(nodoId, soloAbiertos)`, `generarLinkCirculo(circulo)`, `crearCirculo` con soporte de privacidad.
+   * Gestión unificada de perfiles de usuario, inicio de sesión y asignación dinámica de nodos.
 
 ---
 

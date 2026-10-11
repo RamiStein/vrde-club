@@ -52,6 +52,21 @@
             }
         }
     </script>
+    <script>
+      // Disponibilidad inmediata del Login para Nodos sin depender de tiempos de carga
+      window.handleIngresoCompraLunar = function() {
+        if (typeof window.openOnboardingModal === 'function') {
+          window.openOnboardingModal();
+        } else {
+          const m = document.getElementById('modal-onboarding-login');
+          if (m) {
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            setTimeout(() => m.classList.remove('opacity-0'), 10);
+          }
+        }
+      };
+    </script>
 </head>
 <body class="antialiased">
 
@@ -80,7 +95,7 @@
                 <a href="#circulos" class="nav-link hover:text-emerald-400 transition-colors">Círculos Vecinales</a>
                 <a href="#productores" class="nav-link hover:text-emerald-400 transition-colors">Productores</a>
                 <a href="#crea-tu-nodo" class="nav-link hover:text-emerald-400 transition-colors font-semibold text-emerald-300">Abrir Nodo</a>
-                <button onclick="if(typeof handleIngresoCompraLunar==='function'){handleIngresoCompraLunar();}else{location.href='tienda.html';}" class="text-white font-bold bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-full border border-emerald-400/40 shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
+                <button onclick="handleIngresoCompraLunar()" class="text-white font-bold bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-full border border-emerald-400/40 shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
                     <i class="fas fa-moon text-xs text-yellow-300"></i> Ingresar a la Compra Lunar
                 </button>
             </div>
@@ -90,7 +105,7 @@
                 <button id="btn-home-mobile-install-pwa" class="text-xs font-bold bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 px-2.5 py-1.5 rounded-full hover:bg-emerald-600 transition-all flex items-center gap-1" onclick="triggerHomePWAInstall()" title="Instalar App">
                     <span>📲</span> <span>App</span>
                 </button>
-                <button class="text-white font-bold text-xs bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-full border border-emerald-400/40 flex items-center gap-1.5 shadow-md" onclick="if(typeof handleIngresoCompraLunar==='function'){handleIngresoCompraLunar();}else{location.href='tienda.html';}" title="Ingresar a la Compra Lunar">
+                <button class="text-white font-bold text-xs bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-full border border-emerald-400/40 flex items-center gap-1.5 shadow-md" onclick="handleIngresoCompraLunar()" title="Ingresar a la Compra Lunar">
                     <i class="fas fa-moon text-yellow-300 text-xs"></i> <span>Entrar</span>
                 </button>
             </div>
@@ -129,7 +144,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 mb-8 w-full sm:w-auto justify-center">
-                <button onclick="if(typeof handleIngresoCompraLunar==='function'){handleIngresoCompraLunar();}else{location.href='tienda.html';}" class="btn-primary bg-vrde-brand hover:bg-vrde-dark text-white px-8 py-4 rounded-full font-bold shadow-xl shadow-vrde-brand/30 flex items-center justify-center gap-3 text-lg transition-transform hover:scale-105">
+                <button onclick="handleIngresoCompraLunar()" class="btn-primary bg-vrde-brand hover:bg-vrde-dark text-white px-8 py-4 rounded-full font-bold shadow-xl shadow-vrde-brand/30 flex items-center justify-center gap-3 text-lg transition-transform hover:scale-105">
                     <i class="fas fa-moon text-yellow-300"></i> Ingresar a la Compra Lunar
                 </button>
                 <a href="#compra-lunar" class="px-6 py-4 rounded-full font-semibold border border-white/30 hover:bg-white/10 text-white transition-all flex items-center justify-center">
@@ -549,46 +564,104 @@
         </div>
     </footer>
 
-    <!-- MODAL DE ONBOARDING / INGRESO A LA COMPRA LUNAR -->
+    <!-- MODAL DE ONBOARDING / LOGIN PARA NODOS -->
     <div class="fixed inset-0 z-[100] bg-gray-950/80 backdrop-blur-sm hidden items-center justify-center transition-opacity duration-300" id="modal-onboarding-login" onclick="if(event.target === this) closeOnboardingModal()">
-        <div class="bg-white rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl mx-4 relative border border-emerald-100 transform transition-all duration-300" onclick="event.stopPropagation()">
-            <button onclick="closeOnboardingModal()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-700 text-2xl w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors">
+        <div class="bg-white rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl mx-4 relative border border-emerald-100 transform transition-all duration-300 max-h-[92vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <button onclick="closeOnboardingModal()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-700 text-2xl w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors" title="Cerrar">
                 &times;
             </button>
             
             <div class="flex items-center gap-3 mb-5">
-                <img src="assets/favicon.png?v=4" alt="Vrde Club" class="w-11 h-11 rounded-xl object-contain bg-emerald-50 p-1.5 border border-emerald-200 shadow-sm">
+                <img src="assets/favicon.png?v=4" alt="Vrde Club" class="w-12 h-12 rounded-2xl object-contain bg-emerald-50 p-2 border border-emerald-200 shadow-sm flex-shrink-0">
                 <div>
-                    <h3 class="font-tech text-xl font-bold text-gray-900 leading-tight">Ingresar a la Compra Lunar</h3>
-                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wide">Acceso de Prosumidor</span>
+                    <h3 class="font-tech text-2xl font-bold text-gray-900 leading-tight">Login para Nodos</h3>
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+                        <i class="fas fa-moon text-yellow-500"></i> Acceso a la Compra Colectiva
+                    </span>
                 </div>
             </div>
 
-            <p class="text-xs sm:text-sm text-gray-600 mb-6 leading-relaxed">
-                Ingresá tu WhatsApp y tu Nombre para acceder al catálogo, reservar tus alimentos agroecológicos y sincronizar tu círculo barrial.
-            </p>
-
-            <form onsubmit="event.preventDefault(); submitOnboardingLogin();" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Tu Nombre *</label>
-                    <input type="text" id="onboarding-user-nombre" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-sm font-medium text-gray-800" placeholder="Ej: Carolina Gómez">
+            <!-- VISTA 1: SESIÓN ACTIVA DETECTADA -->
+            <div id="onboarding-view-sesion-activa" class="hidden">
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50/50 border border-emerald-200 rounded-2xl p-5 mb-5 shadow-sm">
+                    <div class="flex items-center gap-3.5 mb-3">
+                        <div class="w-11 h-11 rounded-full bg-emerald-600 text-white flex items-center justify-center text-lg font-bold shadow-md shadow-emerald-600/20 flex-shrink-0">
+                            🌱
+                        </div>
+                        <div>
+                            <div class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Sesión Actual</div>
+                            <h4 class="text-base font-bold text-gray-900 leading-tight" id="onboarding-active-user-nombre">Prosumidor/a</h4>
+                            <div class="text-xs text-gray-600 font-medium" id="onboarding-active-user-tel">📱 11 0000 0000</div>
+                        </div>
+                    </div>
+                    <div class="bg-white/80 rounded-xl p-3 border border-emerald-100 flex items-center justify-between gap-3">
+                        <div>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase">Nodo de Retiro:</span>
+                            <div class="text-sm font-bold text-emerald-950 flex items-center gap-1.5 mt-0.5">
+                                <i class="fas fa-store-alt text-emerald-600 text-xs"></i>
+                                <span id="onboarding-active-nodo-nombre">Nodo Loma Verde</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="mostrarFormularioOnboardingLogin()" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-100/70 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-colors">
+                            Cambiar Nodo
+                        </button>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">WhatsApp / Teléfono Celular *</label>
-                    <input type="tel" id="onboarding-user-tel" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-base font-bold text-gray-800 tracking-wide" placeholder="Ej: 11 4829 1029">
+                <div class="space-y-3">
+                    <button id="btn-onboarding-continue-active" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-tech font-bold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2">
+                        <span>Ingresar a la Tienda</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+
+                    <button type="button" onclick="cerrarSesionOnboarding()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-user-plus text-gray-500"></i>
+                        <span>Ingresar con otro número o usuario</span>
+                    </button>
                 </div>
+            </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-tech font-bold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2">
-                    <span>CONTINUAR</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </form>
-
-            <div class="mt-4 text-center">
-                <p class="text-[11px] text-gray-400">
-                    🔒 Sin contraseñas complejas. Tus compras y reservas se sincronizan con tu número.
+            <!-- VISTA 2: FORMULARIO DE INGRESO Y ASIGNACIÓN DE NODO -->
+            <div id="onboarding-view-form">
+                <p class="text-xs sm:text-sm text-gray-600 mb-5 leading-relaxed">
+                    Identificate con tu WhatsApp y elegí el nodo barrial donde vas a retirar tus alimentos a precio directo de chacra.
                 </p>
+
+                <form onsubmit="event.preventDefault(); submitOnboardingLogin();" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Tu Nombre y Apellido *</label>
+                        <input type="text" id="onboarding-user-nombre" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-sm font-medium text-gray-800" placeholder="Ej: Carolina Gómez">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">WhatsApp / Celular *</label>
+                        <input type="tel" id="onboarding-user-tel" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-base font-bold text-gray-800 tracking-wide" placeholder="Ej: 11 2345 6789">
+                        <span class="text-[11px] text-gray-400 mt-1 block">Tus pedidos y reservas se sincronizan automáticamente con este número.</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Elegí tu Nodo Barrial de Retiro *</label>
+                        <select id="onboarding-user-nodo" required class="w-full px-4 py-3 rounded-xl border border-emerald-300 bg-emerald-50/30 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-sm font-semibold text-gray-800">
+                            <option value="" disabled selected>-- Cargando Nodos... --</option>
+                        </select>
+                        <div class="flex items-center justify-between mt-1 text-[11px] text-gray-500">
+                            <span>📍 Punto de entrega y acopio colectivo</span>
+                            <a href="lunar.html" class="text-emerald-700 font-bold hover:underline">Ver mapa de sedes &rarr;</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-tech font-bold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 mt-2">
+                        <i class="fas fa-moon text-yellow-300"></i>
+                        <span>INGRESAR A LA COMPRA LUNAR</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="mt-4 text-center">
+                    <p class="text-[11px] text-gray-400">
+                        🔒 Sin contraseñas. Compra comunitaria directa y autogestionada.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
