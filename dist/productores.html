@@ -127,17 +127,17 @@
             <h2 class="font-tech text-xl font-bold text-gray-800">Productores Guardados</h2>
             <div class="flex items-center gap-2 flex-wrap">
                 <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="handleImportFile(this)">
-                <button onclick="document.getElementById('import-file-input').click()" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Importar archivo JSON desde tu celular u otra compu">
+                <button onclick="shareOrExportData()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg font-bold transition-colors shadow-sm flex items-center gap-1.5" title="Compartir archivo o enviar a WhatsApp">
+                    <i class="fab fa-whatsapp text-sm"></i> Compartir / WhatsApp
+                </button>
+                <button onclick="document.getElementById('import-file-input').click()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 px-3 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Importar archivo JSON desde tu celular u otra compu">
                     <i class="fas fa-file-import mr-1"></i> Importar JSON
                 </button>
-                <button onclick="exportData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 px-3 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Descargar copia de seguridad en tu dispositivo">
-                    <i class="fas fa-download mr-1"></i> Exportar JSON
+                <button onclick="openCopyModal()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2.5 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Ver y copiar texto">
+                    <i class="fas fa-copy mr-1"></i> Copiar
                 </button>
-                <button onclick="copyDataToClipboard()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Copiar texto de backup">
-                    <i class="fas fa-copy"></i> Copiar
-                </button>
-                <button onclick="pasteData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Pegar texto de backup">
-                    <i class="fas fa-paste"></i> Pegar
+                <button onclick="openPasteModal()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2.5 py-2 rounded-lg font-bold transition-colors shadow-sm" title="Pegar texto de backup">
+                    <i class="fas fa-paste mr-1"></i> Pegar
                 </button>
             </div>
         </div>
@@ -159,6 +159,46 @@
             </div>
         </div>
     </main>
+
+    <!-- MODAL: VER / COPIAR BACKUP -->
+    <div id="modal-copy-backup" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-tech font-bold text-lg text-gray-900"><i class="fas fa-copy text-vrde-brand mr-2"></i>Copiar Datos de Productores</h3>
+                <button onclick="closeCopyModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">Copia el texto de abajo para enviártelo por mensaje o pegarlo en la computadora:</p>
+            <textarea id="copy-textarea" rows="8" class="w-full text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-vrde-brand mb-4 select-all" readonly></textarea>
+            <div class="flex gap-2">
+                <button onclick="doCopyText()" id="btn-do-copy" class="flex-1 bg-vrde-brand text-white font-bold py-3 rounded-xl hover:bg-vrde-dark transition-colors text-sm">
+                    <i class="fas fa-clipboard mr-1"></i> Copiar al Portapapeles
+                </button>
+                <button onclick="closeCopyModal()" class="px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl text-sm">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PEGAR BACKUP -->
+    <div id="modal-paste-backup" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-tech font-bold text-lg text-gray-900"><i class="fas fa-paste text-vrde-brand mr-2"></i>Pegar Datos de Productores</h3>
+                <button onclick="closePasteModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">Pega aquí el código que copiaste desde el celular:</p>
+            <textarea id="paste-textarea" rows="8" class="w-full text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-vrde-brand mb-4" placeholder="Pega el código aquí..."></textarea>
+            <div class="flex gap-2">
+                <button onclick="doPasteText()" class="flex-1 bg-vrde-brand text-white font-bold py-3 rounded-xl hover:bg-vrde-dark transition-colors text-sm">
+                    <i class="fas fa-check mr-1"></i> Importar Productores
+                </button>
+                <button onclick="closePasteModal()" class="px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl text-sm">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Lógica de base de datos local y Firebase
@@ -429,17 +469,47 @@
             }
         }
 
-        // Exportar Data
-        function exportData() {
-            if(db.length === 0) return alert('No hay datos para exportar.');
-            
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href",     dataStr);
-            downloadAnchorNode.setAttribute("download", "vrde_productores_" + new Date().getTime() + ".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
+        // Compartir archivo directamente a WhatsApp o Descargar JSON
+        async function shareOrExportData() {
+            if (db.length === 0) return alert('No hay productores guardados para compartir.');
+            const dataStr = JSON.stringify(db, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const fileName = `vrde_productores_${Date.now()}.json`;
+
+            // Si el teléfono soporta compartir archivos nativo (iOS Safari, Android Chrome)
+            if (navigator.canShare) {
+                try {
+                    const file = new File([blob], fileName, { type: 'application/json' });
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Productores Vrde Club',
+                            text: 'Copia de seguridad de productores registrados en la feria'
+                        });
+                        return;
+                    }
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.warn('Error al compartir archivo:', err);
+                    } else {
+                        return;
+                    }
+                }
+            }
+
+            // Descarga clásica vía Blob URL (para computadoras o si el usuario prefiere descargar)
+            try {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            } catch (e) {
+                openCopyModal();
+            }
         }
 
         // Importar Archivo JSON
@@ -475,28 +545,61 @@
             input.value = '';
         }
 
-        // Copiar Backup al portapapeles
-        function copyDataToClipboard() {
+        // Modal Copiar
+        function openCopyModal() {
             if (db.length === 0) return alert('No hay productores guardados para copiar.');
-            const dataStr = JSON.stringify(db);
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(dataStr).then(() => {
-                    alert('¡Copia realizada! El texto del backup fue copiado al portapapeles. Pégalo en WhatsApp o un bloc de notas.');
+            const textarea = document.getElementById('copy-textarea');
+            textarea.value = JSON.stringify(db, null, 2);
+            document.getElementById('modal-copy-backup').classList.remove('hidden');
+            setTimeout(() => {
+                textarea.focus();
+                textarea.select();
+            }, 100);
+        }
+
+        function closeCopyModal() {
+            document.getElementById('modal-copy-backup').classList.add('hidden');
+        }
+
+        function doCopyText() {
+            const textarea = document.getElementById('copy-textarea');
+            textarea.select();
+            textarea.setSelectionRange(0, 999999);
+            try {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    const btn = document.getElementById('btn-do-copy');
+                    btn.innerHTML = '<i class="fas fa-check mr-1"></i> ¡Copiado con Éxito!';
+                    btn.classList.add('bg-green-700');
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-clipboard mr-1"></i> Copiar al Portapapeles';
+                        btn.classList.remove('bg-green-700');
+                    }, 2500);
                 }).catch(() => {
-                    prompt('Copia este código de backup:', dataStr);
+                    document.execCommand('copy');
+                    alert('¡Texto copiado al portapapeles!');
                 });
-            } else {
-                prompt('Copia este código de backup:', dataStr);
+            } catch(e) {
+                document.execCommand('copy');
+                alert('¡Texto copiado al portapapeles!');
             }
         }
 
-        // Pegar Backup desde texto
-        function pasteData() {
-            const pasted = prompt('Pega aquí el código de backup JSON que copiaste del celular:');
-            if (!pasted || !pasted.trim()) return;
+        // Modal Pegar
+        function openPasteModal() {
+            document.getElementById('paste-textarea').value = '';
+            document.getElementById('modal-paste-backup').classList.remove('hidden');
+        }
+
+        function closePasteModal() {
+            document.getElementById('modal-paste-backup').classList.add('hidden');
+        }
+
+        function doPasteText() {
+            const pasted = document.getElementById('paste-textarea').value.trim();
+            if (!pasted) return alert('Por favor pega el código primero.');
             try {
-                const imported = JSON.parse(pasted.trim());
-                if (!Array.isArray(imported)) return alert('El contenido no es una lista válida.');
+                const imported = JSON.parse(pasted);
+                if (!Array.isArray(imported)) return alert('El contenido no es una lista válida de productores.');
                 const existingIds = new Set(db.map(p => p.id));
                 let addedCount = 0;
                 imported.forEach(item => {
@@ -509,9 +612,10 @@
                 localStorage.setItem('vrde_productores_feria', JSON.stringify(db));
                 updateBadge();
                 renderDB();
-                alert(`¡Se sincronizaron ${addedCount} productores correctamente!`);
+                closePasteModal();
+                alert(`¡Se importaron ${addedCount} productores correctamente!`);
             } catch(e) {
-                alert('El texto pegado no es un JSON válido: ' + e.message);
+                alert('Error al leer el código pegado: ' + e.message);
             }
         }
     </script>
